@@ -1,11 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
   "metadata": {
-    "type": "Notebook",
-    "displayName": "FAAC_Deduction_Pipeline"
+    "type": "CopyJob",
+    "displayName": "FAAC_Income_Copy"
   },
   "config": {
     "version": "2.0",
-    "logicalId": "1fd7af99-a945-407d-82e0-dcf7047c29f4"
+    "logicalId": "8300f2d9-6e9a-9caf-4248-fcdf707cf892"
   }
 }

@@ -11,10 +11,513 @@
     },
     "defaultPowerBIDataSourceVersion": "powerBI_V3",
     "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "faac_deduction(1)",
+        "sourceLineageTag": "[nigeria].[faac_deduction]",
+        "columns": [
+          {
+            "name": "state",
+            "dataType": "string",
+            "sourceColumn": "state",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "state",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "lg_count",
+            "dataType": "int64",
+            "sourceColumn": "lg_count",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "lg_count",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "external_debt",
+            "dataType": "int64",
+            "sourceColumn": "external_debt",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "external_debt",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "contractual_obligation_ispo",
+            "dataType": "int64",
+            "sourceColumn": "contractual_obligation_ispo",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "contractual_obligation_ispo",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "other_deductions_note",
+            "dataType": "int64",
+            "sourceColumn": "other_deductions_note",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "other_deductions_note",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "other_deduction",
+            "dataType": "int64",
+            "sourceColumn": "other_deduction",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "other_deduction",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "net_amount_after_deductions",
+            "dataType": "int64",
+            "sourceColumn": "net_amount_after_deductions",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "net_amount_after_deductions",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "year",
+            "dataType": "int64",
+            "sourceColumn": "year",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "year",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "month_number",
+            "dataType": "int64",
+            "sourceColumn": "month_number",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "month_number",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "month_name",
+            "dataType": "string",
+            "sourceColumn": "month_name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "month_name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "disbursement_date",
+            "dataType": "dateTime",
+            "sourceColumn": "disbursement_date",
+            "formatString": "General Date",
+            "sourceProviderType": "date",
+            "sourceLineageTag": "disbursement_date",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "president",
+            "dataType": "string",
+            "sourceColumn": "president",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "president",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "source_file",
+            "dataType": "string",
+            "sourceColumn": "source_file",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "source_file",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "deduction_misc",
+            "dataType": "int64",
+            "sourceColumn": "deduction_misc",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "deduction_misc",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "transfer_nddc_hyppadec",
+            "dataType": "int64",
+            "sourceColumn": "transfer_nddc_hyppadec",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "transfer_nddc_hyppadec",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "faac_deduction",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "nigeria"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "faac_income",
+        "sourceLineageTag": "[nigeria].[faac_income]",
+        "columns": [
+          {
+            "name": "state",
+            "dataType": "string",
+            "sourceColumn": "state",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "state",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "lg_count",
+            "dataType": "int64",
+            "sourceColumn": "lg_count",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "lg_count",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "statutory_allocation",
+            "dataType": "int64",
+            "sourceColumn": "statutory_allocation",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "statutory_allocation",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "oil_derivation",
+            "dataType": "int64",
+            "sourceColumn": "oil_derivation",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "oil_derivation",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "exchange_gain_difference",
+            "dataType": "int64",
+            "sourceColumn": "exchange_gain_difference",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "exchange_gain_difference",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "gross_vat_allocation",
+            "dataType": "int64",
+            "sourceColumn": "gross_vat_allocation",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "gross_vat_allocation",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "total_gross_amount",
+            "dataType": "int64",
+            "sourceColumn": "total_gross_amount",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "total_gross_amount",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "year",
+            "dataType": "int64",
+            "sourceColumn": "year",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "year",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "month_number",
+            "dataType": "int64",
+            "sourceColumn": "month_number",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "month_number",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "month_name",
+            "dataType": "string",
+            "sourceColumn": "month_name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "month_name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "disbursement_date",
+            "dataType": "dateTime",
+            "sourceColumn": "disbursement_date",
+            "formatString": "General Date",
+            "sourceProviderType": "date",
+            "sourceLineageTag": "disbursement_date",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "president",
+            "dataType": "string",
+            "sourceColumn": "president",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "president",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "source_file",
+            "dataType": "string",
+            "sourceColumn": "source_file",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "source_file",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "others_income",
+            "dataType": "int64",
+            "sourceColumn": "others_income",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "others_income",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "total_ecology_fund",
+            "dataType": "int64",
+            "sourceColumn": "total_ecology_fund",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "total_ecology_fund",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "faac_income",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "nigeria"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      }
+    ],
+    "expressions": [
+      {
+        "name": "DatabaseQuery",
+        "kind": "m",
+        "expression": "let\n    database = {{TDS_Endpoint}}\nin\n    database\n"
+      }
+    ],
     "annotations": [
       {
         "name": "__PBI_TimeIntelligenceEnabled",
         "value": "0"
+      },
+      {
+        "name": "SourceLineageTagType",
+        "value": "DatabaseFullyQualifiedName"
       }
     ]
   }

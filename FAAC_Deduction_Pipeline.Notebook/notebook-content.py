@@ -6,7 +6,27 @@
 # META   "kernel_info": {
 # META     "name": "synapse_pyspark"
 # META   },
-# META   "dependencies": {}
+# META   "dependencies": {
+# META     "lakehouse": {
+# META       "default_lakehouse": "7a83841c-158d-46f4-a100-6fff975adc24",
+# META       "default_lakehouse_name": "Data_lake",
+# META       "default_lakehouse_workspace_id": "d71c970d-8937-4534-9d94-2c86745bb502",
+# META       "known_lakehouses": [
+# META         {
+# META           "id": "7a83841c-158d-46f4-a100-6fff975adc24"
+# META         }
+# META       ]
+# META     },
+# META     "warehouse": {
+# META       "default_warehouse": "5b1d0458-7304-a6d8-4ad4-a6ca625583c4",
+# META       "known_warehouses": [
+# META         {
+# META           "id": "5b1d0458-7304-a6d8-4ad4-a6ca625583c4",
+# META           "type": "Datawarehouse"
+# META         }
+# META       ]
+# META     }
+# META   }
 # META }
 
 # CELL ********************
@@ -434,6 +454,13 @@ def run_pipeline():
 run_pipeline()
 
 # METADATA ********************
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# METADATA ********************
+
 # META {
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark"

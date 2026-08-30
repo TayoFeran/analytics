@@ -1,11 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
   "metadata": {
-    "type": "Notebook",
-    "displayName": "FAAC_Deduction_Pipeline"
+    "type": "DataPipeline",
+    "displayName": "FAAC_Full_Job"
   },
   "config": {
     "version": "2.0",
-    "logicalId": "1fd7af99-a945-407d-82e0-dcf7047c29f4"
+    "logicalId": "5309a9bf-8ba1-800a-4410-7491a3f26fe0"
   }
 }
