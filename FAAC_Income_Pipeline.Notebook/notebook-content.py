@@ -214,19 +214,26 @@ def read_faac_excel(filepath: str, year: int, month: int):
         pdf = pdf[existing_cols]
 
         # ── 5. Filter to actual state rows ────────────────────────────────
-        # Remove subtotal/total rows and blank state names
+        # Remove subtotal/total rows and blank state names.
+        # NOTE: the Income sheet consistently spells this state "NASSARAWA"
+        # (double-S) across every file checked (2020-2026 Jan) — confirmed
+        # this was silently dropping ~1.4-2% of every year's total until
+        # fixed here. Both spellings are accepted and normalised to
+        # canonical "Nasarawa" below (same fix already applied to the
+        # Deduction pipeline, which has the identical spelling quirk).
         valid_states = [
             "ABIA", "ADAMAWA", "AKWA IBOM", "ANAMBRA", "BAUCHI", "BAYELSA",
             "BENUE", "BORNO", "CROSS RIVER", "DELTA", "EBONYI", "EDO",
             "EKITI", "ENUGU", "FCT", "GOMBE", "IMO", "JIGAWA",
             "KADUNA", "KANO", "KATSINA", "KEBBI", "KOGI", "KWARA",
-            "LAGOS", "NASARAWA", "NIGER", "OGUN", "ONDO", "OSUN",
+            "LAGOS", "NASARAWA", "NASSARAWA", "NIGER", "OGUN", "ONDO", "OSUN",
             "OYO", "PLATEAU", "RIVERS", "SOKOTO", "TARABA", "YOBE", "ZAMFARA"
         ]
 
         if "state" in pdf.columns:
             pdf["state"] = pdf["state"].astype(str).str.strip().str.upper()
             pdf = pdf[pdf["state"].isin(valid_states)]
+            pdf["state"] = pdf["state"].replace({"NASSARAWA": "NASARAWA"})
 
         if pdf.empty:
             print(f"   ⚠️  No valid state rows found in: {filepath}")
