@@ -45,7 +45,10 @@
 #
 # Adapted from an earlier standalone prototype script for the
 # analytics_engineering Fabric workspace. Logic unchanged; only the
-# lakehouse/warehouse names and source path were updated.
+# lakehouse/warehouse names and source path were updated — plus one fix:
+# total_gross_amount is now always computed as the sum of its component
+# columns rather than trusted from the source file (see the comment at
+# step 6b below for why).
 # =============================================================================
 
 import os
@@ -248,6 +251,22 @@ def read_faac_excel(filepath: str, year: int, month: int):
                     .replace("nan", "0")
                 )
                 pdf[col] = pd.to_numeric(pdf[col], errors="coerce").fillna(0)
+
+        # ── 6b. Recompute total_gross_amount from its components ───────────
+        # The source "Total Gross Amount" cell is a cached Excel formula
+        # result — some files (confirmed: 2020, 2025, 2026 Jan at least)
+        # were saved without Excel recalculating it, leaving it blank, which
+        # would otherwise silently load as 0 (looks like "no revenue" rather
+        # than "missing value"). Verified against files where the source
+        # total IS present (2021-2024 Jan spot-checked) that
+        # sum(components) matches the stated total exactly, so computing it
+        # directly is strictly more robust than trusting the source cell.
+        income_component_cols = [
+            "statutory_allocation", "oil_derivation", "exchange_gain_difference",
+            "total_ecology_fund", "gross_vat_allocation", "others_income"
+        ]
+        present_components = [c for c in income_component_cols if c in pdf.columns]
+        pdf["total_gross_amount"] = sum(pdf[c] for c in present_components)
 
         # ── 7. Add date and administration columns ─────────────────────────
         pdf["year"]            = year

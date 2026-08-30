@@ -49,13 +49,24 @@
 # directly (notebook code isn't exposed via OneLake Files/Tables, and that
 # workspace isn't Git-connected), so its logic wasn't available to port.
 #
-# Header quirks confirmed against real files (2020 + 2024 checked):
-#   - The last column is literally labelled "Total Gross Amount" in the
-#     source, but the values are actually NET of deductions (income total
-#     minus total deductions) — confirmed by cross-checking against the
-#     Income sheet's total_gross_amount for the same state/month. Mapped to
-#     `net_amount_after_deductions` here rather than reusing the misleading
-#     source label.
+# Header quirks confirmed against real files (2020-2026 Jan spot-checked):
+#   - The "Total Gross Amount" column is actually TOTAL DEDUCTIONS (sum of
+#     the deduction line items) — an earlier version of this script assumed
+#     it was the net amount, which was wrong; confirmed by summing the
+#     component columns and finding an exact match wherever the source
+#     value is populated (2021-2024 Jan checked).
+#   - The TRUE net-after-deductions value lives in an UNNAMED trailing
+#     column immediately after "Total Gross Amount" (blank header in the
+#     source file itself — pandas reads it as "Unnamed: N"). The earlier
+#     version of this script never captured this column at all.
+#   - Both "Total Gross Amount" (total deductions) and the unnamed net
+#     column are blank in some files (confirmed: 2020, 2025, 2026 Jan) —
+#     a cached-formula-not-recalculated issue in the source, same as the
+#     Income sheet's "Total Gross Amount". total_deductions is recomputed
+#     from components to work around this (see step 6b below); net_amount
+#     is recovered by falling back to (income total - total_deductions)
+#     using the same file's Income sheet when the source net value itself
+#     is missing.
 #   - The Deduction sheet spells the state "NASSARAWA" (double-S), while
 #     the Income sheet spells it "NASARAWA" (single-S) — both are
 #     normalised to canonical "Nasarawa" below.
@@ -95,8 +106,14 @@ COLUMN_MAP = {
     "Transfer of 50% to NDDC/HYPPADEC":    "transfer_nddc_hyppadec",
     "Deduction":                           "deduction_misc",       # unlabelled generic deduction line in source
     "Others Deduction":                    "other_deduction",
-    "Total Gross Amount":                  "net_amount_after_deductions",  # mislabelled in source — see header note above
+    "Total Gross Amount":                  "total_deductions",     # this is TOTAL DEDUCTIONS, not net — see header note above
 }
+
+# The real net-after-deductions value has no header in the source file at
+# all (blank cell) — it's positioned immediately after "Total Gross Amount".
+# Captured by position, not name, since pandas assigns a generated
+# "Unnamed: N" name that depends on column count.
+NET_AMOUNT_COLUMN_NAME = "net_amount_after_deductions"
 
 # ─── ADMINISTRATION LOOKUP ────────────────────────────────────────────────────
 
@@ -194,9 +211,20 @@ def read_faac_deduction_excel(filepath: str, year: int, month: int):
                         rename_dict[col] = clean_name
                         break
 
+        # ── 3b. Capture the unnamed net-amount column by position ──────────
+        # It has no header in the source (pandas names it "Unnamed: N"), so
+        # it can't be matched by name — grab whatever immediately follows
+        # "Total Gross Amount" if it looks unnamed.
+        if "Total Gross Amount" in cols_present:
+            tga_idx = cols_present.index("Total Gross Amount")
+            if tga_idx + 1 < len(cols_present):
+                next_col = cols_present[tga_idx + 1]
+                if str(next_col).startswith("Unnamed"):
+                    rename_dict[next_col] = NET_AMOUNT_COLUMN_NAME
+
         pdf = pdf.rename(columns=rename_dict)
 
-        target_cols = list(COLUMN_MAP.values())
+        target_cols = list(COLUMN_MAP.values()) + [NET_AMOUNT_COLUMN_NAME]
         existing_cols = [c for c in target_cols if c in pdf.columns]
         pdf = pdf[existing_cols]
 
@@ -227,7 +255,8 @@ def read_faac_deduction_excel(filepath: str, year: int, month: int):
         numeric_cols = [
             "lg_count", "external_debt", "contractual_obligation_ispo",
             "other_deductions_note", "transfer_nddc_hyppadec",
-            "deduction_misc", "other_deduction", "net_amount_after_deductions"
+            "deduction_misc", "other_deduction", "total_deductions",
+            "net_amount_after_deductions"
         ]
 
         for col in numeric_cols:
@@ -242,6 +271,53 @@ def read_faac_deduction_excel(filepath: str, year: int, month: int):
                     .replace("nan", "0")
                 )
                 pdf[col] = pd.to_numeric(pdf[col], errors="coerce").fillna(0)
+
+        # ── 5b. Recompute total_deductions from its components ─────────────
+        # Same reasoning as the income pipeline's total_gross_amount fix:
+        # the source cell is a cached formula that's sometimes blank
+        # (confirmed: 2020, 2025, 2026 Jan), and sum(components) matches the
+        # source value exactly wherever it IS present, so compute it
+        # directly rather than trust the source cell.
+        deduction_component_cols = [
+            "external_debt", "contractual_obligation_ispo", "other_deductions_note",
+            "transfer_nddc_hyppadec", "deduction_misc", "other_deduction"
+        ]
+        present_components = [c for c in deduction_component_cols if c in pdf.columns]
+        pdf["total_deductions"] = sum(pdf[c] for c in present_components)
+
+        # ── 5c. Fall back to (income total - total_deductions) for any row
+        #        where net_amount_after_deductions is still missing/zero ───
+        # The source's own net-amount column is blank in the same files
+        # where totals are blank. Since Income and Deduction are two sheets
+        # in the SAME workbook, recover it here rather than leave it wrong.
+        if "net_amount_after_deductions" not in pdf.columns:
+            pdf["net_amount_after_deductions"] = 0.0
+
+        missing_net = pdf["net_amount_after_deductions"] == 0
+        if missing_net.any():
+            try:
+                income_pdf = pd.read_excel(filepath, sheet_name="Income", header=0, engine="openpyxl")
+                income_pdf.columns = [str(c).strip() for c in income_pdf.columns]
+                income_pdf = income_pdf.rename(columns={"Beneficiaries": "state"})
+                income_component_cols = [
+                    " Statutory Allocation", "Oil Derivation", "Exchange Gain Difference",
+                    "Total Ecology Fund", "Gross VAT Allocation", "Others Income"
+                ]
+                present_income_cols = [c for c in income_component_cols if c in income_pdf.columns]
+                for c in present_income_cols:
+                    income_pdf[c] = pd.to_numeric(
+                        income_pdf[c].astype(str).str.replace(",", "", regex=False).str.replace("-", "0", regex=False),
+                        errors="coerce"
+                    ).fillna(0)
+                income_pdf["income_total"] = sum(income_pdf[c] for c in present_income_cols)
+                income_pdf["state"] = income_pdf["state"].astype(str).str.strip().str.upper()
+                income_totals = income_pdf.set_index("state")["income_total"]
+
+                pdf.loc[missing_net, "net_amount_after_deductions"] = pdf.loc[missing_net].apply(
+                    lambda row: income_totals.get(row["state"], 0) - row["total_deductions"], axis=1
+                )
+            except Exception as e:
+                print(f"   ⚠️  Could not recover net_amount_after_deductions from Income sheet: {e}")
 
         # ── 6. Add date and administration columns ─────────────────────────
         pdf["year"]            = year
@@ -276,7 +352,8 @@ def read_faac_deduction_excel(filepath: str, year: int, month: int):
         long_cols = [
             "external_debt", "contractual_obligation_ispo",
             "other_deductions_note", "transfer_nddc_hyppadec",
-            "deduction_misc", "other_deduction", "net_amount_after_deductions"
+            "deduction_misc", "other_deduction", "total_deductions",
+            "net_amount_after_deductions"
         ]
         for c in long_cols:
             if c in sdf.columns:
@@ -393,7 +470,7 @@ def run_pipeline():
     numeric_fill_cols = [
         "external_debt", "contractual_obligation_ispo", "other_deductions_note",
         "transfer_nddc_hyppadec", "deduction_misc", "other_deduction",
-        "net_amount_after_deductions", "lg_count"
+        "total_deductions", "net_amount_after_deductions", "lg_count"
     ]
     for c in numeric_fill_cols:
         if c in merged.columns:
