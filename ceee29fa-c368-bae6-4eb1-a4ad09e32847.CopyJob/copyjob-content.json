@@ -1,0 +1,246 @@
+{
+  "properties": {
+    "jobMode": "CDC",
+    "fullLoadBehavior": "Truncate",
+    "source": {
+      "type": "LakehouseTable",
+      "connectionSettings": {
+        "type": "Lakehouse",
+        "typeProperties": {
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "artifactId": "975adc24-6fff-a100-46f4-158d7a83841c",
+          "rootFolder": "Tables"
+        }
+      }
+    },
+    "destination": {
+      "type": "DataWarehouseTable",
+      "connectionSettings": {
+        "type": "DataWarehouse",
+        "typeProperties": {
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "artifactId": "5b1d0458-7304-a6d8-4ad4-a6ca625583c4",
+          "endPoint": "hkj6s5hzelvurkms4xm6gthgeq-bwlrzvzxre2elhmufsdhiw5vai.datawarehouse.fabric.microsoft.com"
+        }
+      }
+    },
+    "policy": {
+      "timeout": "0.12:00:00",
+      "retry": 0
+    }
+  },
+  "activities": [
+    {
+      "id": "4e438d8e-80f2-4fed-95b2-ee42497661e9",
+      "properties": {
+        "source": {
+          "datasetSettings": {
+            "schema": "dbo",
+            "table": "faac_monthly_deduction"
+          },
+          "changeDataSettings": {
+            "readMethod": "SnapshotPlusIncremental"
+          },
+          "partitionSettings": {
+            "partitionOption": "None"
+          }
+        },
+        "destination": {
+          "upsertSettings": {
+            "keys": [
+              "state",
+              "year",
+              "month_number"
+            ]
+          },
+          "writeBehavior": "Upsert",
+          "datasetSettings": {
+            "schema": "nigeria",
+            "table": "faac_deduction"
+          }
+        },
+        "enableStaging": true,
+        "translator": {
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "state",
+                "type": "String",
+                "physicalType": "string"
+              },
+              "destination": {
+                "name": "state",
+                "physicalType": "varchar",
+                "length": "8000"
+              }
+            },
+            {
+              "source": {
+                "name": "lg_count",
+                "type": "Int64",
+                "physicalType": "long"
+              },
+              "destination": {
+                "name": "lg_count",
+                "physicalType": "bigint"
+              }
+            },
+            {
+              "source": {
+                "name": "external_debt",
+                "type": "Int64",
+                "physicalType": "long"
+              },
+              "destination": {
+                "name": "external_debt",
+                "physicalType": "bigint"
+              }
+            },
+            {
+              "source": {
+                "name": "contractual_obligation_ispo",
+                "type": "Int64",
+                "physicalType": "long"
+              },
+              "destination": {
+                "name": "contractual_obligation_ispo",
+                "physicalType": "bigint"
+              }
+            },
+            {
+              "source": {
+                "name": "other_deductions_note",
+                "type": "Int64",
+                "physicalType": "long"
+              },
+              "destination": {
+                "name": "other_deductions_note",
+                "physicalType": "bigint"
+              }
+            },
+            {
+              "source": {
+                "name": "other_deduction",
+                "type": "Int64",
+                "physicalType": "long"
+              },
+              "destination": {
+                "name": "other_deduction",
+                "physicalType": "bigint"
+              }
+            },
+            {
+              "source": {
+                "name": "net_amount_after_deductions",
+                "type": "Int64",
+                "physicalType": "long"
+              },
+              "destination": {
+                "name": "net_amount_after_deductions",
+                "physicalType": "bigint"
+              }
+            },
+            {
+              "source": {
+                "name": "year",
+                "type": "Int32",
+                "physicalType": "integer"
+              },
+              "destination": {
+                "name": "year",
+                "physicalType": "int"
+              }
+            },
+            {
+              "source": {
+                "name": "month_number",
+                "type": "Int32",
+                "physicalType": "integer"
+              },
+              "destination": {
+                "name": "month_number",
+                "physicalType": "int"
+              }
+            },
+            {
+              "source": {
+                "name": "month_name",
+                "type": "String",
+                "physicalType": "string"
+              },
+              "destination": {
+                "name": "month_name",
+                "physicalType": "varchar",
+                "length": "8000"
+              }
+            },
+            {
+              "source": {
+                "name": "disbursement_date",
+                "type": "Date",
+                "physicalType": "date"
+              },
+              "destination": {
+                "name": "disbursement_date",
+                "physicalType": "date"
+              }
+            },
+            {
+              "source": {
+                "name": "president",
+                "type": "String",
+                "physicalType": "string"
+              },
+              "destination": {
+                "name": "president",
+                "physicalType": "varchar",
+                "length": "8000"
+              }
+            },
+            {
+              "source": {
+                "name": "source_file",
+                "type": "String",
+                "physicalType": "string"
+              },
+              "destination": {
+                "name": "source_file",
+                "physicalType": "varchar",
+                "length": "8000"
+              }
+            },
+            {
+              "source": {
+                "name": "deduction_misc",
+                "type": "Int64",
+                "physicalType": "long"
+              },
+              "destination": {
+                "name": "deduction_misc",
+                "physicalType": "bigint"
+              }
+            },
+            {
+              "source": {
+                "name": "transfer_nddc_hyppadec",
+                "type": "Int64",
+                "physicalType": "long"
+              },
+              "destination": {
+                "name": "transfer_nddc_hyppadec",
+                "physicalType": "bigint"
+              }
+            }
+          ]
+        },
+        "typeConversionSettings": {
+          "typeConversion": {
+            "allowDataTruncation": true,
+            "treatBooleanAsNumber": false
+          }
+        }
+      }
+    }
+  ]
+}

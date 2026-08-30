@@ -4,7 +4,7 @@
       {
         "type": "InvokeCopyJob",
         "typeProperties": {
-          "copyJobId": "8300f2d9-6e9a-9caf-4248-fcdf707cf892",
+          "copyJobId": "ceee29fa-c368-bae6-4eb1-a4ad09e32847",
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         },
         "externalReferences": {
@@ -30,7 +30,7 @@
       {
         "type": "InvokeCopyJob",
         "typeProperties": {
-          "copyJobId": "8300f2d9-6e9a-9caf-4248-fcdf707cf892",
+          "copyJobId": "105afc56-1471-b43d-44d1-03556ac7caec",
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         },
         "externalReferences": {

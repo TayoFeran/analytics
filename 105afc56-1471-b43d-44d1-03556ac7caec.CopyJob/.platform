@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
   "metadata": {
     "type": "CopyJob",
-    "displayName": "FAAC_Deduction_Copy"
+    "displayName": "FAAC_Income_Copy"
   },
   "config": {
     "version": "2.0",
-    "logicalId": "516228a2-d639-952b-4ad6-1fc58b397968"
+    "logicalId": "105afc56-1471-b43d-44d1-03556ac7caec"
   }
 }
