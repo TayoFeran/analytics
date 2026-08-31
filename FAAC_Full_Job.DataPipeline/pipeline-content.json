@@ -134,7 +134,7 @@
           "scripts": [
             {
               "text": {
-                "value": "DROP TABLE IF EXISTS [DWH].[nigeria].[faac_income]",
+                "value": "DROP TABLE IF EXISTS [DWH].[nigeria].[faac_deduction]",
                 "type": "Expression"
               },
               "type": "Query"
