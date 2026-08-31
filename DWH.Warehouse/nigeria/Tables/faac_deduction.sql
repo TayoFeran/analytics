@@ -14,5 +14,6 @@ CREATE TABLE [nigeria].[faac_deduction] (
 	[president] varchar(8000) NULL, 
 	[source_file] varchar(8000) NULL, 
 	[deduction_misc] bigint NULL, 
-	[transfer_nddc_hyppadec] bigint NULL
+	[transfer_nddc_hyppadec] bigint NULL, 
+	[total_deductions] bigint NULL
 );

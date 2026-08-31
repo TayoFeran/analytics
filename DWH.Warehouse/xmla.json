@@ -13,7 +13,7 @@
     "sourceQueryCulture": "en-US",
     "tables": [
       {
-        "name": "faac_deduction(1)",
+        "name": "faac_deduction",
         "sourceLineageTag": "[nigeria].[faac_deduction]",
         "columns": [
           {
@@ -229,6 +229,21 @@
             "formatString": "0",
             "sourceProviderType": "bigint",
             "sourceLineageTag": "transfer_nddc_hyppadec",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "total_deductions",
+            "dataType": "int64",
+            "sourceColumn": "total_deductions",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "total_deductions",
             "summarizeBy": "sum",
             "annotations": [
               {

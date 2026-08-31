@@ -1,7 +1,6 @@
 {
   "properties": {
-    "jobMode": "CDC",
-    "fullLoadBehavior": "Truncate",
+    "jobMode": "Batch",
     "source": {
       "type": "LakehouseTable",
       "connectionSettings": {
@@ -38,23 +37,13 @@
             "schema": "dbo",
             "table": "faac_monthly_income"
           },
-          "changeDataSettings": {
-            "readMethod": "SnapshotPlusIncremental"
-          },
           "partitionSettings": {
             "partitionOption": "None"
           }
         },
         "destination": {
           "tableOption": "autoCreate",
-          "upsertSettings": {
-            "keys": [
-              "state",
-              "year",
-              "month_number"
-            ]
-          },
-          "writeBehavior": "Upsert",
+          "writeBehavior": "Append",
           "datasetSettings": {
             "schema": "nigeria",
             "table": "faac_income"

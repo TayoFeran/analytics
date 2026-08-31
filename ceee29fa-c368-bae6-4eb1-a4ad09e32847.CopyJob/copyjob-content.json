@@ -1,7 +1,6 @@
 {
   "properties": {
-    "jobMode": "CDC",
-    "fullLoadBehavior": "Truncate",
+    "jobMode": "Batch",
     "source": {
       "type": "LakehouseTable",
       "connectionSettings": {
@@ -10,6 +9,9 @@
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "artifactId": "975adc24-6fff-a100-46f4-158d7a83841c",
           "rootFolder": "Tables"
+        },
+        "externalReferences": {
+          "connection": "2ae1e6ab-b9b5-47eb-b871-e65d521cafb1"
         }
       }
     },
@@ -38,22 +40,12 @@
             "schema": "dbo",
             "table": "faac_monthly_deduction"
           },
-          "changeDataSettings": {
-            "readMethod": "SnapshotPlusIncremental"
-          },
           "partitionSettings": {
             "partitionOption": "None"
           }
         },
         "destination": {
-          "upsertSettings": {
-            "keys": [
-              "state",
-              "year",
-              "month_number"
-            ]
-          },
-          "writeBehavior": "Upsert",
+          "writeBehavior": "Append",
           "datasetSettings": {
             "schema": "nigeria",
             "table": "faac_deduction"
@@ -230,6 +222,16 @@
               "destination": {
                 "name": "transfer_nddc_hyppadec",
                 "physicalType": "bigint"
+              }
+            },
+            {
+              "source": {
+                "name": "total_deductions",
+                "type": "Int64",
+                "physicalType": "long"
+              },
+              "destination": {
+                "name": "total_deductions"
               }
             }
           ]

@@ -17,10 +17,10 @@
           "secureInput": false,
           "secureOutput": false
         },
-        "name": "deduction_copy",
+        "name": "recreate deduction",
         "dependsOn": [
           {
-            "activity": "deduction_pyspark",
+            "activity": "drop deduction",
             "dependencyConditions": [
               "Succeeded"
             ]
@@ -43,10 +43,10 @@
           "secureInput": false,
           "secureOutput": false
         },
-        "name": "income_copy",
+        "name": "recreate income",
         "dependsOn": [
           {
-            "activity": "income_pyspark",
+            "activity": "drop income",
             "dependencyConditions": [
               "Succeeded"
             ]
@@ -84,6 +84,92 @@
         },
         "name": "deduction_pyspark",
         "dependsOn": []
+      },
+      {
+        "type": "Script",
+        "typeProperties": {
+          "scripts": [
+            {
+              "text": {
+                "value": "DROP TABLE IF EXISTS [DWH].[nigeria].[faac_income]",
+                "type": "Expression"
+              },
+              "type": "Query"
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        },
+        "linkedService": {
+          "name": "DWH",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "5b1d0458-7304-a6d8-4ad4-a6ca625583c4",
+              "endpoint": "hkj6s5hzelvurkms4xm6gthgeq-bwlrzvzxre2elhmufsdhiw5vai.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "drop income",
+        "dependsOn": [
+          {
+            "activity": "income_pyspark",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Script",
+        "typeProperties": {
+          "scripts": [
+            {
+              "text": {
+                "value": "DROP TABLE IF EXISTS [DWH].[nigeria].[faac_income]",
+                "type": "Expression"
+              },
+              "type": "Query"
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        },
+        "linkedService": {
+          "name": "DWH",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "5b1d0458-7304-a6d8-4ad4-a6ca625583c4",
+              "endpoint": "hkj6s5hzelvurkms4xm6gthgeq-bwlrzvzxre2elhmufsdhiw5vai.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "drop deduction",
+        "dependsOn": [
+          {
+            "activity": "deduction_pyspark",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       }
     ]
   }
