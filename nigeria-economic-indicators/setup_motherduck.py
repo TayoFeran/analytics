@@ -1,19 +1,25 @@
-import duckdb
 import os
+
+import duckdb
 from dotenv import load_dotenv
+
 load_dotenv()
 TOKEN = os.getenv("MOTHERDUCK_TOKEN")
 
 con = duckdb.connect(f"md:?motherduck_token={TOKEN}")
 
-con.sql("CREATE DATABASE IF NOT EXISTS analytics")
-con.sql("CREATE SCHEMA IF NOT EXISTS analytics.nigeria")
+# Remove the old pre-restructure setup
+con.sql("DROP SCHEMA IF EXISTS analytics.nigeria CASCADE")
 
-# Replacing the earlier single combined table with two, split by grain
-con.sql("DROP TABLE IF EXISTS analytics.nigeria.econ_metric")
+# New warehouse: dev_dwh, schemas by medallion layer instead of by country
+con.sql("CREATE DATABASE IF NOT EXISTS dev_dwh")
+con.sql("CREATE SCHEMA IF NOT EXISTS dev_dwh.bronze")
+con.sql("CREATE SCHEMA IF NOT EXISTS dev_dwh.silver")
+con.sql("CREATE SCHEMA IF NOT EXISTS dev_dwh.analytics")
 
+# Bronze only here — silver and analytics tables will be created by dbt models later
 con.sql("""
-    CREATE TABLE IF NOT EXISTS analytics.nigeria.econ_metric_monthly (
+    CREATE TABLE IF NOT EXISTS dev_dwh.bronze.nigeria_econ_metric_monthly (
         country_code    VARCHAR,
         country_name    VARCHAR,
         indicator_code  VARCHAR,
@@ -26,7 +32,7 @@ con.sql("""
 """)
 
 con.sql("""
-    CREATE TABLE IF NOT EXISTS analytics.nigeria.econ_metric_annual (
+    CREATE TABLE IF NOT EXISTS dev_dwh.bronze.nigeria_econ_metric_annual (
         country_code    VARCHAR,
         country_name    VARCHAR,
         indicator_code  VARCHAR,
@@ -37,5 +43,5 @@ con.sql("""
     )
 """)
 
-print(con.sql("DESCRIBE analytics.nigeria.econ_metric_monthly").fetchall())
-print(con.sql("DESCRIBE analytics.nigeria.econ_metric_annual").fetchall())
+print(con.sql("DESCRIBE dev_dwh.bronze.nigeria_econ_metric_monthly").fetchall())
+print(con.sql("DESCRIBE dev_dwh.bronze.nigeria_econ_metric_annual").fetchall())

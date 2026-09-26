@@ -97,15 +97,13 @@ def main():
     print(f"Annual rows fetched: {len(annual_rows)}")
     print(f"Monthly rows fetched: {len(monthly_rows)}")
 
-    # Truncate-and-reload: bronze is a full snapshot of the source, not an
-    # append log, so every run clears out the old data before loading fresh.
-    con.sql("DELETE FROM analytics.nigeria.econ_metric_annual")
-    con.sql("DELETE FROM analytics.nigeria.econ_metric_monthly")
+    con.sql("DELETE FROM dev_dwh.bronze.nigeria_econ_metric_annual")
+    con.sql("DELETE FROM dev_dwh.bronze.nigeria_econ_metric_monthly")
 
     if annual_rows:
         con.executemany(
             """
-            INSERT INTO analytics.nigeria.econ_metric_annual
+            INSERT INTO dev_dwh.bronze.nigeria_econ_metric_annual
             (country_code, country_name, indicator_code, indicator_name, year, value, extracted_at)
             VALUES (?, ?, ?, ?, ?, ?, ?)
             """,
@@ -115,7 +113,7 @@ def main():
     if monthly_rows:
         con.executemany(
             """
-            INSERT INTO analytics.nigeria.econ_metric_monthly
+            INSERT INTO dev_dwh.bronze.nigeria_econ_metric_monthly
             (country_code, country_name, indicator_code, indicator_name, year, month, value, extracted_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
@@ -123,8 +121,8 @@ def main():
         )
 
     print("Done.")
-    print("Annual count:", con.sql("SELECT COUNT(*) FROM analytics.nigeria.econ_metric_annual").fetchall())
-    print("Monthly count:", con.sql("SELECT COUNT(*) FROM analytics.nigeria.econ_metric_monthly").fetchall())
+    print("Annual count:", con.sql("SELECT COUNT(*) FROM dev_dwh.bronze.nigeria_econ_metric_annual").fetchall())
+    print("Monthly count:", con.sql("SELECT COUNT(*) FROM dev_dwh.bronze.nigeria_econ_metric_monthly").fetchall())
 
 if __name__ == "__main__":
     main()
