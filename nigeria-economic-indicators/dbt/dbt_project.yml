@@ -1,0 +1,22 @@
+name: 'nigeria_econ'
+version: '1.0.0'
+config-version: 2
+
+profile: 'nigeria_econ'
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  nigeria_econ:
+    silver:
+      +schema: silver
+      +materialized: view

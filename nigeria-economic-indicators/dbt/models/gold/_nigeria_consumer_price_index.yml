@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: nigeria_consumer_price_index
+    description: >
+      Nigeria CPI (not seasonally adjusted), one row per month, sourced from the
+      monthly silver model filtered to the CPI indicator.
+    columns:
+      - name: date
+        description: Month start for the observation.
+        data_tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('nigeria_econ_metric_monthly')
+                field: make_date(year, month, 1)
+      - name: country_code
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['NGA']
+      - name: country_name
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Nigeria']
+      - name: cpi_rate
+        description: CPI index value, rounded to whole units.
+        data_tests:
+          - not_null
+      - name: extracted_at
+        data_tests:
+          - not_null

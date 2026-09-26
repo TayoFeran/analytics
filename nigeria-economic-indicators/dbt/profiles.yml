@@ -1,0 +1,10 @@
+nigeria_econ:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "md:dev_dwh"
+      extensions:
+        - motherduck
+      schema: silver
+      threads: 4

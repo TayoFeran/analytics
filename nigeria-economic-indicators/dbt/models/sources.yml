@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: dev_dwh
+    schema: bronze
+    tables:
+      - name: nigeria_econ_metric_annual
+      - name: nigeria_econ_metric_monthly

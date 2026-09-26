@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: nigeria_econ_metric_monthly
+    description: >
+      Typed pass-through of the bronze monthly World Bank extract.
+      Grain: one row per indicator per year-month.
+    columns:
+      - name: country_code
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['NGA']
+      - name: country_name
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Nigeria']
+      - name: indicator_code
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - 'DPANUSSPB'
+                  - 'CPTOTNSXN'
+      - name: indicator_name
+        description: >
+          Human-readable indicator label. The gold layer filters on this column
+          with ILIKE, so unexpected values here silently change gold output.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - 'Official exchange rate (LCU per US$, monthly)'
+                  - 'CPI price index, not seasonally adjusted'
+      - name: year
+        data_tests:
+          - not_null
+      - name: month
+        data_tests:
+          - not_null
+      - name: value
+        data_tests:
+          - not_null
+      - name: extracted_at
+        data_tests:
+          - not_null
