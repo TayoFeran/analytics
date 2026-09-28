@@ -1,0 +1,14 @@
+version: "3.1"
+services:
+  scheduler:
+    volumes:
+      - ../:/usr/local/airflow/project
+  dag-processor:
+    volumes:
+      - ../:/usr/local/airflow/project
+  triggerer:
+    volumes:
+      - ../:/usr/local/airflow/project
+  api-server:
+    volumes:
+      - ../:/usr/local/airflow/project
