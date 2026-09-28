@@ -10,7 +10,7 @@ with DAG(
     dag_id="nigeria_economic_indicators_pipeline",
     description="World Bank API -> MotherDuck bronze -> dbt silver/analytics",
     start_date=datetime(2026, 1, 1),
-    schedule=None,      # manual trigger only, for now
+    schedule= "@daily",  # runs once every day at midnight UTC
     catchup=False,
     tags=["nigeria", "economic-indicators"],
 ) as dag:
