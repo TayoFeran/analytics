@@ -39,4 +39,4 @@ Then build the models: `.\dbt\run_dbt.ps1 build` (PowerShell).
 
 ## Schedule
 
-Daily. Airflow runs it until phase 6 of the restructure, when GitHub Actions takes over.
+Daily at 05:00 UTC by `.github/workflows/daily-pipeline.yml`, which loads `prod_dwh` and then runs `dbt build --target prod`.

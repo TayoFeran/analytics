@@ -12,13 +12,22 @@ Data pipelines that load public Nigerian economic data into **MotherDuck** and m
 | [`pipelines/`](pipelines) | Ingestion: one folder per source that loads data into MotherDuck bronze. Today: [`world-bank/`](pipelines/world-bank). |
 | [`scripts/`](scripts) | Repo tooling, e.g. `check_motherduck.py` to test your token. |
 | [`archive/`](archive) | Parked code kept for reference. Nothing here runs. |
-| [`nigeria-economic-indicators/`](nigeria-economic-indicators) | Airflow (Astro) orchestration, until phase 6 moves scheduling to GitHub Actions. |
+| [`.github/`](.github) | GitHub Actions: `daily-pipeline.yml` (scheduled prod load) and `ci.yml` (checks on every PR), plus the PR template. |
 | [`nigeria-faac/`](nigeria-faac) | FAAC (Federation Account Allocation Committee) pipeline, synced from Fabric: notebooks, copy jobs and the orchestrating data pipeline. |
 | [`shared/`](shared) | Fabric storage used by FAAC: `Data_lake.Lakehouse` and `DWH.Warehouse`. |
 | [`docs/`](docs) | Documentation, including the restructure audit and plan. |
 | [`.claude/`](.claude) | Instructions for Claude Code in this repo. |
 
 Fabric items (`nigeria-faac/`, `shared/`) are written by Fabric. Don't hand-edit them, because Fabric overwrites unrelated files inside an item's folder on commit.
+
+## How it runs
+
+| Workflow | When | What |
+| --- | --- | --- |
+| `daily-pipeline` | daily 05:00 UTC, on merges that change `dbt/` or `pipelines/`, or by hand (Actions tab, "Run workflow") | World Bank extract into `prod_dwh.bronze`, then `dbt build --target prod`. The only writer to `prod_dwh`. |
+| `ci` | every PR and push to `main` | pre-commit checks, then `dbt build --target dev` (PRs only). |
+
+Both need the `MOTHERDUCK_TOKEN` repository secret (Settings, Secrets and variables, Actions).
 
 ## Setup
 
