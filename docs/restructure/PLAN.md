@@ -12,10 +12,10 @@
 | 5. Pipelines | done | #11 |
 | 6. Scheduling + CI | done; first cloud prod run green on 2026-11-01 | #12 |
 | 7. Docs | done | this PR |
-| 8. FAAC on MotherDuck | in progress (#17) | |
-| 9. Retire Fabric | after phase 8 | |
+| 8. FAAC on MotherDuck | done (#17) | #18 |
+| 9. Retire Fabric | done: Git disconnected, workspace deleted, folders removed | this PR |
 
-Branch protection on `main` was skipped for now (decided 2026-11-01): Fabric Git integration commits straight to `main`.
+Branch protection on `main` was skipped while Fabric Git integration committed straight to `main` (2026-11-01), and turned on once Fabric was retired (2026-11-02): PRs only, `validate` and `dbt-dev` must pass, no admin bypass.
 
 This plan is based on the `repo-restructure` skill, adjusted to your decisions from 2026-11-01. Findings are in [AUDIT.md](AUDIT.md). Each phase is one branch and PR, verified before it merges.
 

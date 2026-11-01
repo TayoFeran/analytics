@@ -4,9 +4,6 @@
 # Local hooks call tools from the uv environment, so `uv sync` must have run first.
 default_install_hook_types: [pre-commit, commit-msg]
 
-# Fabric items are written by Fabric Git integration. Never touch them, not even whitespace.
-exclude: ^(nigeria-faac|shared)/
-
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0

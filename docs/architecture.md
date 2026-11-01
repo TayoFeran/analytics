@@ -14,8 +14,6 @@ How data moves from public sources to tables you can query, and what runs it.
                          └──────────────────────────────────────────────────────────────────┘
                                                         MotherDuck: prod_dwh
 
- The old Fabric FAAC pipeline (notebooks → Lakehouse → copy jobs → Fabric Warehouse) is replaced by the
- FAAC load above and will be retired.
 ```
 
 ## Projects
@@ -63,8 +61,8 @@ The two databases have identical schemas, and the dbt source reads `{{ target.da
 
 Secrets: `MOTHERDUCK_TOKEN` lives in `.env` locally (gitignored) and as a GitHub Actions repository secret.
 
-## Fabric (FAAC)
+## FAAC: moved from Fabric
 
 FAAC now runs on MotherDuck (#17): the workbooks live in `data/nigeria/faac/`, and `nigeria.nigeria_faac_income` and `nigeria.nigeria_faac_deduction` replace Fabric's `DWH.nigeria.faac_income` and `faac_deduction`. The migration was reconciled row by row against Fabric. Every difference traced back to a bug in the Fabric notebooks, the largest being a net-amount fallback that understated net allocations by about ₦4.48 trillion. The details are in #17.
 
-The old Fabric items are still synced to `nigeria-faac/` and `shared/` by Fabric Git integration until they're retired (phase 9). Don't hand-edit those folders. See [decision 0001](decisions/0001-motherduck-over-fabric.md).
+Fabric was retired on 2026-11-02: the Git integration was disconnected, the `Analytics_Engineering` workspace deleted, and the Fabric item folders removed from the repo (they remain in git history before that date). See [decision 0001](decisions/0001-motherduck-over-fabric.md).
