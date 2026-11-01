@@ -24,6 +24,35 @@ MONTHLY_INDICATORS = {
 
 TOKEN = os.getenv("MOTHERDUCK_TOKEN")
 
+# Which MotherDuck database to load: dev_dwh for local work, prod_dwh only for the
+# scheduled job. Restricted to known names so a typo can't create a stray database.
+DATABASE = os.getenv("MOTHERDUCK_DATABASE", "dev_dwh")
+ALLOWED_DATABASES = {"dev_dwh", "prod_dwh"}
+
+# Bronze tables this script owns. Created if missing, so a new database (like prod_dwh)
+# is set up by code instead of by hand. Types match the original dev_dwh tables.
+BRONZE_DDL = {
+    "nigeria_econ_metric_annual": """
+        country_code    VARCHAR,
+        country_name    VARCHAR,
+        indicator_code  VARCHAR,
+        indicator_name  VARCHAR,
+        year            INTEGER,
+        value           DOUBLE,
+        extracted_at    TIMESTAMP
+    """,
+    "nigeria_econ_metric_monthly": """
+        country_code    VARCHAR,
+        country_name    VARCHAR,
+        indicator_code  VARCHAR,
+        indicator_name  VARCHAR,
+        year            INTEGER,
+        month           INTEGER,
+        value           DOUBLE,
+        extracted_at    TIMESTAMP
+    """,
+}
+
 
 def _get(url, params, max_retries=3):
     for attempt in range(1, max_retries + 1):
@@ -89,8 +118,24 @@ def fetch_monthly(indicator_code, start_year=2010, end_year=None):
     return parsed
 
 
+def ensure_bronze(con):
+    con.sql(f"CREATE DATABASE IF NOT EXISTS {DATABASE}")
+    con.sql(f"CREATE SCHEMA IF NOT EXISTS {DATABASE}.bronze")
+    for table, columns in BRONZE_DDL.items():
+        con.sql(f"CREATE TABLE IF NOT EXISTS {DATABASE}.bronze.{table} ({columns})")
+
+
 def main():
+    if DATABASE not in ALLOWED_DATABASES:
+        raise SystemExit(
+            f"Error: MOTHERDUCK_DATABASE={DATABASE!r}, expected one of {sorted(ALLOWED_DATABASES)}"
+        )
+    if not TOKEN:
+        raise SystemExit("Error: MOTHERDUCK_TOKEN is not set")
+
+    print(f"Loading into {DATABASE}")
     con = duckdb.connect(f"md:?motherduck_token={TOKEN}")
+    ensure_bronze(con)
 
     annual_rows = []
     for code in ANNUAL_INDICATORS:
@@ -103,13 +148,30 @@ def main():
     print(f"Annual rows fetched: {len(annual_rows)}")
     print(f"Monthly rows fetched: {len(monthly_rows)}")
 
-    con.sql("DELETE FROM dev_dwh.bronze.nigeria_econ_metric_annual")
-    con.sql("DELETE FROM dev_dwh.bronze.nigeria_econ_metric_monthly")
+    # Replace both tables in one transaction: if any insert fails, the old rows stay
+    # instead of leaving bronze empty for the next dbt run.
+    con.execute("BEGIN TRANSACTION")
+    try:
+        load_rows(con, annual_rows, monthly_rows)
+        con.execute("COMMIT")
+    except Exception:
+        con.execute("ROLLBACK")
+        raise
+
+    print("Done.")
+    for table in BRONZE_DDL:
+        count = con.sql(f"SELECT COUNT(*) FROM {DATABASE}.bronze.{table}").fetchone()[0]
+        print(f"{DATABASE}.bronze.{table}: {count} rows")
+
+
+def load_rows(con, annual_rows, monthly_rows):
+    con.execute(f"DELETE FROM {DATABASE}.bronze.nigeria_econ_metric_annual")
+    con.execute(f"DELETE FROM {DATABASE}.bronze.nigeria_econ_metric_monthly")
 
     if annual_rows:
         con.executemany(
-            """
-            INSERT INTO dev_dwh.bronze.nigeria_econ_metric_annual
+            f"""
+            INSERT INTO {DATABASE}.bronze.nigeria_econ_metric_annual
             (country_code, country_name, indicator_code, indicator_name, year, value, extracted_at)
             VALUES (?, ?, ?, ?, ?, ?, ?)
             """,
@@ -129,8 +191,8 @@ def main():
 
     if monthly_rows:
         con.executemany(
-            """
-            INSERT INTO dev_dwh.bronze.nigeria_econ_metric_monthly
+            f"""
+            INSERT INTO {DATABASE}.bronze.nigeria_econ_metric_monthly
             (country_code, country_name, indicator_code, indicator_name,
              year, month, value, extracted_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -149,16 +211,6 @@ def main():
                 for r in monthly_rows
             ],
         )
-
-    print("Done.")
-    print(
-        "Annual count:",
-        con.sql("SELECT COUNT(*) FROM dev_dwh.bronze.nigeria_econ_metric_annual").fetchall(),
-    )
-    print(
-        "Monthly count:",
-        con.sql("SELECT COUNT(*) FROM dev_dwh.bronze.nigeria_econ_metric_monthly").fetchall(),
-    )
 
 
 if __name__ == "__main__":
