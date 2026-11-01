@@ -1,8 +1,11 @@
-"""Extract Nigerian World Bank indicators and load them into MotherDuck bronze tables.
+"""Nigeria project: load World Bank indicators into MotherDuck bronze tables.
 
 Usage (from the repo root):
-    uv run --group pipelines python pipelines/world-bank/extract.py
-    MOTHERDUCK_DATABASE=prod_dwh uv run --group pipelines python pipelines/world-bank/extract.py
+    uv run --group pipelines python pipelines/nigeria/load_world_bank_indicators.py
+
+    # prod_dwh: only the scheduled daily-pipeline workflow does this
+    MOTHERDUCK_DATABASE=prod_dwh \
+        uv run --group pipelines python pipelines/nigeria/load_world_bank_indicators.py
 """
 
 import os
@@ -38,10 +41,11 @@ TOKEN = os.getenv("MOTHERDUCK_TOKEN")
 DATABASE = os.getenv("MOTHERDUCK_DATABASE", "dev_dwh")
 ALLOWED_DATABASES = {"dev_dwh", "prod_dwh"}
 
+# bronze is shared by every project, so table names start with <project>_<source>_.
 # Bronze tables this script owns. Created if missing, so a new database (like prod_dwh)
 # is set up by code instead of by hand. Types match the original dev_dwh tables.
 BRONZE_DDL = {
-    "nigeria_econ_metric_annual": """
+    "nigeria_world_bank_indicators_annual": """
         country_code    VARCHAR,
         country_name    VARCHAR,
         indicator_code  VARCHAR,
@@ -50,7 +54,7 @@ BRONZE_DDL = {
         value           DOUBLE,
         extracted_at    TIMESTAMP
     """,
-    "nigeria_econ_metric_monthly": """
+    "nigeria_world_bank_indicators_monthly": """
         country_code    VARCHAR,
         country_name    VARCHAR,
         indicator_code  VARCHAR,
@@ -197,12 +201,12 @@ def load_rows(
     con: duckdb.DuckDBPyConnection, annual_rows: list[Row], monthly_rows: list[Row]
 ) -> None:
     """Replace both bronze tables. Call inside a transaction."""
-    con.execute(f"DELETE FROM {DATABASE}.bronze.nigeria_econ_metric_annual")
-    con.execute(f"DELETE FROM {DATABASE}.bronze.nigeria_econ_metric_monthly")
+    con.execute(f"DELETE FROM {DATABASE}.bronze.nigeria_world_bank_indicators_annual")
+    con.execute(f"DELETE FROM {DATABASE}.bronze.nigeria_world_bank_indicators_monthly")
 
     con.executemany(
         f"""
-        INSERT INTO {DATABASE}.bronze.nigeria_econ_metric_annual
+        INSERT INTO {DATABASE}.bronze.nigeria_world_bank_indicators_annual
         (country_code, country_name, indicator_code, indicator_name, year, value, extracted_at)
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
@@ -222,7 +226,7 @@ def load_rows(
 
     con.executemany(
         f"""
-        INSERT INTO {DATABASE}.bronze.nigeria_econ_metric_monthly
+        INSERT INTO {DATABASE}.bronze.nigeria_world_bank_indicators_monthly
         (country_code, country_name, indicator_code, indicator_name,
          year, month, value, extracted_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)

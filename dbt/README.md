@@ -6,12 +6,14 @@ The single dbt project for MotherDuck (adapter: `dbt-duckdb`).
 
 ```text
 models/motherduck/
-├── bronze/<source>/_<source>__sources.yml        raw tables loaded by pipelines/ (declared, not built)
-├── silver/<source>/stg_<source>__<entity>.sql    views: one cleaned model per raw table
+├── bronze/<project>/<source>/_<project>_<source>__sources.yml   raw tables loaded by pipelines/ (declared, not built)
+├── silver/<project>/<source>/stg_<project>_<source>__<entity>.sql   views: one cleaned model per raw table
 └── gold/<schema>/<model>.sql                      tables: each subfolder is its own schema
     ├── nigeria/                                  World Bank indicators for Nigeria
     └── sandbox/                                  ad-hoc and shared tables (fo_calendar)
 ```
+
+The repo is shared by unrelated projects, so every layer is split by project first. `bronze` and `silver` are shared schemas: bronze tables are named `<project>_<source>_<what>` and silver models `stg_<project>_<source>__<entity>`, so names never collide between projects.
 
 A model's **folder** decides its schema and materialization (`dbt_project.yml`), so model files don't set `config(schema=..., materialized=...)`. `macros/generate_schema_name.sql` uses those schema names exactly, with no `main_` prefix.
 

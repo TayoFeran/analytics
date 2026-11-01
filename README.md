@@ -6,7 +6,7 @@
 Data pipelines that load public Nigerian economic data into **MotherDuck** and model it with **dbt** in bronze, silver and gold layers. **GitHub Actions** runs everything in the cloud: a daily production load, and checks on every pull request.
 
 ```text
-World Bank API ─▶ pipelines/world-bank ─▶ bronze ─dbt─▶ silver ─dbt─▶ gold (nigeria, sandbox)
+World Bank API ─▶ pipelines/nigeria ─▶ bronze ─dbt─▶ silver ─dbt─▶ gold (nigeria, sandbox)
                                           MotherDuck: dev_dwh (development) · prod_dwh (production)
 ```
 
@@ -16,8 +16,8 @@ The FAAC pipeline still runs in **Microsoft Fabric** until it's migrated to Moth
 
 | Folder | What it is |
 | --- | --- |
-| [`pipelines/`](pipelines) | Ingestion: one folder per source that loads raw data into MotherDuck `bronze`. Today: [`world-bank/`](pipelines/world-bank). |
-| [`dbt/`](dbt) | The dbt project: `models/motherduck/bronze` (sources), `silver` (cleaned views) and `gold/<schema>` (tables; each subfolder is a schema: `nigeria`, `sandbox`). |
+| [`pipelines/`](pipelines) | Ingestion: one folder per project, one `load_<source>_<what>.py` per source, loading raw data into MotherDuck `bronze`. Today: [`nigeria/`](pipelines/nigeria). |
+| [`dbt/`](dbt) | The dbt project: `models/motherduck/bronze/<project>/<source>` (sources), `silver/<project>/<source>` (cleaned views) and `gold/<schema>` (tables; each subfolder is a schema: `nigeria`, `sandbox`). |
 | [`.github/`](.github) | GitHub Actions workflows (`daily-pipeline`, `ci`) and the PR template. |
 | [`scripts/`](scripts) | Repo tooling, e.g. `check_motherduck.py` to test your token. |
 | [`docs/`](docs) | [Architecture](docs/architecture.md), [decisions](docs/decisions), [runbooks](docs/runbooks) and the [restructure record](docs/restructure). |
@@ -49,7 +49,7 @@ uv run --group pipelines python scripts/check_motherduck.py   # check the token 
 
 ```powershell
 # Load fresh World Bank data into dev_dwh
-uv run --group pipelines python pipelines/world-bank/extract.py
+uv run --group pipelines python pipelines/nigeria/load_world_bank_indicators.py
 
 # Build and test dbt models in dev_dwh (PowerShell; loads .env for you)
 .\dbt\run_dbt.ps1 build

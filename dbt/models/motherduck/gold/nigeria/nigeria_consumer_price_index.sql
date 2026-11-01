@@ -4,5 +4,5 @@ select
     country_name,
     round(value, 0) as cpi_rate,
     extracted_at::date as extracted_at
-from {{ ref("stg_world_bank__indicators_monthly") }}
+from {{ ref("stg_nigeria_world_bank__indicators_monthly") }}
 where indicator_name ilike '%cpi price index%'

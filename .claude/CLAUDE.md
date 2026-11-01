@@ -9,7 +9,8 @@ The layout comes from the restructure recorded in `docs/restructure/` (phases 0-
 ## Where things go
 
 - dbt: one project in `dbt/`, models in `dbt/models/motherduck/<bronze|silver|gold>/`. Each subfolder of `gold/` is a schema, e.g. `gold/nigeria`, `gold/sandbox`.
-- Ingestion code: `pipelines/<source>/`. Repo tooling and one-off scripts: `scripts/`. Docs: `docs/`.
+- The warehouse and repo are shared by **unrelated projects**, not only Nigeria. Organize by project first in every layer, and give files self-describing names (never a bare `extract.py`).
+- Ingestion code: `pipelines/<project>/load_<source>_<what>.py`, e.g. `pipelines/nigeria/load_world_bank_indicators.py`. Repo tooling and one-off scripts: `scripts/`. Docs: `docs/`.
 - If a new file doesn't clearly fit, ask before creating a new top-level folder.
 - Don't create `dbt/models/fabric/`. The dbt-duckdb adapter can't build in Fabric.
 
@@ -29,13 +30,14 @@ The layout comes from the restructure recorded in `docs/restructure/` (phases 0-
 ## dbt (MotherDuck)
 
 - Two databases: `dev_dwh` for local work and PR checks (`ci.yml`), `prod_dwh` written only by `.github/workflows/daily-pipeline.yml`. Never build against prod locally unless I ask.
-- `pipelines/world-bank/extract.py` loads the database in `MOTHERDUCK_DATABASE` (default `dev_dwh`, only `dev_dwh`/`prod_dwh` allowed). dbt picks the database by `--target dev|prod`.
+- `pipelines/nigeria/load_world_bank_indicators.py` loads the database in `MOTHERDUCK_DATABASE` (default `dev_dwh`, only `dev_dwh`/`prod_dwh` allowed). dbt picks the database by `--target dev|prod`.
 - Load env first (Git Bash): `set -a; source .env; set +a`
 - Tests: one `_<model_name>.yml` per model, next to its `.sql`. Built-in generic tests only (`unique`, `not_null`, `accepted_values`, `relationships`), with args nested under `arguments:`. No `dbt_utils`, no custom or singular tests.
 - After a model or yml change: `dbt parse --no-partial-parse`, then `dbt build --target dev --select <model>+`.
 - Run dbt with `.\dbt\run_dbt.ps1 <command>` (PowerShell, loads `.env`), or from `dbt/` with `uv run --group dbt dbt <command> --profiles-dir .`.
 - A model's folder sets its schema and materialization in `dbt_project.yml`. Don't add `config(schema=..., materialized=...)` to model files.
-- Silver models are named `stg_<source>__<entity>`. Sources are declared in `bronze/<source>/_<source>__sources.yml`.
+- dbt folders are `<layer>/<project>/<source>/` for bronze and silver, and `gold/<project or schema>/`.
+- bronze and silver are **shared schemas**, so names carry the project: bronze tables `<project>_<source>_<what>`, silver models `stg_<project>_<source>__<entity>`, sources declared as `<project>_<source>` in `bronze/<project>/<source>/_<project>_<source>__sources.yml`.
 
 ## Fabric
 
