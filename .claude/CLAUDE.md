@@ -12,6 +12,7 @@ The layout comes from the restructure recorded in `docs/restructure/` (phases 0-
 - The warehouse and repo are shared by **unrelated projects**, not only Nigeria. Organize by project first in every layer, and give files self-describing names (never a bare `extract.py`).
 - Ingestion code: `pipelines/<project>/load_<source>_<what>.py`, e.g. `pipelines/nigeria/load_world_bank_indicators.py`. Repo tooling and one-off scripts: `scripts/`. Docs: `docs/`.
 - If a new file doesn't clearly fit, ask before creating a new top-level folder.
+- Adding a project or a source: use the `add-project` skill (`.claude/skills/add-project/`), which follows `docs/runbooks/adding-a-project.md`.
 - Don't create `dbt/models/fabric/`. The dbt-duckdb adapter can't build in Fabric.
 
 ## How I want you to work
