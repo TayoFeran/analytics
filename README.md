@@ -12,6 +12,7 @@ Don't hand-edit synced item files unless you know what you're doing — Fabric o
 | --- | --- |
 | [`nigeria-faac/`](nigeria-faac) | FAAC (Federation Account Allocation Committee) pipeline, synced from the Fabric workspace folder of the same name: notebooks, copy jobs and the orchestrating data pipeline. |
 | [`nigeria-economic-indicators/`](nigeria-economic-indicators) | World Bank extraction to MotherDuck, dbt medallion models and tests, orchestrated with Airflow. Not a Fabric item. |
+| [`sandbox/`](sandbox) | Standalone dbt project for sandbox tables in MotherDuck (`dev_dwh.sandbox`), starting with the `fo_calendar` date dimension. Not a Fabric item. |
 | [`shared/`](shared) | Workspace-wide storage used by any project: `Data_lake.Lakehouse` and `DWH.Warehouse`. Each project writes to its own schema (FAAC uses `nigeria`). |
 
 Related: [`nigeria`](https://github.com/TayoFeran/nigeria) — human-facing documentation/portfolio repo for the FAAC project. This repo holds the actual synced pipeline/notebook code; `nigeria` holds the narrative.

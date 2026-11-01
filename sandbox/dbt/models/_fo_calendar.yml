@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: fo_calendar
+    description: >
+      Date dimension with one row per day from 1990-01-01 to the current date,
+      ported from the Redshift sandbox.fo_calendar script. Weeks run Monday to
+      Sunday; rank columns count from the start (asc) or from today (desc).
+    columns:
+      - name: date
+        description: Calendar day (grain of the table).
+        data_tests:
+          - not_null
+          - unique
+      - name: day_name
+        description: Short weekday name (Sun, Mon, ...).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      - name: day_of_week
+        description: Day of week, 1 = Sunday ... 7 = Saturday.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5, 6, 7]
+                quote: false
+      - name: day_rank_asc
+        description: Day number counted from 1990-01-01 (1 = first day).
+        data_tests:
+          - not_null
+          - unique
+      - name: day_rank_desc
+        description: Day number counted back from today (1 = today).
+        data_tests:
+          - not_null
+          - unique
+      - name: week_date
+        description: Sunday that ends the Monday-Sunday week containing the date.
+        data_tests:
+          - not_null
+      - name: week_year_num
+        description: >
+          Week number within the year. A week that spans the year end is
+          numbered in both years (e.g. WK53 for its December days, WK1 for its
+          January days).
+        data_tests:
+          - not_null
+      - name: month_date
+        description: Last day of the month containing the date.
+        data_tests:
+          - not_null
+      - name: month_num
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                quote: false
+      - name: qtr_num
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4]
+                quote: false
+      - name: qtr_name
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Q1', 'Q2', 'Q3', 'Q4']
+      - name: year
+        data_tests:
+          - not_null
