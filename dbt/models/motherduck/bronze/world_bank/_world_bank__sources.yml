@@ -4,7 +4,7 @@ sources:
   - name: world_bank
     description: >
       Raw World Bank indicator extracts for Nigeria, loaded by the World Bank pipeline
-      (currently nigeria-economic-indicators/extract.py).
+      pipelines/world-bank/extract.py.
     # Same database as the target, so dev builds read dev_dwh.bronze and prod builds
     # read prod_dwh.bronze
     database: "{{ target.database }}"

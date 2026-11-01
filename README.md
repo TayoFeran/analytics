@@ -9,7 +9,10 @@ Data pipelines that load public Nigerian economic data into **MotherDuck** and m
 | Folder | What it is |
 | --- | --- |
 | [`dbt/`](dbt) | The dbt project for MotherDuck. Models live in `models/motherduck/bronze` (sources), `silver` (cleaned views) and `gold/<schema>` (tables, one subfolder per schema: `nigeria`, `sandbox`). |
-| [`nigeria-economic-indicators/`](nigeria-economic-indicators) | World Bank extraction script, plus Airflow (Astro) orchestration until phase 6. |
+| [`pipelines/`](pipelines) | Ingestion: one folder per source that loads data into MotherDuck bronze. Today: [`world-bank/`](pipelines/world-bank). |
+| [`scripts/`](scripts) | Repo tooling, e.g. `check_motherduck.py` to test your token. |
+| [`archive/`](archive) | Parked code kept for reference. Nothing here runs. |
+| [`nigeria-economic-indicators/`](nigeria-economic-indicators) | Airflow (Astro) orchestration, until phase 6 moves scheduling to GitHub Actions. |
 | [`nigeria-faac/`](nigeria-faac) | FAAC (Federation Account Allocation Committee) pipeline, synced from Fabric: notebooks, copy jobs and the orchestrating data pipeline. |
 | [`shared/`](shared) | Fabric storage used by FAAC: `Data_lake.Lakehouse` and `DWH.Warehouse`. |
 | [`docs/`](docs) | Documentation, including the restructure audit and plan. |

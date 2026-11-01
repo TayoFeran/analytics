@@ -17,9 +17,11 @@ dbt = [
 ]
 dev = [
     "commitizen>=4,<5",
+    "mypy>=1.15",
     "pre-commit>=4,<5",
     "ruff>=0.14",
     "shandy-sqlfmt[jinjafmt]>=0.27",
+    "types-requests>=2.32",
 ]
 pipelines = [
     "duckdb>=1.5,<1.6",
@@ -42,6 +44,12 @@ extend-exclude = ["nigeria-faac", "shared"]
 [tool.ruff.lint]
 # E/F: errors and pyflakes, I: import order, B: likely bugs, UP: modern syntax, SIM: simplifications
 select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+# Our own Python only. archive/ is parked code; Fabric notebooks are written by Fabric.
+files = ["pipelines", "scripts"]
 
 [tool.sqlfmt]
 line_length = 100

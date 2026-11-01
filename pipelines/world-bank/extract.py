@@ -1,6 +1,15 @@
+"""Extract Nigerian World Bank indicators and load them into MotherDuck bronze tables.
+
+Usage (from the repo root):
+    uv run --group pipelines python pipelines/world-bank/extract.py
+    MOTHERDUCK_DATABASE=prod_dwh uv run --group pipelines python pipelines/world-bank/extract.py
+"""
+
 import os
 import time
+from collections.abc import Callable
 from datetime import UTC, datetime
+from typing import Any
 
 import duckdb
 import requests
@@ -53,8 +62,18 @@ BRONZE_DDL = {
     """,
 }
 
+# One extracted observation, keyed by bronze column name
+Row = dict[str, Any]
 
-def _get(url, params, max_retries=3):
+
+def _get(url: str, params: dict[str, Any], max_retries: int = 3) -> Any:
+    """Return the parsed JSON body, retrying failed requests with a growing pause.
+
+    Args:
+        url: World Bank API endpoint.
+        params: Query string parameters.
+        max_retries: Attempts before the last HTTP error is raised.
+    """
     for attempt in range(1, max_retries + 1):
         resp = requests.get(url, params=params, timeout=30)
         if resp.ok:
@@ -62,9 +81,19 @@ def _get(url, params, max_retries=3):
         if attempt == max_retries:
             resp.raise_for_status()
         time.sleep(1.5 * attempt)
+    raise RuntimeError(f"No response from {url} after {max_retries} attempts")
 
 
-def fetch_annual(indicator_code, start_year=1990, end_year=None):
+def fetch_annual(
+    indicator_code: str, start_year: int = 1990, end_year: int | None = None
+) -> list[Row]:
+    """Fetch one annual indicator for Nigeria, skipping years without a value.
+
+    Args:
+        indicator_code: World Bank code, a key of ANNUAL_INDICATORS.
+        start_year: First year to request.
+        end_year: Last year to request; defaults to the current year.
+    """
     end_year = end_year or datetime.now(UTC).year
     url = f"{WB_BASE}/country/{COUNTRY}/indicator/{indicator_code}"
     params = {"format": "json", "date": f"{start_year}:{end_year}", "per_page": 1000}
@@ -86,7 +115,16 @@ def fetch_annual(indicator_code, start_year=1990, end_year=None):
     ]
 
 
-def fetch_monthly(indicator_code, start_year=2010, end_year=None):
+def fetch_monthly(
+    indicator_code: str, start_year: int = 2010, end_year: int | None = None
+) -> list[Row]:
+    """Fetch one monthly indicator for Nigeria, skipping months without a value.
+
+    Args:
+        indicator_code: World Bank code, a key of MONTHLY_INDICATORS.
+        start_year: First year to request.
+        end_year: Last year to request; defaults to the current year.
+    """
     end_year = end_year or datetime.now(UTC).year
     url = f"{WB_BASE}/country/{COUNTRY}/indicator/{indicator_code}"
     params = {
@@ -98,7 +136,7 @@ def fetch_monthly(indicator_code, start_year=2010, end_year=None):
     payload = _get(url, params)
     rows = payload[1] or []
     extracted_at = datetime.now(UTC)
-    parsed = []
+    parsed: list[Row] = []
     for r in rows:
         if r.get("value") is None:
             continue
@@ -118,14 +156,84 @@ def fetch_monthly(indicator_code, start_year=2010, end_year=None):
     return parsed
 
 
-def ensure_bronze(con):
+def fetch_all(indicators: dict[str, str], fetch: Callable[[str], list[Row]]) -> list[Row]:
+    """Fetch every indicator, stopping before any load if one comes back empty.
+
+    An empty response means an API problem, not "no data": loading it would wipe that
+    indicator from bronze and empty the gold table built on it.
+
+    Args:
+        indicators: Indicator codes to fetch, mapped to their names.
+        fetch: fetch_annual or fetch_monthly.
+    """
+    rows: list[Row] = []
+    for code, name in indicators.items():
+        fetched = fetch(code)
+        if not fetched:
+            raise SystemExit(f"Error: 0 rows fetched for {code} ({name}); bronze left unchanged")
+        print(f"{code}: {len(fetched)} rows")
+        rows.extend(fetched)
+    return rows
+
+
+def ensure_bronze(con: duckdb.DuckDBPyConnection) -> None:
     con.sql(f"CREATE DATABASE IF NOT EXISTS {DATABASE}")
     con.sql(f"CREATE SCHEMA IF NOT EXISTS {DATABASE}.bronze")
     for table, columns in BRONZE_DDL.items():
         con.sql(f"CREATE TABLE IF NOT EXISTS {DATABASE}.bronze.{table} ({columns})")
 
 
-def main():
+def load_rows(
+    con: duckdb.DuckDBPyConnection, annual_rows: list[Row], monthly_rows: list[Row]
+) -> None:
+    """Replace both bronze tables. Call inside a transaction."""
+    con.execute(f"DELETE FROM {DATABASE}.bronze.nigeria_econ_metric_annual")
+    con.execute(f"DELETE FROM {DATABASE}.bronze.nigeria_econ_metric_monthly")
+
+    con.executemany(
+        f"""
+        INSERT INTO {DATABASE}.bronze.nigeria_econ_metric_annual
+        (country_code, country_name, indicator_code, indicator_name, year, value, extracted_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        [
+            (
+                r["country_code"],
+                r["country_name"],
+                r["indicator_code"],
+                r["indicator_name"],
+                r["year"],
+                r["value"],
+                r["extracted_at"],
+            )
+            for r in annual_rows
+        ],
+    )
+
+    con.executemany(
+        f"""
+        INSERT INTO {DATABASE}.bronze.nigeria_econ_metric_monthly
+        (country_code, country_name, indicator_code, indicator_name,
+         year, month, value, extracted_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        [
+            (
+                r["country_code"],
+                r["country_name"],
+                r["indicator_code"],
+                r["indicator_name"],
+                r["year"],
+                r["month"],
+                r["value"],
+                r["extracted_at"],
+            )
+            for r in monthly_rows
+        ],
+    )
+
+
+def main() -> None:
     if DATABASE not in ALLOWED_DATABASES:
         raise SystemExit(
             f"Error: MOTHERDUCK_DATABASE={DATABASE!r}, expected one of {sorted(ALLOWED_DATABASES)}"
@@ -133,20 +241,13 @@ def main():
     if not TOKEN:
         raise SystemExit("Error: MOTHERDUCK_TOKEN is not set")
 
+    # Fetch everything before touching MotherDuck, so an API failure changes nothing
+    annual_rows = fetch_all(ANNUAL_INDICATORS, fetch_annual)
+    monthly_rows = fetch_all(MONTHLY_INDICATORS, fetch_monthly)
+
     print(f"Loading into {DATABASE}")
     con = duckdb.connect(f"md:?motherduck_token={TOKEN}")
     ensure_bronze(con)
-
-    annual_rows = []
-    for code in ANNUAL_INDICATORS:
-        annual_rows.extend(fetch_annual(code))
-
-    monthly_rows = []
-    for code in MONTHLY_INDICATORS:
-        monthly_rows.extend(fetch_monthly(code))
-
-    print(f"Annual rows fetched: {len(annual_rows)}")
-    print(f"Monthly rows fetched: {len(monthly_rows)}")
 
     # Replace both tables in one transaction: if any insert fails, the old rows stay
     # instead of leaving bronze empty for the next dbt run.
@@ -158,59 +259,10 @@ def main():
         con.execute("ROLLBACK")
         raise
 
-    print("Done.")
     for table in BRONZE_DDL:
-        count = con.sql(f"SELECT COUNT(*) FROM {DATABASE}.bronze.{table}").fetchone()[0]
+        result = con.sql(f"SELECT COUNT(*) FROM {DATABASE}.bronze.{table}").fetchone()
+        count = result[0] if result else 0
         print(f"{DATABASE}.bronze.{table}: {count} rows")
-
-
-def load_rows(con, annual_rows, monthly_rows):
-    con.execute(f"DELETE FROM {DATABASE}.bronze.nigeria_econ_metric_annual")
-    con.execute(f"DELETE FROM {DATABASE}.bronze.nigeria_econ_metric_monthly")
-
-    if annual_rows:
-        con.executemany(
-            f"""
-            INSERT INTO {DATABASE}.bronze.nigeria_econ_metric_annual
-            (country_code, country_name, indicator_code, indicator_name, year, value, extracted_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            """,
-            [
-                (
-                    r["country_code"],
-                    r["country_name"],
-                    r["indicator_code"],
-                    r["indicator_name"],
-                    r["year"],
-                    r["value"],
-                    r["extracted_at"],
-                )
-                for r in annual_rows
-            ],
-        )
-
-    if monthly_rows:
-        con.executemany(
-            f"""
-            INSERT INTO {DATABASE}.bronze.nigeria_econ_metric_monthly
-            (country_code, country_name, indicator_code, indicator_name,
-             year, month, value, extracted_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            [
-                (
-                    r["country_code"],
-                    r["country_name"],
-                    r["indicator_code"],
-                    r["indicator_name"],
-                    r["year"],
-                    r["month"],
-                    r["value"],
-                    r["extracted_at"],
-                )
-                for r in monthly_rows
-            ],
-        )
 
 
 if __name__ == "__main__":
