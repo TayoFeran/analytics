@@ -1,0 +1,63 @@
+# Checks that run automatically on every `git commit`.
+# Install once per clone:  uv run pre-commit install
+# Run on everything:       uv run pre-commit run --all-files
+# Local hooks call tools from the uv environment, so `uv sync` must have run first.
+default_install_hook_types: [pre-commit, commit-msg]
+
+# Fabric items are written by Fabric Git integration. Never touch them, not even whitespace.
+exclude: ^(nigeria-faac|shared)/
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ["--unsafe"]
+      - id: check-toml
+      - id: check-json
+      - id: check-added-large-files
+        args: ["--maxkb=1000"]
+        exclude: '\.lock$'
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: debug-statements
+
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: uv run --group dev ruff check --fix --exit-non-zero-on-fix
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: ruff format
+        entry: uv run --group dev ruff format
+        language: system
+        types: [python]
+      - id: sqlfmt
+        name: sqlfmt
+        entry: uv run --group dev sqlfmt
+        language: system
+        types_or: [sql]
+      # --no-partial-parse: dbt's partial-parse cache can pass locally while CI, which starts
+      # cold, fails on the same commit. A full parse takes seconds and makes them agree.
+      # One entry per dbt project until phase 3 merges them into dbt/.
+      - id: dbt-parse-nigeria
+        name: dbt parse (nigeria-economic-indicators)
+        entry: bash -c 'cd nigeria-economic-indicators/dbt && uv run --group dbt dbt parse --profiles-dir . --no-partial-parse -q'
+        language: system
+        files: ^nigeria-economic-indicators/dbt/.*\.(sql|yml)$
+        pass_filenames: false
+      - id: dbt-parse-sandbox
+        name: dbt parse (sandbox)
+        entry: bash -c 'cd sandbox/dbt && uv run --group dbt dbt parse --profiles-dir . --no-partial-parse -q'
+        language: system
+        files: ^sandbox/dbt/.*\.(sql|yml)$
+        pass_filenames: false
+      - id: commitizen-check
+        name: commit message format
+        entry: uv run --group dev cz check --commit-msg-file
+        language: system
+        stages: [commit-msg]

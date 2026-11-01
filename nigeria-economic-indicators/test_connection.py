@@ -1,6 +1,8 @@
-import duckdb
 import os
+
+import duckdb
 from dotenv import load_dotenv
+
 load_dotenv()
 TOKEN = os.getenv("MOTHERDUCK_TOKEN")
 
