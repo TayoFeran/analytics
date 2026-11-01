@@ -23,6 +23,7 @@ Python dependencies are managed with [uv](https://docs.astral.sh/uv/) in `pyproj
 
 ```bash
 uv sync --all-groups          # create .venv with every group
+uv run pre-commit install     # run the quality checks on every commit
 cp .env.example .env          # then fill in MOTHERDUCK_TOKEN
 set -a; source .env; set +a   # load env vars (Git Bash)
 ```

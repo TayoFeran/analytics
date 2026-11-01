@@ -8,12 +8,18 @@ dependencies = []
 # One group per area, so each job installs only what it needs:
 #   uv run --group dbt dbt build
 #   uv run --group pipelines python <script>
-# Dev tools (ruff, sqlfmt, pre-commit, commitizen) are added in phase 2.
+#   uv run --group dev pre-commit run --all-files
 [dependency-groups]
 dbt = [
     "dbt-core>=1.12,<1.13",
     "dbt-duckdb>=1.11,<1.12",
     "duckdb>=1.5,<1.6",
+]
+dev = [
+    "commitizen>=4,<5",
+    "pre-commit>=4,<5",
+    "ruff>=0.14",
+    "shandy-sqlfmt[jinjafmt]>=0.27",
 ]
 pipelines = [
     "duckdb>=1.5,<1.6",
@@ -24,3 +30,30 @@ pipelines = [
 [tool.uv]
 # This repo is a collection of projects, not an installable package
 package = false
+# A plain `uv sync` locally installs every group. CI picks only the groups a job needs.
+default-groups = "all"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+# Fabric items are written by Fabric; never reformat them
+extend-exclude = ["nigeria-faac", "shared"]
+
+[tool.ruff.lint]
+# E/F: errors and pyflakes, I: import order, B: likely bugs, UP: modern syntax, SIM: simplifications
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.sqlfmt]
+line_length = 100
+exclude = ["**/target/**", "**/dbt_packages/**", "nigeria-faac/**", "shared/**"]
+
+# Commit format: <ticket or area>(<+|~|->): <short description>
+# Merge and revert commits are accepted automatically by cz check.
+[tool.commitizen]
+name = "cz_customize"
+
+[tool.commitizen.customize]
+schema = "<ticket or area>(<+|~|->): <short description>"
+schema_pattern = '^([A-Z]+-\d+|[a-z]+)\((\+|~|-)\): .+'
+example = "dbt(+): Add fo_calendar to gold/sandbox"
+message_template = "{{ticket}}({{change_type}}): {{message}}"

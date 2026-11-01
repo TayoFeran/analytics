@@ -40,5 +40,6 @@ The repo is being restructured. Follow `docs/restructure/PLAN.md` for the target
 
 ## Code quality
 
+- Checks run on every commit through pre-commit (ruff, sqlfmt, dbt parse, file checks, commit message format). Run everything with `uv run pre-commit run --all-files`. Never skip hooks with `--no-verify`.
 - Comments explain why, not what.
 - Script output is plain text (`Error: ...`, `Wrote 3 tables`), no emojis or decorative lines.
