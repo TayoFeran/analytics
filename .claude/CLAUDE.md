@@ -4,7 +4,7 @@
 
 Personal data-engineering portfolio. Python pipelines load public Nigerian economic data into MotherDuck, and dbt models it into bronze, silver and gold layers. The FAAC pipeline still runs in Microsoft Fabric (`nigeria-faac/`, `shared/`) until it's migrated to MotherDuck.
 
-The repo is being restructured. Follow `docs/restructure/PLAN.md` for the target layout and phase order.
+The layout comes from the restructure recorded in `docs/restructure/` (phases 0-7 done; FAAC phases 8-9 wait for a GitHub issue). See `docs/architecture.md` for how it fits together, and `docs/decisions/` for why.
 
 ## Where things go
 
