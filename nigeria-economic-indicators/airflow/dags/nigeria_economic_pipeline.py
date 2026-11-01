@@ -3,7 +3,7 @@ from datetime import datetime
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 
-PROJECT_DIR = "/usr/local/airflow/project"
+PIPELINES_DIR = "/usr/local/airflow/pipelines"  # repo-root pipelines/
 DBT_DIR = "/usr/local/airflow/dbt"  # repo-root dbt/, mounted in docker-compose.override.yml
 
 with DAG(
@@ -16,7 +16,7 @@ with DAG(
 ) as dag:
     extract_worldbank_data = BashOperator(
         task_id="extract_worldbank_data",
-        bash_command=f"python {PROJECT_DIR}/extract.py",
+        bash_command=f"python {PIPELINES_DIR}/world-bank/extract.py",
     )
 
     dbt_run = BashOperator(

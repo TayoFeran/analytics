@@ -36,6 +36,13 @@ repos:
         entry: uv run --group dev ruff format
         language: system
         types: [python]
+      # Checks type hints in pipelines/ and scripts/ (files set in pyproject.toml)
+      - id: mypy
+        name: mypy
+        entry: uv run --group dev mypy
+        language: system
+        types: [python]
+        pass_filenames: false
       - id: sqlfmt
         name: sqlfmt
         entry: uv run --group dev sqlfmt
