@@ -40,8 +40,6 @@ default-groups = "all"
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-# Fabric items are written by Fabric; never reformat them
-extend-exclude = ["nigeria-faac", "shared"]
 
 [tool.ruff.lint]
 # E/F: errors and pyflakes, I: import order, B: likely bugs, UP: modern syntax, SIM: simplifications
@@ -50,12 +48,12 @@ select = ["E", "F", "I", "B", "UP", "SIM"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
-# Our own Python only. archive/ is parked code; Fabric notebooks are written by Fabric.
+# Our own Python only. archive/ is parked code.
 files = ["pipelines", "scripts"]
 
 [tool.sqlfmt]
 line_length = 100
-exclude = ["**/target/**", "**/dbt_packages/**", "nigeria-faac/**", "shared/**"]
+exclude = ["**/target/**", "**/dbt_packages/**"]
 
 # Commit format: <ticket or area>(<+|~|->): <short description>
 # Merge and revert commits are accepted automatically by cz check.

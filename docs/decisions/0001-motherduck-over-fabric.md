@@ -1,7 +1,8 @@
-# 0001: MotherDuck is the warehouse; Fabric is being phased out
+# 0001: MotherDuck is the warehouse; Fabric is retired
 
-- Status: accepted
+- Status: accepted, carried out
 - Date: 2026-11-01
+- Carried out: 2026-11-02
 
 ## Context
 
@@ -23,3 +24,9 @@ There is no `dbt/models/fabric/` folder. The `dbt/models/motherduck/` level is k
 - One place for transformations (`dbt/`), one set of tests and one schedule.
 - Before Fabric can go, the FAAC Excel files, which today live only in the Fabric Lakehouse, need a home that GitHub Actions can reach.
 - Fabric Git integration still commits straight to `main` with the owner's account. That is one reason `main` has no branch protection yet.
+
+## Outcome (2026-11-02)
+
+- FAAC was migrated in #17 (PR #18): the workbooks moved to `data/nigeria/faac/`, and `nigeria.nigeria_faac_income` / `nigeria_faac_deduction` replaced the Fabric Warehouse tables. A row-by-row reconciliation found 5 bugs in the Fabric notebooks, the largest understating net allocations by about ₦4.48 trillion (details in #17).
+- The workspace's Git integration was disconnected, the `Analytics_Engineering` workspace was deleted, and `nigeria-faac/` and `shared/` were removed from the repo. They remain in git history.
+- With Fabric no longer committing to `main`, branch protection was turned on: PRs only, and the `validate` and `dbt-dev` checks must pass.

@@ -35,7 +35,7 @@ Work on a branch named `<project>/add-project` or `<project>/add-<source>`. Step
 - A bare or generic file name (`extract.py`, `load.py`), or a table or model without the project prefix. dbt model names must be unique across **all** projects.
 - Forgetting the `+schema` entry for a new gold folder. The models would land in `main`.
 - Putting the workflow step after `dbt build`. The models would read yesterday's bronze.
-- Creating files under `nigeria-faac/` or `shared/` (Fabric-owned), or a `dbt/models/fabric/` folder.
+- Adding a `dbt/models/fabric/` folder or anything Fabric-specific: Fabric is retired, and dbt-duckdb only builds in MotherDuck.
 - Tests outside the house rules: one `_<model>.yml` per model, built-in tests only, no packages or singular tests.
 - Running anything against `prod_dwh` locally. Only `daily-pipeline` writes prod.
 

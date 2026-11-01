@@ -10,7 +10,7 @@ World Bank API, FAAC workbooks ─▶ pipelines/nigeria ─▶ bronze ─dbt─�
                                           MotherDuck: dev_dwh (development) · prod_dwh (production)
 ```
 
-The FAAC allocation pipeline moved here from **Microsoft Fabric** (#17); the old Fabric items are kept until they're retired. See [architecture](docs/architecture.md) for the full picture.
+The FAAC allocation pipeline moved here from **Microsoft Fabric** (#17), and Fabric has since been retired. See [architecture](docs/architecture.md) for the full picture.
 
 ## Layout
 
@@ -23,7 +23,6 @@ The FAAC allocation pipeline moved here from **Microsoft Fabric** (#17); the old
 | [`scripts/`](scripts) | Repo tooling, e.g. `check_motherduck.py` to test your token. |
 | [`docs/`](docs) | [Architecture](docs/architecture.md), [decisions](docs/decisions), [runbooks](docs/runbooks) and the [restructure record](docs/restructure). |
 | [`archive/`](archive) | Retired code kept for reference (the old Airflow project, one-off setup). Nothing here runs. |
-| [`nigeria-faac/`](nigeria-faac), [`shared/`](shared) | The old Fabric FAAC pipeline and its storage, written by Fabric Git integration, until they're retired. Don't hand-edit: Fabric overwrites unrelated files inside an item's folder on commit. |
 | [`.claude/`](.claude) | Instructions for Claude Code in this repo. |
 
 ## How it runs

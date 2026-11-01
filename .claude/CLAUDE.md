@@ -2,7 +2,7 @@
 
 ## What this repo is
 
-Personal data-engineering portfolio. Python pipelines load public Nigerian economic data into MotherDuck, and dbt models it into bronze, silver and gold layers. The FAAC pipeline still runs in Microsoft Fabric (`nigeria-faac/`, `shared/`) until it's migrated to MotherDuck.
+Personal data-engineering portfolio. Python pipelines load public Nigerian economic data into MotherDuck, and dbt models it into bronze, silver and gold layers. The FAAC allocation pipeline moved here from Microsoft Fabric in #17. Fabric was retired on 2026-11-02, and nothing in this repo uses it any more.
 
 The layout comes from the restructure recorded in `docs/restructure/` (phases 0-7 done; FAAC phases 8-9 wait for a GitHub issue). See `docs/architecture.md` for how it fits together, and `docs/decisions/` for why.
 
@@ -14,7 +14,6 @@ The layout comes from the restructure recorded in `docs/restructure/` (phases 0-
 - Ingestion code: `pipelines/<project>/load_<source>_<what>.py`, e.g. `pipelines/nigeria/load_world_bank_indicators.py`. Repo tooling and one-off scripts: `scripts/`. Docs: `docs/`.
 - If a new file doesn't clearly fit, ask before creating a new top-level folder.
 - Adding a project or a source: use the `add-project` skill (`.claude/skills/add-project/`), which follows `docs/runbooks/adding-a-project.md`.
-- Don't create `dbt/models/fabric/`. The dbt-duckdb adapter can't build in Fabric.
 
 ## How I want you to work
 
@@ -41,10 +40,9 @@ The layout comes from the restructure recorded in `docs/restructure/` (phases 0-
 - dbt folders are `<layer>/<project>/<source>/` for bronze and silver, and `gold/<project or schema>/`.
 - bronze and silver are **shared schemas**, so names carry the project: bronze tables `<project>_<source>_<what>`, silver models `stg_<project>_<source>__<entity>`, sources declared as `<project>_<source>` in `bronze/<project>/<source>/_<project>_<source>__sources.yml`.
 
-## Fabric
+## FAAC and security
 
-- Items in `nigeria-faac/` and `shared/` are written by Fabric Git integration: don't hand-edit them.
-- FAAC runs on MotherDuck since #17 (`pipelines/nigeria/load_faac_allocations.py`, `nigeria.nigeria_faac_*`). The Fabric items remain until phase 9 retires them.
+- FAAC runs on MotherDuck since #17 (`pipelines/nigeria/load_faac_allocations.py`, `nigeria.nigeria_faac_*`). Fabric is retired: don't add Fabric items or a `dbt/models/fabric/` folder.
 - Never put the MotherDuck token in a connection string (`md:?motherduck_token=...`): DuckDB echoes it in error messages. Connect with `md:` and let the extension read `MOTHERDUCK_TOKEN` from the environment.
 
 ## Code quality
