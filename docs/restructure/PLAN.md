@@ -12,7 +12,7 @@
 | 5. Pipelines | done | #11 |
 | 6. Scheduling + CI | done; first cloud prod run green on 2026-11-01 | #12 |
 | 7. Docs | done | this PR |
-| 8. FAAC on MotherDuck | waiting for a GitHub issue | |
+| 8. FAAC on MotherDuck | in progress (#17) | |
 | 9. Retire Fabric | after phase 8 | |
 
 Branch protection on `main` was skipped for now (decided 2026-11-01): Fabric Git integration commits straight to `main`.

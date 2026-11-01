@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: stg_nigeria_faac__income
+    description: >
+      Cleaned FAAC Income sheet rows: state names normalised (NASSARAWA to Nasarawa,
+      title case), blank amounts as 0, and total_gross_amount recomputed from its six
+      components. Grain: one row per state per disbursement month.
+    columns:
+      - name: state
+        description: State name in title case. FCT is not in the source sheets.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Abia
+                  - Adamawa
+                  - Akwa Ibom
+                  - Anambra
+                  - Bauchi
+                  - Bayelsa
+                  - Benue
+                  - Borno
+                  - Cross River
+                  - Delta
+                  - Ebonyi
+                  - Edo
+                  - Ekiti
+                  - Enugu
+                  - FCT
+                  - Gombe
+                  - Imo
+                  - Jigawa
+                  - Kaduna
+                  - Kano
+                  - Katsina
+                  - Kebbi
+                  - Kogi
+                  - Kwara
+                  - Lagos
+                  - Nasarawa
+                  - Niger
+                  - Ogun
+                  - Ondo
+                  - Osun
+                  - Oyo
+                  - Plateau
+                  - Rivers
+                  - Sokoto
+                  - Taraba
+                  - Yobe
+                  - Zamfara
+      - name: lg_count
+        description: Number of local governments in the state.
+        data_tests:
+          - not_null
+      - name: total_gross_amount
+        description: Sum of the six revenue lines, in naira.
+        data_tests:
+          - not_null
+      - name: total_gross_amount_reported
+        description: The file's own total. Blank where the file wasn't recalculated.
+      - name: disbursement_date
+        description: First day of the disbursement month.
+        data_tests:
+          - not_null
+      - name: source_file
+        description: Workbook the row came from, e.g. "2024 Jan Disbursement.xlsx".
+        data_tests:
+          - not_null

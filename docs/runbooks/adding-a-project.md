@@ -39,12 +39,14 @@ git switch -c <project>/add-project
 
 1. Copy `.claude/skills/add-project/templates/load_source_template.py` to `pipelines/<project>/load_<source>_<what>.py`.
 2. Fill in `PROJECT`, `SOURCE`, the table's columns in `BRONZE_DDL`, and `fetch_rows()`.
-3. Keep the safety checks the template already has: only `dev_dwh`/`prod_dwh`, fetch everything before connecting, stop on 0 rows, replace in one transaction, `utc_now()` for timestamps. For several tables, add more `BRONZE_DDL` entries and call `replace_table` once per table inside the same transaction.
+3. Keep the safety checks the template already has: only `dev_dwh`/`prod_dwh`, fetch everything before connecting, stop on 0 rows, replace in one transaction, `utc_now()` for timestamps, and the token read from the environment, never put in the connection string. For several tables, add more `BRONZE_DDL` entries and call `replace_table` once per table inside the same transaction.
 4. Add `pipelines/<project>/README.md`: one row per script (script, source, tables written), then what it pulls, safety checks, how to run and the schedule. `pipelines/nigeria/README.md` is the model.
 
 If the source needs an API key:
 - Add `<SOURCE>_API_KEY=` to `.env.example`, and the real value to your `.env`.
 - `gh secret set <SOURCE>_API_KEY` for GitHub Actions.
+
+If the data comes as files rather than from an API (e.g. Excel workbooks), commit them under `data/<project>/<source>/` and read them from there. Adding a file is then a commit, which triggers the prod load. `pipelines/nigeria/load_faac_allocations.py` is the example; it also shows staging rows locally and uploading them in one `INSERT ... SELECT`, which is much faster than row-by-row inserts for thousands of rows.
 
 If it needs a new Python library: `uv add --group pipelines <library>`. That updates `pyproject.toml` and `uv.lock`.
 

@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: nigeria_faac
+    description: >
+      FAAC (Federation Account Allocation Committee) monthly disbursement workbooks for
+      the Nigeria project, loaded as written by pipelines/nigeria/load_faac_allocations.py
+      from data/nigeria/faac/<year>/. One row per state row of each sheet.
+    database: "{{ target.database }}"
+    # bronze is shared by all projects; table names carry the <project>_<source>_ prefix
+    schema: bronze
+    tables:
+      - name: income_sheet
+        identifier: nigeria_faac_income_sheet
+        description: >
+          Income sheet rows. total_gross_amount is the file's own total, blank in files
+          saved without recalculating formulas.
+      - name: deduction_sheet
+        identifier: nigeria_faac_deduction_sheet
+        description: >
+          Deduction sheet rows. The sheet's "Total Gross Amount" is loaded as
+          total_deductions (it is the total of deductions), and the unlabelled column
+          after it as net_amount_after_deductions. Both are blank in some files.

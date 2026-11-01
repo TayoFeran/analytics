@@ -112,7 +112,9 @@ def main() -> None:
     print(f"{TABLE}: {len(rows)} rows fetched")
 
     print(f"Loading into {DATABASE}")
-    con = duckdb.connect(f"md:?motherduck_token={TOKEN}")
+    # The MotherDuck extension reads MOTHERDUCK_TOKEN from the environment. Never put the
+    # token in the connection string: DuckDB echoes it in error messages.
+    con = duckdb.connect("md:")
     ensure_bronze(con)
 
     # One transaction: if the insert fails, the old rows stay

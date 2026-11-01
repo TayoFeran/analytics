@@ -260,7 +260,9 @@ def main() -> None:
     monthly_rows = fetch_all(MONTHLY_INDICATORS, fetch_monthly)
 
     print(f"Loading into {DATABASE}")
-    con = duckdb.connect(f"md:?motherduck_token={TOKEN}")
+    # The MotherDuck extension reads MOTHERDUCK_TOKEN from the environment. Never put the
+    # token in the connection string: DuckDB echoes it in error messages.
+    con = duckdb.connect("md:")
     ensure_bronze(con)
 
     # Replace both tables in one transaction: if any insert fails, the old rows stay
