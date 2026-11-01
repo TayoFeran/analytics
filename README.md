@@ -8,8 +8,8 @@ Data pipelines that load public Nigerian economic data into **MotherDuck** and m
 
 | Folder | What it is |
 | --- | --- |
-| [`nigeria-economic-indicators/`](nigeria-economic-indicators) | World Bank extraction to MotherDuck, plus dbt models and tests. Airflow (Astro) is used for orchestration until phase 6. |
-| [`sandbox/`](sandbox) | dbt project for sandbox tables in MotherDuck (`dev_dwh.sandbox`), starting with the `fo_calendar` date dimension. |
+| [`dbt/`](dbt) | The dbt project for MotherDuck. Models live in `models/motherduck/bronze` (sources), `silver` (cleaned views) and `gold/<schema>` (tables, one subfolder per schema: `nigeria`, `sandbox`). |
+| [`nigeria-economic-indicators/`](nigeria-economic-indicators) | World Bank extraction script, plus Airflow (Astro) orchestration until phase 6. |
 | [`nigeria-faac/`](nigeria-faac) | FAAC (Federation Account Allocation Committee) pipeline, synced from Fabric: notebooks, copy jobs and the orchestrating data pipeline. |
 | [`shared/`](shared) | Fabric storage used by FAAC: `Data_lake.Lakehouse` and `DWH.Warehouse`. |
 | [`docs/`](docs) | Documentation, including the restructure audit and plan. |
@@ -26,6 +26,13 @@ uv sync --all-groups          # create .venv with every group
 uv run pre-commit install     # run the quality checks on every commit
 cp .env.example .env          # then fill in MOTHERDUCK_TOKEN
 set -a; source .env; set +a   # load env vars (Git Bash)
+```
+
+Run dbt (PowerShell, from anywhere in the repo; loads `.env` for you):
+
+```powershell
+.\dbt\run_dbt.ps1 build                        # build and test everything in dev_dwh
+.\dbt\run_dbt.ps1 build --select fo_calendar   # one model
 ```
 
 ## Related

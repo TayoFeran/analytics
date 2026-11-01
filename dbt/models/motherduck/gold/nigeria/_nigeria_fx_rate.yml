@@ -13,7 +13,7 @@ models:
           - unique
           - relationships:
               arguments:
-                to: ref('nigeria_econ_metric_monthly')
+                to: ref('stg_world_bank__indicators_monthly')
                 field: make_date(year, month, 1)
       - name: country_code
         data_tests:
