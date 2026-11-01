@@ -4,5 +4,5 @@ select  -- distinct indicator_name
     country_name,
     round(value, 0) as exchange_rate,
     extracted_at::date as extracted_at
-from {{ ref("stg_world_bank__indicators_monthly") }}
+from {{ ref("stg_nigeria_world_bank__indicators_monthly") }}
 where indicator_name ilike '%exchange rate%'

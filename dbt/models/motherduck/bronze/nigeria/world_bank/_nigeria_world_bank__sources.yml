@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: nigeria_world_bank
+    description: >
+      Raw World Bank indicator extracts for the Nigeria project, loaded by
+      pipelines/nigeria/load_world_bank_indicators.py.
+    # Same database as the target, so dev builds read dev_dwh.bronze and prod builds
+    # read prod_dwh.bronze
+    database: "{{ target.database }}"
+    # bronze is shared by all projects; table names carry the <project>_<source>_ prefix
+    schema: bronze
+    tables:
+      - name: indicators_annual
+        identifier: nigeria_world_bank_indicators_annual
+        description: Annual indicators (GDP, population). One row per indicator per year.
+      - name: indicators_monthly
+        identifier: nigeria_world_bank_indicators_monthly
+        description: Monthly indicators (FX rate, CPI). One row per indicator per month.

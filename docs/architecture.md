@@ -8,7 +8,7 @@ How data moves from public sources to tables you can query, and what runs it.
                          GitHub Actions: daily-pipeline.yml (05:00 UTC, on merge, or by hand)
                          ┌──────────────────────────────────────────────────────────────────┐
                          │                                                                  │
- World Bank API ──▶ pipelines/world-bank/extract.py ──▶ bronze ──dbt──▶ silver ──dbt──▶ gold │
+ World Bank API ──▶ pipelines/nigeria/load_world_bank_indicators.py ──▶ bronze ─dbt▶ silver ─dbt▶ gold │
                          │                              (raw)       (views)        (tables) │
                          └──────────────────────────────────────────────────────────────────┘
                                                         MotherDuck: prod_dwh
@@ -16,12 +16,16 @@ How data moves from public sources to tables you can query, and what runs it.
  FAAC Excel files ──▶ Fabric notebooks ──▶ Lakehouse ──▶ copy jobs ──▶ Fabric Warehouse  (being migrated)
 ```
 
+## Projects
+
+The repo and warehouse are shared by unrelated projects. Every layer is organized by project first: `pipelines/<project>/`, `bronze/<project>/<source>/`, `silver/<project>/<source>/` and `gold/<project>/`. `bronze` and `silver` are shared schemas, so their tables and views start with the project name. Today's projects: `nigeria` (World Bank indicators; FAAC later) and `sandbox` (ad-hoc and shared tables such as `fo_calendar`).
+
 ## Layers
 
 | Layer | Where the code is | MotherDuck schema | Built by | What a row is |
 |---|---|---|---|---|
-| bronze | `pipelines/<source>/` writes it, and `dbt/models/motherduck/bronze/<source>/` declares it as a dbt source | `bronze` | the extract script | the raw API value, plus `extracted_at` |
-| silver | `dbt/models/motherduck/silver/<source>/` | `silver` | dbt (views) | one cleaned, typed observation (`stg_<source>__<entity>`) |
+| bronze | `pipelines/<project>/load_<source>_<what>.py` writes it, and `dbt/models/motherduck/bronze/<project>/<source>/` declares it as a dbt source | `bronze` (shared; tables named `<project>_<source>_<what>`) | the load script | the raw API value, plus `extracted_at` |
+| silver | `dbt/models/motherduck/silver/<project>/<source>/` | `silver` (shared; models named `stg_<project>_<source>__<entity>`) | dbt (views) | one cleaned, typed observation |
 | gold | `dbt/models/motherduck/gold/<schema>/` | one schema per subfolder: `nigeria`, `sandbox` | dbt (tables) | a business-ready fact, e.g. one month of the FX rate |
 
 Gold tables today:

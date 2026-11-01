@@ -17,7 +17,7 @@ Or on GitHub: **Actions**, then **daily-pipeline**, then the red run, then the f
 
 - `uv.lock` is out of date: someone changed `pyproject.toml` without running `uv lock`. Run `uv lock` locally, commit, and merge.
 
-### "Extract World Bank data into prod_dwh.bronze"
+### "nigeria: load World Bank indicators into prod_dwh.bronze"
 
 | Error | Cause | Fix |
 |---|---|---|
@@ -55,7 +55,7 @@ GitHub **disables scheduled workflows after 60 days with no commits** to the rep
 ## Check that prod is fresh
 
 ```bash
-uv run --group pipelines python -c "import duckdb, dotenv; dotenv.load_dotenv(); print(duckdb.connect('md:').sql('select max(extracted_at) from prod_dwh.bronze.nigeria_econ_metric_annual').fetchone())"
+uv run --group pipelines python -c "import duckdb, dotenv; dotenv.load_dotenv(); print(duckdb.connect('md:').sql('select max(extracted_at) from prod_dwh.bronze.nigeria_world_bank_indicators_annual').fetchone())"
 ```
 
 The value should be from today's run, around 05:00 UTC.
