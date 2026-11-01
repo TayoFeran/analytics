@@ -20,9 +20,9 @@ first DAG tutorial: https://www.astronomer.io/docs/learn/get-started-with-airflo
 ![Picture of the ISS](https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2010/02/space_station_over_earth/10293696-3-eng-GB/Space_Station_over_Earth_card_full.jpg)
 """
 
+import requests
 from airflow.sdk import Asset, dag, task
 from pendulum import datetime
-import requests
 
 
 # Define the basic parameters of the DAG, like schedule and start_date
@@ -36,7 +36,8 @@ import requests
 def example_astronauts():
     # Define tasks
     @task(
-        # Define an asset outlet for the task. This can be used to schedule downstream DAGs when this task has run.
+        # Define an asset outlet for the task. This can be used to schedule downstream DAGs
+        # when this task has run.
         outlets=[Asset("current_astronauts")]
     )  # Define that this task updates the `current_astronauts` Asset
     def get_astronauts(**context) -> list[dict]:
@@ -69,9 +70,7 @@ def example_astronauts():
                 {"craft": "Tiangong", "name": "Ye Guangfu"},
             ]
 
-        context["ti"].xcom_push(
-            key="number_of_people_in_space", value=number_of_people_in_space
-        )
+        context["ti"].xcom_push(key="number_of_people_in_space", value=number_of_people_in_space)
         return list_of_people_in_space
 
     @task

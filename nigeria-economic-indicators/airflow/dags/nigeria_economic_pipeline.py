@@ -10,11 +10,10 @@ with DAG(
     dag_id="nigeria_economic_indicators_pipeline",
     description="World Bank API -> MotherDuck bronze -> dbt silver/analytics",
     start_date=datetime(2026, 1, 1),
-    schedule= "@daily",  # runs once every day at midnight UTC
+    schedule="@daily",  # runs once every day at midnight UTC
     catchup=False,
     tags=["nigeria", "economic-indicators"],
 ) as dag:
-
     extract_worldbank_data = BashOperator(
         task_id="extract_worldbank_data",
         bash_command=f"python {PROJECT_DIR}/extract.py",
