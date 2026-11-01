@@ -59,6 +59,10 @@ uv run --group pipelines python pipelines/nigeria/load_world_bank_indicators.py
 uv run pre-commit run --all-files
 ```
 
+## Adding a project
+
+Follow [`docs/runbooks/adding-a-project.md`](docs/runbooks/adding-a-project.md): naming rules, the load-script template, dbt bronze/silver/gold, scheduling and a checklist. In Claude Code, ask to "add a project" and the `add-project` skill walks through it.
+
 ## Contributing
 
 1. Branch from `main`.
