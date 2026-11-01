@@ -23,7 +23,7 @@ Don't guess these:
 
 Work on a branch named `<project>/add-project` or `<project>/add-<source>`. Steps:
 
-1. **Load script**: copy `templates/load_source_template.py` (in this skill folder) to `pipelines/<project>/load_<source>_<what>.py`. Fill in the placeholders. **Don't remove its safety checks**: allowed databases, fetch-before-connect, stop on 0 rows, one transaction, `utc_now()`. Add or extend `pipelines/<project>/README.md`. Add keys to `.env.example`, and libraries with `uv add --group pipelines`.
+1. **Load script**: copy `templates/load_source_template.py` (in this skill folder) to `pipelines/<project>/load_<source>_<what>.py`. Fill in the placeholders. **Don't remove its safety checks**: allowed databases, fetch-before-connect, stop on 0 rows, one transaction, `utc_now()`, and the token read from the environment (never in the connection string). For more than a few hundred rows, stage locally and upload with one `INSERT ... SELECT` (see `pipelines/nigeria/load_faac_allocations.py`). Source files that aren't fetched from an API live in `data/<project>/<source>/`. Add or extend `pipelines/<project>/README.md`. Add keys to `.env.example`, and libraries with `uv add --group pipelines`.
 2. **Bronze**: `dbt/models/motherduck/bronze/<project>/<source>/_<project>_<source>__sources.yml`, with source name `<project>_<source>`, `database: "{{ target.database }}"`, `schema: bronze`, and `identifier:` set to the full table name.
 3. **Silver**: `silver/<project>/<source>/stg_<project>_<source>__<entity>.sql` plus its own `_<model>.yml`.
 4. **Gold**: `gold/<project>/<project>_<what>.sql` plus its own `_<model>.yml`, testing the grain. For a **new project only**, add `<project>: {+schema: <project>}` under `gold:` in `dbt/dbt_project.yml`.

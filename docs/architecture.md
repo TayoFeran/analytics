@@ -8,17 +8,19 @@ How data moves from public sources to tables you can query, and what runs it.
                          GitHub Actions: daily-pipeline.yml (05:00 UTC, on merge, or by hand)
                          ┌──────────────────────────────────────────────────────────────────┐
                          │                                                                  │
- World Bank API ──▶ pipelines/nigeria/load_world_bank_indicators.py ──▶ bronze ─dbt▶ silver ─dbt▶ gold │
-                         │                              (raw)       (views)        (tables) │
+ World Bank API ─────────▶ pipelines/nigeria/load_world_bank_indicators.py ─┐                       │
+ data/nigeria/faac/*.xlsx ▶ pipelines/nigeria/load_faac_allocations.py ─────┴▶ bronze ─dbt▶ silver ─dbt▶ gold
+                         │                                          (raw)    (views)     (tables)│
                          └──────────────────────────────────────────────────────────────────┘
                                                         MotherDuck: prod_dwh
 
- FAAC Excel files ──▶ Fabric notebooks ──▶ Lakehouse ──▶ copy jobs ──▶ Fabric Warehouse  (being migrated)
+ The old Fabric FAAC pipeline (notebooks → Lakehouse → copy jobs → Fabric Warehouse) is replaced by the
+ FAAC load above and will be retired.
 ```
 
 ## Projects
 
-The repo and warehouse are shared by unrelated projects. Every layer is organized by project first: `pipelines/<project>/`, `bronze/<project>/<source>/`, `silver/<project>/<source>/` and `gold/<project>/`. `bronze` and `silver` are shared schemas, so their tables and views start with the project name. Today's projects: `nigeria` (World Bank indicators; FAAC later) and `sandbox` (ad-hoc and shared tables such as `fo_calendar`).
+The repo and warehouse are shared by unrelated projects. Every layer is organized by project first: `pipelines/<project>/`, `bronze/<project>/<source>/`, `silver/<project>/<source>/` and `gold/<project>/`. `bronze` and `silver` are shared schemas, so their tables and views start with the project name. Today's projects: `nigeria` (World Bank indicators and FAAC allocations) and `sandbox` (ad-hoc and shared tables such as `fo_calendar`).
 
 ## Layers
 
@@ -36,6 +38,8 @@ Gold tables today:
 | `nigeria.nigeria_population` | one row per year | World Bank `SP.POP.TOTL` |
 | `nigeria.nigeria_fx_rate` | one row per month | World Bank `DPANUSSPB` |
 | `nigeria.nigeria_consumer_price_index` | one row per month | World Bank `CPTOTNSXN` |
+| `nigeria.nigeria_faac_income` | one row per state per month (`state_month`) | FAAC workbooks, Income sheet |
+| `nigeria.nigeria_faac_deduction` | one row per state per month (`state_month`) | FAAC workbooks, Deduction sheet (+ Income for the net-amount fallback) |
 | `sandbox.fo_calendar` | one row per day, 1990-01-01 to today | generated |
 
 ## Environments
@@ -55,10 +59,12 @@ The two databases have identical schemas, and the dbt source reads `{{ target.da
 |---|---|---|
 | Local checks | `.pre-commit-config.yaml` | every `git commit`: file checks, ruff, mypy, sqlfmt, dbt parse, commit message format |
 | `ci` workflow | `.github/workflows/ci.yml` | every PR (checks + `dbt build --target dev`) and push to `main` (checks) |
-| `daily-pipeline` workflow | `.github/workflows/daily-pipeline.yml` | 05:00 UTC daily, on merges that change `dbt/` or `pipelines/`, and by hand |
+| `daily-pipeline` workflow | `.github/workflows/daily-pipeline.yml` | 05:00 UTC daily, on merges that change `dbt/`, `pipelines/` or `data/`, and by hand |
 
 Secrets: `MOTHERDUCK_TOKEN` lives in `.env` locally (gitignored) and as a GitHub Actions repository secret.
 
 ## Fabric (FAAC)
 
-The FAAC pipeline still runs in Microsoft Fabric, synced to `nigeria-faac/` and `shared/` by Fabric Git integration. Don't hand-edit those folders. Moving FAAC to MotherDuck will be tracked in its own GitHub issue. See [decision 0001](decisions/0001-motherduck-over-fabric.md).
+FAAC now runs on MotherDuck (#17): the workbooks live in `data/nigeria/faac/`, and `nigeria.nigeria_faac_income` and `nigeria.nigeria_faac_deduction` replace Fabric's `DWH.nigeria.faac_income` and `faac_deduction`. The migration was reconciled row by row against Fabric. Every difference traced back to a bug in the Fabric notebooks, the largest being a net-amount fallback that understated net allocations by about ₦4.48 trillion. The details are in #17.
+
+The old Fabric items are still synced to `nigeria-faac/` and `shared/` by Fabric Git integration until they're retired (phase 9). Don't hand-edit those folders. See [decision 0001](decisions/0001-motherduck-over-fabric.md).

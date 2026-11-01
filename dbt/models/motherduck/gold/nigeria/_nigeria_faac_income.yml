@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: nigeria_faac_income
+    description: >
+      FAAC allocations received by each state, by revenue line, in naira. Grain: one
+      row per state per disbursement month (state_month). Replaces Fabric's
+      DWH.nigeria.faac_income.
+    columns:
+      - name: state_month
+        description: Grain key, "<YYYY-MM> <state>", e.g. "2024-01 Lagos".
+        data_tests:
+          - not_null
+          - unique
+      - name: disbursement_date
+        description: First day of the disbursement month.
+        data_tests:
+          - not_null
+      - name: month_number
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                quote: false
+      - name: president
+        description: >
+          Administration in office in the disbursement month. A new value means a new
+          administration: update the CASE in the model and this list.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Buhari', 'Tinubu']
+      - name: state
+        data_tests:
+          - not_null
+      - name: total_gross_amount
+        description: Sum of the six revenue lines.
+        data_tests:
+          - not_null
+      - name: source_file
+        data_tests:
+          - not_null

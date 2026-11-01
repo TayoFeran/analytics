@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: nigeria_faac_deduction
+    description: >
+      Deductions from each state's FAAC allocation, by deduction line, and the net
+      amount received, in naira. Grain: one row per state per disbursement month
+      (state_month). Replaces Fabric's DWH.nigeria.faac_deduction.
+    columns:
+      - name: state_month
+        description: Grain key, "<YYYY-MM> <state>". Every row has a matching income row.
+        data_tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('nigeria_faac_income')
+                field: state_month
+      - name: disbursement_date
+        data_tests:
+          - not_null
+      - name: month_number
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                quote: false
+      - name: president
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Buhari', 'Tinubu']
+      - name: state
+        data_tests:
+          - not_null
+      - name: total_deductions
+        description: Sum of the six deduction lines.
+        data_tests:
+          - not_null
+      - name: net_amount_after_deductions
+        description: >
+          Net amount the state received. From the file where filled in; otherwise income
+          total minus total_deductions (which matches the file exactly wherever both exist).
+        data_tests:
+          - not_null
+      - name: source_file
+        data_tests:
+          - not_null

@@ -12,6 +12,8 @@ on:
     paths:
       - "dbt/**"
       - "pipelines/**"
+      # New source files, e.g. next month's FAAC workbook
+      - "data/**"
       - "pyproject.toml"
       - "uv.lock"
       - ".github/workflows/daily-pipeline.yml"
@@ -46,6 +48,9 @@ jobs:
       # One step per pipeline, all before dbt so models see fresh bronze data
       - name: "nigeria: load World Bank indicators into prod_dwh.bronze"
         run: uv run python pipelines/nigeria/load_world_bank_indicators.py
+
+      - name: "nigeria: load FAAC allocation workbooks into prod_dwh.bronze"
+        run: uv run python pipelines/nigeria/load_faac_allocations.py
 
       - name: dbt build (prod)
         working-directory: dbt

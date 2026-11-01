@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: stg_nigeria_faac__deduction
+    description: >
+      Cleaned FAAC Deduction sheet rows: state names normalised, blank amounts as 0, and
+      total_deductions recomputed from its six components. The file's own net amount is
+      kept as net_amount_reported (blank in some files). Grain: one row per state per
+      disbursement month.
+    columns:
+      - name: state
+        description: State name in title case. FCT is not in the source sheets.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Abia
+                  - Adamawa
+                  - Akwa Ibom
+                  - Anambra
+                  - Bauchi
+                  - Bayelsa
+                  - Benue
+                  - Borno
+                  - Cross River
+                  - Delta
+                  - Ebonyi
+                  - Edo
+                  - Ekiti
+                  - Enugu
+                  - FCT
+                  - Gombe
+                  - Imo
+                  - Jigawa
+                  - Kaduna
+                  - Kano
+                  - Katsina
+                  - Kebbi
+                  - Kogi
+                  - Kwara
+                  - Lagos
+                  - Nasarawa
+                  - Niger
+                  - Ogun
+                  - Ondo
+                  - Osun
+                  - Oyo
+                  - Plateau
+                  - Rivers
+                  - Sokoto
+                  - Taraba
+                  - Yobe
+                  - Zamfara
+      - name: lg_count
+        data_tests:
+          - not_null
+      - name: total_deductions
+        description: Sum of the six deduction lines, in naira.
+        data_tests:
+          - not_null
+      - name: total_deductions_reported
+        description: The file's own total of deductions. Blank where not recalculated.
+      - name: net_amount_reported
+        description: The file's own net amount after deductions (unlabelled column). Blank where not recalculated.
+      - name: disbursement_date
+        data_tests:
+          - not_null
+      - name: source_file
+        data_tests:
+          - not_null
