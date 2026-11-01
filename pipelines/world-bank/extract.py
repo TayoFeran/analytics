@@ -66,6 +66,16 @@ BRONZE_DDL = {
 Row = dict[str, Any]
 
 
+def utc_now() -> datetime:
+    """Current UTC time without a timezone, for the bronze TIMESTAMP columns.
+
+    DuckDB converts a timezone-aware value to the machine's local time before storing it
+    in a plain TIMESTAMP. Laptop runs in Lagos (UTC+1) were stored an hour ahead of the
+    GitHub Actions runs (UTC). A naive UTC value is stored as-is everywhere.
+    """
+    return datetime.now(UTC).replace(tzinfo=None)
+
+
 def _get(url: str, params: dict[str, Any], max_retries: int = 3) -> Any:
     """Return the parsed JSON body, retrying failed requests with a growing pause.
 
@@ -99,7 +109,7 @@ def fetch_annual(
     params = {"format": "json", "date": f"{start_year}:{end_year}", "per_page": 1000}
     payload = _get(url, params)
     rows = payload[1] or []
-    extracted_at = datetime.now(UTC)
+    extracted_at = utc_now()
     return [
         {
             "country_code": COUNTRY,
@@ -135,7 +145,7 @@ def fetch_monthly(
     }
     payload = _get(url, params)
     rows = payload[1] or []
-    extracted_at = datetime.now(UTC)
+    extracted_at = utc_now()
     parsed: list[Row] = []
     for r in rows:
         if r.get("value") is None:
