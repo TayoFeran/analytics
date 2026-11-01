@@ -1,1 +1,35 @@
+# Secrets: real values live in .env locally and in GitHub Secrets in CI
+.env
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# dbt (any dbt project in the repo)
+**/target/
+**/dbt_packages/
+**/logs/
+**/prod-state/
+**/.user.yml
+
+# Local data: never commit data files, use MotherDuck or dbt seeds
+*.duckdb
+*.duckdb.wal
+*.parquet
+
+# Airflow (Astro) local files, until Airflow is archived in phase 6
+.astro/
+airflow_settings.yaml
+
+# Editors / OS
 .vscode/
+.idea/
+.DS_Store
+Thumbs.db

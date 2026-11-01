@@ -1,18 +1,32 @@
 # analytics
 
-Git integration target for the Microsoft Fabric **`analytics`** workspace.
+Data pipelines that load public Nigerian economic data into **MotherDuck** and model it with **dbt** in bronze, silver and gold layers. The FAAC pipeline still runs in **Microsoft Fabric**, synced to this repo through Fabric Git integration, until it's migrated to MotherDuck.
 
-This repo is auto-synced by Fabric — connect the workspace via **Workspace settings → Git integration** in the Fabric portal, then use the Source Control panel there to commit/update. Items land in folders here that mirror the workspace's folder structure, so as more projects get added to the workspace, each gets its own subfolder.
-
-Don't hand-edit synced item files unless you know what you're doing — Fabric overwrites unrelated files inside an item's folder on commit.
+> This repo is being restructured in phases. See [`docs/restructure/PLAN.md`](docs/restructure/PLAN.md) for the target layout and progress.
 
 ## Layout
 
 | Folder | What it is |
 | --- | --- |
-| [`nigeria-faac/`](nigeria-faac) | FAAC (Federation Account Allocation Committee) pipeline, synced from the Fabric workspace folder of the same name: notebooks, copy jobs and the orchestrating data pipeline. |
-| [`nigeria-economic-indicators/`](nigeria-economic-indicators) | World Bank extraction to MotherDuck, dbt medallion models and tests, orchestrated with Airflow. Not a Fabric item. |
-| [`sandbox/`](sandbox) | Standalone dbt project for sandbox tables in MotherDuck (`dev_dwh.sandbox`), starting with the `fo_calendar` date dimension. Not a Fabric item. |
-| [`shared/`](shared) | Workspace-wide storage used by any project: `Data_lake.Lakehouse` and `DWH.Warehouse`. Each project writes to its own schema (FAAC uses `nigeria`). |
+| [`nigeria-economic-indicators/`](nigeria-economic-indicators) | World Bank extraction to MotherDuck, plus dbt models and tests. Airflow (Astro) is used for orchestration until phase 6. |
+| [`sandbox/`](sandbox) | dbt project for sandbox tables in MotherDuck (`dev_dwh.sandbox`), starting with the `fo_calendar` date dimension. |
+| [`nigeria-faac/`](nigeria-faac) | FAAC (Federation Account Allocation Committee) pipeline, synced from Fabric: notebooks, copy jobs and the orchestrating data pipeline. |
+| [`shared/`](shared) | Fabric storage used by FAAC: `Data_lake.Lakehouse` and `DWH.Warehouse`. |
+| [`docs/`](docs) | Documentation, including the restructure audit and plan. |
+| [`.claude/`](.claude) | Instructions for Claude Code in this repo. |
 
-Related: [`nigeria`](https://github.com/TayoFeran/nigeria) — human-facing documentation/portfolio repo for the FAAC project. This repo holds the actual synced pipeline/notebook code; `nigeria` holds the narrative.
+Fabric items (`nigeria-faac/`, `shared/`) are written by Fabric. Don't hand-edit them, because Fabric overwrites unrelated files inside an item's folder on commit.
+
+## Setup
+
+Python dependencies are managed with [uv](https://docs.astral.sh/uv/) in `pyproject.toml`, in groups per area (`dbt`, `pipelines`).
+
+```bash
+uv sync --all-groups          # create .venv with every group
+cp .env.example .env          # then fill in MOTHERDUCK_TOKEN
+set -a; source .env; set +a   # load env vars (Git Bash)
+```
+
+## Related
+
+[`nigeria`](https://github.com/TayoFeran/nigeria): documentation and portfolio repo for the FAAC project. This repo holds the pipeline code; `nigeria` holds the narrative.

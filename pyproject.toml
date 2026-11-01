@@ -1,0 +1,26 @@
+[project]
+name = "analytics"
+version = "0.1.0"
+description = "Data pipelines into MotherDuck, modelled with dbt"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+# One group per area, so each job installs only what it needs:
+#   uv run --group dbt dbt build
+#   uv run --group pipelines python <script>
+# Dev tools (ruff, sqlfmt, pre-commit, commitizen) are added in phase 2.
+[dependency-groups]
+dbt = [
+    "dbt-core>=1.12,<1.13",
+    "dbt-duckdb>=1.11,<1.12",
+    "duckdb>=1.5,<1.6",
+]
+pipelines = [
+    "duckdb>=1.5,<1.6",
+    "python-dotenv>=1,<2",
+    "requests>=2.32,<3",
+]
+
+[tool.uv]
+# This repo is a collection of projects, not an installable package
+package = false
