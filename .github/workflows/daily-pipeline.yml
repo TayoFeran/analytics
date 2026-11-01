@@ -1,0 +1,51 @@
+# The production pipeline: World Bank API -> prod_dwh.bronze -> dbt build (prod).
+# The only thing that writes to prod_dwh. Runs in GitHub's cloud, so your laptop can be off.
+name: daily-pipeline
+
+on:
+  schedule:
+    # 05:00 UTC = 06:00 in Lagos. GitHub cron is UTC and can start a few minutes late.
+    - cron: "0 5 * * *"
+  # Deploy: a merge to main that changes models or the extract updates prod right away
+  push:
+    branches: [main]
+    paths:
+      - "dbt/**"
+      - "pipelines/world-bank/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/daily-pipeline.yml"
+  # Run button in the Actions tab
+  workflow_dispatch:
+
+# Never run two prod loads at once; a second trigger waits for the first to finish
+concurrency:
+  group: daily-pipeline
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
+      MOTHERDUCK_DATABASE: prod_dwh
+      # Use exactly the groups installed below; don't let `uv run` add the dev tools
+      UV_NO_SYNC: "1"
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Install dependencies (pipelines + dbt)
+        run: uv sync --locked --no-default-groups --group pipelines --group dbt
+
+      - name: Extract World Bank data into prod_dwh.bronze
+        run: uv run python pipelines/world-bank/extract.py
+
+      - name: dbt build (prod)
+        working-directory: dbt
+        run: uv run dbt build --target prod --profiles-dir .

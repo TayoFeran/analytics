@@ -28,7 +28,7 @@ The repo is being restructured. Follow `docs/restructure/PLAN.md` for the target
 
 ## dbt (MotherDuck)
 
-- Two databases: `dev_dwh` for local work and PR checks, `prod_dwh` written only by the scheduled GitHub Actions job. Never build against prod locally unless I ask.
+- Two databases: `dev_dwh` for local work and PR checks (`ci.yml`), `prod_dwh` written only by `.github/workflows/daily-pipeline.yml`. Never build against prod locally unless I ask.
 - `pipelines/world-bank/extract.py` loads the database in `MOTHERDUCK_DATABASE` (default `dev_dwh`, only `dev_dwh`/`prod_dwh` allowed). dbt picks the database by `--target dev|prod`.
 - Load env first (Git Bash): `set -a; source .env; set +a`
 - Tests: one `_<model_name>.yml` per model, next to its `.sql`. Built-in generic tests only (`unique`, `not_null`, `accepted_values`, `relationships`), with args nested under `arguments:`. No `dbt_utils`, no custom or singular tests.

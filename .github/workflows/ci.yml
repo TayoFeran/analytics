@@ -1,0 +1,52 @@
+# Checks every PR before it can reach main. Never touches prod_dwh.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push to the same PR cancels the older, now-outdated run
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Same checks as the local pre-commit hooks: ruff, mypy, sqlfmt, dbt parse, file checks.
+  # No token needed: dbt parse uses the in-memory ci target.
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+      - name: Install dependencies
+        run: uv sync --locked --all-groups
+      - name: Pre-commit checks
+        run: uv run pre-commit run --all-files --show-diff-on-failure
+
+  # Builds and tests every model in dev_dwh against the PR's code. Small enough today to
+  # build everything; switch to state:modified+ (changed models only) when it gets slow.
+  dbt-dev:
+    if: github.event_name == 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      # One dev build at a time across PRs, since they share dev_dwh
+      group: dbt-dev
+      cancel-in-progress: false
+    env:
+      MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
+      UV_NO_SYNC: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+      - name: Install dependencies (dbt)
+        run: uv sync --locked --no-default-groups --group dbt
+      - name: dbt build (dev)
+        working-directory: dbt
+        run: uv run dbt build --target dev --profiles-dir .
