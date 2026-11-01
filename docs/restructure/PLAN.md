@@ -1,5 +1,22 @@
 # Restructure plan
 
+## Progress
+
+| Phase | Status | PR |
+|---|---|---|
+| 0. Clean start | done | #6 |
+| 1. Foundations | done | #7 |
+| 2. Quality gates | done | #8 |
+| 3. One dbt project | done | #9 |
+| 4. Prod database | done | #10 |
+| 5. Pipelines | done | #11 |
+| 6. Scheduling + CI | done; first cloud prod run green on 2026-11-01 | #12 |
+| 7. Docs | done | this PR |
+| 8. FAAC on MotherDuck | waiting for a GitHub issue | |
+| 9. Retire Fabric | after phase 8 | |
+
+Branch protection on `main` was skipped for now (decided 2026-11-01): Fabric Git integration commits straight to `main`.
+
 This plan is based on the `repo-restructure` skill, adjusted to your decisions from 2026-11-01. Findings are in [AUDIT.md](AUDIT.md). Each phase is one branch and PR, verified before it merges.
 
 ## Target layout

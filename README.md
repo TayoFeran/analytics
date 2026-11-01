@@ -1,51 +1,71 @@
 # analytics
 
-Data pipelines that load public Nigerian economic data into **MotherDuck** and model it with **dbt** in bronze, silver and gold layers. The FAAC pipeline still runs in **Microsoft Fabric**, synced to this repo through Fabric Git integration, until it's migrated to MotherDuck.
+[![daily-pipeline](https://github.com/TayoFeran/analytics/actions/workflows/daily-pipeline.yml/badge.svg)](https://github.com/TayoFeran/analytics/actions/workflows/daily-pipeline.yml)
+[![ci](https://github.com/TayoFeran/analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/TayoFeran/analytics/actions/workflows/ci.yml)
 
-> This repo is being restructured in phases. See [`docs/restructure/PLAN.md`](docs/restructure/PLAN.md) for the target layout and progress.
+Data pipelines that load public Nigerian economic data into **MotherDuck** and model it with **dbt** in bronze, silver and gold layers. **GitHub Actions** runs everything in the cloud: a daily production load, and checks on every pull request.
+
+```text
+World Bank API ─▶ pipelines/world-bank ─▶ bronze ─dbt─▶ silver ─dbt─▶ gold (nigeria, sandbox)
+                                          MotherDuck: dev_dwh (development) · prod_dwh (production)
+```
+
+The FAAC pipeline still runs in **Microsoft Fabric** until it's migrated to MotherDuck. See [architecture](docs/architecture.md) for the full picture.
 
 ## Layout
 
 | Folder | What it is |
 | --- | --- |
-| [`dbt/`](dbt) | The dbt project for MotherDuck. Models live in `models/motherduck/bronze` (sources), `silver` (cleaned views) and `gold/<schema>` (tables, one subfolder per schema: `nigeria`, `sandbox`). |
-| [`pipelines/`](pipelines) | Ingestion: one folder per source that loads data into MotherDuck bronze. Today: [`world-bank/`](pipelines/world-bank). |
+| [`pipelines/`](pipelines) | Ingestion: one folder per source that loads raw data into MotherDuck `bronze`. Today: [`world-bank/`](pipelines/world-bank). |
+| [`dbt/`](dbt) | The dbt project: `models/motherduck/bronze` (sources), `silver` (cleaned views) and `gold/<schema>` (tables; each subfolder is a schema: `nigeria`, `sandbox`). |
+| [`.github/`](.github) | GitHub Actions workflows (`daily-pipeline`, `ci`) and the PR template. |
 | [`scripts/`](scripts) | Repo tooling, e.g. `check_motherduck.py` to test your token. |
-| [`archive/`](archive) | Parked code kept for reference. Nothing here runs. |
-| [`.github/`](.github) | GitHub Actions: `daily-pipeline.yml` (scheduled prod load) and `ci.yml` (checks on every PR), plus the PR template. |
-| [`nigeria-faac/`](nigeria-faac) | FAAC (Federation Account Allocation Committee) pipeline, synced from Fabric: notebooks, copy jobs and the orchestrating data pipeline. |
-| [`shared/`](shared) | Fabric storage used by FAAC: `Data_lake.Lakehouse` and `DWH.Warehouse`. |
-| [`docs/`](docs) | Documentation, including the restructure audit and plan. |
+| [`docs/`](docs) | [Architecture](docs/architecture.md), [decisions](docs/decisions), [runbooks](docs/runbooks) and the [restructure record](docs/restructure). |
+| [`archive/`](archive) | Retired code kept for reference (the old Airflow project, one-off setup). Nothing here runs. |
+| [`nigeria-faac/`](nigeria-faac), [`shared/`](shared) | FAAC pipeline and its storage, written by Fabric Git integration. Don't hand-edit: Fabric overwrites unrelated files inside an item's folder on commit. |
 | [`.claude/`](.claude) | Instructions for Claude Code in this repo. |
-
-Fabric items (`nigeria-faac/`, `shared/`) are written by Fabric. Don't hand-edit them, because Fabric overwrites unrelated files inside an item's folder on commit.
 
 ## How it runs
 
 | Workflow | When | What |
 | --- | --- | --- |
-| `daily-pipeline` | daily 05:00 UTC, on merges that change `dbt/` or `pipelines/`, or by hand (Actions tab, "Run workflow") | World Bank extract into `prod_dwh.bronze`, then `dbt build --target prod`. The only writer to `prod_dwh`. |
-| `ci` | every PR and push to `main` | pre-commit checks, then `dbt build --target dev` (PRs only). |
+| `daily-pipeline` | daily 05:00 UTC, on merges that change `dbt/` or `pipelines/`, or by hand ("Run workflow") | World Bank extract into `prod_dwh.bronze`, then `dbt build --target prod`. The only writer to `prod_dwh`. |
+| `ci` | every PR and push to `main` | pre-commit checks, then `dbt build --target dev` on PRs. |
 
-Both need the `MOTHERDUCK_TOKEN` repository secret (Settings, Secrets and variables, Actions).
+Both use the `MOTHERDUCK_TOKEN` repository secret. If a run fails, see the [runbook](docs/runbooks/daily-pipeline.md).
 
 ## Setup
 
-Python dependencies are managed with [uv](https://docs.astral.sh/uv/) in `pyproject.toml`, in groups per area (`dbt`, `pipelines`).
+Python dependencies are managed with [uv](https://docs.astral.sh/uv/) in `pyproject.toml`, in groups per area (`dbt`, `pipelines`, `dev`).
 
 ```bash
-uv sync --all-groups          # create .venv with every group
+uv sync                       # create .venv with every group
 uv run pre-commit install     # run the quality checks on every commit
 cp .env.example .env          # then fill in MOTHERDUCK_TOKEN
-set -a; source .env; set +a   # load env vars (Git Bash)
+uv run --group pipelines python scripts/check_motherduck.py   # check the token works
 ```
 
-Run dbt (PowerShell, from anywhere in the repo; loads `.env` for you):
+## Everyday commands
 
 ```powershell
-.\dbt\run_dbt.ps1 build                        # build and test everything in dev_dwh
-.\dbt\run_dbt.ps1 build --select fo_calendar   # one model
+# Load fresh World Bank data into dev_dwh
+uv run --group pipelines python pipelines/world-bank/extract.py
+
+# Build and test dbt models in dev_dwh (PowerShell; loads .env for you)
+.\dbt\run_dbt.ps1 build
+.\dbt\run_dbt.ps1 build --select nigeria_gdp+
+
+# Run every quality check
+uv run pre-commit run --all-files
 ```
+
+## Contributing
+
+1. Branch from `main`.
+2. Make the change, and build it in dev.
+3. Commit with the format `<area or ticket>(<+|~|->): Short description`, e.g. `dbt(+): Add fo_calendar`. The commit hook checks it.
+4. Open a PR. CI runs the checks and a dev build.
+5. Merge. Changes to `dbt/` or `pipelines/` deploy to prod straight away.
 
 ## Related
 
