@@ -1,0 +1,29 @@
+# dbt connection targets. The token is NOT here: the MotherDuck extension reads the
+# MOTHERDUCK_TOKEN environment variable (from .env locally, GitHub Secrets in CI).
+#
+# Isolation comes from separate databases, so a dev build can never overwrite a prod table.
+analytics:
+  target: dev
+  outputs:
+    # Local work and PR checks
+    dev:
+      type: duckdb
+      path: "md:dev_dwh"
+      extensions:
+        - motherduck
+      schema: main
+      threads: 4
+    # Written only by the scheduled GitHub Actions job (phase 6). Database created in phase 4.
+    prod:
+      type: duckdb
+      path: "md:prod_dwh"
+      extensions:
+        - motherduck
+      schema: main
+      threads: 4
+    # In-memory DuckDB for dbt parse in pre-commit and CI: no token, no network
+    ci:
+      type: duckdb
+      path: ":memory:"
+      schema: main
+      threads: 1

@@ -43,18 +43,12 @@ repos:
         types_or: [sql]
       # --no-partial-parse: dbt's partial-parse cache can pass locally while CI, which starts
       # cold, fails on the same commit. A full parse takes seconds and makes them agree.
-      # One entry per dbt project until phase 3 merges them into dbt/.
-      - id: dbt-parse-nigeria
-        name: dbt parse (nigeria-economic-indicators)
-        entry: bash -c 'cd nigeria-economic-indicators/dbt && uv run --group dbt dbt parse --profiles-dir . --no-partial-parse -q'
+      # --target ci parses against in-memory DuckDB, so no token or network is needed.
+      - id: dbt-parse
+        name: dbt parse
+        entry: bash -c 'cd dbt && uv run --group dbt dbt parse --profiles-dir . --target ci --no-partial-parse -q'
         language: system
-        files: ^nigeria-economic-indicators/dbt/.*\.(sql|yml)$
-        pass_filenames: false
-      - id: dbt-parse-sandbox
-        name: dbt parse (sandbox)
-        entry: bash -c 'cd sandbox/dbt && uv run --group dbt dbt parse --profiles-dir . --no-partial-parse -q'
-        language: system
-        files: ^sandbox/dbt/.*\.(sql|yml)$
+        files: ^dbt/.*\.(sql|yml)$
         pass_filenames: false
       - id: commitizen-check
         name: commit message format

@@ -1,7 +1,0 @@
-.env
-__pycache__/
-venv/
-dbt/target/
-dbt/logs/
-dbt/dbt_packages/
-dbt/.user.yml

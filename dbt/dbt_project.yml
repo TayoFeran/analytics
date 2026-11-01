@@ -1,0 +1,33 @@
+name: 'analytics'
+version: '1.0.0'
+config-version: 2
+
+profile: 'analytics'
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# A model's folder decides its schema and materialization, so models don't set them.
+# macros/generate_schema_name.sql makes these schema names exact (no target prefix).
+#   models/<platform>/<layer>/...         layer: bronze (sources only), silver, gold
+#   models/motherduck/gold/<schema>/...   each gold subfolder is its own schema
+models:
+  analytics:
+    motherduck:
+      silver:
+        +schema: silver
+        +materialized: view
+      gold:
+        +materialized: table
+        nigeria:
+          +schema: nigeria
+        sandbox:
+          +schema: sandbox

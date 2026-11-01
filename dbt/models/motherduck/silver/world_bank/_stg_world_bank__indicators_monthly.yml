@@ -1,13 +1,12 @@
 version: 2
 
 models:
-  - name: nigeria_econ_metric_annual
+  - name: stg_world_bank__indicators_monthly
     description: >
-      Typed pass-through of the bronze annual World Bank extract.
-      Grain: one row per indicator per year.
+      Typed pass-through of the bronze monthly World Bank extract.
+      Grain: one row per indicator per year-month.
     columns:
       - name: country_code
-        description: ISO-3 country code. The pipeline only extracts Nigeria.
         data_tests:
           - not_null
           - accepted_values:
@@ -20,14 +19,13 @@ models:
               arguments:
                 values: ['Nigeria']
       - name: indicator_code
-        description: World Bank indicator code driving the extract.
         data_tests:
           - not_null
           - accepted_values:
               arguments:
                 values:
-                  - 'NY.GDP.MKTP.CD'
-                  - 'SP.POP.TOTL'
+                  - 'DPANUSSPB'
+                  - 'CPTOTNSXN'
       - name: indicator_name
         description: >
           Human-readable indicator label. The gold layer filters on this column
@@ -37,16 +35,17 @@ models:
           - accepted_values:
               arguments:
                 values:
-                  - 'GDP (current US$)'
-                  - 'Population, total'
+                  - 'Official exchange rate (LCU per US$, monthly)'
+                  - 'CPI price index, not seasonally adjusted'
       - name: year
         data_tests:
           - not_null
+      - name: month
+        data_tests:
+          - not_null
       - name: value
-        description: Indicator value. Nulls are dropped during extraction.
         data_tests:
           - not_null
       - name: extracted_at
-        description: UTC timestamp of the extract run that produced the row.
         data_tests:
           - not_null

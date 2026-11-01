@@ -1,20 +1,20 @@
 version: 2
 
 models:
-  - name: nigeria_gdp
+  - name: nigeria_consumer_price_index
     description: >
-      Nigeria GDP (current US$), one row per year, sourced from the annual
-      silver model filtered to the GDP indicator.
+      Nigeria CPI (not seasonally adjusted), one row per month, sourced from the
+      monthly silver model filtered to the CPI indicator.
     columns:
       - name: date
-        description: Year start (Jan 1) for the observation.
+        description: Month start for the observation.
         data_tests:
           - not_null
           - unique
           - relationships:
               arguments:
-                to: ref('nigeria_econ_metric_annual')
-                field: make_date(year, 1, 1)
+                to: ref('stg_world_bank__indicators_monthly')
+                field: make_date(year, month, 1)
       - name: country_code
         data_tests:
           - not_null
@@ -27,11 +27,10 @@ models:
           - accepted_values:
               arguments:
                 values: ['Nigeria']
-      - name: gdp
-        description: GDP in current US dollars.
+      - name: cpi_rate
+        description: CPI index value, rounded to whole units.
         data_tests:
           - not_null
       - name: extracted_at
-        description: Date of the extract run that produced the row.
         data_tests:
           - not_null

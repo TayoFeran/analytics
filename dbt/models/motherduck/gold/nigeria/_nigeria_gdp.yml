@@ -1,10 +1,10 @@
 version: 2
 
 models:
-  - name: nigeria_population
+  - name: nigeria_gdp
     description: >
-      Nigeria total population, one row per year, sourced from the annual
-      silver model filtered to the population indicator.
+      Nigeria GDP (current US$), one row per year, sourced from the annual
+      silver model filtered to the GDP indicator.
     columns:
       - name: date
         description: Year start (Jan 1) for the observation.
@@ -13,7 +13,7 @@ models:
           - unique
           - relationships:
               arguments:
-                to: ref('nigeria_econ_metric_annual')
+                to: ref('stg_world_bank__indicators_annual')
                 field: make_date(year, 1, 1)
       - name: country_code
         data_tests:
@@ -27,10 +27,11 @@ models:
           - accepted_values:
               arguments:
                 values: ['Nigeria']
-      - name: population
-        description: Total population, cast to integer.
+      - name: gdp
+        description: GDP in current US dollars.
         data_tests:
           - not_null
       - name: extracted_at
+        description: Date of the extract run that produced the row.
         data_tests:
           - not_null

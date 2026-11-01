@@ -32,6 +32,9 @@ The repo is being restructured. Follow `docs/restructure/PLAN.md` for the target
 - Load env first (Git Bash): `set -a; source .env; set +a`
 - Tests: one `_<model_name>.yml` per model, next to its `.sql`. Built-in generic tests only (`unique`, `not_null`, `accepted_values`, `relationships`), with args nested under `arguments:`. No `dbt_utils`, no custom or singular tests.
 - After a model or yml change: `dbt parse --no-partial-parse`, then `dbt build --target dev --select <model>+`.
+- Run dbt with `.\dbt\run_dbt.ps1 <command>` (PowerShell, loads `.env`), or from `dbt/` with `uv run --group dbt dbt <command> --profiles-dir .`.
+- A model's folder sets its schema and materialization in `dbt_project.yml`. Don't add `config(schema=..., materialized=...)` to model files.
+- Silver models are named `stg_<source>__<entity>`. Sources are declared in `bronze/<source>/_<source>__sources.yml`.
 
 ## Fabric
 

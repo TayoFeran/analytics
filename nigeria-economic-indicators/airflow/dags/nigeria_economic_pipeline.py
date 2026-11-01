@@ -4,11 +4,11 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 
 PROJECT_DIR = "/usr/local/airflow/project"
-DBT_DIR = f"{PROJECT_DIR}/dbt"
+DBT_DIR = "/usr/local/airflow/dbt"  # repo-root dbt/, mounted in docker-compose.override.yml
 
 with DAG(
     dag_id="nigeria_economic_indicators_pipeline",
-    description="World Bank API -> MotherDuck bronze -> dbt silver/analytics",
+    description="World Bank API -> MotherDuck bronze -> dbt silver/gold",
     start_date=datetime(2026, 1, 1),
     schedule="@daily",  # runs once every day at midnight UTC
     catchup=False,
