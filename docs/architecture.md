@@ -29,6 +29,8 @@ The repo and warehouse are shared by unrelated projects. Every layer is organize
 | gold | `dbt/models/motherduck/gold/<schema>/` | one schema per subfolder: `nigeria`, `sandbox`, `datamart` | dbt (tables) | a business-ready fact, e.g. one month of the FX rate |
 | seeds | `dbt/seeds/<schema>/` | one schema per subfolder: `sandbox` | dbt (`dbt seed`, part of `dbt build`) | a row of a small hand-maintained reference list, e.g. a state and its zone |
 
+Dashboards built on gold live in `dashboards/<dashboard-name>/`, one folder per dashboard, holding its design files and, later, its Power BI project. Today: `dashboards/nigeria-data-dashboard/` (#2).
+
 Gold tables today:
 
 | Table | Grain | Source |
