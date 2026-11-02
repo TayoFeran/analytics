@@ -1,0 +1,63 @@
+table dim_administration
+
+	column president
+		dataType: string
+		summarizeBy: none
+		sourceColumn: president
+
+		annotation SummarizationSetBy = Automatic
+
+	column full_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: full_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column party
+		dataType: string
+		summarizeBy: none
+		sourceColumn: party
+
+		annotation SummarizationSetBy = Automatic
+
+	column term_start
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		summarizeBy: none
+		sourceColumn: term_start
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column term_end
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		summarizeBy: none
+		sourceColumn: term_end
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column first_disbursement_month
+		dataType: dateTime
+		isHidden
+		formatString: mmm yyyy
+		summarizeBy: none
+		sourceColumn: first_disbursement_month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition dim_administration = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database(MotherDuckHost, MotherDuckDatabase), "select#(lf)    president,#(lf)    full_name,#(lf)    party,#(lf)    term_start::date as term_start,#(lf)    term_end::date as term_end,#(lf)    first_disbursement_month::date as first_disbursement_month#(lf)from sandbox.nigeria_administration", null, [EnableFolding = true])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

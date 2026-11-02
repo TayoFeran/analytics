@@ -1,0 +1,45 @@
+table Compare_B
+
+	column compare_by
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: compare_by
+
+		annotation SummarizationSetBy = Automatic
+
+	column compare_by_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: compare_by_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column member
+		dataType: string
+		summarizeBy: none
+		sourceColumn: member
+		sortByColumn: member_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column member_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: member_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Compare_B = m
+		mode: import
+		source =
+				let
+				    Source = Compare_A
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

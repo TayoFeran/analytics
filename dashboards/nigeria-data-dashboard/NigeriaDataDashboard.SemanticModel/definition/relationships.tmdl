@@ -1,0 +1,20 @@
+relationship 20eba80b-2873-5395-85b4-3e7cd91ed3f7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: faac.disbursement_date
+	toColumn: calendar_table.date
+
+relationship 15c8b1c4-5d69-510f-b4e4-f43551c73b1c
+	fromColumn: faac.state
+	toColumn: dim_state.state
+
+relationship b34571fd-be23-5c70-9a67-480b2950bc7e
+	fromColumn: faac.president
+	toColumn: dim_administration.president
+
+relationship 37381f4d-d97a-5cd2-a9c6-207e0aab2430
+	fromColumn: Compare_A.compare_by
+	toColumn: Compare_By.compare_by
+
+relationship c2093194-4a9e-5659-8c84-a91e83e4e876
+	fromColumn: Compare_B.compare_by
+	toColumn: Compare_By.compare_by

@@ -1,0 +1,49 @@
+table 'Compare Side'
+
+	calculationGroup
+		precedence: 20
+
+		calculationItem A =
+				VAR _by = SELECTEDVALUE ( Compare_By[compare_by], "Administration" )
+				VAR _m = SELECTEDVALUE ( Compare_A[member] )
+				RETURN
+				    SWITCH (
+				        _by,
+				        "Administration", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_administration[president] ) ),
+				        "State", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[state] ) ),
+				        "Zone", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[zone] ) ),
+				        "Region", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[region] ) )
+				    )
+			ordinal: 0
+
+		calculationItem B =
+				VAR _by = SELECTEDVALUE ( Compare_By[compare_by], "Administration" )
+				VAR _m = SELECTEDVALUE ( Compare_B[member] )
+				RETURN
+				    SWITCH (
+				        _by,
+				        "Administration", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_administration[president] ) ),
+				        "State", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[state] ) ),
+				        "Zone", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[zone] ) ),
+				        "Region", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[region] ) )
+				    )
+			ordinal: 1
+
+	column Name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Name
+		sortByColumn: Ordinal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ordinal
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: Ordinal
+
+		annotation SummarizationSetBy = Automatic
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,75 @@
+table Metric_param
+
+	column Metric_param
+		dataType: string
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Metric_param Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Metric_param Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Metric_param Fields'
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Metric_param Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Metric_param Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Metric_key
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Value4]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Metric_family
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Value5]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Metric_param = calculated
+		mode: import
+		source =
+				{
+				    ("Gross allocation", NAMEOF ( 'Dax'[Gross] ), 0, "Gross", "Income"),
+				    ("Statutory allocation", NAMEOF ( 'Dax'[Statutory] ), 1, "Statutory", "Income"),
+				    ("VAT", NAMEOF ( 'Dax'[VAT] ), 2, "VAT", "Income"),
+				    ("Oil derivation", NAMEOF ( 'Dax'[Oil_Derivation] ), 3, "Oil_Derivation", "Income"),
+				    ("Exchange gain", NAMEOF ( 'Dax'[Exchange_Gain] ), 4, "Exchange_Gain", "Income"),
+				    ("Ecology fund", NAMEOF ( 'Dax'[Ecology] ), 5, "Ecology", "Income"),
+				    ("Other income", NAMEOF ( 'Dax'[Others_Income] ), 6, "Others_Income", "Income"),
+				    ("Total deductions", NAMEOF ( 'Dax'[Deductions] ), 7, "Deductions", "Deduction"),
+				    ("External debt", NAMEOF ( 'Dax'[External_Debt] ), 8, "External_Debt", "Deduction"),
+				    ("Contractual obligations (ISPO)", NAMEOF ( 'Dax'[Contractual_Obligation] ), 9, "Contractual_Obligation", "Deduction"),
+				    ("NDDC / HYPPADEC transfer", NAMEOF ( 'Dax'[NDDC_Transfer] ), 10, "NDDC_Transfer", "Deduction"),
+				    ("Other deductions (see note)", NAMEOF ( 'Dax'[Other_Deductions_Note] ), 11, "Other_Deductions_Note", "Deduction"),
+				    ("Deduction (unlabelled)", NAMEOF ( 'Dax'[Deduction_Misc] ), 12, "Deduction_Misc", "Deduction"),
+				    ("Other deductions", NAMEOF ( 'Dax'[Other_Deduction] ), 13, "Other_Deduction", "Deduction"),
+				    ("Net received", NAMEOF ( 'Dax'[Net] ), 14, "Net", "Net")
+				}
+
+	annotation PBI_ResultType = Table

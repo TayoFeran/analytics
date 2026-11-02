@@ -4,7 +4,7 @@ A Power BI dashboard for public Nigerian data, organised in sections. Tracked in
 
 | Section | Status | Source tables (`prod_dwh`) |
 |---|---|---|
-| FAAC | In design | `datamart.nigeria_faac_state_month`, `sandbox.nigeria_state`, `sandbox.nigeria_administration`, `sandbox.fo_calendar` |
+| FAAC | Model built, pages in progress | `datamart.nigeria_faac_state_month`, `sandbox.nigeria_state`, `sandbox.nigeria_administration`, `sandbox.fo_calendar` |
 | Economic metrics | Planned | `nigeria.*` World Bank indicators |
 | Elections | Planned | Needs a new source |
 
@@ -13,6 +13,10 @@ A Power BI dashboard for public Nigerian data, organised in sections. Tracked in
 ```text
 nigeria-data-dashboard/
 ├── README.md
+├── NigeriaDataDashboard.pbip              open this in Power BI Desktop
+├── NigeriaDataDashboard.SemanticModel/    tables, relationships and measures, as TMDL
+├── NigeriaDataDashboard.Report/           pages and visuals, as PBIR JSON
+├── queries/                               readable copy of each table's SQL
 └── design/
     ├── make_backgrounds.py   draws the page and tooltip backgrounds, and placement.md
     ├── placement.md          x / y / w / h of every visual and nav button, tooltip pages included
@@ -21,7 +25,22 @@ nigeria-data-dashboard/
                               tt_*.png: one image per tooltip page, at 2x its custom size
 ```
 
-The Power BI project files (`.pbip`, semantic model and report) will be added here once they're built.
+The project is saved as PBIP so every change shows up in a git diff. Power BI also writes a `.pbi/` folder with the data cache and per-user settings; `.gitignore` keeps those out, because the cache holds query results.
+
+## Connecting to MotherDuck
+
+The model reads MotherDuck through its Postgres endpoint. Two parameters (Transform data → Edit parameters) set where:
+
+| Parameter | Value | Note |
+|---|---|---|
+| `MotherDuckHost` | `pg.eu-west-1-aws.motherduck.com` | Not a secret |
+| `MotherDuckDatabase` | `prod_dwh` | Switch to `dev_dwh` to test model changes, then switch back |
+
+The first refresh asks for credentials: choose **Database**, any user name, and a MotherDuck token as the password. Power BI keeps it in its own credential store, so the token is never written into the project files.
+
+A fresh clone has no data until you refresh (Home → Refresh), because the cache isn't in git.
+
+Each table loads with a native SQL query. The same SQL is in `queries/<table>.sql`, which is easier to read and review than the one-line copy inside the TMDL. Change both together.
 
 ## Page backgrounds
 

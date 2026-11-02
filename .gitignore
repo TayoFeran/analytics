@@ -33,3 +33,8 @@ airflow_settings.yaml
 .idea/
 .DS_Store
 Thumbs.db
+
+# Power BI projects: per-user settings and the data cache (it holds query results)
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+*.pbix

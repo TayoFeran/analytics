@@ -1,0 +1,21 @@
+table 'Refresh Time'
+
+	column refreshed_at
+		dataType: dateTime
+		isHidden
+		formatString: dd-mmm-yy hh:mm:ss
+		summarizeBy: none
+		sourceColumn: refreshed_at
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Refresh Time' = m
+		mode: import
+		source =
+				let
+				    // Lagos time (UTC+1) when the model was last refreshed
+				    Source = #table(type table [refreshed_at = datetime], {{DateTimeZone.RemoveZone(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), 1, 0))}})
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,1260 @@
+table Dax
+
+	measure Gross =
+			-- Gross allocation in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[total_gross_amount_usd] ),
+			    SUM ( faac[total_gross_amount] )
+			)
+		displayFolder: 01 Base\Income
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Statutory =
+			-- Statutory allocation in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[statutory_allocation_usd] ),
+			    SUM ( faac[statutory_allocation] )
+			)
+		displayFolder: 01 Base\Income
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure VAT =
+			-- VAT in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[gross_vat_allocation_usd] ),
+			    SUM ( faac[gross_vat_allocation] )
+			)
+		displayFolder: 01 Base\Income
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Oil_Derivation =
+			-- Oil derivation in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[oil_derivation_usd] ),
+			    SUM ( faac[oil_derivation] )
+			)
+		displayFolder: 01 Base\Income
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Exchange_Gain =
+			-- Exchange gain in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[exchange_gain_difference_usd] ),
+			    SUM ( faac[exchange_gain_difference] )
+			)
+		displayFolder: 01 Base\Income
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Ecology =
+			-- Ecology fund in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[total_ecology_fund_usd] ),
+			    SUM ( faac[total_ecology_fund] )
+			)
+		displayFolder: 01 Base\Income
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Others_Income =
+			-- Other income in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[others_income_usd] ),
+			    SUM ( faac[others_income] )
+			)
+		displayFolder: 01 Base\Income
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Deductions =
+			-- Total deductions in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[total_deductions_usd] ),
+			    SUM ( faac[total_deductions] )
+			)
+		displayFolder: 01 Base\Deductions
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure External_Debt =
+			-- External debt in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[external_debt_usd] ),
+			    SUM ( faac[external_debt] )
+			)
+		displayFolder: 01 Base\Deductions
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Contractual_Obligation =
+			-- Contractual obligations (ISPO) in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[contractual_obligation_ispo_usd] ),
+			    SUM ( faac[contractual_obligation_ispo] )
+			)
+		displayFolder: 01 Base\Deductions
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure NDDC_Transfer =
+			-- NDDC / HYPPADEC transfer in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[transfer_nddc_hyppadec_usd] ),
+			    SUM ( faac[transfer_nddc_hyppadec] )
+			)
+		displayFolder: 01 Base\Deductions
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Other_Deductions_Note =
+			-- Other deductions (see note) in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[other_deductions_note_usd] ),
+			    SUM ( faac[other_deductions_note] )
+			)
+		displayFolder: 01 Base\Deductions
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Deduction_Misc =
+			-- Deduction (unlabelled) in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[deduction_misc_usd] ),
+			    SUM ( faac[deduction_misc] )
+			)
+		displayFolder: 01 Base\Deductions
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Other_Deduction =
+			-- Other deductions in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[other_deduction_usd] ),
+			    SUM ( faac[other_deduction] )
+			)
+		displayFolder: 01 Base\Deductions
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Net =
+			-- Net received in the currency picked on the ₦/$ switch
+			IF (
+			    SELECTEDVALUE ( Currency[Currency], "₦" ) = "$",
+			    SUM ( faac[net_amount_after_deductions_usd] ),
+			    SUM ( faac[net_amount_after_deductions] )
+			)
+		displayFolder: 01 Base\Net
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Net_rate =
+			-- Share of the gross allocation the state actually received
+			DIVIDE ( [Net], [Gross], 0 )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 01 Base\Net
+
+	measure Months =
+			DISTINCTCOUNT ( faac[disbursement_date] )
+		formatString: #,0
+		displayFolder: 01 Base\Context
+
+	measure States =
+			DISTINCTCOUNT ( faac[state] )
+		formatString: #,0
+		displayFolder: 01 Base\Context
+
+	measure State_months =
+			-- State-month rows, the divisor for the Per state per month basis
+			COUNTROWS ( faac )
+		formatString: #,0
+		displayFolder: 01 Base\Context
+
+	measure Latest_month =
+			-- Latest month with FAAC data, whatever is selected
+			CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
+		formatString: mmm yyyy
+		displayFolder: 01 Base\Context
+
+	measure FX_rate_avg =
+			-- Average of the monthly official rates in the selection (naira per US dollar)
+			AVERAGEX ( VALUES ( faac[disbursement_date] ), CALCULATE ( MAX ( faac[naira_per_usd] ) ) )
+		formatString: ₦#,0.00
+		displayFolder: 01 Base\Context
+
+	measure Metric_value =
+			-- Value of the metric picked in Metric_param (a matrix row or column, a hovered cell, or a
+			-- card's visual filter). Sums columns directly, so calculation groups apply to it exactly once.
+			VAR _k = SELECTEDVALUE ( Metric_param[Metric_key] )
+			VAR _usd = SELECTEDVALUE ( Currency[Currency], "₦" ) = "$"
+			RETURN
+			    SWITCH (
+			        _k,
+			        "Gross", IF ( _usd, SUM ( faac[total_gross_amount_usd] ), SUM ( faac[total_gross_amount] ) ),
+			        "Statutory", IF ( _usd, SUM ( faac[statutory_allocation_usd] ), SUM ( faac[statutory_allocation] ) ),
+			        "VAT", IF ( _usd, SUM ( faac[gross_vat_allocation_usd] ), SUM ( faac[gross_vat_allocation] ) ),
+			        "Oil_Derivation", IF ( _usd, SUM ( faac[oil_derivation_usd] ), SUM ( faac[oil_derivation] ) ),
+			        "Exchange_Gain", IF ( _usd, SUM ( faac[exchange_gain_difference_usd] ), SUM ( faac[exchange_gain_difference] ) ),
+			        "Ecology", IF ( _usd, SUM ( faac[total_ecology_fund_usd] ), SUM ( faac[total_ecology_fund] ) ),
+			        "Others_Income", IF ( _usd, SUM ( faac[others_income_usd] ), SUM ( faac[others_income] ) ),
+			        "Deductions", IF ( _usd, SUM ( faac[total_deductions_usd] ), SUM ( faac[total_deductions] ) ),
+			        "External_Debt", IF ( _usd, SUM ( faac[external_debt_usd] ), SUM ( faac[external_debt] ) ),
+			        "Contractual_Obligation", IF ( _usd, SUM ( faac[contractual_obligation_ispo_usd] ), SUM ( faac[contractual_obligation_ispo] ) ),
+			        "NDDC_Transfer", IF ( _usd, SUM ( faac[transfer_nddc_hyppadec_usd] ), SUM ( faac[transfer_nddc_hyppadec] ) ),
+			        "Other_Deductions_Note", IF ( _usd, SUM ( faac[other_deductions_note_usd] ), SUM ( faac[other_deductions_note] ) ),
+			        "Deduction_Misc", IF ( _usd, SUM ( faac[deduction_misc_usd] ), SUM ( faac[deduction_misc] ) ),
+			        "Other_Deduction", IF ( _usd, SUM ( faac[other_deduction_usd] ), SUM ( faac[other_deduction] ) ),
+			        "Net", IF ( _usd, SUM ( faac[net_amount_after_deductions_usd] ), SUM ( faac[net_amount_after_deductions] ) )
+			    )
+		displayFolder: 01 Base\Selected metric
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Oil_Derivation_share =
+			DIVIDE ( [Oil_Derivation], [Gross], 0 )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 02 Rates & Averages\Shares
+
+	measure VAT_share =
+			DIVIDE ( [VAT], [Gross], 0 )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 02 Rates & Averages\Shares
+
+	measure Deductions_share =
+			DIVIDE ( [Deductions], [Gross], 0 )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 02 Rates & Averages\Shares
+
+	measure Net_share_national =
+			-- The state's share of the net received by all states, for the current period
+			DIVIDE ( [Net_curr], CALCULATE ( [Net_curr], REMOVEFILTERS ( dim_state ) ), 0 )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 02 Rates & Averages\Shares
+
+	measure Gross_curr =
+			CALCULATE ( [Gross], 'Period Calc'[Name] = "Current" )
+		displayFolder: 03 Period Comparison\Gross
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Gross_prev =
+			CALCULATE ( [Gross], 'Period Calc'[Name] = "Previous" )
+		displayFolder: 03 Period Comparison\Gross
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Gross_PnP =
+			CALCULATE ( [Gross], 'Period Calc'[Name] = "Change %" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 03 Period Comparison\Gross
+
+	measure 'Gross_G&D' =
+			CALCULATE ( [Gross], 'Period Calc'[Name] = "Trend" )
+		displayFolder: 03 Period Comparison\Gross
+
+	measure Gross_colour =
+			-- Up is good
+			VAR _chg = [Gross_PnP]
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( _chg ) || ROUND ( _chg, 4 ) = 0, "#C98A00",
+			        _chg > 0, "#0E8A5F",
+			        "#C93C3C"
+			    )
+		displayFolder: 03 Period Comparison\Gross
+
+	measure Gross_change_text =
+			-- e.g. "▲ 8.9% Growth · vs Mar 2026"
+			VAR _chg = [Gross_PnP]
+			VAR _mark =
+			    SWITCH ( TRUE (), ROUND ( _chg, 4 ) = 0, UNICHAR ( 9632 ), _chg > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) )
+			RETURN
+			    IF (
+			        ISBLANK ( _chg ),
+			        "No data for this period",
+			        _mark & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [Gross_G&D] & " · " & [Periodic_text]
+			    )
+		displayFolder: 03 Period Comparison\Gross
+
+	measure Deductions_curr =
+			CALCULATE ( [Deductions], 'Period Calc'[Name] = "Current" )
+		displayFolder: 03 Period Comparison\Deductions
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Deductions_prev =
+			CALCULATE ( [Deductions], 'Period Calc'[Name] = "Previous" )
+		displayFolder: 03 Period Comparison\Deductions
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Deductions_PnP =
+			CALCULATE ( [Deductions], 'Period Calc'[Name] = "Change %" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 03 Period Comparison\Deductions
+
+	measure 'Deductions_G&D' =
+			CALCULATE ( [Deductions], 'Period Calc'[Name] = "Trend" )
+		displayFolder: 03 Period Comparison\Deductions
+
+	measure Deductions_colour =
+			-- Up is bad: more was deducted
+			VAR _chg = [Deductions_PnP]
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( _chg ) || ROUND ( _chg, 4 ) = 0, "#C98A00",
+			        _chg < 0, "#0E8A5F",
+			        "#C93C3C"
+			    )
+		displayFolder: 03 Period Comparison\Deductions
+
+	measure Deductions_change_text =
+			-- e.g. "▲ 8.9% Growth · vs Mar 2026"
+			VAR _chg = [Deductions_PnP]
+			VAR _mark =
+			    SWITCH ( TRUE (), ROUND ( _chg, 4 ) = 0, UNICHAR ( 9632 ), _chg > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) )
+			RETURN
+			    IF (
+			        ISBLANK ( _chg ),
+			        "No data for this period",
+			        _mark & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [Deductions_G&D] & " · " & [Periodic_text]
+			    )
+		displayFolder: 03 Period Comparison\Deductions
+
+	measure Net_curr =
+			CALCULATE ( [Net], 'Period Calc'[Name] = "Current" )
+		displayFolder: 03 Period Comparison\Net
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Net_prev =
+			CALCULATE ( [Net], 'Period Calc'[Name] = "Previous" )
+		displayFolder: 03 Period Comparison\Net
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Net_PnP =
+			CALCULATE ( [Net], 'Period Calc'[Name] = "Change %" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 03 Period Comparison\Net
+
+	measure 'Net_G&D' =
+			CALCULATE ( [Net], 'Period Calc'[Name] = "Trend" )
+		displayFolder: 03 Period Comparison\Net
+
+	measure Net_colour =
+			-- Up is good
+			VAR _chg = [Net_PnP]
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( _chg ) || ROUND ( _chg, 4 ) = 0, "#C98A00",
+			        _chg > 0, "#0E8A5F",
+			        "#C93C3C"
+			    )
+		displayFolder: 03 Period Comparison\Net
+
+	measure Net_change_text =
+			-- e.g. "▲ 8.9% Growth · vs Mar 2026"
+			VAR _chg = [Net_PnP]
+			VAR _mark =
+			    SWITCH ( TRUE (), ROUND ( _chg, 4 ) = 0, UNICHAR ( 9632 ), _chg > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) )
+			RETURN
+			    IF (
+			        ISBLANK ( _chg ),
+			        "No data for this period",
+			        _mark & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [Net_G&D] & " · " & [Periodic_text]
+			    )
+		displayFolder: 03 Period Comparison\Net
+
+	measure FX_rate_curr =
+			CALCULATE ( [FX_rate_avg], 'Period Calc'[Name] = "Current" )
+		formatString: ₦#,0.00
+		displayFolder: 03 Period Comparison\FX_rate
+
+	measure FX_rate_prev =
+			CALCULATE ( [FX_rate_avg], 'Period Calc'[Name] = "Previous" )
+		formatString: ₦#,0.00
+		displayFolder: 03 Period Comparison\FX_rate
+
+	measure FX_rate_PnP =
+			CALCULATE ( [FX_rate_avg], 'Period Calc'[Name] = "Change %" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 03 Period Comparison\FX_rate
+
+	measure 'FX_rate_G&D' =
+			CALCULATE ( [FX_rate_avg], 'Period Calc'[Name] = "Trend" )
+		displayFolder: 03 Period Comparison\FX_rate
+
+	measure FX_rate_colour =
+			-- Up is bad (a higher rate means a weaker naira)
+			VAR _chg = [FX_rate_PnP]
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( _chg ) || ROUND ( _chg, 4 ) = 0, "#C98A00",
+			        _chg < 0, "#0E8A5F",
+			        "#C93C3C"
+			    )
+		displayFolder: 03 Period Comparison\FX_rate
+
+	measure FX_rate_change_text =
+			-- e.g. "▲ 8.9% Growth · vs Mar 2026"
+			VAR _chg = [FX_rate_PnP]
+			VAR _mark =
+			    SWITCH ( TRUE (), ROUND ( _chg, 4 ) = 0, UNICHAR ( 9632 ), _chg > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) )
+			RETURN
+			    IF (
+			        ISBLANK ( _chg ),
+			        "No data for this period",
+			        _mark & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [FX_rate_G&D] & " · " & [Periodic_text]
+			    )
+		displayFolder: 03 Period Comparison\FX_rate
+
+	measure Metric_value_curr =
+			CALCULATE ( [Metric_value], 'Period Calc'[Name] = "Current" )
+		displayFolder: 03 Period Comparison\Metric (tooltip)
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Metric_value_prev =
+			CALCULATE ( [Metric_value], 'Period Calc'[Name] = "Previous" )
+		displayFolder: 03 Period Comparison\Metric (tooltip)
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Metric_value_PnP =
+			CALCULATE ( [Metric_value], 'Period Calc'[Name] = "Change %" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 03 Period Comparison\Metric (tooltip)
+
+	measure 'Metric_value_G&D' =
+			CALCULATE ( [Metric_value], 'Period Calc'[Name] = "Trend" )
+		displayFolder: 03 Period Comparison\Metric (tooltip)
+
+	measure Metric_value_colour =
+			-- Income and net: up is good. Deductions: up is bad. No change: amber.
+			VAR _chg = [Metric_value_PnP]
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( _chg ) || ROUND ( _chg, 4 ) = 0, "#C98A00",
+			        ( _chg > 0 ) = ( SELECTEDVALUE ( Metric_param[Metric_family] ) <> "Deduction" ), "#0E8A5F",
+			        "#C93C3C"
+			    )
+		displayFolder: 03 Period Comparison\Metric (tooltip)
+
+	measure Metric_change_text =
+			-- e.g. "▲ 8.9% Growth · vs Mar 2026"
+			VAR _chg = [Metric_value_PnP]
+			VAR _mark =
+			    SWITCH ( TRUE (), ROUND ( _chg, 4 ) = 0, UNICHAR ( 9632 ), _chg > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) )
+			RETURN
+			    IF (
+			        ISBLANK ( _chg ),
+			        "No data for this period",
+			        _mark & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [Metric_value_G&D] & " · " & [Periodic_text]
+			    )
+		displayFolder: 03 Period Comparison\Metric (tooltip)
+
+	measure Side_A_label =
+			SELECTEDVALUE ( Compare_A[member], "Pick side A" )
+		displayFolder: 04 Comparison\Sides
+
+	measure Side_B_label =
+			SELECTEDVALUE ( Compare_B[member], "Pick side B" )
+		displayFolder: 04 Comparison\Sides
+
+	measure Side_A_meta =
+			-- e.g. "APC · 96 months · 36 states"
+			VAR _by = SELECTEDVALUE ( Compare_By[compare_by], "Administration" )
+			VAR _months = CALCULATE ( [Months], 'Compare Side'[Name] = "A" )
+			VAR _states = CALCULATE ( [States], 'Compare Side'[Name] = "A" )
+			VAR _party =
+			    IF (
+			        _by = "Administration",
+			        LOOKUPVALUE ( dim_administration[party], dim_administration[president], [Side_A_label] ) & " · "
+			    )
+			RETURN
+			    IF (
+			        ISBLANK ( _months ),
+			        "No data",
+			        _party & _months & IF ( _months = 1, " month", " months" ) & " · "
+			            & _states & IF ( _states = 1, " state", " states" )
+			    )
+		displayFolder: 04 Comparison\Sides
+
+	measure Side_B_meta =
+			-- e.g. "APC · 96 months · 36 states"
+			VAR _by = SELECTEDVALUE ( Compare_By[compare_by], "Administration" )
+			VAR _months = CALCULATE ( [Months], 'Compare Side'[Name] = "B" )
+			VAR _states = CALCULATE ( [States], 'Compare Side'[Name] = "B" )
+			VAR _party =
+			    IF (
+			        _by = "Administration",
+			        LOOKUPVALUE ( dim_administration[party], dim_administration[president], [Side_B_label] ) & " · "
+			    )
+			RETURN
+			    IF (
+			        ISBLANK ( _months ),
+			        "No data",
+			        _party & _months & IF ( _months = 1, " month", " months" ) & " · "
+			            & _states & IF ( _states = 1, " state", " states" )
+			    )
+		displayFolder: 04 Comparison\Sides
+
+	measure Side_A_total =
+			-- Side A's total for the metric picked in Metric_param. Ignores Basis on purpose:
+			-- callers read the Basis slicer themselves and divide.
+			CALCULATE ( [Metric_value], 'Compare Side'[Name] = "A", REMOVEFILTERS ( Basis[Basis] ) )
+		displayFolder: 04 Comparison\Sides
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Side_B_total =
+			-- Side B's total for the metric picked in Metric_param. Ignores Basis on purpose:
+			-- callers read the Basis slicer themselves and divide.
+			CALCULATE ( [Metric_value], 'Compare Side'[Name] = "B", REMOVEFILTERS ( Basis[Basis] ) )
+		displayFolder: 04 Comparison\Sides
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Side_A_months =
+			CALCULATE ( [Months], 'Compare Side'[Name] = "A", REMOVEFILTERS ( Basis[Basis] ) )
+		formatString: #,0
+		displayFolder: 04 Comparison\Sides
+
+	measure Side_B_months =
+			CALCULATE ( [Months], 'Compare Side'[Name] = "B", REMOVEFILTERS ( Basis[Basis] ) )
+		formatString: #,0
+		displayFolder: 04 Comparison\Sides
+
+	measure Side_A_state_months =
+			CALCULATE ( [State_months], 'Compare Side'[Name] = "A", REMOVEFILTERS ( Basis[Basis] ) )
+		formatString: #,0
+		displayFolder: 04 Comparison\Sides
+
+	measure Side_B_state_months =
+			CALCULATE ( [State_months], 'Compare Side'[Name] = "B", REMOVEFILTERS ( Basis[Basis] ) )
+		formatString: #,0
+		displayFolder: 04 Comparison\Sides
+
+	measure Side_A_value =
+			-- Side A's value of the metric picked in Metric_param, on the selected Basis.
+			-- Put it directly in a visual; inside another measure it can't see the Basis slicer.
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _a =
+			    DIVIDE (
+			        CALCULATE ( [Side_A_total] ),
+			        SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 )
+			    )
+			VAR _b =
+			    DIVIDE (
+			        CALCULATE ( [Side_B_total] ),
+			        SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 )
+			    )
+			RETURN
+			    _a
+		displayFolder: 04 Comparison\Sides
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Side_B_value =
+			-- Side B's value of the metric picked in Metric_param, on the selected Basis.
+			-- Put it directly in a visual; inside another measure it can't see the Basis slicer.
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _a =
+			    DIVIDE (
+			        CALCULATE ( [Side_A_total] ),
+			        SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 )
+			    )
+			VAR _b =
+			    DIVIDE (
+			        CALCULATE ( [Side_B_total] ),
+			        SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 )
+			    )
+			RETURN
+			    _b
+		displayFolder: 04 Comparison\Sides
+
+		formatStringDefinition =
+				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+				VAR _a = ABS ( SELECTEDMEASURE () )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
+				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
+				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
+				        """" & _s & """#,0"
+				    )
+
+	measure Compare_valid =
+			-- Warning text when both sides are the same; blank otherwise
+			VAR _by = SELECTEDVALUE ( Compare_By[compare_by], "Administration" )
+			RETURN
+			    IF (
+			        NOT ISBLANK ( SELECTEDVALUE ( Compare_A[member] ) )
+			            && SELECTEDVALUE ( Compare_A[member] ) = SELECTEDVALUE ( Compare_B[member] ),
+			        "Pick two different " & LOWER ( _by ) & "s to compare."
+			    )
+		displayFolder: 04 Comparison\Sides
+
+	measure Metric_A_colour =
+			-- Green if Side A is better, red if worse, amber if equal. For deductions, higher is worse.
+			VAR _fam = SELECTEDVALUE ( Metric_param[Metric_family] )
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _a =
+			    DIVIDE (
+			        CALCULATE ( [Side_A_total] ),
+			        SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 )
+			    )
+			VAR _b =
+			    DIVIDE (
+			        CALCULATE ( [Side_B_total] ),
+			        SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 )
+			    )
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( _a ) || ISBLANK ( _b ), "#6B7C73",
+			        ROUND ( _a, 0 ) = ROUND ( _b, 0 ), "#C98A00",
+			        ( _a > _b ) = ( _fam <> "Deduction" ), "#0E8A5F",
+			        "#C93C3C"
+			    )
+		displayFolder: 04 Comparison\Colours
+
+	measure Metric_B_colour =
+			-- Green if Side B is better, red if worse, amber if equal. For deductions, higher is worse.
+			VAR _fam = SELECTEDVALUE ( Metric_param[Metric_family] )
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _a =
+			    DIVIDE (
+			        CALCULATE ( [Side_A_total] ),
+			        SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 )
+			    )
+			VAR _b =
+			    DIVIDE (
+			        CALCULATE ( [Side_B_total] ),
+			        SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 )
+			    )
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( _a ) || ISBLANK ( _b ), "#6B7C73",
+			        ROUND ( _a, 0 ) = ROUND ( _b, 0 ), "#C98A00",
+			        ( _b > _a ) = ( _fam <> "Deduction" ), "#0E8A5F",
+			        "#C93C3C"
+			    )
+		displayFolder: 04 Comparison\Colours
+
+	measure Last_6_Period_flag =
+			-- 1 for the 6 months up to the latest month with data (sparklines, tooltip trends)
+			VAR _last = [Latest_month]
+			VAR _m = MAX ( calendar_table[month_date] )
+			RETURN
+			    IF ( _m <= EOMONTH ( _last, 0 ) && _m > EOMONTH ( _last, -6 ), 1, 0 )
+		formatString: 0
+		displayFolder: 05 Visual Helpers\Sparklines
+
+	measure Last_24_month_flag =
+			-- 1 for the 24 months up to the latest month with data (Overview trend)
+			VAR _last = [Latest_month]
+			VAR _m = MAX ( calendar_table[month_date] )
+			RETURN
+			    IF ( _m <= EOMONTH ( _last, 0 ) && _m > EOMONTH ( _last, -24 ), 1, 0 )
+		formatString: 0
+		displayFolder: 05 Visual Helpers\Sparklines
+
+	measure Trend_title =
+			"Gross allocation and net received, last 24 months · " & [Area_label]
+		displayFolder: 06 Titles & Labels\Titles
+
+	measure Mix_title =
+			"Revenue mix · " & [Period_label]
+		displayFolder: 06 Titles & Labels\Titles
+
+	measure Top5_title =
+			"Top 5 states by net received · " & [Period_label]
+		displayFolder: 06 Titles & Labels\Titles
+
+	measure Map_title =
+			"Net received by state · " & [Period_label]
+		displayFolder: 06 Titles & Labels\Titles
+
+	measure Ranking_title =
+			"States ranked by net received · " & [Period_label]
+		displayFolder: 06 Titles & Labels\Titles
+
+	measure Oil_title =
+			"Oil derivation by state · " & [Period_label]
+		displayFolder: 06 Titles & Labels\Titles
+
+	measure Period_label =
+			-- The current period in words: "Apr 2026", "Q2 2026 to date", "2026 to date"
+			VAR _last = [Latest_month]
+			RETURN
+			    SWITCH (
+			        SELECTEDVALUE ( Period[Period], "Monthly" ),
+			        "Quarterly", "Q" & QUARTER ( _last ) & " " & YEAR ( _last ) & " to date",
+			        "Yearly", YEAR ( _last ) & " to date",
+			        FORMAT ( _last, "mmm yyyy" )
+			    )
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Periodic_text =
+			-- What "previous" means: "vs Mar 2026", "vs Q2 2025 (to date)", "vs Jan–Apr 2025"
+			VAR _last = [Latest_month]
+			VAR _py = YEAR ( _last ) - 1
+			RETURN
+			    SWITCH (
+			        SELECTEDVALUE ( Period[Period], "Monthly" ),
+			        "Quarterly", "vs Q" & QUARTER ( _last ) & " " & _py & " (to date)",
+			        "Yearly",
+			            "vs "
+			                & IF (
+			                    MONTH ( _last ) = 1,
+			                    "Jan " & _py,
+			                    "Jan–" & FORMAT ( DATE ( _py, MONTH ( _last ), 1 ), "mmm yyyy" )
+			                ),
+			        "vs " & FORMAT ( EDATE ( _last, -1 ), "mmm yyyy" )
+			    )
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Area_label =
+			SWITCH (
+			    TRUE (),
+			    HASONEVALUE ( dim_state[state] ), VALUES ( dim_state[state] ),
+			    HASONEVALUE ( dim_state[zone] ), VALUES ( dim_state[zone] ),
+			    HASONEVALUE ( dim_state[region] ), VALUES ( dim_state[region] ),
+			    "All states"
+			)
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Currency_label =
+			IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "US dollars", "naira" )
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Basis_label =
+			SELECTEDVALUE ( Basis[Basis], "Total" ) & ", " & [Currency_label]
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Refresh_text =
+			"Updated " & FORMAT ( MAX ( 'Refresh Time'[refreshed_at] ), "dd-mmm-yy | hh:mm" ) & " Lagos"
+			    & UNICHAR ( 10 ) & "FAAC data to " & FORMAT ( [Latest_month], "mmm yyyy" )
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Comparison_narrative =
+			-- e.g. "Under Tinubu, states were allocated ₦607.0bn a month on average, 2.3× as much as
+			-- under Buhari (₦265.3bn). Deductions took 9.8% of gross under Tinubu and 12.3% under Buhari."
+			VAR _by = SELECTEDVALUE ( Compare_By[compare_by], "Administration" )
+			VAR _na = [Side_A_label]
+			VAR _nb = [Side_B_label]
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _a =
+			    DIVIDE (
+			        CALCULATE ( [Side_A_total], Metric_param[Metric_key] = "Gross" ),
+			        SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 )
+			    )
+			VAR _b =
+			    DIVIDE (
+			        CALCULATE ( [Side_B_total], Metric_param[Metric_key] = "Gross" ),
+			        SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 )
+			    )
+			-- A share within one side: the basis divisor cancels, so totals are enough
+			VAR _da =
+			    DIVIDE (
+			        CALCULATE ( [Side_A_total], Metric_param[Metric_key] = "Deductions" ),
+			        CALCULATE ( [Side_A_total], Metric_param[Metric_key] = "Gross" )
+			    )
+			VAR _db =
+			    DIVIDE (
+			        CALCULATE ( [Side_B_total], Metric_param[Metric_key] = "Deductions" ),
+			        CALCULATE ( [Side_B_total], Metric_param[Metric_key] = "Gross" )
+			    )
+			VAR _per =
+			    SWITCH (
+			        _basis,
+			        "Monthly average", " a month on average",
+			        "Per state per month", " per state per month",
+			        " in total"
+			    )
+			VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _fa =
+			    _s
+			        & SWITCH (
+			            TRUE (),
+			            ABS ( _a ) >= 1e12, FORMAT ( _a / 1e12, "#,0.0" ) & "tn",
+			            ABS ( _a ) >= 1e9, FORMAT ( _a / 1e9, "#,0.0" ) & "bn",
+			            ABS ( _a ) >= 1e6, FORMAT ( _a / 1e6, "#,0.0" ) & "m",
+			            FORMAT ( _a, "#,0" )
+			        )
+			VAR _fb =
+			    _s
+			        & SWITCH (
+			            TRUE (),
+			            ABS ( _b ) >= 1e12, FORMAT ( _b / 1e12, "#,0.0" ) & "tn",
+			            ABS ( _b ) >= 1e9, FORMAT ( _b / 1e9, "#,0.0" ) & "bn",
+			            ABS ( _b ) >= 1e6, FORMAT ( _b / 1e6, "#,0.0" ) & "m",
+			            FORMAT ( _b, "#,0" )
+			        )
+			VAR _subject =
+			    SWITCH (
+			        _by,
+			        "Administration", "Under " & _nb & ", states were allocated ",
+			        "State", _nb & " was allocated ",
+			        "States in the " & _nb & " were allocated "
+			    )
+			VAR _ref = SWITCH ( _by, "Administration", "under " & _na, "State", _na, "states in the " & _na )
+			VAR _in = IF ( _by = "Administration", "under ", "in " )
+			VAR _r = DIVIDE ( _b, _a )
+			VAR _cmp =
+			    SWITCH (
+			        TRUE (),
+			        ROUND ( _r, 3 ) = 1, "the same as " & _ref,
+			        _r >= 1.5, FORMAT ( _r, "0.0" ) & "× as much as " & _ref,
+			        _r > 1, FORMAT ( _r - 1, "0%" ) & " more than " & _ref,
+			        FORMAT ( 1 - _r, "0%" ) & " less than " & _ref
+			    )
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        NOT ISBLANK ( [Compare_valid] ), [Compare_valid],
+			        ISBLANK ( _a ) || ISBLANK ( _b ), "Pick a " & LOWER ( _by ) & " for each side.",
+			        _subject & _fb & _per & ", " & _cmp & " (" & _fa & "). "
+			            & "Deductions took " & FORMAT ( _db, "0.0%" ) & " of gross " & _in & _nb
+			            & " and " & FORMAT ( _da, "0.0%" ) & " " & _in & _na & "."
+			    )
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Metric_definition =
+			-- Plain-language explanation of the hovered metric, keyed on Metric_key
+			VAR _k = SELECTEDVALUE ( Metric_param[Metric_key] )
+			RETURN
+			    SWITCH (
+			        _k,
+			        "Gross", "Everything the state was allocated at the monthly FAAC sharing, before deductions: statutory allocation, VAT, oil derivation, exchange gain, ecology fund and other income.",
+			        "Statutory", "The state's share of the Federation Account, the pool of federally collected revenue such as oil and gas earnings, company income tax and customs duties. States split it using the revenue allocation formula, which weighs equality, population, land mass and other factors.",
+			        "VAT", "The state's share of Value Added Tax collected nationwide. VAT is pooled and split between the federal government, states and local governments, then among states partly equally and partly by population and where the tax was generated.",
+			        "Oil_Derivation", "Extra money for oil- and gas-producing states: at least 13% of revenue from natural resources goes back to the states that produce them (Constitution, s.162(2)). Most states receive none.",
+			        "Exchange_Gain", "The state's share of the extra naira the Federation Account earns when dollar revenue is converted at a weaker naira rate than the budget assumed. Only paid in some months.",
+			        "Ecology", "The state's share of the Ecological Fund, set aside from the Federation Account for problems such as erosion, flooding and desertification.",
+			        "Others_Income", "Smaller or one-off revenue lines that the FAAC report groups as ""Others"".",
+			        "Deductions", "Money taken from the state's allocation at source, before payment, mostly to repay debts and meet commitments the state has signed up to.",
+			        "External_Debt", "Repayments on the state's foreign loans (for example from the World Bank), deducted at source by the federal government.",
+			        "Contractual_Obligation", "Irrevocable Standing Payment Orders (ISPOs): payments the state committed to in advance, usually for bank loans, bonds or contracts, deducted automatically each month.",
+			        "NDDC_Transfer", "Half of the ecological fund due to member states, transferred by law to the Niger Delta Development Commission (NDDC) or the Hydroelectric Power Producing Areas Development Commission (HYPPADEC).",
+			        "Other_Deductions_Note", "Other deductions that the FAAC report explains in its notes, often repayments of federal loans to states such as budget support or bailout facilities.",
+			        "Deduction_Misc", "A deduction shown in the FAAC report under a column headed only ""Deduction"", with no further detail.",
+			        "Other_Deduction", "Smaller deductions that the FAAC report groups as ""Others"".",
+			        "Net", "What the state actually received: gross allocation minus deductions.",
+			        "Hover a metric to see what it means."
+			    )
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure FX_rate_definition =
+			"The month's average official naira-per-dollar rate (World Bank). Each month's naira amounts are converted at that month's own rate."
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Deductions_share_definition =
+			"The share of the gross allocation taken as deductions."
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Net_share_definition =
+			"The state's share of the net received by all 36 states."
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Metric_tooltip_title =
+			UPPER ( SELECTEDVALUE ( Metric_param[Metric_param], "Metric" ) & " · " & [Area_label] )
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Metric_tooltip_subtitle =
+			[Period_label] & " · " & [Currency_label]
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Metric_tooltip_summary =
+			-- e.g. "Oil derivation was ₦18.4bn in Apr 2026, up 8.9% vs Mar 2026."
+			VAR _name = SELECTEDVALUE ( Metric_param[Metric_param], "This metric" )
+			VAR _v = [Metric_value_curr]
+			VAR _chg = [Metric_value_PnP]
+			VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _amount =
+			    _s
+			        & SWITCH (
+			            TRUE (),
+			            ABS ( _v ) >= 1e12, FORMAT ( _v / 1e12, "#,0.0" ) & "tn",
+			            ABS ( _v ) >= 1e9, FORMAT ( _v / 1e9, "#,0.0" ) & "bn",
+			            ABS ( _v ) >= 1e6, FORMAT ( _v / 1e6, "#,0.0" ) & "m",
+			            FORMAT ( _v, "#,0" )
+			        )
+			VAR _move =
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( _chg ), "",
+			        ROUND ( _chg, 4 ) = 0, ", unchanged " & [Periodic_text],
+			        ", " & IF ( _chg > 0, "up ", "down " ) & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [Periodic_text]
+			    )
+			RETURN
+			    IF (
+			        ISBLANK ( _v ),
+			        "No data for this period.",
+			        _name & " was " & _amount & " in " & [Period_label] & _move & "."
+			    )
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure State_tooltip_title =
+			UPPER ( SELECTEDVALUE ( dim_state[state] ) )
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure State_tooltip_subtitle =
+			-- "South South · South · Rank 2 of 36 by net". Ranked against every state, even with a Zone filter.
+			VAR _net = [Net_curr]
+			VAR _rank =
+			    CALCULATE (
+			        RANKX ( VALUES ( dim_state[state] ), [Net_curr], _net, DESC ),
+			        REMOVEFILTERS ( dim_state )
+			    )
+			VAR _n =
+			    CALCULATE (
+			        COUNTROWS ( FILTER ( VALUES ( dim_state[state] ), NOT ISBLANK ( [Net_curr] ) ) ),
+			        REMOVEFILTERS ( dim_state )
+			    )
+			RETURN
+			    SELECTEDVALUE ( dim_state[zone] ) & " · " & SELECTEDVALUE ( dim_state[region] )
+			        & " · Rank " & _rank & " of " & _n & " by net"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Compare_tooltip_title =
+			UPPER ( SELECTEDVALUE ( Metric_param[Metric_param], "Metric" ) ) & " · " & [Basis_label]
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Compare_tooltip_text =
+			-- "▲ Tinubu 185.0% higher than Buhari", coloured with Metric_B_colour
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _a =
+			    DIVIDE (
+			        CALCULATE ( [Side_A_total] ),
+			        SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 )
+			    )
+			VAR _b =
+			    DIVIDE (
+			        CALCULATE ( [Side_B_total] ),
+			        SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 )
+			    )
+			VAR _d = DIVIDE ( _b - _a, _a )
+			VAR _mark =
+			    SWITCH ( TRUE (), ROUND ( _d, 4 ) = 0, UNICHAR ( 9632 ), _d > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) )
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( _a ) || ISBLANK ( _b ), "No data for one side.",
+			        ROUND ( _d, 4 ) = 0, _mark & " " & [Side_B_label] & " and " & [Side_A_label] & " are equal",
+			        _mark & " " & [Side_B_label] & " " & FORMAT ( ABS ( _d ), "0.0%" )
+			            & IF ( _d > 0, " higher", " lower" ) & " than " & [Side_A_label]
+			    )
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	column Value
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dax = calculated
+		mode: import
+		source =
+				ROW ( "Value", 0 )
+
+	annotation PBI_ResultType = Table

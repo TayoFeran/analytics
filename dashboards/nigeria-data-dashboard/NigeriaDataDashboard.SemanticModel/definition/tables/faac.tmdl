@@ -1,0 +1,286 @@
+table faac
+
+	column disbursement_date
+		dataType: dateTime
+		isHidden
+		formatString: mmm yyyy
+		summarizeBy: none
+		sourceColumn: disbursement_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column state
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column president
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: president
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_gross_amount
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: total_gross_amount
+
+		annotation SummarizationSetBy = Automatic
+
+	column statutory_allocation
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: statutory_allocation
+
+		annotation SummarizationSetBy = Automatic
+
+	column gross_vat_allocation
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: gross_vat_allocation
+
+		annotation SummarizationSetBy = Automatic
+
+	column oil_derivation
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: oil_derivation
+
+		annotation SummarizationSetBy = Automatic
+
+	column exchange_gain_difference
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: exchange_gain_difference
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_ecology_fund
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: total_ecology_fund
+
+		annotation SummarizationSetBy = Automatic
+
+	column others_income
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: others_income
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_deductions
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: total_deductions
+
+		annotation SummarizationSetBy = Automatic
+
+	column external_debt
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: external_debt
+
+		annotation SummarizationSetBy = Automatic
+
+	column contractual_obligation_ispo
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: contractual_obligation_ispo
+
+		annotation SummarizationSetBy = Automatic
+
+	column transfer_nddc_hyppadec
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: transfer_nddc_hyppadec
+
+		annotation SummarizationSetBy = Automatic
+
+	column other_deductions_note
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: other_deductions_note
+
+		annotation SummarizationSetBy = Automatic
+
+	column deduction_misc
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: deduction_misc
+
+		annotation SummarizationSetBy = Automatic
+
+	column other_deduction
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: other_deduction
+
+		annotation SummarizationSetBy = Automatic
+
+	column net_amount_after_deductions
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: net_amount_after_deductions
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_gross_amount_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: total_gross_amount_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column statutory_allocation_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: statutory_allocation_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column gross_vat_allocation_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: gross_vat_allocation_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column oil_derivation_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: oil_derivation_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column exchange_gain_difference_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: exchange_gain_difference_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_ecology_fund_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: total_ecology_fund_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column others_income_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: others_income_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_deductions_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: total_deductions_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column external_debt_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: external_debt_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column contractual_obligation_ispo_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: contractual_obligation_ispo_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column transfer_nddc_hyppadec_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: transfer_nddc_hyppadec_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column other_deductions_note_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: other_deductions_note_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column deduction_misc_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: deduction_misc_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column other_deduction_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: other_deduction_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column net_amount_after_deductions_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: net_amount_after_deductions_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column naira_per_usd
+		dataType: double
+		isHidden
+		summarizeBy: none
+		sourceColumn: naira_per_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	partition faac = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database(MotherDuckHost, MotherDuckDatabase), "select#(lf)    disbursement_date::date as disbursement_date,#(lf)    state,#(lf)    president,#(lf)    total_gross_amount::double as total_gross_amount,#(lf)    statutory_allocation::double as statutory_allocation,#(lf)    gross_vat_allocation::double as gross_vat_allocation,#(lf)    oil_derivation::double as oil_derivation,#(lf)    exchange_gain_difference::double as exchange_gain_difference,#(lf)    total_ecology_fund::double as total_ecology_fund,#(lf)    others_income::double as others_income,#(lf)    total_deductions::double as total_deductions,#(lf)    external_debt::double as external_debt,#(lf)    contractual_obligation_ispo::double as contractual_obligation_ispo,#(lf)    transfer_nddc_hyppadec::double as transfer_nddc_hyppadec,#(lf)    other_deductions_note::double as other_deductions_note,#(lf)    deduction_misc::double as deduction_misc,#(lf)    other_deduction::double as other_deduction,#(lf)    net_amount_after_deductions::double as net_amount_after_deductions,#(lf)    total_gross_amount_usd::double as total_gross_amount_usd,#(lf)    statutory_allocation_usd::double as statutory_allocation_usd,#(lf)    gross_vat_allocation_usd::double as gross_vat_allocation_usd,#(lf)    oil_derivation_usd::double as oil_derivation_usd,#(lf)    exchange_gain_difference_usd::double as exchange_gain_difference_usd,#(lf)    total_ecology_fund_usd::double as total_ecology_fund_usd,#(lf)    others_income_usd::double as others_income_usd,#(lf)    total_deductions_usd::double as total_deductions_usd,#(lf)    external_debt_usd::double as external_debt_usd,#(lf)    contractual_obligation_ispo_usd::double as contractual_obligation_ispo_usd,#(lf)    transfer_nddc_hyppadec_usd::double as transfer_nddc_hyppadec_usd,#(lf)    other_deductions_note_usd::double as other_deductions_note_usd,#(lf)    deduction_misc_usd::double as deduction_misc_usd,#(lf)    other_deduction_usd::double as other_deduction_usd,#(lf)    net_amount_after_deductions_usd::double as net_amount_after_deductions_usd,#(lf)    naira_per_usd::double as naira_per_usd#(lf)from datamart.nigeria_faac_state_month", null, [EnableFolding = true])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

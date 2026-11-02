@@ -1,0 +1,32 @@
+-- Calendar up to yesterday, plus a year-quarter label for the Period switcher
+select
+    date,
+    day_num,
+    day_name,
+    dayf,
+    day_of_week,
+    day_rank_asc,
+    day_rank_desc,
+    week_date,
+    week_year_num,
+    week_year_name,
+    weekf,
+    week_month_rank,
+    week_rank_asc,
+    week_rank_desc,
+    month_date,
+    month_num,
+    month_name,
+    monthf,
+    month_rank_asc,
+    month_rank_desc,
+    qtr_num,
+    qtr_name,
+    qtr_rank_asc,
+    qtr_rank_desc,
+    year,
+    year_rank_asc,
+    qtr_name || ' ' || year as qtr_year,
+    year * 10 + qtr_num as qtr_year_sort
+from sandbox.fo_calendar
+where date != current_date

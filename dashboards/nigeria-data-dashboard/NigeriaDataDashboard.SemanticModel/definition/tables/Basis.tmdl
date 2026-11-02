@@ -1,0 +1,43 @@
+table Basis
+
+	calculationGroup
+		precedence: 10
+
+		calculationItem Total =
+				SELECTEDMEASURE ()
+			ordinal: 0
+
+		calculationItem 'Monthly average' =
+				IF (
+				    ISSELECTEDMEASURE ( [Gross], [Statutory], [VAT], [Oil_Derivation], [Exchange_Gain], [Ecology], [Others_Income], [Deductions], [External_Debt], [Contractual_Obligation], [NDDC_Transfer], [Other_Deductions_Note], [Deduction_Misc], [Other_Deduction], [Net], [Metric_value] ),
+				    DIVIDE ( SELECTEDMEASURE (), DISTINCTCOUNT ( faac[disbursement_date] ) ),
+				    SELECTEDMEASURE ()
+				)
+			ordinal: 1
+
+		calculationItem 'Per state per month' =
+				IF (
+				    ISSELECTEDMEASURE ( [Gross], [Statutory], [VAT], [Oil_Derivation], [Exchange_Gain], [Ecology], [Others_Income], [Deductions], [External_Debt], [Contractual_Obligation], [NDDC_Transfer], [Other_Deductions_Note], [Deduction_Misc], [Other_Deduction], [Net], [Metric_value] ),
+				    DIVIDE ( SELECTEDMEASURE (), COUNTROWS ( faac ) ),
+				    SELECTEDMEASURE ()
+				)
+			ordinal: 2
+
+	column Basis
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Name
+		sortByColumn: Ordinal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ordinal
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: Ordinal
+
+		annotation SummarizationSetBy = Automatic
+
+	annotation PBI_ResultType = Table
