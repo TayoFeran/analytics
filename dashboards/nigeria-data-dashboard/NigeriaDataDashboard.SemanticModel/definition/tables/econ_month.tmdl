@@ -1,0 +1,66 @@
+table econ_month
+
+	column month_date
+		dataType: dateTime
+		isHidden
+		formatString: mmm yyyy
+		summarizeBy: none
+		sourceColumn: month_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column president
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: president
+
+		annotation SummarizationSetBy = Automatic
+
+	column naira_per_usd
+		dataType: double
+		isHidden
+		formatString: #,0.00
+		summarizeBy: none
+		sourceColumn: naira_per_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column naira_value_change_yoy
+		dataType: double
+		isHidden
+		formatString: 0.0%
+		summarizeBy: none
+		sourceColumn: naira_value_change_yoy
+
+		annotation SummarizationSetBy = Automatic
+
+	column cpi_index
+		dataType: double
+		isHidden
+		formatString: #,0.0
+		summarizeBy: none
+		sourceColumn: cpi_index
+
+		annotation SummarizationSetBy = Automatic
+
+	column inflation_yoy
+		dataType: double
+		isHidden
+		formatString: 0.0%
+		summarizeBy: none
+		sourceColumn: inflation_yoy
+
+		annotation SummarizationSetBy = Automatic
+
+	partition econ_month = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database(MotherDuckHost, MotherDuckDatabase), "select#(lf)    month_date::date as month_date,#(lf)    president,#(lf)    naira_per_usd::double as naira_per_usd,#(lf)    naira_value_change_yoy::double as naira_value_change_yoy,#(lf)    cpi_index::double as cpi_index,#(lf)    inflation_yoy::double as inflation_yoy#(lf)from datamart.nigeria_economy_month", null, [EnableFolding = true])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

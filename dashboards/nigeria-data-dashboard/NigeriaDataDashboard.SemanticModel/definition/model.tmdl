@@ -10,7 +10,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["MotherDuckHost", "MotherDuckDatabase", "Dax", "faac", "calendar_table", "dim_state", "dim_administration", "Currency", "Period", "Metric_param", "Period Calc", "Basis", "Compare_By", "Compare_A", "Compare_B", "Compare Side", "Refresh Time"]
+annotation PBI_QueryOrder = ["MotherDuckHost", "MotherDuckDatabase", "Dax", "faac", "calendar_table", "dim_state", "dim_administration", "econ_month", "econ_year", "Currency", "Prices", "Period", "Metric_param", "Period Calc", "Basis", "Compare_By", "Compare_A", "Compare_B", "Compare Side", "Refresh Time"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -19,7 +19,10 @@ ref table faac
 ref table calendar_table
 ref table dim_state
 ref table dim_administration
+ref table econ_month
+ref table econ_year
 ref table Currency
+ref table Prices
 ref table Period
 ref table Metric_param
 ref table 'Period Calc'

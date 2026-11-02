@@ -1,0 +1,102 @@
+table econ_year
+
+	column year_date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy
+		summarizeBy: none
+		sourceColumn: year_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column president
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: president
+
+		annotation SummarizationSetBy = Automatic
+
+	column gdp_usd
+		dataType: double
+		isHidden
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: gdp_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column gdp_naira
+		dataType: double
+		isHidden
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: gdp_naira
+
+		annotation SummarizationSetBy = Automatic
+
+	column real_gdp_growth
+		dataType: double
+		isHidden
+		formatString: 0.0%
+		summarizeBy: none
+		sourceColumn: real_gdp_growth
+
+		annotation SummarizationSetBy = Automatic
+
+	column population
+		dataType: double
+		isHidden
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: population
+
+		annotation SummarizationSetBy = Automatic
+
+	column gdp_per_person_usd
+		dataType: double
+		isHidden
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: gdp_per_person_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	column gdp_per_person_naira
+		dataType: double
+		isHidden
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: gdp_per_person_naira
+
+		annotation SummarizationSetBy = Automatic
+
+	column avg_naira_per_usd
+		dataType: double
+		isHidden
+		formatString: #,0.00
+		summarizeBy: none
+		sourceColumn: avg_naira_per_usd
+
+		annotation SummarizationSetBy = Automatic
+
+	partition econ_year = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database(MotherDuckHost, MotherDuckDatabase), "select#(lf)    year_date::date as year_date,#(lf)    year::int as year,#(lf)    president,#(lf)    gdp_usd::double as gdp_usd,#(lf)    gdp_naira::double as gdp_naira,#(lf)    real_gdp_growth::double as real_gdp_growth,#(lf)    population::double as population,#(lf)    gdp_per_person_usd::double as gdp_per_person_usd,#(lf)    gdp_per_person_naira::double as gdp_per_person_naira,#(lf)    avg_naira_per_usd::double as avg_naira_per_usd#(lf)from datamart.nigeria_economy_year", null, [EnableFolding = true])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
