@@ -238,3 +238,187 @@ RETURN
 ```
 
 The side values use `Metric_value` with `'Compare Side'[Name] = "A"` / `"B"`. The title is `Metric_param` and `Metric_tooltip_subtitle` joined with " · ".
+
+# Tooltips: Economy section
+
+Design agreed on 2026-11-02. Positions are in [`placement.md`](placement.md), and the backgrounds are `backgrounds/tt_economy_*.png`. The DAX below goes into the semantic model in step 6.
+
+## Which visual uses which tooltip
+
+| Visual | Tooltip |
+|---|---|
+| Overview: inflation and naira line charts | TT - Economy Month |
+| Economy size: all four charts | TT - Economy Year |
+| FAAC in real terms: monthly column chart | TT - Real Terms Month |
+| Presidents: all three bar charts | TT - President Detail |
+| Overview KPI cards | Default: the card's value, its as-of text and its definition |
+| FAAC in real terms KPI cards | Default: the value and `Today_prices_definition` |
+
+These tooltips work differently from the FAAC ones. The Economy measures have no period switch, so a hovered month, year or president passes straight through as a filter. Each tooltip shows the hovered point's own values using the plain base measures (`Inflation_yoy`, `GDP_naira`, `Net_paid`...), not the `_latest` card measures.
+
+## Definitions (approved)
+
+They sit in `06 Titles & Labels\Tooltips`, next to the FAAC definitions.
+
+```dax
+Inflation_definition = "How much prices rose compared with the same month a year earlier (World Bank consumer price index)."
+Naira_value_definition = "How many more or fewer US dollars a naira buys than before. Negative means the naira lost value."
+Real_growth_definition = "How much the economy grew in the year after removing price rises."
+GDP_per_person_definition = "The economy's total output divided by the population. It is an average, not what a typical person earns."
+Today_prices_definition =
+"Today's prices: each month's amount restated in " & FORMAT ( [Price_base_month], "mmm yyyy" )
+    & " prices, using the World Bank consumer price index."
+
+Econ_month_definitions = "Inflation: " & [Inflation_definition] & "  Naira value: " & [Naira_value_definition]
+Econ_year_definitions = "Real growth: " & [Real_growth_definition] & "  Per person: " & [GDP_per_person_definition]
+President_definitions =
+"Averages are over the months or years each president was in office. Naira value compares the rate at the start and end of the term. "
+    & "A year goes to the president in office for most of it."
+```
+
+## Measures behind TT - Economy Month
+
+```dax
+Econ_month_tooltip_title =
+-- e.g. "Jul 2026 · Tinubu"
+FORMAT ( MAX ( econ_month[month_date] ), "mmm yyyy" ) & " · " & SELECTEDVALUE ( econ_month[president] )
+```
+
+The three cards are `Inflation_yoy`, `Naira_per_usd` and `Naira_value_change_yoy`. Naira value is green when positive and red when negative.
+
+## Measures behind TT - Economy Year
+
+```dax
+Econ_year_tooltip_title =
+-- e.g. "2024 · Tinubu"; years before 1999 have no president
+MAX ( econ_year[year] ) & " · " & COALESCE ( SELECTEDVALUE ( econ_year[president] ), "Before 1999 (military rule)" )
+
+GDP_year_tooltip_text =
+-- e.g. "From 2023, GDP rose 18.7% in naira but fell 48.2% in dollars: the naira lost value, the economy didn't shrink."
+VAR _y = MAX ( econ_year[year] )
+VAR _n = [GDP_naira]
+VAR _u = [GDP_usd]
+VAR _n0 = CALCULATE ( [GDP_naira], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _y - 1 )
+VAR _u0 = CALCULATE ( [GDP_usd], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _y - 1 )
+VAR _cn = DIVIDE ( _n, _n0 ) - 1
+VAR _cu = DIVIDE ( _u, _u0 ) - 1
+RETURN
+    IF (
+        NOT ISBLANK ( _n0 ),
+        "From " & ( _y - 1 ) & ", GDP " & IF ( _cn >= 0, "rose ", "fell " ) & FORMAT ( ABS ( _cn ), "0.0%" )
+            & " in naira" & IF ( ( _cn >= 0 ) = ( _cu >= 0 ), " and ", " but " )
+            & IF ( _cu >= 0, "rose ", "fell " ) & FORMAT ( ABS ( _cu ), "0.0%" ) & " in dollars"
+            & IF ( _cn > 0 && _cu < 0, ": the naira lost value, the economy didn't shrink.", "." )
+    )
+```
+
+The average ₦ per $ card uses `Naira_per_usd`, which averages the hovered year's months. It is blank before 2010.
+
+## Measures behind TT - Real Terms Month
+
+```dax
+Real_terms_tooltip_title =
+-- e.g. "Jan 2020 · Buhari"
+FORMAT ( MAX ( faac[disbursement_date] ), "mmm yyyy" ) & " · " & SELECTEDVALUE ( faac[president] )
+
+Price_multiplier =
+-- How many times prices rose between the hovered month and the base month, e.g. 3.40
+VAR _base = [Price_base_month]
+VAR _base_cpi = CALCULATE ( MAX ( econ_month[cpi_index] ), REMOVEFILTERS (), econ_month[month_date] = _base )
+RETURN
+    DIVIDE ( _base_cpi, MAX ( econ_month[cpi_index] ) )
+-- formatString: "×"0.00
+
+Real_terms_tooltip_text =
+-- e.g. "Prices rose 3.40× from Jan 2020 to Apr 2026 (CPI 300.7 → 1,021.2), so ₦206.8bn then
+-- bought what ₦702.2bn buys in Apr 2026."
+VAR _m = MAX ( faac[disbursement_date] )
+VAR _base = [Price_base_month]
+VAR _cpi = MAX ( econ_month[cpi_index] )
+VAR _base_cpi = CALCULATE ( MAX ( econ_month[cpi_index] ), REMOVEFILTERS (), econ_month[month_date] = _base )
+VAR _p = [Net_paid]
+VAR _t = [Net_today_prices]
+RETURN
+    SWITCH (
+        TRUE (),
+        ISBLANK ( _cpi ), "Price data for " & FORMAT ( _m, "mmm yyyy" ) & " isn't out yet.",
+        _m = _base, "This is the base month, so today's prices equal what was paid.",
+        "Prices rose " & FORMAT ( [Price_multiplier], "0.00" ) & "× from " & FORMAT ( _m, "mmm yyyy" ) & " to "
+            & FORMAT ( _base, "mmm yyyy" ) & " (CPI " & FORMAT ( _cpi, "#,0.0" ) & " → " & FORMAT ( _base_cpi, "#,0.0" )
+            & "), so ₦" & FORMAT ( _p / 1e9, "#,0.0" ) & "bn then bought what ₦" & FORMAT ( _t / 1e9, "#,0.0" )
+            & "bn buys in " & FORMAT ( _base, "mmm yyyy" ) & "."
+    )
+```
+
+## Measures behind TT - President Detail
+
+```dax
+President_tooltip_title =
+COALESCE ( SELECTEDVALUE ( dim_administration[full_name] ), "Before 1999 (military rule)" )
+
+President_tooltip_subtitle =
+-- e.g. "APC · 29 May 2015 to 29 May 2023 · 96 months of data"
+VAR _end = SELECTEDVALUE ( dim_administration[term_end] )
+RETURN
+    IF (
+        HASONEVALUE ( dim_administration[president] ),
+        SELECTEDVALUE ( dim_administration[party] ) & " · "
+            & FORMAT ( SELECTEDVALUE ( dim_administration[term_start] ), "d mmm yyyy" ) & " to "
+            & IF ( ISBLANK ( _end ), "present", FORMAT ( _end, "d mmm yyyy" ) )
+            & " · " & FORMAT ( [Term_months] + 0, "#,0" ) & " months of data",
+        "Years " & MIN ( econ_year[year] ) & " to " & MAX ( econ_year[year] )
+    )
+
+Term_rate_text =
+-- e.g. "₦198.86 in May 2015 → ₦461.42 in Apr 2023"
+VAR _first = CALCULATE ( MIN ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) )
+VAR _last = CALCULATE ( MAX ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) )
+RETURN
+    IF (
+        NOT ISBLANK ( _first ),
+        FORMAT ( CALCULATE ( [Naira_per_usd], econ_month[month_date] = _first ), "₦#,0.00" ) & " in " & FORMAT ( _first, "mmm yyyy" )
+            & " → " & FORMAT ( CALCULATE ( [Naira_per_usd], econ_month[month_date] = _last ), "₦#,0.00" ) & " in " & FORMAT ( _last, "mmm yyyy" ),
+        "No monthly exchange rate data for this term yet"
+    )
+```
+
+The cards are `Inflation_yoy`, `Term_naira_change` and `Real_GDP_growth`, and the coverage line is `Term_coverage_text`.
+
+## Measures for the FAAC in real terms KPI cards
+
+These were found missing in step 4 and are added with the tooltip measures, in `01 Base\Real terms`.
+
+```dax
+Real_first_month = CALCULATE ( MIN ( faac[disbursement_date] ) )
+Real_latest_month = CALCULATE ( MAX ( faac[disbursement_date] ) )
+
+Net_first_month =
+VAR _m = EOMONTH ( [Real_first_month], 0 )
+RETURN
+    CALCULATE ( [Net_prices], calendar_table[month_date] = _m )
+
+Net_latest_month =
+VAR _m = EOMONTH ( [Real_latest_month], 0 )
+RETURN
+    CALCULATE ( [Net_prices], calendar_table[month_date] = _m )
+
+Change_as_paid =
+VAR _m1 = EOMONTH ( [Real_first_month], 0 )
+VAR _m2 = EOMONTH ( [Real_latest_month], 0 )
+RETURN
+    DIVIDE (
+        CALCULATE ( [Net_paid], calendar_table[month_date] = _m2 ),
+        CALCULATE ( [Net_paid], calendar_table[month_date] = _m1 )
+    ) - 1
+
+Change_real =
+VAR _m1 = EOMONTH ( [Real_first_month], 0 )
+VAR _m2 = EOMONTH ( [Real_latest_month], 0 )
+RETURN
+    DIVIDE (
+        CALCULATE ( [Net_today_prices], calendar_table[month_date] = _m2 ),
+        CALCULATE ( [Net_today_prices], calendar_table[month_date] = _m1 )
+    ) - 1
+```
+
+`calendar_table[month_date]` is the **last** day of the month, hence `EOMONTH`.

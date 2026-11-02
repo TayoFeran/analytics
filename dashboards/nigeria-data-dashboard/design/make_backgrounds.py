@@ -422,6 +422,90 @@ TOOLTIPS = {
             ("Text: Compare_tooltip_text, ▲▼■ difference (coloured)", (16, 162, 344, 192)),
         ],
     },
+    "month": {
+        "title": "TT - Economy Month",
+        "section": "ECONOMY",
+        "size": (320, 200),
+        "used_by": "Economy Overview, inflation and naira line charts",
+        "labels": [("INFLATION", 14, 48), ("₦ PER $", 118, 48), ("NAIRA VALUE", 222, 48)],
+        "hlines": [(14, 40, 306), (14, 96, 306)],
+        "vlines": [(110, 48, 86), (214, 48, 86)],
+        "visuals": [
+            ("Text: Econ_month_tooltip_title (month · president)", (14, 12, 306, 32)),
+            ("Card: Inflation_yoy", (14, 62, 104, 86)),
+            ("Card: Naira_per_usd", (118, 62, 208, 86)),
+            ("Card: Naira_value_change_yoy (coloured by sign)", (222, 62, 306, 86)),
+            ("Text: Econ_month_definitions", (14, 104, 306, 192)),
+        ],
+    },
+    "year": {
+        "title": "TT - Economy Year",
+        "section": "ECONOMY",
+        "size": (360, 250),
+        "used_by": "Economy size, all four charts",
+        "labels": [
+            ("GDP (₦)", 16, 48),
+            ("GDP ($)", 128, 48),
+            ("REAL GROWTH", 240, 48),
+            ("PER PERSON ($)", 16, 104),
+            ("PER PERSON (₦)", 128, 104),
+            ("AVG ₦ PER $", 240, 104),
+        ],
+        "hlines": [(16, 40, 344), (16, 96, 344), (16, 152, 344)],
+        "vlines": [(120, 48, 86), (232, 48, 86), (120, 104, 142), (232, 104, 142)],
+        "visuals": [
+            ("Text: Econ_year_tooltip_title (year · president)", (16, 12, 344, 32)),
+            ("Card: GDP_naira", (16, 62, 112, 86)),
+            ("Card: GDP_usd", (128, 62, 224, 86)),
+            ("Card: Real_GDP_growth", (240, 62, 344, 86)),
+            ("Card: GDP_per_person_usd", (16, 118, 112, 142)),
+            ("Card: GDP_per_person_naira", (128, 118, 224, 142)),
+            ("Card: avg ₦ per $ (Naira_per_usd)", (240, 118, 344, 142)),
+            ("Text: GDP_year_tooltip_text (naira vs dollar change)", (16, 160, 344, 200)),
+            ("Text: Econ_year_definitions", (16, 202, 344, 244)),
+        ],
+    },
+    "real-terms": {
+        "title": "TT - Real Terms Month",
+        "section": "ECONOMY",
+        "size": (340, 220),
+        "used_by": "FAAC in real terms, the monthly column chart",
+        "labels": [("AS PAID", 16, 48), ("× PRICES", 124, 48), ("IN TODAY'S PRICES", 232, 48)],
+        "hlines": [(16, 40, 324), (16, 96, 324), (16, 158, 324)],
+        "vlines": [(120, 48, 86), (228, 48, 86)],
+        "visuals": [
+            ("Text: Real_terms_tooltip_title (month · president)", (16, 12, 324, 32)),
+            ("Card: Net_paid", (16, 62, 116, 86)),
+            ("Card: Price_multiplier", (124, 62, 224, 86)),
+            ("Card: Net_today_prices", (232, 62, 324, 86)),
+            ("Text: Real_terms_tooltip_text (the calculation in words)", (16, 104, 324, 150)),
+            ("Text: Today_prices_definition", (16, 166, 324, 212)),
+        ],
+    },
+    "president": {
+        "title": "TT - President Detail",
+        "section": "ECONOMY",
+        "size": (360, 280),
+        "used_by": "Presidents page, all three bar charts",
+        "labels": [
+            ("AVG INFLATION", 16, 64),
+            ("NAIRA VALUE", 128, 64),
+            ("AVG REAL GROWTH", 240, 64),
+            ("NAIRA PER $", 16, 120),
+        ],
+        "hlines": [(16, 56, 344), (16, 112, 344), (16, 162, 344)],
+        "vlines": [(120, 64, 102), (232, 64, 102)],
+        "visuals": [
+            ("Text: President_tooltip_title (full name)", (16, 10, 344, 30)),
+            ("Text: President_tooltip_subtitle (party, term, months of data)", (16, 32, 344, 50)),
+            ("Card: Inflation_yoy", (16, 78, 112, 102)),
+            ("Card: Term_naira_change (coloured by sign)", (128, 78, 224, 102)),
+            ("Card: Real_GDP_growth", (240, 78, 344, 102)),
+            ("Text: Term_rate_text (start rate → end rate)", (16, 134, 344, 154)),
+            ("Text: Term_coverage_text (amber, partial terms only)", (16, 170, 344, 190)),
+            ("Text: President_definitions", (16, 196, 344, 272)),
+        ],
+    },
 }
 
 
@@ -596,8 +680,9 @@ def render(page: str, spec: dict, out: Path) -> Path:
     return path
 
 
-def tooltip_file_name(page: str) -> str:
-    return "tt_faac_" + page.replace("-", "_") + ".png"
+def tooltip_file_name(page: str, spec: dict) -> str:
+    """tt_<section>_<page>.png"""
+    return f"tt_{spec.get('section', 'FAAC').lower()}_" + page.replace("-", "_") + ".png"
 
 
 def render_tooltip(page: str, spec: dict, out: Path) -> Path:
@@ -612,7 +697,7 @@ def render_tooltip(page: str, spec: dict, out: Path) -> Path:
         d.line(box((x1, y, x2, y)), fill=C["line"], width=s(1))
     for x, y1, y2 in spec["vlines"]:
         d.line(box((x, y1, x, y2)), fill=C["line"], width=s(1))
-    path = out / tooltip_file_name(page)
+    path = out / tooltip_file_name(page, spec)
     img.convert("RGB").save(path, optimize=True)
     return path
 
@@ -659,7 +744,7 @@ def placement_md() -> str:
         tw, th = spec["size"]
         lines += [
             "",
-            f"## {spec['title']} (`{tooltip_file_name(page)}`, {tw}×{th})",
+            f"## {spec['title']} (`{tooltip_file_name(page, spec)}`, {tw}×{th})",
             "",
             f"Used by: {spec['used_by']}.",
             "",
