@@ -51,6 +51,13 @@ table Metric_param
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Plain copy of the metric name for matrix rows and columns, where the field parameter
+	/// itself would be swapped for its measures
+	column Metric_label = Metric_param[Metric_param]
+		dataType: string
+		summarizeBy: none
+		sortByColumn: 'Metric_param Order'
+
 	partition Metric_param = calculated
 		mode: import
 		source =

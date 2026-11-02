@@ -233,7 +233,7 @@ TOOLTIPS = {
             ("Card: current value (Metric_value, Period Calc = Current)", (16, 126, 176, 162)),
             ("Card: previous value (Metric_value, Period Calc = Previous)", (184, 126, 344, 162)),
             ("Text: change % ▲▼■, Growth/Decline, Periodic_text (coloured)", (16, 166, 344, 186)),
-            ("Column chart: Metric_value, last 6 months (Last_5_Period_flag)", (16, 216, 344, 256)),
+            ("Column chart: Metric_value, last 6 months (Last_6_Period_flag)", (16, 216, 344, 256)),
             ("Text: Metric_tooltip_summary", (16, 260, 344, 292)),
         ],
     },
@@ -256,7 +256,7 @@ TOOLTIPS = {
             ("Card: Deductions (Period Calc = Current)", (118, 80, 208, 104)),
             ("Card: Net (Period Calc = Current)", (222, 80, 306, 104)),
             ("Text: net share of national", (14, 110, 306, 128)),
-            ("Column chart: Net, last 6 months (Last_5_Period_flag)", (14, 156, 306, 230)),
+            ("Column chart: Net, last 6 months (Last_6_Period_flag)", (14, 156, 306, 230)),
         ],
     },
     "compare-metric": {

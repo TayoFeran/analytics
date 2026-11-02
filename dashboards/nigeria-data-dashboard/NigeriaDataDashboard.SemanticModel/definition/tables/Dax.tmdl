@@ -11,15 +11,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Statutory =
 			-- Statutory allocation in the currency picked on the ₦/$ switch
@@ -32,15 +25,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure VAT =
 			-- VAT in the currency picked on the ₦/$ switch
@@ -53,15 +39,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Oil_Derivation =
 			-- Oil derivation in the currency picked on the ₦/$ switch
@@ -74,15 +53,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Exchange_Gain =
 			-- Exchange gain in the currency picked on the ₦/$ switch
@@ -95,15 +67,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Ecology =
 			-- Ecology fund in the currency picked on the ₦/$ switch
@@ -116,15 +81,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Others_Income =
 			-- Other income in the currency picked on the ₦/$ switch
@@ -137,15 +95,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Deductions =
 			-- Total deductions in the currency picked on the ₦/$ switch
@@ -158,15 +109,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure External_Debt =
 			-- External debt in the currency picked on the ₦/$ switch
@@ -179,15 +123,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Contractual_Obligation =
 			-- Contractual obligations (ISPO) in the currency picked on the ₦/$ switch
@@ -200,15 +137,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure NDDC_Transfer =
 			-- NDDC / HYPPADEC transfer in the currency picked on the ₦/$ switch
@@ -221,15 +151,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Other_Deductions_Note =
 			-- Other deductions (see note) in the currency picked on the ₦/$ switch
@@ -242,15 +165,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Deduction_Misc =
 			-- Deduction (unlabelled) in the currency picked on the ₦/$ switch
@@ -263,15 +179,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Other_Deduction =
 			-- Other deductions in the currency picked on the ₦/$ switch
@@ -284,15 +193,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Net =
 			-- Net received in the currency picked on the ₦/$ switch
@@ -305,15 +207,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Net_rate =
 			-- Share of the gross allocation the state actually received
@@ -377,15 +272,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Oil_Derivation_share =
 			DIVIDE ( [Oil_Derivation], [Gross], 0 )
@@ -414,15 +302,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Gross_prev =
 			CALCULATE ( [Gross], 'Period Calc'[Name] = "Previous" )
@@ -430,15 +311,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Gross_PnP =
 			CALCULATE ( [Gross], 'Period Calc'[Name] = "Change %" )
@@ -480,15 +354,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Deductions_prev =
 			CALCULATE ( [Deductions], 'Period Calc'[Name] = "Previous" )
@@ -496,15 +363,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Deductions_PnP =
 			CALCULATE ( [Deductions], 'Period Calc'[Name] = "Change %" )
@@ -546,15 +406,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Net_prev =
 			CALCULATE ( [Net], 'Period Calc'[Name] = "Previous" )
@@ -562,15 +415,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Net_PnP =
 			CALCULATE ( [Net], 'Period Calc'[Name] = "Change %" )
@@ -656,15 +502,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Metric_value_prev =
 			CALCULATE ( [Metric_value], 'Period Calc'[Name] = "Previous" )
@@ -672,15 +511,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Metric_value_PnP =
 			CALCULATE ( [Metric_value], 'Period Calc'[Name] = "Change %" )
@@ -770,15 +602,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Side_B_total =
 			-- Side B's total for the metric picked in Metric_param. Ignores Basis on purpose:
@@ -788,15 +613,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Side_A_months =
 			CALCULATE ( [Months], 'Compare Side'[Name] = "A", REMOVEFILTERS ( Basis[Basis] ) )
@@ -838,15 +656,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Side_B_value =
 			-- Side B's value of the metric picked in Metric_param, on the selected Basis.
@@ -868,15 +679,8 @@ table Dax
 
 		formatStringDefinition =
 				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				VAR _a = ABS ( SELECTEDMEASURE () )
-				RETURN
-				    SWITCH (
-				        TRUE (),
-				        _a >= 1e12, """" & _s & """#,0.0,,,,""tn""",
-				        _a >= 1e9, """" & _s & """#,0.0,,,""bn""",
-				        _a >= 1e6, """" & _s & """#,0.0,,""m""",
-				        """" & _s & """#,0"
-				    )
+				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
+				RETURN """" & _s & """#,0"
 
 	measure Compare_valid =
 			-- Warning text when both sides are the same; blank otherwise
@@ -984,7 +788,7 @@ table Dax
 			VAR _last = [Latest_month]
 			RETURN
 			    SWITCH (
-			        SELECTEDVALUE ( Period[Period], "Monthly" ),
+			        SWITCH ( SELECTEDVALUE ( Period[Period Order] ), 1, "Quarterly", 2, "Yearly", "Monthly" ),
 			        "Quarterly", "Q" & QUARTER ( _last ) & " " & YEAR ( _last ) & " to date",
 			        "Yearly", YEAR ( _last ) & " to date",
 			        FORMAT ( _last, "mmm yyyy" )
@@ -997,7 +801,7 @@ table Dax
 			VAR _py = YEAR ( _last ) - 1
 			RETURN
 			    SWITCH (
-			        SELECTEDVALUE ( Period[Period], "Monthly" ),
+			        SWITCH ( SELECTEDVALUE ( Period[Period Order] ), 1, "Quarterly", 2, "Yearly", "Monthly" ),
 			        "Quarterly", "vs Q" & QUARTER ( _last ) & " " & _py & " (to date)",
 			        "Yearly",
 			            "vs "
@@ -1109,7 +913,7 @@ table Dax
 			    SWITCH (
 			        TRUE (),
 			        NOT ISBLANK ( [Compare_valid] ), [Compare_valid],
-			        ISBLANK ( _a ) || ISBLANK ( _b ), "Pick a " & LOWER ( _by ) & " for each side.",
+			        ISBLANK ( _a ) || ISBLANK ( _b ), "Pick " & IF ( _by = "Administration", "an ", "a " ) & LOWER ( _by ) & " for each side.",
 			        _subject & _fb & _per & ", " & _cmp & " (" & _fa & "). "
 			            & "Deductions took " & FORMAT ( _db, "0.0%" ) & " of gross " & _in & _nb
 			            & " and " & FORMAT ( _da, "0.0%" ) & " " & _in & _na & "."
@@ -1154,7 +958,7 @@ table Dax
 		displayFolder: 06 Titles & Labels\Tooltips
 
 	measure Metric_tooltip_title =
-			UPPER ( SELECTEDVALUE ( Metric_param[Metric_param], "Metric" ) & " · " & [Area_label] )
+			UPPER ( SELECTEDVALUE ( Metric_param[Metric_label], "Metric" ) & " · " & [Area_label] )
 		displayFolder: 06 Titles & Labels\Tooltips
 
 	measure Metric_tooltip_subtitle =
@@ -1163,7 +967,7 @@ table Dax
 
 	measure Metric_tooltip_summary =
 			-- e.g. "Oil derivation was ₦18.4bn in Apr 2026, up 8.9% vs Mar 2026."
-			VAR _name = SELECTEDVALUE ( Metric_param[Metric_param], "This metric" )
+			VAR _name = SELECTEDVALUE ( Metric_param[Metric_label], "This metric" )
 			VAR _v = [Metric_value_curr]
 			VAR _chg = [Metric_value_PnP]
 			VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
@@ -1214,7 +1018,7 @@ table Dax
 		displayFolder: 06 Titles & Labels\Tooltips
 
 	measure Compare_tooltip_title =
-			UPPER ( SELECTEDVALUE ( Metric_param[Metric_param], "Metric" ) ) & " · " & [Basis_label]
+			UPPER ( SELECTEDVALUE ( Metric_param[Metric_label], "Metric" ) ) & " · " & [Basis_label]
 		displayFolder: 06 Titles & Labels\Tooltips
 
 	measure Compare_tooltip_text =
@@ -1241,6 +1045,11 @@ table Dax
 			        _mark & " " & [Side_B_label] & " " & FORMAT ( ABS ( _d ), "0.0%" )
 			            & IF ( _d > 0, " higher", " lower" ) & " than " & [Side_A_label]
 			    )
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure State_share_text =
+			-- e.g. "Share of national net: 7.6%"
+			"Share of national net: " & FORMAT ( [Net_share_national], "0.0%" )
 		displayFolder: 06 Titles & Labels\Tooltips
 
 	column Value

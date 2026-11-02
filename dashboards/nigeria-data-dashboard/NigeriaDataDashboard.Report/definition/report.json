@@ -37,6 +37,57 @@
           "type": "BaseTheme"
         }
       ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "bg_about.png",
+          "path": "bg_about.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_faac_compare.png",
+          "path": "bg_faac_compare.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_faac_deductions.png",
+          "path": "bg_faac_deductions.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_faac_overview.png",
+          "path": "bg_faac_overview.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_faac_revenue_mix.png",
+          "path": "bg_faac_revenue_mix.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_faac_states.png",
+          "path": "bg_faac_states.png",
+          "type": "Image"
+        },
+        {
+          "name": "tt_faac_compare_metric.png",
+          "path": "tt_faac_compare_metric.png",
+          "type": "Image"
+        },
+        {
+          "name": "tt_faac_metric_detail.png",
+          "path": "tt_faac_metric_detail.png",
+          "type": "Image"
+        },
+        {
+          "name": "tt_faac_state_detail.png",
+          "path": "tt_faac_state_detail.png",
+          "type": "Image"
+        }
+      ]
     }
   ],
   "settings": {
