@@ -215,6 +215,69 @@ LAYOUT = {
     },
 }
 
+# Tooltip pages (step 5), each on its own custom-size canvas. Power BI draws a tooltip as
+# a plain rectangle, so these fill edge to edge: no rounded card, no shadow.
+#   labels: (static text, x, y); hlines: (x1, y, x2); vlines: (x, y1, y2)
+TOOLTIPS = {
+    "metric-detail": {
+        "title": "TT - Metric Detail",
+        "size": (360, 300),
+        "used_by": "KPI cards (Gross, Deductions, Net), Revenue mix and Deductions matrices",
+        "labels": [("VS PREVIOUS", 16, 112), ("LAST 6 MONTHS", 16, 202)],
+        "hlines": [(16, 104, 344), (16, 194, 344)],
+        "vlines": [],
+        "visuals": [
+            ("Text: Metric_tooltip_title (metric · area)", (16, 10, 344, 28)),
+            ("Text: Metric_tooltip_subtitle (basis, currency)", (16, 28, 344, 42)),
+            ("Text: Metric_definition", (16, 46, 344, 98)),
+            ("Card: current value (Metric_value, Period Calc = Current)", (16, 126, 176, 162)),
+            ("Card: previous value (Metric_value, Period Calc = Previous)", (184, 126, 344, 162)),
+            ("Text: change % ▲▼■, Growth/Decline, Periodic_text (coloured)", (16, 166, 344, 186)),
+            ("Column chart: Metric_value, last 6 months (Last_5_Period_flag)", (16, 216, 344, 256)),
+            ("Text: Metric_tooltip_summary", (16, 260, 344, 292)),
+        ],
+    },
+    "state-detail": {
+        "title": "TT - State Detail",
+        "size": (320, 240),
+        "used_by": "States page map and 36-state ranking bar",
+        "labels": [
+            ("GROSS", 14, 66),
+            ("DEDUCTIONS", 118, 66),
+            ("NET", 222, 66),
+            ("NET, LAST 6 MONTHS", 14, 142),
+        ],
+        "hlines": [(14, 58, 306), (14, 134, 306)],
+        "vlines": [(110, 66, 104), (214, 66, 104)],
+        "visuals": [
+            ("Text: State_tooltip_title (state name)", (14, 12, 306, 32)),
+            ("Text: zone · region · rank of 36 by net", (14, 34, 306, 52)),
+            ("Card: Gross (Period Calc = Current)", (14, 80, 104, 104)),
+            ("Card: Deductions (Period Calc = Current)", (118, 80, 208, 104)),
+            ("Card: Net (Period Calc = Current)", (222, 80, 306, 104)),
+            ("Text: net share of national", (14, 110, 306, 128)),
+            ("Column chart: Net, last 6 months (Last_5_Period_flag)", (14, 156, 306, 230)),
+        ],
+    },
+    "compare-metric": {
+        "title": "TT - Compare Metric",
+        "size": (360, 200),
+        "used_by": "Compare page, Side A and Side B tables",
+        "labels": [("SIDE A", 16, 92), ("SIDE B", 192, 92)],
+        "hlines": [(16, 84, 344), (16, 154, 344)],
+        "vlines": [(180, 92, 146)],
+        "visuals": [
+            ("Text: Metric_tooltip_title (metric · basis, currency)", (16, 12, 344, 32)),
+            ("Text: Metric_definition", (16, 34, 344, 78)),
+            ("Text: Side A name", (16, 104, 172, 120)),
+            ("Card: Side A value (Compare Side = A)", (16, 122, 172, 146)),
+            ("Text: Side B name", (192, 104, 344, 120)),
+            ("Card: Side B value (Compare Side = B)", (192, 122, 344, 146)),
+            ("Text: Compare_tooltip_text, ▲▼■ difference (coloured)", (16, 162, 344, 192)),
+        ],
+    },
+}
+
 
 def s(v: float) -> int:
     return round(v * SCALE)
@@ -393,6 +456,27 @@ def render(page: str, spec: dict, out: Path) -> Path:
     return path
 
 
+def tooltip_file_name(page: str) -> str:
+    return "tt_faac_" + page.replace("-", "_") + ".png"
+
+
+def render_tooltip(page: str, spec: dict, out: Path) -> Path:
+    tw, th = spec["size"]
+    img = Image.new("RGBA", (s(tw), s(th)), C["card"])
+    d = ImageDraw.Draw(img)
+    d.rectangle(box((0, 0, tw, 4)), fill=C["series1"])
+    d.rectangle(box((0, 0, tw - 0.5, th - 0.5)), outline=C["line"], width=s(1))
+    for text, x, y in spec["labels"]:
+        tracked(d, (x, y), text, font(SEMI, 8), C["muted"], 1.1)
+    for x1, y, x2 in spec["hlines"]:
+        d.line(box((x1, y, x2, y)), fill=C["line"], width=s(1))
+    for x, y1, y2 in spec["vlines"]:
+        d.line(box((x, y1, x, y2)), fill=C["line"], width=s(1))
+    path = out / tooltip_file_name(page)
+    img.convert("RGB").save(path, optimize=True)
+    return path
+
+
 def placement_md() -> str:
     lines = [
         "# Visual placement guide",
@@ -422,6 +506,28 @@ def placement_md() -> str:
         ]
         for name, (x1, y1, x2, y2) in spec["visuals"]:
             lines.append(f"| {name} | {x1} | {y1} | {x2 - x1} | {y2 - y1} |")
+    lines += [
+        "",
+        "# Tooltip pages",
+        "",
+        "Set up each one: Format page → Page information → Allow use as tooltip on;",
+        "Canvas settings → Type Custom, at the size below; hide the page.",
+        "On each visual that uses it: Format → General → Tooltips → Type Report page,",
+        "Page = the tooltip page.",
+    ]
+    for page, spec in TOOLTIPS.items():
+        tw, th = spec["size"]
+        lines += [
+            "",
+            f"## {spec['title']} (`{tooltip_file_name(page)}`, {tw}×{th})",
+            "",
+            f"Used by: {spec['used_by']}.",
+            "",
+            "| Visual | x | y | w | h |",
+            "|---|---|---|---|---|",
+        ]
+        for name, (x1, y1, x2, y2) in spec["visuals"]:
+            lines.append(f"| {name} | {x1} | {y1} | {x2 - x1} | {y2 - y1} |")
     return "\n".join(lines) + "\n"
 
 
@@ -431,6 +537,8 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
     for page, spec in LAYOUT.items():
         print(f"Wrote {render(page, spec, out).name}")
+    for page, spec in TOOLTIPS.items():
+        print(f"Wrote {render_tooltip(page, spec, out).name}")
     (here / "placement.md").write_text(placement_md(), encoding="utf-8")
     print("Wrote placement.md")
 

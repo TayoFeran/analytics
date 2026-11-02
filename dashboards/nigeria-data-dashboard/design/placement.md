@@ -92,3 +92,53 @@ at these y positions:
 | Text box: sources, GitHub pipeline link, daily refresh | 758 | 100 | 484 | 266 |
 | Text box: metric definitions (Metric_definition text) | 230 | 420 | 484 | 266 |
 | Text box: no FCT, no Oct 2024, FAAC from Jan 2020 only | 758 | 420 | 484 | 266 |
+
+# Tooltip pages
+
+Set up each one: Format page → Page information → Allow use as tooltip on;
+Canvas settings → Type Custom, at the size below; hide the page.
+On each visual that uses it: Format → General → Tooltips → Type Report page,
+Page = the tooltip page.
+
+## TT - Metric Detail (`tt_faac_metric_detail.png`, 360×300)
+
+Used by: KPI cards (Gross, Deductions, Net), Revenue mix and Deductions matrices.
+
+| Visual | x | y | w | h |
+|---|---|---|---|---|
+| Text: Metric_tooltip_title (metric · area) | 16 | 10 | 328 | 18 |
+| Text: Metric_tooltip_subtitle (basis, currency) | 16 | 28 | 328 | 14 |
+| Text: Metric_definition | 16 | 46 | 328 | 52 |
+| Card: current value (Metric_value, Period Calc = Current) | 16 | 126 | 160 | 36 |
+| Card: previous value (Metric_value, Period Calc = Previous) | 184 | 126 | 160 | 36 |
+| Text: change % ▲▼■, Growth/Decline, Periodic_text (coloured) | 16 | 166 | 328 | 20 |
+| Column chart: Metric_value, last 6 months (Last_5_Period_flag) | 16 | 216 | 328 | 40 |
+| Text: Metric_tooltip_summary | 16 | 260 | 328 | 32 |
+
+## TT - State Detail (`tt_faac_state_detail.png`, 320×240)
+
+Used by: States page map and 36-state ranking bar.
+
+| Visual | x | y | w | h |
+|---|---|---|---|---|
+| Text: State_tooltip_title (state name) | 14 | 12 | 292 | 20 |
+| Text: zone · region · rank of 36 by net | 14 | 34 | 292 | 18 |
+| Card: Gross (Period Calc = Current) | 14 | 80 | 90 | 24 |
+| Card: Deductions (Period Calc = Current) | 118 | 80 | 90 | 24 |
+| Card: Net (Period Calc = Current) | 222 | 80 | 84 | 24 |
+| Text: net share of national | 14 | 110 | 292 | 18 |
+| Column chart: Net, last 6 months (Last_5_Period_flag) | 14 | 156 | 292 | 74 |
+
+## TT - Compare Metric (`tt_faac_compare_metric.png`, 360×200)
+
+Used by: Compare page, Side A and Side B tables.
+
+| Visual | x | y | w | h |
+|---|---|---|---|---|
+| Text: Metric_tooltip_title (metric · basis, currency) | 16 | 12 | 328 | 20 |
+| Text: Metric_definition | 16 | 34 | 328 | 44 |
+| Text: Side A name | 16 | 104 | 156 | 16 |
+| Card: Side A value (Compare Side = A) | 16 | 122 | 156 | 24 |
+| Text: Side B name | 192 | 104 | 152 | 16 |
+| Card: Side B value (Compare Side = B) | 192 | 122 | 152 | 24 |
+| Text: Compare_tooltip_text, ▲▼■ difference (coloured) | 16 | 162 | 328 | 30 |

@@ -14,9 +14,11 @@ A Power BI dashboard for public Nigerian data, organised in sections. Tracked in
 nigeria-data-dashboard/
 ├── README.md
 └── design/
-    ├── make_backgrounds.py   draws the page backgrounds and placement.md
-    ├── placement.md          x / y / w / h of every visual and nav button
-    └── backgrounds/          one 2560x1440 PNG per page
+    ├── make_backgrounds.py   draws the page and tooltip backgrounds, and placement.md
+    ├── placement.md          x / y / w / h of every visual and nav button, tooltip pages included
+    ├── tooltips.md           which visual uses which tooltip, metric definitions, tooltip DAX
+    └── backgrounds/          bg_*.png: one 2560x1440 image per page
+                              tt_*.png: one image per tooltip page, at 2x its custom size
 ```
 
 The Power BI project files (`.pbip`, semantic model and report) will be added here once they're built.
