@@ -31,3 +31,12 @@ models:
           +schema: nigeria
         sandbox:
           +schema: sandbox
+        # Marts shaped for dashboards (one wide fact per report area), across projects
+        datamart:
+          +schema: datamart
+
+# Seeds (small reference CSVs kept in the repo): the folder decides the schema, as for models
+seeds:
+  analytics:
+    sandbox:
+      +schema: sandbox

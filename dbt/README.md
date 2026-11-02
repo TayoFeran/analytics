@@ -9,8 +9,11 @@ models/motherduck/
 ├── bronze/<project>/<source>/_<project>_<source>__sources.yml   raw tables loaded by pipelines/ (declared, not built)
 ├── silver/<project>/<source>/stg_<project>_<source>__<entity>.sql   views: one cleaned model per raw table
 └── gold/<schema>/<model>.sql                      tables: each subfolder is its own schema
-    ├── nigeria/                                  World Bank indicators for Nigeria
-    └── sandbox/                                  ad-hoc and shared tables (fo_calendar)
+    ├── nigeria/                                  the Nigeria project: World Bank indicators, FAAC
+    ├── sandbox/                                  ad-hoc and shared tables (fo_calendar)
+    └── datamart/                                 wide facts shaped for dashboards, across projects
+seeds/<schema>/<seed>.csv                         small hand-maintained reference lists (+ one yml each)
+    └── sandbox/                                  nigeria_state (zones, regions), nigeria_administration
 ```
 
 The repo is shared by unrelated projects, so every layer is split by project first. `bronze` and `silver` are shared schemas: bronze tables are named `<project>_<source>_<what>` and silver models `stg_<project>_<source>__<entity>`, so names never collide between projects.
@@ -52,5 +55,6 @@ uv run --group dbt dbt build --profiles-dir .
 ## Add a model
 
 1. Put the `.sql` file in the folder for its layer and schema. A new `gold/<schema>/` folder needs a `+schema` entry in `dbt_project.yml`.
+   A small reference list that people maintain by hand (a mapping, a lookup) is a **seed**: a CSV in `seeds/<schema>/` with its own `_<seed>.yml`, loaded by `dbt build`.
 2. Add `_<model_name>.yml` with a description and tests.
 3. `.\dbt\run_dbt.ps1 build --select <model_name>+` until it's green, then open a PR. CI builds it in dev, and the merge deploys it to prod.

@@ -26,7 +26,8 @@ The repo and warehouse are shared by unrelated projects. Every layer is organize
 |---|---|---|---|---|
 | bronze | `pipelines/<project>/load_<source>_<what>.py` writes it, and `dbt/models/motherduck/bronze/<project>/<source>/` declares it as a dbt source | `bronze` (shared; tables named `<project>_<source>_<what>`) | the load script | the raw API value, plus `extracted_at` |
 | silver | `dbt/models/motherduck/silver/<project>/<source>/` | `silver` (shared; models named `stg_<project>_<source>__<entity>`) | dbt (views) | one cleaned, typed observation |
-| gold | `dbt/models/motherduck/gold/<schema>/` | one schema per subfolder: `nigeria`, `sandbox` | dbt (tables) | a business-ready fact, e.g. one month of the FX rate |
+| gold | `dbt/models/motherduck/gold/<schema>/` | one schema per subfolder: `nigeria`, `sandbox`, `datamart` | dbt (tables) | a business-ready fact, e.g. one month of the FX rate |
+| seeds | `dbt/seeds/<schema>/` | one schema per subfolder: `sandbox` | dbt (`dbt seed`, part of `dbt build`) | a row of a small hand-maintained reference list, e.g. a state and its zone |
 
 Gold tables today:
 
@@ -39,6 +40,14 @@ Gold tables today:
 | `nigeria.nigeria_faac_income` | one row per state per month (`state_month`) | FAAC workbooks, Income sheet |
 | `nigeria.nigeria_faac_deduction` | one row per state per month (`state_month`) | FAAC workbooks, Deduction sheet (+ Income for the net-amount fallback) |
 | `sandbox.fo_calendar` | one row per day, 1990-01-01 to today | generated |
+| `datamart.nigeria_faac_state_month` | one row per state per month (`state_month`) | FAAC income + deduction, with every amount also in US dollars at the month's official exchange rate. Fact table of the Nigeria Data Dashboard's FAAC section |
+
+Reference lists (dbt seeds, in `sandbox`):
+
+| Table | Grain | What it's for |
+|---|---|---|
+| `sandbox.nigeria_state` | one row per state (36 + FCT) | geopolitical zone and region (North/South) of each state |
+| `sandbox.nigeria_administration` | one row per administration | president, party, term dates and the first FAAC month attributed to each |
 
 ## Environments
 
