@@ -5,7 +5,7 @@ A Power BI dashboard for public Nigerian data, organised in sections. Tracked in
 | Section | Status | Source tables (`prod_dwh`) |
 |---|---|---|
 | FAAC | Model built, pages in progress | `datamart.nigeria_faac_state_month`, `sandbox.nigeria_state`, `sandbox.nigeria_administration`, `sandbox.fo_calendar` |
-| Economic metrics | Planned | `nigeria.*` World Bank indicators |
+| Economic metrics | Data model built | `datamart.nigeria_economy_month`, `datamart.nigeria_economy_year`, `sandbox.nigeria_administration`, `sandbox.fo_calendar` |
 | Elections | Planned | Needs a new source |
 
 ## Folder layout

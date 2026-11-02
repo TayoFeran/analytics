@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: nigeria_economy_year
+    description: >
+      Nigeria's GDP in US dollars and naira, real GDP growth, population and GDP per person
+      per year from 1990 (World Bank figures, reflecting NBS's 2025 rebasing), with the
+      year's average exchange rate from 2010. Built from nigeria.nigeria_gdp,
+      nigeria_gdp_naira, nigeria_gdp_growth, nigeria_population and nigeria_fx_rate. Yearly
+      fact table of the Nigeria Data Dashboard's Economy section. Grain: one row per year.
+    columns:
+      - name: year_date
+        description: 1 January of the year. Joins to the calendar table.
+        data_tests:
+          - not_null
+          - unique
+      - name: year
+        data_tests:
+          - not_null
+          - unique
+      - name: president
+        description: >
+          Administration in office for most of the year (on 1 July), so a handover year goes
+          to the incoming president. Blank before 1999 (military rule). Joins to
+          sandbox.nigeria_administration.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('nigeria_administration')
+                field: president
+      - name: gdp_usd
+        description: GDP at current prices, in US dollars.
+        data_tests:
+          - not_null
+      - name: gdp_naira
+        description: GDP at current prices, in naira.
+      - name: real_gdp_growth
+        description: Real GDP growth (constant prices) as a fraction (0.041 = 4.1%).
+      - name: population
+        description: Total population, mid-year estimate.
+      - name: gdp_per_person_usd
+        description: gdp_usd / population.
+      - name: gdp_per_person_naira
+        description: gdp_naira / population.
+      - name: avg_naira_per_usd
+        description: >
+          Average of the year's monthly official rates. Blank before 2010, when the monthly
+          series starts. A partial year averages only the months published so far.

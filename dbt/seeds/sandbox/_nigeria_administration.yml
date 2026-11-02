@@ -3,9 +3,10 @@ version: 2
 seeds:
   - name: nigeria_administration
     description: >
-      Nigerian presidential administrations, for comparing FAAC allocations by
-      administration. Jonathan is listed ahead of any data from his term, so pre-2020
-      workbooks can be added without changing this list.
+      Nigerian presidential administrations since the return to civilian rule in 1999, for
+      comparing FAAC allocations and economic indicators by administration. The yearly
+      economy table starts in 1990; its years under military rule (before 1999) have no
+      administration.
     config:
       column_types:
         term_start: date
@@ -13,7 +14,7 @@ seeds:
         first_disbursement_month: date
     columns:
       - name: president
-        description: Short name, matching the president column of the FAAC tables.
+        description: Short name, matching the president column of the FAAC and economy tables.
         data_tests:
           - not_null
           - unique
@@ -28,12 +29,15 @@ seeds:
         data_tests:
           - not_null
       - name: term_end
-        description: End of term. Blank for the administration in office.
+        description: >
+          End of term. Blank for the administration in office. Yar'Adua's term ended with his
+          death; Jonathan had been acting president since February 2010.
       - name: first_disbursement_month
         description: >
-          First FAAC month attributed to this administration. Presidents are inaugurated on
-          29 May, so the whole of May goes to the incoming administration (the same rule as
-          the president column in nigeria_faac_income and nigeria_faac_deduction).
+          First month attributed to this administration, in the FAAC and economy tables.
+          Presidents are inaugurated on 29 May, so the whole of May goes to the incoming
+          administration (the same rule as the president column in nigeria_faac_income and
+          nigeria_faac_deduction). Yar'Adua died on 5 May 2010, so May 2010 goes to Jonathan.
         data_tests:
           - not_null
           - unique

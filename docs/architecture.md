@@ -45,13 +45,15 @@ Gold tables today:
 | `nigeria.nigeria_faac_deduction` | one row per state per month (`state_month`) | FAAC workbooks, Deduction sheet (+ Income for the net-amount fallback) |
 | `sandbox.fo_calendar` | one row per day, 1990-01-01 to today | generated |
 | `datamart.nigeria_faac_state_month` | one row per state per month (`state_month`) | FAAC income + deduction, with every amount also in US dollars at the month's official exchange rate. Fact table of the Nigeria Data Dashboard's FAAC section |
+| `datamart.nigeria_economy_month` | one row per month (`month_date`), from 2010 | official exchange rate and CPI, with the year-on-year change in each. Monthly fact table of the dashboard's Economy section |
+| `datamart.nigeria_economy_year` | one row per year (`year_date`), from 1990 | GDP in US dollars and naira, real growth, population, GDP per person and the year's average exchange rate. Yearly fact table of the Economy section |
 
 Reference lists (dbt seeds, in `sandbox`):
 
 | Table | Grain | What it's for |
 |---|---|---|
 | `sandbox.nigeria_state` | one row per state (36 + FCT) | geopolitical zone and region (North/South) of each state |
-| `sandbox.nigeria_administration` | one row per administration | president, party, term dates and the first FAAC month attributed to each |
+| `sandbox.nigeria_administration` | one row per administration | president, party, term dates and the first month attributed to each, from Obasanjo (1999) |
 
 ## Environments
 
