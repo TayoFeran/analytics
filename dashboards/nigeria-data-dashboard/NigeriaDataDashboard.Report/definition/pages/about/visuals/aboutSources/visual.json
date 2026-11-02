@@ -80,6 +80,30 @@
               {
                 "textRuns": [
                   {
+                    "value": "State boundaries on the map: geoBoundaries (GRID3, 2022), CC BY 4.0.",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "10pt",
+                      "color": "#0F2019"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "10pt",
+                      "color": "#0F2019"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
                     "value": "Code: ",
                     "textStyle": {
                       "fontFamily": "Segoe UI",

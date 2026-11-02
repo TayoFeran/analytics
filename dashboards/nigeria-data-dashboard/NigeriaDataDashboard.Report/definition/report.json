@@ -86,6 +86,11 @@
           "name": "tt_faac_state_detail.png",
           "path": "tt_faac_state_detail.png",
           "type": "Image"
+        },
+        {
+          "name": "nigeria_states.json",
+          "path": "nigeria_states.json",
+          "type": "ShapeMap"
         }
       ]
     }

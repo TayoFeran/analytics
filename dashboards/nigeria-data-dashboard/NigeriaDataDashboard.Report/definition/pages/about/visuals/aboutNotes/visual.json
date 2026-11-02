@@ -32,7 +32,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "36 states only: the FCT isn't in the FAAC state reports.",
+                    "value": "36 states only: the FCT isn't in the FAAC state reports, so it is grey on the map.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",

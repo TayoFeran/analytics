@@ -41,7 +41,7 @@ at these y positions:
 |---|---|---|---|---|
 | Slicers: Period, Zone, State, Currency | 284 | 78 | 960 | 28 |
 | Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Filled/shape map: net received by state | 226 | 138 | 524 | 356 |
+| Shape map: net received by state (TT - State Detail tooltip) | 226 | 138 | 524 | 356 |
 | Bar chart: all 36 states ranked by net (scrolls) | 786 | 138 | 460 | 548 |
 | Card row: selected state gross, deductions, net, share of national | 226 | 530 | 524 | 156 |
 
