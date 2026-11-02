@@ -26,6 +26,9 @@ COUNTRY_NAME = "Nigeria"
 
 ANNUAL_INDICATORS = {
     "NY.GDP.MKTP.CD": "GDP (current US$)",
+    # Naira GDP and real growth: dollar GDP moves with the exchange rate, so it can't show growth
+    "NY.GDP.MKTP.CN": "GDP (current LCU)",
+    "NY.GDP.MKTP.KD.ZG": "GDP growth (annual %)",
     "SP.POP.TOTL": "Population, total",
 }
 
