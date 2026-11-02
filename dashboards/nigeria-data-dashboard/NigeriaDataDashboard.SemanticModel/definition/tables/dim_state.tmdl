@@ -1,0 +1,32 @@
+table dim_state
+
+	column state
+		dataType: string
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone
+		dataType: string
+		summarizeBy: none
+		sourceColumn: zone
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_state = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database(MotherDuckHost, MotherDuckDatabase), "select state, zone, region#(lf)from sandbox.nigeria_state#(lf)where state in (select distinct state from datamart.nigeria_faac_state_month)", null, [EnableFolding = true])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

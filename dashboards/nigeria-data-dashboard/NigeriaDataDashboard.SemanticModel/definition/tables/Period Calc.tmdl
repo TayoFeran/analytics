@@ -1,0 +1,151 @@
+table 'Period Calc'
+
+	calculationGroup
+		precedence: 30
+
+		calculationItem Current =
+				VAR _p = SELECTEDVALUE ( Period[Period], "Monthly" )
+				-- "Current" is the latest month with FAAC data, not today
+				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
+				-- Quarterly and Yearly are to date, compared with the same months a year earlier
+				VAR _from =
+				    SWITCH (
+				        _p,
+				        "Quarterly", DATE ( YEAR ( _last ), ( QUARTER ( _last ) - 1 ) * 3 + 1, 1 ),
+				        "Yearly", DATE ( YEAR ( _last ), 1, 1 ),
+				        DATE ( YEAR ( _last ), MONTH ( _last ), 1 )
+				    )
+				VAR _shift = IF ( _p = "Monthly", 1, 12 )
+				VAR _cur =
+				    CALCULATE (
+				        SELECTEDMEASURE (),
+				        REMOVEFILTERS ( calendar_table ),
+				        DATESBETWEEN ( calendar_table[date], _from, EOMONTH ( _last, 0 ) )
+				    )
+				VAR _prev =
+				    CALCULATE (
+				        SELECTEDMEASURE (),
+				        REMOVEFILTERS ( calendar_table ),
+				        DATESBETWEEN ( calendar_table[date], EDATE ( _from, - _shift ), EOMONTH ( _last, - _shift ) )
+				    )
+				RETURN
+				    _cur
+			ordinal: 0
+
+			formatStringDefinition = SELECTEDMEASUREFORMATSTRING ()
+
+		calculationItem Previous =
+				VAR _p = SELECTEDVALUE ( Period[Period], "Monthly" )
+				-- "Current" is the latest month with FAAC data, not today
+				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
+				-- Quarterly and Yearly are to date, compared with the same months a year earlier
+				VAR _from =
+				    SWITCH (
+				        _p,
+				        "Quarterly", DATE ( YEAR ( _last ), ( QUARTER ( _last ) - 1 ) * 3 + 1, 1 ),
+				        "Yearly", DATE ( YEAR ( _last ), 1, 1 ),
+				        DATE ( YEAR ( _last ), MONTH ( _last ), 1 )
+				    )
+				VAR _shift = IF ( _p = "Monthly", 1, 12 )
+				VAR _cur =
+				    CALCULATE (
+				        SELECTEDMEASURE (),
+				        REMOVEFILTERS ( calendar_table ),
+				        DATESBETWEEN ( calendar_table[date], _from, EOMONTH ( _last, 0 ) )
+				    )
+				VAR _prev =
+				    CALCULATE (
+				        SELECTEDMEASURE (),
+				        REMOVEFILTERS ( calendar_table ),
+				        DATESBETWEEN ( calendar_table[date], EDATE ( _from, - _shift ), EOMONTH ( _last, - _shift ) )
+				    )
+				RETURN
+				    _prev
+			ordinal: 1
+
+			formatStringDefinition = SELECTEDMEASUREFORMATSTRING ()
+
+		calculationItem 'Change %' =
+				VAR _p = SELECTEDVALUE ( Period[Period], "Monthly" )
+				-- "Current" is the latest month with FAAC data, not today
+				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
+				-- Quarterly and Yearly are to date, compared with the same months a year earlier
+				VAR _from =
+				    SWITCH (
+				        _p,
+				        "Quarterly", DATE ( YEAR ( _last ), ( QUARTER ( _last ) - 1 ) * 3 + 1, 1 ),
+				        "Yearly", DATE ( YEAR ( _last ), 1, 1 ),
+				        DATE ( YEAR ( _last ), MONTH ( _last ), 1 )
+				    )
+				VAR _shift = IF ( _p = "Monthly", 1, 12 )
+				VAR _cur =
+				    CALCULATE (
+				        SELECTEDMEASURE (),
+				        REMOVEFILTERS ( calendar_table ),
+				        DATESBETWEEN ( calendar_table[date], _from, EOMONTH ( _last, 0 ) )
+				    )
+				VAR _prev =
+				    CALCULATE (
+				        SELECTEDMEASURE (),
+				        REMOVEFILTERS ( calendar_table ),
+				        DATESBETWEEN ( calendar_table[date], EDATE ( _from, - _shift ), EOMONTH ( _last, - _shift ) )
+				    )
+				RETURN
+				    DIVIDE ( _cur - _prev, _prev )
+			ordinal: 2
+
+			formatStringDefinition = "0.0%"
+
+		calculationItem Trend =
+				VAR _p = SELECTEDVALUE ( Period[Period], "Monthly" )
+				-- "Current" is the latest month with FAAC data, not today
+				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
+				-- Quarterly and Yearly are to date, compared with the same months a year earlier
+				VAR _from =
+				    SWITCH (
+				        _p,
+				        "Quarterly", DATE ( YEAR ( _last ), ( QUARTER ( _last ) - 1 ) * 3 + 1, 1 ),
+				        "Yearly", DATE ( YEAR ( _last ), 1, 1 ),
+				        DATE ( YEAR ( _last ), MONTH ( _last ), 1 )
+				    )
+				VAR _shift = IF ( _p = "Monthly", 1, 12 )
+				VAR _cur =
+				    CALCULATE (
+				        SELECTEDMEASURE (),
+				        REMOVEFILTERS ( calendar_table ),
+				        DATESBETWEEN ( calendar_table[date], _from, EOMONTH ( _last, 0 ) )
+				    )
+				VAR _prev =
+				    CALCULATE (
+				        SELECTEDMEASURE (),
+				        REMOVEFILTERS ( calendar_table ),
+				        DATESBETWEEN ( calendar_table[date], EDATE ( _from, - _shift ), EOMONTH ( _last, - _shift ) )
+				    )
+				RETURN
+				    SWITCH (
+				        TRUE (),
+				        ISBLANK ( _cur ) || ISBLANK ( _prev ), BLANK (),
+				        ROUND ( _cur - _prev, 2 ) = 0, "Unchanged",
+				        _cur > _prev, "Growth",
+				        "Decline"
+				    )
+			ordinal: 3
+
+	column Name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Name
+		sortByColumn: Ordinal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ordinal
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: Ordinal
+
+		annotation SummarizationSetBy = Automatic
+
+	annotation PBI_ResultType = Table

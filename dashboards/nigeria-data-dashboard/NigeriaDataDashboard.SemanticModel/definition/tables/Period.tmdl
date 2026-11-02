@@ -1,0 +1,47 @@
+table Period
+
+	column Period
+		dataType: string
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Period Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Period Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Period Fields'
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Period Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Period Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Period = calculated
+		mode: import
+		source =
+				{
+				    ("Monthly", NAMEOF ( 'calendar_table'[monthf] ), 0),
+				    ("Quarterly", NAMEOF ( 'calendar_table'[qtr_year] ), 1),
+				    ("Yearly", NAMEOF ( 'calendar_table'[year] ), 2)
+				}
+
+	annotation PBI_ResultType = Table

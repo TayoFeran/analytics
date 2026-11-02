@@ -1,0 +1,9 @@
+/// MotherDuck Postgres endpoint (not a secret). The token is held in Power BI's credential store.
+expression MotherDuckHost = "pg.eu-west-1-aws.motherduck.com" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+
+	annotation PBI_ResultType = Text
+
+/// prod_dwh for the published dashboard; dev_dwh to test model changes against dev data
+expression MotherDuckDatabase = "prod_dwh" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+
+	annotation PBI_ResultType = Text

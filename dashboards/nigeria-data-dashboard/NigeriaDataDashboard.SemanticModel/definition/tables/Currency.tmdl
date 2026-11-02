@@ -1,0 +1,28 @@
+table Currency
+
+	column Currency
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Currency
+		sortByColumn: currency_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column currency_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: currency_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Currency = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Currency = text, currency_order = Int64.Type], {{"₦", 1}, {"$", 2}})
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

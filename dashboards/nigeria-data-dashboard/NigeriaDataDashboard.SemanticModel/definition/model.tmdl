@@ -1,0 +1,33 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["MotherDuckHost", "MotherDuckDatabase", "Dax", "faac", "calendar_table", "dim_state", "dim_administration", "Currency", "Period", "Metric_param", "Period Calc", "Basis", "Compare_By", "Compare_A", "Compare_B", "Compare Side", "Refresh Time"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Dax
+ref table faac
+ref table calendar_table
+ref table dim_state
+ref table dim_administration
+ref table Currency
+ref table Period
+ref table Metric_param
+ref table 'Period Calc'
+ref table Basis
+ref table Compare_By
+ref table Compare_A
+ref table Compare_B
+ref table 'Compare Side'
+ref table 'Refresh Time'
+
+ref cultureInfo en-US

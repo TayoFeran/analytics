@@ -1,0 +1,259 @@
+table calendar_table
+	dataCategory: Time
+
+	column date
+		dataType: dateTime
+		isKey
+		formatString: dd mmm yyyy
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column day_num
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: day_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: day_name
+		sortByColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column dayf
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dayf
+		sortByColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_rank_asc
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: day_rank_asc
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_rank_desc
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: day_rank_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_date
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		summarizeBy: none
+		sourceColumn: week_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column week_year_num
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: week_year_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_year_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: week_year_name
+		sortByColumn: week_year_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column weekf
+		dataType: string
+		summarizeBy: none
+		sourceColumn: weekf
+		sortByColumn: week_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_month_rank
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: week_month_rank
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_rank_asc
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: week_rank_asc
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_rank_desc
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: week_rank_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_date
+		dataType: dateTime
+		formatString: mmm yyyy
+		summarizeBy: none
+		sourceColumn: month_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column month_num
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: month_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column monthf
+		dataType: string
+		summarizeBy: none
+		sourceColumn: monthf
+		sortByColumn: month_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_rank_asc
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: month_rank_asc
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_rank_desc
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: month_rank_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column qtr_num
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: qtr_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column qtr_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: qtr_name
+		sortByColumn: qtr_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column qtr_rank_asc
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: qtr_rank_asc
+
+		annotation SummarizationSetBy = Automatic
+
+	column qtr_rank_desc
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: qtr_rank_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column year
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_rank_asc
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: year_rank_asc
+
+		annotation SummarizationSetBy = Automatic
+
+	column qtr_year
+		dataType: string
+		summarizeBy: none
+		sourceColumn: qtr_year
+		sortByColumn: qtr_year_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column qtr_year_sort
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: qtr_year_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	partition calendar_table = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database(MotherDuckHost, MotherDuckDatabase), "select#(lf)    date, day_num, day_name, dayf, day_of_week, day_rank_asc, day_rank_desc,#(lf)    week_date, week_year_num, week_year_name, weekf, week_month_rank,#(lf)    week_rank_asc, week_rank_desc,#(lf)    month_date, month_num, month_name, monthf, month_rank_asc, month_rank_desc,#(lf)    qtr_num, qtr_name, qtr_rank_asc, qtr_rank_desc,#(lf)    year, year_rank_asc,#(lf)    qtr_name || ' ' || year as qtr_year,#(lf)    year * 10 + qtr_num as qtr_year_sort#(lf)from sandbox.fo_calendar#(lf)where date != current_date", null, [EnableFolding = true])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

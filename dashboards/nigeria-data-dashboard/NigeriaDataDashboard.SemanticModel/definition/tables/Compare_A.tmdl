@@ -1,0 +1,45 @@
+table Compare_A
+
+	column compare_by
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: compare_by
+
+		annotation SummarizationSetBy = Automatic
+
+	column compare_by_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: compare_by_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column member
+		dataType: string
+		summarizeBy: none
+		sourceColumn: member
+		sortByColumn: member_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column member_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: member_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Compare_A = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database(MotherDuckHost, MotherDuckDatabase), "with faac as (#(lf)    select distinct president, state from datamart.nigeria_faac_state_month#(lf)),#(lf)states as (#(lf)    select * from sandbox.nigeria_state where state in (select state from faac)#(lf))#(lf)select 'Administration' as compare_by, 1 as compare_by_order, president as member,#(lf)    row_number() over (order by term_start) as member_order#(lf)from sandbox.nigeria_administration#(lf)where president in (select president from faac)#(lf)union all#(lf)select 'State', 2, state, 100 + row_number() over (order by state) from states#(lf)union all#(lf)select 'Zone', 3, zone, 200 + row_number() over (order by zone)#(lf)from (select distinct zone from states)#(lf)union all#(lf)select 'Region', 4, region, 300 + row_number() over (order by region)#(lf)from (select distinct region from states)", null, [EnableFolding = true])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
