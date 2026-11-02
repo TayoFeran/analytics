@@ -28,7 +28,7 @@ models:
               arguments:
                 values: ['Nigeria']
       - name: exchange_rate
-        description: Local currency units per US dollar, rounded to whole units.
+        description: Local currency units per US dollar, as published (unrounded).
         data_tests:
           - not_null
       - name: extracted_at

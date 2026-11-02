@@ -28,7 +28,7 @@ models:
               arguments:
                 values: ['Nigeria']
       - name: cpi_rate
-        description: CPI index value, rounded to whole units.
+        description: CPI index value, as published (unrounded), so inflation can be computed from it.
         data_tests:
           - not_null
       - name: extracted_at
