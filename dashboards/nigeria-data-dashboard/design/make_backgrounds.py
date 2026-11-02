@@ -112,7 +112,7 @@ LAYOUT = {
         "visuals": [
             ("Slicers: Period, Zone, State, Currency", (284, 78, 1244, 106)),
             ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("Filled/shape map: net received by state", (226, 138, 750, 494)),
+            ("Shape map: net received by state (TT - State Detail tooltip)", (226, 138, 750, 494)),
             ("Bar chart: all 36 states ranked by net (scrolls)", (786, 138, 1246, 686)),
             (
                 "Card row: selected state gross, deductions, net, share of national",
