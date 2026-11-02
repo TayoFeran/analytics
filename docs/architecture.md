@@ -36,6 +36,8 @@ Gold tables today:
 | Table | Grain | Source |
 |---|---|---|
 | `nigeria.nigeria_gdp` | one row per year | World Bank `NY.GDP.MKTP.CD` |
+| `nigeria.nigeria_gdp_naira` | one row per year | World Bank `NY.GDP.MKTP.CN` |
+| `nigeria.nigeria_gdp_growth` | one row per year | World Bank `NY.GDP.MKTP.KD.ZG` |
 | `nigeria.nigeria_population` | one row per year | World Bank `SP.POP.TOTL` |
 | `nigeria.nigeria_fx_rate` | one row per month | World Bank `DPANUSSPB` |
 | `nigeria.nigeria_consumer_price_index` | one row per month | World Bank `CPTOTNSXN` |

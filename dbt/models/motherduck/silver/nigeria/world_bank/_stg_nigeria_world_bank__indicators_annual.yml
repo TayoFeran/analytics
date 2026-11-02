@@ -27,17 +27,21 @@ models:
               arguments:
                 values:
                   - 'NY.GDP.MKTP.CD'
+                  - 'NY.GDP.MKTP.CN'
+                  - 'NY.GDP.MKTP.KD.ZG'
                   - 'SP.POP.TOTL'
       - name: indicator_name
         description: >
-          Human-readable indicator label. The gold layer filters on this column
-          with ILIKE, so unexpected values here silently change gold output.
+          Human-readable indicator label. The annual gold models filter on
+          indicator_code, which is stable; this list catches a renamed indicator.
         data_tests:
           - not_null
           - accepted_values:
               arguments:
                 values:
                   - 'GDP (current US$)'
+                  - 'GDP (current LCU)'
+                  - 'GDP growth (annual %)'
                   - 'Population, total'
       - name: year
         data_tests:

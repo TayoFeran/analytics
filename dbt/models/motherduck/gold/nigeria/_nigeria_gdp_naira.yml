@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: nigeria_gdp_naira
+    description: >
+      Nigeria GDP in current naira (World Bank NY.GDP.MKTP.CN), one row per year, sourced from the annual
+      silver model filtered to this indicator's code.
+    columns:
+      - name: date
+        description: Year start (Jan 1) for the observation.
+        data_tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('stg_nigeria_world_bank__indicators_annual')
+                field: make_date(year, 1, 1)
+      - name: country_code
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['NGA']
+      - name: country_name
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Nigeria']
+      - name: gdp_naira
+        description: GDP in current naira (local currency units).
+        data_tests:
+          - not_null
+      - name: extracted_at
+        description: Date of the extract run that produced the row.
+        data_tests:
+          - not_null

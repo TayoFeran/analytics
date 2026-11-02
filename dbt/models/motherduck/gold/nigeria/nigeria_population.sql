@@ -5,4 +5,4 @@ select
     value::int as population,
     extracted_at::date as extracted_at
 from {{ ref("stg_nigeria_world_bank__indicators_annual") }}
-where indicator_name ilike '%population%'
+where indicator_code = 'SP.POP.TOTL'

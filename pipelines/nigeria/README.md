@@ -16,6 +16,8 @@ Pulls Nigerian economic indicators from the [World Bank API](https://datahelpdes
 | Indicator | Code | Frequency | From |
 |---|---|---|---|
 | GDP (current US$) | `NY.GDP.MKTP.CD` | annual | 1990 |
+| GDP (current LCU) | `NY.GDP.MKTP.CN` | annual | 1990 |
+| GDP growth (annual %) | `NY.GDP.MKTP.KD.ZG` | annual | 1990 |
 | Population, total | `SP.POP.TOTL` | annual | 1990 |
 | Official exchange rate (LCU per US$) | `DPANUSSPB` | monthly | 2010 |
 | CPI price index, not seasonally adjusted | `CPTOTNSXN` | monthly | 2010 |
