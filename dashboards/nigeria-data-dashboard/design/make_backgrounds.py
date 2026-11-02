@@ -52,11 +52,14 @@ NAV = [
     ("Deductions", "deductions", 232),
     ("Compare", "compare", 264),
     ("ECONOMY", "section", 310),
-    ("Indicators", None, 328),
-    ("ELECTIONS", "section", 374),
-    ("Results", None, 392),
-    ("INFO", "section", 438),
-    ("About", "about", 456),
+    ("Overview", "economy-overview", 328),
+    ("Economy size", "economy-size", 360),
+    ("FAAC in real terms", "real-terms", 392),
+    ("Presidents", "presidents", 424),
+    ("ELECTIONS", "section", 470),
+    ("Results", None, 488),
+    ("INFO", "section", 534),
+    ("About", "about", 552),
 ]
 NAV_H = 28
 
@@ -68,6 +71,38 @@ STANDARD_FILTERS = [
     ("CURRENCY", 1020, (1090, 78, 1244, 106)),
 ]
 FILTER_SEPARATORS = [538, 1006]
+
+# Economy pages: a years range slicer and a president dropdown. No currency switch: each
+# chart's title says which currency it shows.
+ECONOMY_FILTERS = [
+    ("YEARS", 234, (282, 78, 560, 106)),
+    ("PRESIDENT", 588, (660, 78, 860, 106)),
+]
+ECONOMY_SEPARATORS = [574]
+
+# Sidebar footer, per section (None = dashboard-wide pages like About)
+FOOTER = {
+    "FAAC": [
+        "Source: FAAC monthly",
+        "disbursement reports,",
+        "via MotherDuck.",
+        "36 states; FCT isn't",
+        "in the reports.",
+    ],
+    "ECONOMY": [
+        "Source: World Bank",
+        "(exchange rate, CPI,",
+        "GDP, population), via",
+        "MotherDuck. Can differ",
+        "from NBS headlines.",
+    ],
+    None: [
+        "Sources: FAAC monthly",
+        "disbursement reports",
+        "and the World Bank,",
+        "via MotherDuck.",
+    ],
+}
 
 # Cards per page: (x1, y1, x2, y2, static label or None, style)
 #   style: "card" plain, "kpi" green top strip, "narr" gold left strip
@@ -192,6 +227,117 @@ LAYOUT = {
             ("Table: metric names, centre column", (660, 168, 812, 606)),
             ("Matrix or table: Side B values + bars (Compare Side = B)", (812, 168, 1246, 606)),
             ("Text: Comparison_narrative", (296, 638, 990, 690)),
+        ],
+    },
+    "economy-overview": {
+        "title": "Overview",
+        "section": "ECONOMY",
+        "slug": "overview",
+        "filters": ECONOMY_FILTERS,
+        "seps": ECONOMY_SEPARATORS,
+        "cards": [
+            (216, 128, 464, 216, "INFLATION", "kpi"),
+            (480, 128, 728, 216, "NAIRA PER US DOLLAR", "kpi"),
+            (744, 128, 992, 216, "REAL GDP GROWTH", "kpi"),
+            (1008, 128, 1256, 216, "GDP PER PERSON", "kpi"),
+            (216, 232, 728, 584, None, "card"),
+            (744, 232, 1256, 584, None, "card"),
+            (216, 600, 1256, 696, None, "narr"),
+        ],
+        "visuals": [
+            ("Slicer: Years (between)", (282, 78, 560, 106)),
+            ("Slicer: President (dropdown)", (660, 78, 860, 106)),
+            ("Text: refresh stamp", (1040, 22, 1256, 58)),
+            ("KPI group: Inflation (value, change line, as-of text)", (226, 146, 454, 210)),
+            ("KPI group: Naira per US dollar", (490, 146, 718, 210)),
+            ("KPI group: Real GDP growth", (754, 146, 982, 210)),
+            ("KPI group: GDP per person ($ and ₦)", (1018, 146, 1246, 210)),
+            ("Line chart: inflation by month, coloured by president", (226, 242, 718, 574)),
+            (
+                "Line chart: naira per US dollar by month, coloured by president",
+                (754, 242, 1246, 574),
+            ),
+            ("Text: Inflation_narrative + Naira_narrative", (296, 608, 1246, 690)),
+        ],
+    },
+    "economy-size": {
+        "title": "Economy size",
+        "section": "ECONOMY",
+        "slug": "size",
+        "filters": ECONOMY_FILTERS,
+        "seps": ECONOMY_SEPARATORS,
+        "cards": [
+            (216, 128, 728, 400, None, "card"),
+            (744, 128, 1256, 400, None, "card"),
+            (216, 416, 728, 600, None, "card"),
+            (744, 416, 1256, 600, None, "card"),
+            (216, 616, 1256, 696, None, "narr"),
+        ],
+        "visuals": [
+            ("Slicers: Years, President", (282, 78, 860, 106)),
+            ("Text: refresh stamp", (1040, 22, 1256, 58)),
+            ("Column chart: GDP in naira by year", (226, 138, 718, 390)),
+            ("Column chart: GDP in US dollars by year", (754, 138, 1246, 390)),
+            (
+                "Column chart: real GDP growth by year (green above 0, red below)",
+                (226, 426, 718, 590),
+            ),
+            ("Line chart: GDP per person by year ($)", (754, 426, 1246, 590)),
+            ("Text: GDP_narrative", (296, 624, 1246, 690)),
+        ],
+    },
+    "real-terms": {
+        "title": "FAAC in real terms",
+        "section": "ECONOMY",
+        "slug": "real_terms",
+        "filters": ECONOMY_FILTERS + [("PRICES", 890, (940, 78, 1244, 106))],
+        "seps": ECONOMY_SEPARATORS + [876],
+        "cards": [
+            (216, 128, 464, 216, "FIRST MONTH", "kpi"),
+            (480, 128, 728, 216, "LATEST MONTH", "kpi"),
+            (744, 128, 992, 216, "CHANGE, AS PAID", "kpi"),
+            (1008, 128, 1256, 216, "CHANGE, IN REAL TERMS", "kpi"),
+            (216, 232, 1256, 600, None, "card"),
+            (216, 616, 1256, 696, None, "narr"),
+        ],
+        "visuals": [
+            ("Slicer: Years (between)", (282, 78, 560, 106)),
+            ("Slicer: President (dropdown)", (660, 78, 860, 106)),
+            ("Slicer: Prices, As paid / Today's prices (tiles)", (940, 78, 1244, 106)),
+            ("Text: refresh stamp", (1040, 22, 1256, 58)),
+            ("KPI group: first month net (as paid and real)", (226, 146, 454, 210)),
+            ("KPI group: latest month net", (490, 146, 718, 210)),
+            ("KPI group: change as paid", (754, 146, 982, 210)),
+            ("KPI group: change in real terms", (1018, 146, 1246, 210)),
+            ("Column chart: Net_prices by month (title Real_terms_title)", (226, 242, 1246, 590)),
+            ("Text: Real_terms_narrative", (296, 624, 1246, 690)),
+        ],
+    },
+    "presidents": {
+        "title": "Presidents",
+        "section": "ECONOMY",
+        "slug": "presidents",
+        # No president filter: this page compares them
+        "filters": [("YEARS", 234, (282, 78, 560, 106))],
+        "seps": [],
+        "cards": [
+            (216, 128, 552, 520, "AVERAGE INFLATION", "card"),
+            (568, 128, 904, 520, "NAIRA VALUE OVER THE TERM", "card"),
+            (920, 128, 1256, 520, "AVERAGE REAL GDP GROWTH", "card"),
+            (216, 536, 1256, 600, None, "card"),
+            (216, 616, 1256, 696, None, "narr"),
+        ],
+        "visuals": [
+            ("Slicer: Years (between)", (282, 78, 560, 106)),
+            ("Text: refresh stamp", (1040, 22, 1256, 58)),
+            ("Bar chart: Inflation_yoy by president, in term order", (226, 152, 542, 510)),
+            ("Bar chart: Term_naira_change by president", (578, 152, 894, 510)),
+            (
+                "Bar chart: Real_GDP_growth by president (blank = Before 1999)",
+                (930, 152, 1246, 510),
+            ),
+            ("Table: Term_coverage_text by president (partial terms only)", (226, 544, 1246, 592)),
+            ("Text: Administration_narrative", (296, 624, 1246, 690)),
         ],
     },
     "about": {
@@ -363,7 +509,7 @@ def draw_card(
         tracked(ImageDraw.Draw(img), (lx, ly), label, font(SEMI, 9.5), C["muted"], 1.2)
 
 
-def draw_sidebar(img: Image.Image, page: str) -> None:
+def draw_sidebar(img: Image.Image, page: str, section: str | None) -> None:
     d = ImageDraw.Draw(img)
     d.rectangle(box((0, 0, SIDEBAR_W, H)), fill=C["side"])
     d.text((s(22), s(24)), "NIGERIA", font=font(BOLD, 19), fill=C["side_ink"])
@@ -384,14 +530,7 @@ def draw_sidebar(img: Image.Image, page: str) -> None:
             chip = (134, y + 7, 170, y + NAV_H - 7)
             d.rounded_rectangle(box(chip), radius=s(7), outline="#5E8A77", width=s(1))
             tracked(d, (chip[0] + 6, chip[1] + 1.5), "SOON", font(SEMI, 7.5), "#5E8A77", 0.8)
-    foot = [
-        "Source: FAAC monthly",
-        "disbursement reports,",
-        "via MotherDuck.",
-        "36 states; FCT isn't",
-        "in the reports.",
-    ]
-    for i, line in enumerate(foot):
+    for i, line in enumerate(FOOTER[section]):
         d.text((s(22), s(640 + i * 13)), line, font=font(REG, 9), fill="#8FB0A2")
 
 
@@ -437,13 +576,14 @@ def file_name(page: str, spec: dict) -> str:
     """bg_<section>_<page>.png, or bg_<page>.png for dashboard-wide pages like About."""
     section = spec.get("section", "FAAC")
     prefix = f"bg_{section.lower()}_" if section else "bg_"
-    return prefix + page.replace("-", "_") + ".png"
+    return prefix + spec.get("slug", page).replace("-", "_") + ".png"
 
 
 def render(page: str, spec: dict, out: Path) -> Path:
     img = Image.new("RGBA", (s(W), s(H)), C["canvas"])
-    draw_sidebar(img, page)
-    draw_header(img, spec["title"], spec.get("section", "FAAC"))
+    section = spec.get("section", "FAAC")
+    draw_sidebar(img, page, section)
+    draw_header(img, spec["title"], section)
     draw_filters(img, spec)
     for x1, y1, x2, y2, label, style in spec["cards"]:
         draw_card(img, (x1, y1, x2, y2), style, label)

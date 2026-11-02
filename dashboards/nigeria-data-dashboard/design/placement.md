@@ -16,7 +16,11 @@ at these y positions:
 | Revenue mix | 200 |
 | Deductions | 232 |
 | Compare | 264 |
-| About | 456 |
+| Overview | 328 |
+| Economy size | 360 |
+| FAAC in real terms | 392 |
+| Presidents | 424 |
+| About | 552 |
 
 ## Overview (`bg_faac_overview.png`)
 
@@ -82,6 +86,60 @@ at these y positions:
 | Table: metric names, centre column | 660 | 168 | 152 | 438 |
 | Matrix or table: Side B values + bars (Compare Side = B) | 812 | 168 | 434 | 438 |
 | Text: Comparison_narrative | 296 | 638 | 694 | 52 |
+
+## Overview (`bg_economy_overview.png`)
+
+| Visual | x | y | w | h |
+|---|---|---|---|---|
+| Slicer: Years (between) | 282 | 78 | 278 | 28 |
+| Slicer: President (dropdown) | 660 | 78 | 200 | 28 |
+| Text: refresh stamp | 1040 | 22 | 216 | 36 |
+| KPI group: Inflation (value, change line, as-of text) | 226 | 146 | 228 | 64 |
+| KPI group: Naira per US dollar | 490 | 146 | 228 | 64 |
+| KPI group: Real GDP growth | 754 | 146 | 228 | 64 |
+| KPI group: GDP per person ($ and ₦) | 1018 | 146 | 228 | 64 |
+| Line chart: inflation by month, coloured by president | 226 | 242 | 492 | 332 |
+| Line chart: naira per US dollar by month, coloured by president | 754 | 242 | 492 | 332 |
+| Text: Inflation_narrative + Naira_narrative | 296 | 608 | 950 | 82 |
+
+## Economy size (`bg_economy_size.png`)
+
+| Visual | x | y | w | h |
+|---|---|---|---|---|
+| Slicers: Years, President | 282 | 78 | 578 | 28 |
+| Text: refresh stamp | 1040 | 22 | 216 | 36 |
+| Column chart: GDP in naira by year | 226 | 138 | 492 | 252 |
+| Column chart: GDP in US dollars by year | 754 | 138 | 492 | 252 |
+| Column chart: real GDP growth by year (green above 0, red below) | 226 | 426 | 492 | 164 |
+| Line chart: GDP per person by year ($) | 754 | 426 | 492 | 164 |
+| Text: GDP_narrative | 296 | 624 | 950 | 66 |
+
+## FAAC in real terms (`bg_economy_real_terms.png`)
+
+| Visual | x | y | w | h |
+|---|---|---|---|---|
+| Slicer: Years (between) | 282 | 78 | 278 | 28 |
+| Slicer: President (dropdown) | 660 | 78 | 200 | 28 |
+| Slicer: Prices, As paid / Today's prices (tiles) | 940 | 78 | 304 | 28 |
+| Text: refresh stamp | 1040 | 22 | 216 | 36 |
+| KPI group: first month net (as paid and real) | 226 | 146 | 228 | 64 |
+| KPI group: latest month net | 490 | 146 | 228 | 64 |
+| KPI group: change as paid | 754 | 146 | 228 | 64 |
+| KPI group: change in real terms | 1018 | 146 | 228 | 64 |
+| Column chart: Net_prices by month (title Real_terms_title) | 226 | 242 | 1020 | 348 |
+| Text: Real_terms_narrative | 296 | 624 | 950 | 66 |
+
+## Presidents (`bg_economy_presidents.png`)
+
+| Visual | x | y | w | h |
+|---|---|---|---|---|
+| Slicer: Years (between) | 282 | 78 | 278 | 28 |
+| Text: refresh stamp | 1040 | 22 | 216 | 36 |
+| Bar chart: Inflation_yoy by president, in term order | 226 | 152 | 316 | 358 |
+| Bar chart: Term_naira_change by president | 578 | 152 | 316 | 358 |
+| Bar chart: Real_GDP_growth by president (blank = Before 1999) | 930 | 152 | 316 | 358 |
+| Table: Term_coverage_text by president (partial terms only) | 226 | 544 | 1020 | 48 |
+| Text: Administration_narrative | 296 | 624 | 950 | 66 |
 
 ## About (`bg_about.png`)
 
