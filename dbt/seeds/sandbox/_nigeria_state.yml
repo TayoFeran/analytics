@@ -1,0 +1,34 @@
+version: 2
+
+seeds:
+  - name: nigeria_state
+    description: >
+      Nigeria's 36 states and the FCT, with their geopolitical zone and region (North or
+      South). Reference list for the Nigeria Data Dashboard's zone and region comparisons.
+      FCT is included although the FAAC workbooks don't list it.
+    columns:
+      - name: state
+        description: State name as used in the gold tables, e.g. "Akwa Ibom", "Nasarawa".
+        data_tests:
+          - not_null
+          - unique
+      - name: zone
+        description: Geopolitical zone.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - North Central
+                  - North East
+                  - North West
+                  - South East
+                  - South South
+                  - South West
+      - name: region
+        description: North (North Central, North East, North West) or South (South East, South South, South West).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['North', 'South']

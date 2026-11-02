@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: nigeria_faac_state_month
+    description: >
+      FAAC allocations per state per disbursement month, in naira and US dollars: revenue
+      lines, deduction lines, total deductions and the net amount received. Combines
+      nigeria.nigeria_faac_income and nigeria.nigeria_faac_deduction with the month's
+      official exchange rate (nigeria.nigeria_fx_rate). Fact table of the Nigeria Data
+      Dashboard's FAAC section. Grain: one row per state per month (state_month).
+    columns:
+      - name: state_month
+        description: Grain key, "<YYYY-MM> <state>", e.g. "2024-01 Lagos".
+        data_tests:
+          - not_null
+          - unique
+      - name: disbursement_date
+        description: First day of the disbursement month. Joins to the calendar table.
+        data_tests:
+          - not_null
+      - name: state
+        description: Joins to sandbox.nigeria_state for zone and region.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('nigeria_state')
+                field: state
+      - name: president
+        description: Administration in office in the disbursement month. Joins to sandbox.nigeria_administration.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('nigeria_administration')
+                field: president
+      - name: total_gross_amount
+        description: Gross allocation (sum of the six revenue lines), in naira.
+        data_tests:
+          - not_null
+      - name: total_deductions
+        description: Sum of the six deduction lines, in naira. Every row has a matching deduction row.
+        data_tests:
+          - not_null
+      - name: net_amount_after_deductions
+        description: Net amount the state received, in naira.
+        data_tests:
+          - not_null
+      - name: naira_per_usd
+        description: >
+          Official naira per US dollar exchange rate for the disbursement month, used for
+          every *_usd column. A warning (not a failure) if a new FAAC month arrives before
+          the World Bank publishes that month's rate: the naira figures still load, and the
+          dollar figures fill in once the rate exists.
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+      - name: total_gross_amount_usd
+        description: Gross allocation in US dollars at the month's exchange rate.
+      - name: net_amount_after_deductions_usd
+        description: Net amount received in US dollars at the month's exchange rate.

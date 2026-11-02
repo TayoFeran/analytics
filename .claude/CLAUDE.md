@@ -4,7 +4,7 @@
 
 Personal data-engineering portfolio. Python pipelines load public Nigerian economic data into MotherDuck, and dbt models it into bronze, silver and gold layers. The FAAC allocation pipeline moved here from Microsoft Fabric in #17. Fabric was retired on 2026-11-02, and nothing in this repo uses it any more.
 
-The layout comes from the restructure recorded in `docs/restructure/` (phases 0-7 done; FAAC phases 8-9 wait for a GitHub issue). See `docs/architecture.md` for how it fits together, and `docs/decisions/` for why.
+The layout comes from the restructure recorded in `docs/restructure/` (all phases 0-9 done, including the FAAC migration and Fabric's retirement). See `docs/architecture.md` for how it fits together, and `docs/decisions/` for why.
 
 ## Where things go
 
@@ -37,7 +37,7 @@ The layout comes from the restructure recorded in `docs/restructure/` (phases 0-
 - After a model or yml change: `dbt parse --no-partial-parse`, then `dbt build --target dev --select <model>+`.
 - Run dbt with `.\dbt\run_dbt.ps1 <command>` (PowerShell, loads `.env`), or from `dbt/` with `uv run --group dbt dbt <command> --profiles-dir .`.
 - A model's folder sets its schema and materialization in `dbt_project.yml`. Don't add `config(schema=..., materialized=...)` to model files.
-- dbt folders are `<layer>/<project>/<source>/` for bronze and silver, and `gold/<project or schema>/`.
+- dbt folders are `<layer>/<project>/<source>/` for bronze and silver, and `gold/<project or schema>/`. Dashboard-shaped facts go in `gold/datamart/` (schema `datamart`), named `<project>_<what>`. Hand-maintained reference lists are seeds in `dbt/seeds/<schema>/` (today `sandbox`), each with its own `_<seed>.yml`.
 - bronze and silver are **shared schemas**, so names carry the project: bronze tables `<project>_<source>_<what>`, silver models `stg_<project>_<source>__<entity>`, sources declared as `<project>_<source>` in `bronze/<project>/<source>/_<project>_<source>__sources.yml`.
 
 ## FAAC and security
