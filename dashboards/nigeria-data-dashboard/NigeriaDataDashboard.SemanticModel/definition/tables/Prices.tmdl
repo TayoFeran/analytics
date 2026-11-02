@@ -1,0 +1,28 @@
+table Prices
+
+	column Prices
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Prices
+		sortByColumn: prices_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column prices_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: prices_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Prices = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Prices = text, prices_order = Int64.Type], {{"As paid", 1}, {"Today's prices", 2}})
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

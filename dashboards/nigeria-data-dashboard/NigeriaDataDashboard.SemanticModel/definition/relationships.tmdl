@@ -18,3 +18,21 @@ relationship 37381f4d-d97a-5cd2-a9c6-207e0aab2430
 relationship c2093194-4a9e-5659-8c84-a91e83e4e876
 	fromColumn: Compare_B.compare_by
 	toColumn: Compare_By.compare_by
+
+relationship 35f128d2-bdbe-5c61-a2b6-b3df52929046
+	joinOnDateBehavior: datePartOnly
+	fromColumn: econ_month.month_date
+	toColumn: calendar_table.date
+
+relationship 3cc055b9-c35b-5ee0-8e52-0f61e40b0121
+	fromColumn: econ_month.president
+	toColumn: dim_administration.president
+
+relationship ff6824d4-4eb5-52db-9e0c-d34d681db3d1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: econ_year.year_date
+	toColumn: calendar_table.date
+
+relationship 65637ab4-b454-5335-97e9-f0fb88a570eb
+	fromColumn: econ_year.president
+	toColumn: dim_administration.president
