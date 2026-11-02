@@ -200,3 +200,59 @@ Used by: Compare page, Side A and Side B tables.
 | Text: Side B name | 192 | 104 | 152 | 16 |
 | Card: Side B value (Compare Side = B) | 192 | 122 | 152 | 24 |
 | Text: Compare_tooltip_text, ▲▼■ difference (coloured) | 16 | 162 | 328 | 30 |
+
+## TT - Economy Month (`tt_economy_month.png`, 320×200)
+
+Used by: Economy Overview, inflation and naira line charts.
+
+| Visual | x | y | w | h |
+|---|---|---|---|---|
+| Text: Econ_month_tooltip_title (month · president) | 14 | 12 | 292 | 20 |
+| Card: Inflation_yoy | 14 | 62 | 90 | 24 |
+| Card: Naira_per_usd | 118 | 62 | 90 | 24 |
+| Card: Naira_value_change_yoy (coloured by sign) | 222 | 62 | 84 | 24 |
+| Text: Econ_month_definitions | 14 | 104 | 292 | 88 |
+
+## TT - Economy Year (`tt_economy_year.png`, 360×250)
+
+Used by: Economy size, all four charts.
+
+| Visual | x | y | w | h |
+|---|---|---|---|---|
+| Text: Econ_year_tooltip_title (year · president) | 16 | 12 | 328 | 20 |
+| Card: GDP_naira | 16 | 62 | 96 | 24 |
+| Card: GDP_usd | 128 | 62 | 96 | 24 |
+| Card: Real_GDP_growth | 240 | 62 | 104 | 24 |
+| Card: GDP_per_person_usd | 16 | 118 | 96 | 24 |
+| Card: GDP_per_person_naira | 128 | 118 | 96 | 24 |
+| Card: avg ₦ per $ (Naira_per_usd) | 240 | 118 | 104 | 24 |
+| Text: GDP_year_tooltip_text (naira vs dollar change) | 16 | 160 | 328 | 40 |
+| Text: Econ_year_definitions | 16 | 202 | 328 | 42 |
+
+## TT - Real Terms Month (`tt_economy_real_terms.png`, 340×220)
+
+Used by: FAAC in real terms, the monthly column chart.
+
+| Visual | x | y | w | h |
+|---|---|---|---|---|
+| Text: Real_terms_tooltip_title (month · president) | 16 | 12 | 308 | 20 |
+| Card: Net_paid | 16 | 62 | 100 | 24 |
+| Card: Price_multiplier | 124 | 62 | 100 | 24 |
+| Card: Net_today_prices | 232 | 62 | 92 | 24 |
+| Text: Real_terms_tooltip_text (the calculation in words) | 16 | 104 | 308 | 46 |
+| Text: Today_prices_definition | 16 | 166 | 308 | 46 |
+
+## TT - President Detail (`tt_economy_president.png`, 360×280)
+
+Used by: Presidents page, all three bar charts.
+
+| Visual | x | y | w | h |
+|---|---|---|---|---|
+| Text: President_tooltip_title (full name) | 16 | 10 | 328 | 20 |
+| Text: President_tooltip_subtitle (party, term, months of data) | 16 | 32 | 328 | 18 |
+| Card: Inflation_yoy | 16 | 78 | 96 | 24 |
+| Card: Term_naira_change (coloured by sign) | 128 | 78 | 96 | 24 |
+| Card: Real_GDP_growth | 240 | 78 | 104 | 24 |
+| Text: Term_rate_text (start rate → end rate) | 16 | 134 | 328 | 20 |
+| Text: Term_coverage_text (amber, partial terms only) | 16 | 170 | 328 | 20 |
+| Text: President_definitions | 16 | 196 | 328 | 76 |
