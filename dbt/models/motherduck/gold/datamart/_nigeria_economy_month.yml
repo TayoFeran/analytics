@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: nigeria_economy_month
+    description: >
+      Nigeria's official exchange rate and consumer price index per month from January 2010,
+      with the year-on-year change in each (World Bank figures). Built from
+      nigeria.nigeria_fx_rate and nigeria.nigeria_consumer_price_index. Monthly fact table
+      of the Nigeria Data Dashboard's Economy section. Grain: one row per month (month_date).
+    columns:
+      - name: month_date
+        description: First day of the month. Joins to the calendar table.
+        data_tests:
+          - not_null
+          - unique
+      - name: president
+        description: >
+          Administration in office in the month; May goes to the incoming one. Joins to
+          sandbox.nigeria_administration.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('nigeria_administration')
+                field: president
+      - name: naira_per_usd
+        description: Official naira per US dollar. Blank if the month's rate isn't out yet.
+      - name: naira_value_change_yoy
+        description: >
+          Change in what a naira buys in dollars vs the same month a year earlier, as a
+          fraction: rate a year ago / rate now - 1. Negative = the naira lost value.
+          Blank for 2010, which has no year-earlier month.
+      - name: cpi_index
+        description: >
+          World Bank consumer price index. Not seasonally adjusted; chained across NBS's
+          2025 rebasing, so it has no break. Blank if the month's index isn't out yet.
+      - name: inflation_yoy
+        description: >
+          Inflation vs the same month a year earlier, as a fraction (0.154 = 15.4%). Blank
+          for 2010. Can differ from NBS's headline rate.
