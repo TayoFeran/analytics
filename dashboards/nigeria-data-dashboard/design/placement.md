@@ -112,7 +112,7 @@ Used by: KPI cards (Gross, Deductions, Net), Revenue mix and Deductions matrices
 | Card: current value (Metric_value, Period Calc = Current) | 16 | 126 | 160 | 36 |
 | Card: previous value (Metric_value, Period Calc = Previous) | 184 | 126 | 160 | 36 |
 | Text: change % ▲▼■, Growth/Decline, Periodic_text (coloured) | 16 | 166 | 328 | 20 |
-| Column chart: Metric_value, last 6 months (Last_5_Period_flag) | 16 | 216 | 328 | 40 |
+| Column chart: Metric_value, last 6 months (Last_6_Period_flag) | 16 | 216 | 328 | 40 |
 | Text: Metric_tooltip_summary | 16 | 260 | 328 | 32 |
 
 ## TT - State Detail (`tt_faac_state_detail.png`, 320×240)
@@ -127,7 +127,7 @@ Used by: States page map and 36-state ranking bar.
 | Card: Deductions (Period Calc = Current) | 118 | 80 | 90 | 24 |
 | Card: Net (Period Calc = Current) | 222 | 80 | 84 | 24 |
 | Text: net share of national | 14 | 110 | 292 | 18 |
-| Column chart: Net, last 6 months (Last_5_Period_flag) | 14 | 156 | 292 | 74 |
+| Column chart: Net, last 6 months (Last_6_Period_flag) | 14 | 156 | 292 | 74 |
 
 ## TT - Compare Metric (`tt_faac_compare_metric.png`, 360×200)
 

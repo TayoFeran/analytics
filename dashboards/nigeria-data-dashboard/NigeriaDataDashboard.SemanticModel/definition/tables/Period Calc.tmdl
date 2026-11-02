@@ -4,7 +4,7 @@ table 'Period Calc'
 		precedence: 30
 
 		calculationItem Current =
-				VAR _p = SELECTEDVALUE ( Period[Period], "Monthly" )
+				VAR _p = SWITCH ( SELECTEDVALUE ( Period[Period Order] ), 1, "Quarterly", 2, "Yearly", "Monthly" )
 				-- "Current" is the latest month with FAAC data, not today
 				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
 				-- Quarterly and Yearly are to date, compared with the same months a year earlier
@@ -35,7 +35,7 @@ table 'Period Calc'
 			formatStringDefinition = SELECTEDMEASUREFORMATSTRING ()
 
 		calculationItem Previous =
-				VAR _p = SELECTEDVALUE ( Period[Period], "Monthly" )
+				VAR _p = SWITCH ( SELECTEDVALUE ( Period[Period Order] ), 1, "Quarterly", 2, "Yearly", "Monthly" )
 				-- "Current" is the latest month with FAAC data, not today
 				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
 				-- Quarterly and Yearly are to date, compared with the same months a year earlier
@@ -66,7 +66,7 @@ table 'Period Calc'
 			formatStringDefinition = SELECTEDMEASUREFORMATSTRING ()
 
 		calculationItem 'Change %' =
-				VAR _p = SELECTEDVALUE ( Period[Period], "Monthly" )
+				VAR _p = SWITCH ( SELECTEDVALUE ( Period[Period Order] ), 1, "Quarterly", 2, "Yearly", "Monthly" )
 				-- "Current" is the latest month with FAAC data, not today
 				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
 				-- Quarterly and Yearly are to date, compared with the same months a year earlier
@@ -97,7 +97,7 @@ table 'Period Calc'
 			formatStringDefinition = "0.0%"
 
 		calculationItem Trend =
-				VAR _p = SELECTEDVALUE ( Period[Period], "Monthly" )
+				VAR _p = SWITCH ( SELECTEDVALUE ( Period[Period Order] ), 1, "Quarterly", 2, "Yearly", "Monthly" )
 				-- "Current" is the latest month with FAAC data, not today
 				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
 				-- Quarterly and Yearly are to date, compared with the same months a year earlier

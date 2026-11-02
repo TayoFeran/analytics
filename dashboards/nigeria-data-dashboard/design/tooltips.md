@@ -47,9 +47,21 @@ Metric_param = {
 -- Metric_key, Metric_family
 ```
 
+## Reading a field parameter in DAX
+
+A field parameter's name column (`Period[Period]`, `Metric_param[Metric_param]`) is tied to its hidden
+`Fields` column as a composite key, so DAX can't read it on its own: `SELECTEDVALUE ( Period[Period] )`
+fails with "Column [Period] is part of composite key". Read a column outside the key instead:
+
+- `Period`: the order column, `SWITCH ( SELECTEDVALUE ( Period[Period Order] ), 1, "Quarterly", 2, "Yearly", "Monthly" )`.
+- `Metric_param`: `Metric_key` for lookups, or `Metric_label` (a plain calculated copy of the name) for display
+  and for matrix rows and columns.
+
+The DAX in this file is the design draft. The semantic model is the source of truth.
+
 ## Definitions (approved)
 
-All of these sit in `06 Titles & Labels\Tooltips`. The About page's Definitions box is a table of `Metric_param[Metric_param]` and `Metric_definition`, so every definition lives in one place.
+All of these sit in `06 Titles & Labels\Tooltips`. The About page's Definitions box is a table of `Metric_param[Metric_label]` and `Metric_definition`, so every definition lives in one place.
 
 ```dax
 Metric_definition =
@@ -125,7 +137,7 @@ RETURN
     _mark & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [Metric_value_G&D] & " · " & [Periodic_text]
 
 Metric_tooltip_title =
-VAR _name = SELECTEDVALUE ( Metric_param[Metric_param], "Metric" )
+VAR _name = SELECTEDVALUE ( Metric_param[Metric_label], "Metric" )
 VAR _area =
     SWITCH (
         TRUE (),
@@ -141,7 +153,7 @@ SELECTEDVALUE ( Basis[Basis], "Monthly average" ) & ", "
 
 Metric_tooltip_summary =
 -- "Oil derivation was ₦18.4bn in Apr 2026, up 8.9% vs last month."
-VAR _name = SELECTEDVALUE ( Metric_param[Metric_param], "This metric" )
+VAR _name = SELECTEDVALUE ( Metric_param[Metric_label], "This metric" )
 VAR _v = [Metric_value_curr]
 VAR _chg = [Metric_value_PnP]
 VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
@@ -158,7 +170,7 @@ VAR _amount =
 VAR _last = [Latest_month]
 VAR _when =
     SWITCH (
-        SELECTEDVALUE ( Period[Period], "Monthly" ),
+        SWITCH ( SELECTEDVALUE ( Period[Period Order] ), 1, "Quarterly", 2, "Yearly", "Monthly" ),
         "Quarterly", "Q" & QUARTER ( _last ) & " " & YEAR ( _last ) & " to date",
         "Yearly", YEAR ( _last ) & " to date",
         FORMAT ( _last, "mmm yyyy" )
@@ -174,7 +186,7 @@ RETURN
     IF ( ISBLANK ( _v ), BLANK (), _name & " was " & _amount & " in " & _when & _move & "." )
 ```
 
-Mini chart: a column chart of `Metric_value` by `calendar_table[monthf]`, filtered to `Last_5_Period_flag = 1`, coloured `#0E6B45`, with axes off and a data label on the last column only.
+Mini chart: a column chart of `Metric_value` by `calendar_table[monthf]`, filtered to `Last_6_Period_flag = 1`, coloured `#0E6B45`, with axes off and a data label on the last column only.
 
 ## Measures behind TT - State Detail
 
