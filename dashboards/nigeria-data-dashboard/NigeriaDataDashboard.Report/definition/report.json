@@ -48,6 +48,26 @@
           "type": "Image"
         },
         {
+          "name": "bg_economy_overview.png",
+          "path": "bg_economy_overview.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_economy_presidents.png",
+          "path": "bg_economy_presidents.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_economy_real_terms.png",
+          "path": "bg_economy_real_terms.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_economy_size.png",
+          "path": "bg_economy_size.png",
+          "type": "Image"
+        },
+        {
           "name": "bg_faac_compare.png",
           "path": "bg_faac_compare.png",
           "type": "Image"
@@ -70,6 +90,26 @@
         {
           "name": "bg_faac_states.png",
           "path": "bg_faac_states.png",
+          "type": "Image"
+        },
+        {
+          "name": "tt_economy_month.png",
+          "path": "tt_economy_month.png",
+          "type": "Image"
+        },
+        {
+          "name": "tt_economy_president.png",
+          "path": "tt_economy_president.png",
+          "type": "Image"
+        },
+        {
+          "name": "tt_economy_real_terms.png",
+          "path": "tt_economy_real_terms.png",
+          "type": "Image"
+        },
+        {
+          "name": "tt_economy_year.png",
+          "path": "tt_economy_year.png",
           "type": "Image"
         },
         {
