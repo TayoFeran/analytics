@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAAC Deductions look-and-feel mock-up</title>
+<style>
+  :root{
+    /* Green & White palette from the Nigeria Data Dashboard; layout = 1280x720 Power BI canvas */
+    --side:#0B3D2E; --side2:#1B5A45; --canvas:#F3F6F4; --gold:#E2B53E;
+    --better:#0E8A5F; --worse:#C93C3C; --equal:#C98A00;
+    --ink:#14231D; --muted:#5E6E67; --line:#E3E9E6; --track:#EDF2EF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#DCE3DF;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:var(--ink)}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:12px 20px;background:#fff;border-bottom:1px solid var(--line);font-size:13px}
+  .controls b{font-weight:600}
+  .controls button{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer}
+  .controls button.on{background:var(--side);color:#fff;border-color:var(--side)}
+  .note{color:var(--muted)}
+  .wrap{padding:20px;display:flex;justify-content:center}
+  .scaler{transform-origin:top left}
+  .canvas{position:relative;width:1280px;height:720px;background:var(--canvas);overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+  .abs{position:absolute}
+  .card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(11,61,46,.08),0 4px 14px rgba(11,61,46,.05)}
+
+  .side{left:0;top:0;width:192px;height:720px;background:var(--side);color:#fff;padding:26px 14px 0 22px}
+  .brand{font-weight:700;font-size:19px;line-height:1.1;letter-spacing:.5px}
+  .brand small{display:block;font-weight:400;font-size:9px;letter-spacing:2.4px;opacity:.7;margin-top:6px}
+  .sec{font-size:8.5px;letter-spacing:2.2px;opacity:.6;margin:22px 0 6px}
+  .nav{display:flex;align-items:center;gap:9px;font-size:11.5px;height:30px;padding-left:6px;margin-left:-8px;border-radius:7px;opacity:.82}
+  .nav i{width:6px;height:6px;border-radius:50%;background:#B9CCC3;flex:none}
+  .nav.on{background:var(--side2);opacity:1;font-weight:600}
+  .nav.on i{background:var(--gold)}
+  .soon{margin-left:auto;font-size:7.5px;letter-spacing:1.3px;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:1px 6px}
+  .srcnote{position:absolute;bottom:16px;left:22px;right:14px;font-size:8.5px;line-height:1.5;opacity:.65}
+
+  .eyebrow{left:216px;top:20px;font-size:9.5px;letter-spacing:2.6px;color:var(--better);font-weight:600}
+  .title{left:216px;top:32px;font-size:26px;font-weight:600}
+  .fresh{right:24px;top:20px;height:38px;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border-radius:999px;font-size:10.5px;background:#fff;border:1px solid #0E8A5F55}
+  .fresh .pill{display:flex;align-items:center;gap:6px;color:#fff;font-weight:600;font-size:10px;padding:5px 10px;border-radius:999px;background:var(--better)}
+  .fresh .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff}
+  .fresh .tag{font-size:8px;letter-spacing:1.6px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+  .fresh .msg{font-weight:600}
+  .fresh .facts{color:var(--muted);border-left:1px solid var(--line);padding-left:10px}
+
+  .filters{left:216px;top:72px;width:1040px;height:40px;border-radius:999px;display:flex;align-items:center;padding:0 18px;font-size:8.5px;letter-spacing:1.6px;color:var(--muted)}
+  .f{display:flex;align-items:center;gap:10px;height:100%;padding-right:16px}
+  .f + .f{border-left:1px solid var(--line);padding-left:16px}
+  .tiles{display:flex;gap:4px;letter-spacing:0}
+  .tiles span{font-size:10px;color:var(--ink);background:var(--track);padding:4px 9px;border-radius:6px}
+  .tiles span.on{background:var(--side);color:#fff}
+  .dd{letter-spacing:0;font-size:10px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 26px 4px 9px;position:relative;min-width:90px}
+  .dd::after{content:"▾";position:absolute;right:8px;color:var(--muted)}
+
+  .ptitle{font-size:11.5px;font-weight:600}
+  .psub{font-size:9px;color:var(--muted);margin-top:2px}
+  .buildtag{position:absolute;z-index:50;font-size:8px;letter-spacing:1px;font-weight:700;padding:2px 6px;border-radius:4px;color:#fff;pointer-events:none}
+  .t-html{background:#7A3FC4}.t-native{background:#2F6FD1}
+  body.nolabels .buildtag{display:none}
+
+  .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:9px;color:var(--muted)}
+  .legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;background:var(--c)}
+
+  /* shared hover card (stands in for Power BI tooltips) */
+  .tt{position:absolute;display:none;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 18px rgba(11,61,46,.18);padding:9px 11px;font-size:10px;pointer-events:none;z-index:60}
+  .tt .m{font-weight:700;font-size:11px;letter-spacing:.5px}
+  .tt .sub{color:var(--muted);font-size:9px;margin:2px 0 5px;display:flex;align-items:center;gap:5px}
+  .tt .sub i{width:8px;height:8px;border-radius:2px}
+  .tt .r{display:grid;align-items:center;gap:8px;padding:3px 0;border-top:1px solid var(--line)}
+  .tt .r span:first-child{color:var(--muted);display:flex;align-items:center;gap:5px}
+  .tt .r span:first-child i{width:7px;height:7px;border-radius:2px;flex:none}
+  .tt .r b{font-weight:700;text-align:right}
+  .tt .r .sh{color:var(--muted);text-align:right}
+  .tt .r.tot{font-weight:700}
+  .tt .r.tot span:first-child{color:var(--ink)}
+  .tt .c{font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:4px;text-align:center;white-space:nowrap}
+  .tt .vs{color:var(--muted);font-size:8.5px;margin-top:4px}
+  .tt .def{color:var(--muted);font-size:9.5px;line-height:1.4;margin:3px 0 6px;white-space:normal}
+  #att .r{grid-template-columns:1fr 66px 34px 58px}
+  #att .r span:first-child{white-space:nowrap}
+  #mtt{width:250px}
+  #mtt .r{grid-template-columns:1fr auto}
+  #btt .r{grid-template-columns:1fr auto}
+
+  /* oil derivation bars (native) */
+  .obar{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center;height:21px;font-size:9.5px}
+  .obar .nm{text-align:right;font-weight:600}
+  .obar .tr{position:relative;height:13px}
+  .obar .tr span{position:absolute;left:0;top:0;bottom:0;border-radius:0 3px 3px 0}
+  .obar .tr em{position:absolute;top:-1px;font-style:normal;font-size:9px;font-weight:600}
+
+  /* matrix (native, with SVG bars) */
+  table.mx{width:100%;border-collapse:collapse;font-size:10px;margin-top:8px}
+  .mx th{font-size:8px;letter-spacing:1.3px;color:var(--muted);font-weight:600;text-align:right;padding:4px 6px;border-bottom:1px solid var(--line)}
+  .mx th:first-child{text-align:left}
+  .mx td{padding:4px 6px;height:22px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  .mx td:first-child{text-align:left;font-weight:600}
+  .mx td:first-child i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  .mx tr.tot td{font-weight:700;border-bottom:none;border-top:1.5px solid var(--ink)}
+  .mx tbody tr:not(.tot):hover td{background:#F6F9F7}
+  .mx .c{font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:4px}
+  .mx .shc{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+
+  .banner{left:216px;top:654px;width:1040px;height:50px;border-radius:12px;display:flex;align-items:center;gap:14px;padding:0 18px;
+    background:linear-gradient(90deg,#0B3D2E 0%,#145A43 70%,#1D6B51 100%);color:#fff}
+  .banner .ico{width:28px;height:28px;border-radius:8px;background:rgba(226,181,62,.18);display:flex;align-items:center;justify-content:center;flex:none}
+  .banner .kick{font-size:8.5px;letter-spacing:2px;color:var(--gold);font-weight:600;white-space:nowrap}
+  .banner .txt{font-size:12px;line-height:1.35}
+  .banner .up{color:#6EE0AE;font-weight:700}
+  .banner .dn{color:#FF9A9A;font-weight:700}
+  .banner .hl{color:var(--gold);font-weight:700}
+
+  .explain{max-width:1280px;margin:0 auto 30px;padding:0 20px;font-size:13.5px;line-height:1.55}
+  .explain h2{font-size:16px;margin:18px 0 6px}
+  .explain table{border-collapse:collapse;width:100%;background:#fff;font-size:12.5px}
+  .explain td,.explain th{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+  .explain th{background:var(--side);color:#fff;font-weight:600}
+</style>
+<style>
+  /* Deductions page extras */
+  #ctt{width:318px}
+  #ctt .r{grid-template-columns:1fr 66px 34px 58px}
+  #ctt .r span:first-child{white-space:nowrap}
+  #ptt{width:200px}
+  #ptt .r{grid-template-columns:1fr auto}
+  #xtt{width:260px}
+  #xtt .r{grid-template-columns:1fr auto}
+  #pcard{overflow:hidden}
+  #pleg{gap:3px 10px;font-size:8.5px}
+  .pbars{height:172px;overflow-y:auto;margin-top:6px;padding-right:6px;position:relative}
+  .pbar{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center;height:19px;font-size:9.5px}
+  .pbar .nm{text-align:right;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pbar .tr{position:relative;height:12px}
+  .pbar .tr span{position:absolute;left:0;top:0;bottom:0;border-radius:0 3px 3px 0}
+  .pbar .tr em{position:absolute;top:-1px;font-style:normal;font-size:9px;font-weight:600}
+  .xwrap{height:192px;overflow-y:auto;margin-top:6px}
+  table.xm{width:100%;border-collapse:collapse;font-size:9.5px}
+  .xm th{position:sticky;top:0;background:#fff;font-size:8px;letter-spacing:1.1px;color:var(--muted);font-weight:600;text-align:right;padding:4px 6px;border-bottom:1px solid var(--line);z-index:1}
+  .xm th:first-child{text-align:left}
+  .xm th i{display:inline-block;width:10px;height:3px;border-radius:2px;margin-right:4px;vertical-align:2px}
+  .xm td{padding:3px 6px;text-align:right;border-bottom:1px solid #F0F3F1;white-space:nowrap}
+  .xm td:first-child{text-align:left;font-weight:600}
+  .xm td.cell:hover{outline:1.5px solid var(--ink);outline-offset:-1.5px}
+  .xm td.tot{font-weight:700}
+  .xm td.pg{font-weight:700}
+  .legend.lines span::before{width:12px;height:3px;border-radius:2px;vertical-align:2px}
+  .legend.lines span.dash::before{background:repeating-linear-gradient(90deg,var(--c) 0 4px,transparent 4px 6px)}
+  /* date range slicer */
+  .range{display:flex;align-items:center;gap:5px;letter-spacing:0}
+  .range select{font:inherit;font-size:10px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 4px;background:#fff;cursor:pointer}
+  .range select:focus-visible{outline:2px solid var(--gold)}
+  .range span{color:var(--muted);font-size:10px}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <span><b>Mock-up controls</b> <span class="note">(not part of the report)</span></span>
+  <span><button id="lblbtn" class="on">Show build labels</button></span>
+  <span class="note">Sample data only. Change the DATE RANGE in the filter bar: every chart follows it, and the last month in the range becomes the latest month. Hover lines, bars and matrix cells for tooltips.</span>
+</div>
+
+<div class="wrap"><div class="scaler" id="scaler"><div class="canvas" role="img" aria-label="Mock-up of the FAAC Deductions page with a date range slicer: deduction lines over time, external debt by state, state by deduction line matrix and insight banner">
+
+  <div class="abs side">
+    <div class="brand">NIGERIA<br>DATA<small>DASHBOARD</small></div>
+    <div class="sec">FAAC</div>
+    <div class="nav"><i></i>Overview</div>
+    <div class="nav"><i></i>States</div>
+    <div class="nav"><i></i>Revenue mix</div>
+    <div class="nav on"><i></i>Deductions</div>
+    <div class="nav"><i></i>Compare</div>
+    <div class="sec">ECONOMY</div>
+    <div class="nav"><i></i>Overview</div>
+    <div class="nav"><i></i>Economy size</div>
+    <div class="nav"><i></i>FAAC in real terms</div>
+    <div class="nav"><i></i>Presidents</div>
+    <div class="sec">ELECTIONS</div>
+    <div class="nav" style="opacity:.55"><i></i>Results<span class="soon">SOON</span></div>
+    <div class="sec">INFO</div>
+    <div class="nav"><i></i>About</div>
+    <div class="srcnote">Source: FAAC monthly disbursement reports, via MotherDuck. 36 states; FCT isn't in the reports.</div>
+  </div>
+
+  <div class="abs eyebrow">NIGERIA DATA DASHBOARD &nbsp;·&nbsp; FAAC</div>
+  <div class="abs title">Deductions</div>
+  <div class="abs fresh">
+    <span class="pill">On time</span><span class="tag">MONTHLY</span>
+    <span class="msg">September 2026 data is in.</span>
+    <span class="facts">Data up to Sep 2026 · Refreshed 5 Nov 2026, 08:14</span>
+  </div>
+  <span class="buildtag t-html" style="right:24px;top:8px">HTML · Freshness_html (ignores the date range)</span>
+
+  <div class="abs card filters">
+    <div class="f">PERIOD <span class="tiles"><span class="on">Current</span><span>Quarterly</span><span>Yearly</span></span></div>
+    <div class="f">DATE RANGE <span class="range"><select id="dFrom" aria-label="From month"></select><span>to</span><select id="dTo" aria-label="To month"></select></span></div>
+    <div class="f">ZONE <span class="dd">All</span></div>
+    <div class="f">STATE <span class="dd">All</span></div>
+    <div class="f">CURRENCY <span class="tiles"><span class="on">₦</span><span>$</span></span></div>
+  </div>
+  <span class="buildtag t-native" style="left:470px;top:64px">NATIVE · date range slicer (month, between)</span>
+
+  <!-- line chart (native) -->
+  <div class="abs card" id="ccard" style="left:216px;top:124px;width:624px;height:262px;padding:14px 16px">
+    <div class="ptitle" id="ctitle"></div>
+    <div class="psub">All 36 states · ₦ billions · hover a month for the breakdown</div>
+    <div class="legend lines" id="cleg" style="margin-top:6px"></div>
+    <svg id="lines" width="592" height="186" style="margin-top:4px"></svg>
+    <div class="tt" id="ctt"></div>
+  </div>
+  <span class="buildtag t-native" style="left:216px;top:116px">NATIVE · line chart + tooltip card (deductions up = red)</span>
+
+  <!-- external debt by state (native) -->
+  <div class="abs card" id="pcard" style="left:856px;top:124px;width:400px;height:262px;padding:14px 16px">
+    <div class="ptitle" id="ptitle"></div>
+    <div class="psub">₦ billions · coloured by zone · hover a state for detail</div>
+    <div class="legend" id="pleg" style="margin-top:6px"></div>
+    <div class="pbars" id="pbars"></div>
+    <div class="tt" id="ptt"></div>
+  </div>
+  <span class="buildtag t-native" style="left:856px;top:116px">NATIVE · bar chart: external debt by state, zone colours</span>
+
+  <!-- matrix (native) -->
+  <div class="abs card" id="xcard" style="left:216px;top:398px;width:1040px;height:242px;padding:14px 16px">
+    <div class="ptitle" id="xtitle"></div>
+    <div class="psub">₦ billions · darker = bigger within each line · hover a cell for its definition and change vs the previous month</div>
+    <div class="xwrap"><table class="xm" id="xm"></table></div>
+    <div class="tt" id="xtt"></div>
+  </div>
+  <span class="buildtag t-native" style="left:216px;top:390px">NATIVE · matrix + green heat shading (TT - Metric Detail)</span>
+
+  <div class="abs banner">
+    <div class="ico"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z" fill="#E2B53E"/></svg></div>
+    <div class="kick" id="bkick"></div>
+    <div class="txt" id="btxt"></div>
+  </div>
+  <span class="buildtag t-html" style="left:216px;top:646px">HTML · Deductions_insight_html</span>
+
+</div></div></div>
+
+<div class="explain">
+  <h2>What's on this mock-up</h2>
+  <table>
+    <tr><th>Element</th><th>What changes</th><th>Built as</th><th>Trade-off</th></tr>
+    <tr><td>Date range slicer</td><td>New on every page: From and To month. Every chart follows it, and the To month becomes the latest month for KPIs, rankings, the matrix and the banner. "vs previous month" still compares with the month before the To month, even when that month is outside the range.</td><td>Native slicer on calendar_table[month_date]; Period Calc "Previous" ignores the date filter</td><td>The freshness strip ignores the range on purpose: it reports on the data, not the selection.</td></tr>
+    <tr><td>Freshness strip</td><td>Replaces the refresh stamp. Same settings as the other pages.</td><td>HTML measure</td><td>None.</td></tr>
+    <tr><td>Deduction lines over time</td><td>A line chart, one line per deduction line, in greens and gold (the two smallest lines dashed). Latest values labelled. Tooltip card: each line with amount, share of deductions and % change vs the previous month; deductions up = red. Zero months show Resumed / Not paid / –.</td><td>Native line chart + report-page tooltip</td><td>Needs the month-aware tooltip measures.</td></tr>
+    <tr><td>External debt by state</td><td>Replaces "deductions as % of gross". External debt deducted from each state in the latest month, ranked, coloured by zone. Tooltip: state, zone, external debt, share of all external debt, change vs the previous month.</td><td>Native bar chart</td><td>Scrolls; 36 rows.</td></tr>
+    <tr><td>State × line matrix</td><td>Green heat shading per column, a total and a % of gross column. Keeps the Metric Detail tooltip, now with change vs the previous month.</td><td>Native matrix, background conditional formatting</td><td>None.</td></tr>
+    <tr><td>Insight banner</td><td>At the bottom, for the latest month in the range: total and change, share of gross, the biggest line, and the state with the most external debt deducted.</td><td>HTML measure</td><td>None.</td></tr>
+  </table>
+</div>
+
+<script>
+  // Sample data only. September totals match the Overview mock-up: deductions ₦118.6bn of ₦792.4bn gross.
+  const LINES = [
+    {k:"External debt",      c:"#0B3D2E", sep:58.1, aug:61.0},
+    {k:"Contractual (ISPO)", c:"#0E8A5F", sep:31.4, aug:36.2},
+    {k:"NDDC / HYPPADEC",    c:"#6CC49A", sep:17.8, aug:17.5},
+    {k:"Other (see note)",   c:"#E2B53E", sep:6.5,  aug:9.8},
+    {k:"Unlabelled",         c:"#93A59D", sep:1.8,  aug:0,   dash:true},
+    {k:"Other deductions",   c:"#3F7D68", sep:3.0,  aug:5.7, dash:true}
+  ];
+  const DEF = {
+    "External debt":"Repayments on the state's foreign loans (for example from the World Bank), deducted at source by the federal government.",
+    "Contractual (ISPO)":"Irrevocable Standing Payment Orders: payments the state committed to in advance, usually for bank loans, bonds or contracts, deducted automatically each month.",
+    "NDDC / HYPPADEC":"Half of the ecological fund due to member states, transferred by law to the NDDC or HYPPADEC.",
+    "Other (see note)":"Other deductions that the FAAC report explains in its notes, often repayments of federal loans such as budget support or bailout facilities.",
+    "Unlabelled":"A deduction shown in the FAAC report under a column headed only \"Deduction\", with no further detail.",
+    "Other deductions":"Smaller deductions that the FAAC report groups as \"Others\".",
+    "Total":"Money taken from the state's allocation at source, before payment, mostly to repay debts and meet commitments the state has signed up to."
+  };
+  const ZONES = {"North Central":["Benue","Kogi","Kwara","Nasarawa","Niger","Plateau"],"North East":["Adamawa","Bauchi","Borno","Gombe","Taraba","Yobe"],
+    "North West":["Jigawa","Kaduna","Kano","Katsina","Kebbi","Sokoto","Zamfara"],"South East":["Abia","Anambra","Ebonyi","Enugu","Imo"],
+    "South South":["Akwa Ibom","Bayelsa","Cross River","Delta","Edo","Rivers"],"South West":["Ekiti","Lagos","Ogun","Ondo","Osun","Oyo"]};
+  const ZCOL = {"North Central":"#2E9B72","North East":"#D9A21B","North West":"#3A6EA5","South East":"#8E5BB5","South South":"#C8693A","South West":"#0B3D2E"};
+  const ZONE_OF = {}; Object.entries(ZONES).forEach(([z,l])=>l.forEach(s=>ZONE_OF[s]=z));
+  const GOOD="#0E8A5F", BAD="#C93C3C";
+  const bn = v => "₦"+v.toFixed(1)+"bn", pct = (v,d=1) => (v*100).toFixed(d)+"%";
+  const word = t => `<span class="c" style="color:#5E6E67;background:#EDF2EF">${t}</span>`;
+  // Deductions: higher is worse, so up = red. Zero months get a word instead of a %.
+  const chip = (cur, prev) => { if(prev==null) return word("n/a"); if(prev<0.005) return word(cur>=0.005?"Resumed":"–"); if(cur<0.005) return word("Not paid");
+    const c=(cur-prev)/prev, eq=Math.abs(c)<0.0005, up=c>0, col=eq?"#C98A00":(up?BAD:GOOD), bg=eq?"#FBF1DC":(up?"#FBE7E7":"#E3F4EC");
+    return `<span class="c" style="color:${col};background:${bg}">${eq?"■":(up?"▲":"▼")} ${pct(Math.abs(c))}</span>`; };
+  const hash = s => { let h=7; for (const c of String(s)) h=(h*31+c.charCodeAt(0))%9973; return h/9973; };
+
+  // States: same net figures as the States mock-up; deductions scaled so September totals ₦118.6bn
+  const NET = {"Lagos":38.2,"Delta":35.9,"Rivers":33.1,"Akwa Ibom":29.4,"Bayelsa":24.8,"Kano":23.6,"Ondo":19.2,"Edo":17.5,"Kaduna":17.1,"Katsina":16.8,
+    "Oyo":16.2,"Borno":16.0,"Bauchi":15.4,"Jigawa":15.1,"Niger":15.0,"Imo":14.6,"Sokoto":14.3,"Benue":14.1,"Kebbi":13.6,"Zamfara":13.2,
+    "Adamawa":13.0,"Plateau":12.7,"Taraba":12.5,"Kogi":12.4,"Anambra":12.2,"Yobe":12.1,"Abia":12.0,"Enugu":11.9,"Ogun":11.6,"Cross River":11.4,
+    "Gombe":11.2,"Kwara":11.0,"Nasarawa":10.8,"Osun":10.2,"Ebonyi":10.1,"Ekiti":10.0};
+  (function(){ const keys=Object.keys(NET).slice(5), restSum=keys.reduce((a,k)=>a+NET[k],0), top=Object.keys(NET).slice(0,5).reduce((a,k)=>a+NET[k],0);
+    const add=(673.8-top-restSum)/keys.length; keys.forEach(k=>NET[k]=+(NET[k]+add).toFixed(1));
+    const over=NET["Kano"]-24.1; NET["Kano"]=24.1; const others=keys.filter(k=>k!=="Kano"); others.forEach(k=>NET[k]=+(NET[k]+over/others.length).toFixed(2)); })();
+  const NDDC = new Set(["Delta","Rivers","Akwa Ibom","Bayelsa","Ondo","Edo","Imo","Abia","Cross River","Niger","Kogi","Kwara","Kebbi","Kaduna","Plateau","Taraba","Benue","Nasarawa"]);
+  const ST = Object.keys(NET);
+  const raw = {}; ST.forEach(s=>{ const ded = s==="Lagos" ? .098 : .09+hash(s)*.15; raw[s]=NET[s]/(1-ded)-NET[s]; });
+  const kk = 118.6/ST.reduce((a,s)=>a+raw[s],0);
+  const S = {}; ST.forEach(s=>{ S[s]={sepDed:raw[s]*kk, gross:NET[s]+raw[s]*kk}; S[s].w=[.3+hash(s)*.3, .2+hash(s+"i")*.25, NDDC.has(s)?.12:0.0001, .05, .02, .03]; });
+  // Balance each state's September split so state totals and line totals both match (iterative proportional fitting)
+  for(let it=0;it<40;it++){
+    ST.forEach(s=>{ const t=S[s].w.reduce((a,b)=>a+b,0); S[s].w=S[s].w.map(x=>x*S[s].sepDed/t); });
+    LINES.forEach((L,j)=>{ const t=ST.reduce((a,s)=>a+S[s].w[j],0); ST.forEach(s=>S[s].w[j]*=L.sep/t); });
+  }
+
+  // 24 months, Oct 2024 to Sep 2026; the unlabelled line only appears in some months
+  const MON=["Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"];
+  const LAB=[], FULL=[]; for(let i=0;i<24;i++){ const y=i<3?2024:(i<15?2025:2026); LAB.push(MON[i%12]+" "+String(y).slice(2)); FULL.push(MON[i%12]+" "+y); }
+  LINES.forEach((L,j)=>{ L.v=[]; for(let i=0;i<22;i++){ let v=L.sep*(0.92+0.22*Math.sin(i*0.55+j))*(1+0.06*Math.cos(i*1.3+j*2));
+      if(L.k==="Unlabelled" && ![3,4,9,15,16].includes(i)) v=0; L.v.push(v); } L.v.push(L.aug, L.sep); });
+  // A state's line in month i follows the national line, with a little noise; September matches the balanced split exactly
+  const val = (s,j,i) => { if(i<0) return null; const L=LINES[j]; if(L.v[i]===0) return 0; return S[s].w[j]*L.v[i]/L.sep*(i===23?1:(0.95+hash(s+j+"m"+i)*0.1)); };
+  const stDed = (s,i) => LINES.reduce((a,_,j)=>a+val(s,j,i),0);
+  const natDed = i => LINES.reduce((a,L)=>a+L.v[i],0);
+  const natGross = i => 792.4*(0.80+0.20*i/23)*(i===23?1:(1+0.03*Math.sin(i)));
+
+  // date range slicer
+  const dFrom=document.getElementById("dFrom"), dTo=document.getElementById("dTo");
+  FULL.forEach((m,i)=>{ dFrom.add(new Option(m.replace(/^(\w{3}) /,"$1 "),i)); dTo.add(new Option(m,i)); });
+  dFrom.value=0; dTo.value=23;
+  function range(){ let a=+dFrom.value, b=+dTo.value; if(a>b){ if(this===dFrom) b=a; else a=b; dFrom.value=a; dTo.value=b; } return [a,b]; }
+  dFrom.onchange=function(){ range.call(this); renderAll(); }; dTo.onchange=function(){ range.call(this); renderAll(); };
+
+  document.getElementById("cleg").innerHTML = LINES.map(L=>`<span class="${L.dash?"dash":""}" style="--c:${L.c}">${L.k}</span>`).join("");
+  document.getElementById("pleg").innerHTML = Object.keys(ZONES).map(z=>`<span style="--c:${ZCOL[z]}">${z}</span>`).join("");
+
+  // line chart: monotone-looking curves, no gridlines, latest values labelled (nudged apart so they don't overlap)
+  function drawLines(a,b){
+    const svg=document.getElementById("lines"), W=592, H=186, pl=6, pr=62, pt=12, pb=20, n=b-a+1;
+    document.getElementById("ctitle").textContent = `Deduction lines over time, ${FULL[a]} to ${FULL[b]}`;
+    const mx=Math.max(...LINES.flatMap(L=>L.v.slice(a,b+1)))*1.08;
+    const X=i=>pl+(n===1?(W-pl-pr)/2:(i-a)*(W-pl-pr)/(n-1)), Y=v=>pt+(1-v/mx)*(H-pt-pb);
+    const curve=pts=>{ if(pts.length===1) return `M${pts[0][0]-3},${pts[0][1]} L${pts[0][0]+3},${pts[0][1]}`; let d=`M${pts[0][0]},${pts[0][1]}`;
+      for(let i=0;i<pts.length-1;i++){ const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
+        d+=` C${p1[0]+(p2[0]-p0[0])/6},${p1[1]+(p2[1]-p0[1])/6} ${p2[0]-(p3[0]-p1[0])/6},${p2[1]-(p3[1]-p1[1])/6} ${p2[0]},${p2[1]}`; } return d; };
+    let s="";
+    LINES.slice().reverse().forEach(L=>{ const pts=[]; for(let i=a;i<=b;i++) pts.push([X(i),Y(L.v[i])]);
+      s+=`<path d="${curve(pts)}" fill="none" stroke="${L.c}" stroke-width="${L.dash?1.6:2.2}" ${L.dash?'stroke-dasharray="4 3"':""}/>`;
+      s+=`<circle cx="${X(b)}" cy="${Y(L.v[b])}" r="2.8" fill="${L.c}"/>`; });
+    const labs=LINES.map(L=>({L,y:Y(L.v[b])+3.5})).sort((p,q)=>p.y-q.y);
+    for(let i=1;i<labs.length;i++) if(labs[i].y-labs[i-1].y<11) labs[i].y=labs[i-1].y+11;
+    const over=labs[labs.length-1].y-(H-pb+2); if(over>0) labs.forEach(l=>l.y-=over);
+    labs.forEach(l=>{ s+=`<text x="${X(b)+7}" y="${l.y.toFixed(1)}" font-size="9.5" font-weight="700" fill="${l.L.c==="#E2B53E"?"#9A7414":l.L.c}">${bn(l.L.v[b])}</text>`; });
+    const step=Math.max(1,Math.ceil(n/8));
+    for(let i=a;i<=b;i+=step) s+=`<text x="${X(i)}" y="${H-5}" font-size="9" font-weight="600" fill="#14231D" text-anchor="${i===a&&n>1?"start":"middle"}">${LAB[i]}</text>`;
+    s+=`<line id="cg" y1="${pt}" y2="${H-pb}" stroke="#14231D" stroke-opacity=".45" stroke-dasharray="3 3" visibility="hidden"/>`;
+    s+=`<rect width="${W}" height="${H}" fill="transparent"/>`;
+    svg.innerHTML=s;
+    const tt=document.getElementById("ctt"), g=document.getElementById("cg");
+    svg.onmousemove=e=>{ const r=svg.getBoundingClientRect(), sc=r.width/W, x=(e.clientX-r.left)/sc;
+      const i = n===1 ? a : Math.max(a,Math.min(b,a+Math.round((x-pl)/((W-pl-pr)/(n-1)))));
+      g.setAttribute("x1",X(i)); g.setAttribute("x2",X(i)); g.setAttribute("visibility","visible");
+      const tot=natDed(i), prevTot=i?natDed(i-1):null;
+      tt.innerHTML=`<div class="m">${FULL[i].toUpperCase()}</div>
+        ${LINES.map(L=>`<div class="r"><span><i style="background:${L.c}"></i>${L.k}</span><b>${bn(L.v[i])}</b><span class="sh">${pct(L.v[i]/tot,0)}</span>${chip(L.v[i], i?L.v[i-1]:null)}</div>`).join("")}
+        <div class="r tot"><span>All deductions</span><b>${bn(tot)}</b><span class="sh">100%</span>${chip(tot, prevTot)}</div>
+        <div class="vs">${i?"Change vs "+FULL[i-1]:"No earlier month in the data"} · deductions up = red</div>`;
+      tt.style.display="block"; const left=16+X(i)+14; tt.style.left=(left+318>616?16+X(i)-330:left)+"px"; tt.style.top="20px"; };
+    svg.onmouseleave=()=>{tt.style.display="none"; g.setAttribute("visibility","hidden");};
+  }
+
+  // external debt by state for the latest month in the range
+  function drawBars(b){
+    document.getElementById("ptitle").textContent = `External debt deducted by state, ${FULL[b]}`;
+    const rows=ST.map(s=>({s, v:val(s,0,b), p:val(s,0,b-1)})).sort((x,y)=>y.v-x.v), mx=rows[0].v, tot=rows.reduce((a2,r)=>a2+r.v,0);
+    const el=document.getElementById("pbars"), tt=document.getElementById("ptt"), card=document.getElementById("pcard"), scale=v=>v/mx*78;
+    el.innerHTML=rows.map(r=>`<div class="pbar" data-s="${r.s}"><div class="nm">${r.s}</div><div class="tr"><span style="width:${scale(r.v)}%;background:${ZCOL[ZONE_OF[r.s]]}"></span><em style="left:calc(${scale(r.v)}% + 5px)">${r.v.toFixed(2)}</em></div></div>`).join("");
+    el.querySelectorAll(".pbar").forEach(bEl=>{ const r=rows.find(q=>q.s===bEl.dataset.s);
+      bEl.onmousemove=e=>{ const c=card.getBoundingClientRect(), sc=c.width/400, x=(e.clientX-c.left)/sc, y=(e.clientY-c.top)/sc;
+        tt.innerHTML=`<div class="m">${r.s.toUpperCase()}</div><div class="sub"><i style="background:${ZCOL[ZONE_OF[r.s]]}"></i>${ZONE_OF[r.s]}</div>
+          <div class="r"><span>External debt</span><b>${bn(r.v)}</b></div><div class="r"><span>Share of all external debt</span><b>${pct(r.v/tot)}</b></div>
+          <div class="r"><span>Change vs ${FULL[b-1]||"previous"}</span>${chip(r.v, r.p)}</div>`;
+        tt.style.display="block"; tt.style.left=Math.min(x+12,400-210)+"px"; tt.style.top=Math.min(y+12,262-104)+"px"; };
+      bEl.onmouseleave=()=>tt.style.display="none"; });
+  }
+
+  // matrix for the latest month in the range, green heat shading per column
+  function drawMatrix(b){
+    document.getElementById("xtitle").textContent = `Deductions by state and line, ${FULL[b]}`;
+    const cur=s=>LINES.map((_,j)=>val(s,j,b)), order=ST.slice().sort((x,y)=>stDed(y,b)-stDed(x,b));
+    const colMax=LINES.map((_,j)=>Math.max(...ST.map(s=>val(s,j,b)))), dedMax=Math.max(...ST.map(s=>stDed(s,b)));
+    const g=s=>S[s].gross*natGross(b)/792.4;
+    const heat=(v,m)=>{ const t=m?v/m:0; return `background:rgba(14,138,95,${(0.04+t*0.32).toFixed(2)})`; };
+    const head=`<thead><tr><th>STATE</th>${LINES.map(L=>`<th><i style="background:${L.c}"></i>${L.k.toUpperCase()}</th>`).join("")}<th>TOTAL</th><th>% OF GROSS</th></tr></thead>`;
+    const body=order.map(s=>{ const c=cur(s), d=stDed(s,b);
+      return `<tr><td>${s}</td>${c.map((v,j)=>`<td class="cell" data-s="${s}" data-j="${j}" style="${heat(v,colMax[j])}">${v<0.05?"–":v.toFixed(1)}</td>`).join("")}
+        <td class="cell tot" data-s="${s}" data-j="t" style="${heat(d,dedMax)}">${d.toFixed(1)}</td><td class="pg">${pct(d/g(s))}</td></tr>`; }).join("");
+    document.getElementById("xm").innerHTML=head+"<tbody>"+body+"</tbody>";
+    const tt=document.getElementById("xtt"), card=document.getElementById("xcard");
+    document.querySelectorAll("#xm td.cell").forEach(td=>{ const s=td.dataset.s, j=td.dataset.j;
+      const name = j==="t" ? "Total" : LINES[+j].k, v = j==="t" ? stDed(s,b) : val(s,+j,b), p = b ? (j==="t" ? stDed(s,b-1) : val(s,+j,b-1)) : null;
+      td.onmousemove=e=>{ const r=card.getBoundingClientRect(), sc=r.width/1040, x=(e.clientX-r.left)/sc, y=(e.clientY-r.top)/sc;
+        tt.innerHTML=`<div class="m">${(j==="t"?"ALL DEDUCTIONS":name.toUpperCase())} · ${s.toUpperCase()}</div><div class="def">${DEF[name]}</div>
+          <div class="r"><span>${FULL[b]}</span><b>${v<0.005?"₦0":bn(v)}</b></div><div class="r"><span>${FULL[b-1]||"Previous month"}</span><b>${p==null?"n/a":(p<0.005?"₦0":bn(p))}</b></div>
+          <div class="r"><span>Change</span>${chip(v,p)}</div>`;
+        tt.style.display="block"; tt.style.left=Math.min(x+14,1040-270)+"px"; tt.style.top=(y>120? y-150 : y+14)+"px"; };
+      td.onmouseleave=()=>tt.style.display="none"; });
+  }
+
+  // banner for the latest month in the range (rule-based)
+  function drawBanner(b){
+    document.getElementById("bkick").innerHTML = `KEY TAKEAWAY<br>${FULL[b].toUpperCase()}`;
+    const tot=natDed(b), prev=b?natDed(b-1):null, c=prev?(tot-prev)/prev:0, big=LINES.slice().sort((x,y)=>y.v[b]-x.v[b])[0];
+    const LONG={Jan:"January",Feb:"February",Mar:"March",Apr:"April",May:"May",Jun:"June",Jul:"July",Aug:"August",Sep:"September",Oct:"October",Nov:"November",Dec:"December"};
+    const top=ST.slice().sort((x,y)=>val(y,0,b)-val(x,0,b))[0], month=LONG[FULL[b].split(" ")[0]], pm=b?LONG[FULL[b-1].split(" ")[0]]:"";
+    document.getElementById("btxt").innerHTML =
+      `States lost <span class="hl">${bn(tot)}</span> to deductions in ${month}${prev?`, <span class="${c<0?"up":"dn"}">${c<0?"▼":"▲"} ${pct(Math.abs(c))}</span> on ${pm}`:""}, ${pct(tot/natGross(b))} of gross. `+
+      `${big.k} was the biggest line at <span class="hl">${pct(big.v[b]/tot,0)}</span>, and ${top} had the most external debt deducted, <span class="hl">${bn(val(top,0,b))}</span>.`;
+  }
+
+  function renderAll(){ const a=+dFrom.value, b=+dTo.value; drawLines(a,b); drawBars(b); drawMatrix(b); drawBanner(b); }
+  renderAll();
+
+  document.getElementById("lblbtn").onclick=e=>{document.body.classList.toggle("nolabels"); e.target.classList.toggle("on");};
+  function fit(){ const sc=Math.min(1,(window.innerWidth-40)/1280), el=document.getElementById("scaler");
+    el.style.transform=`scale(${sc})`; el.style.width=1280*sc+"px"; el.style.height=720*sc+"px"; }
+  window.addEventListener("resize",fit); fit();
+</script>
+</body>
+</html>
