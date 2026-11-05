@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presidents look-and-feel mock-up</title>
+<style>
+  :root{
+    /* Green & White palette from the Nigeria Data Dashboard; layout = 1280x720 Power BI canvas */
+    --side:#0B3D2E; --side2:#1B5A45; --canvas:#F3F6F4; --gold:#E2B53E;
+    --better:#0E8A5F; --worse:#C93C3C; --equal:#C98A00;
+    --ink:#14231D; --muted:#5E6E67; --line:#E3E9E6; --track:#EDF2EF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#DCE3DF;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:var(--ink)}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:12px 20px;background:#fff;border-bottom:1px solid var(--line);font-size:13px}
+  .controls b{font-weight:600}
+  .controls button{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer}
+  .controls button.on{background:var(--side);color:#fff;border-color:var(--side)}
+  .note{color:var(--muted)}
+  .wrap{padding:20px;display:flex;justify-content:center}
+  .scaler{transform-origin:top left}
+  .canvas{position:relative;width:1280px;height:720px;background:var(--canvas);overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+  .abs{position:absolute}
+  .card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(11,61,46,.08),0 4px 14px rgba(11,61,46,.05)}
+
+  .side{left:0;top:0;width:192px;height:720px;background:var(--side);color:#fff;padding:26px 14px 0 22px}
+  .brand{font-weight:700;font-size:19px;line-height:1.1;letter-spacing:.5px}
+  .brand small{display:block;font-weight:400;font-size:9px;letter-spacing:2.4px;opacity:.7;margin-top:6px}
+  .sec{font-size:8.5px;letter-spacing:2.2px;opacity:.6;margin:22px 0 6px}
+  .nav{display:flex;align-items:center;gap:9px;font-size:11.5px;height:30px;padding-left:6px;margin-left:-8px;border-radius:7px;opacity:.82}
+  .nav i{width:6px;height:6px;border-radius:50%;background:#B9CCC3;flex:none}
+  .nav.on{background:var(--side2);opacity:1;font-weight:600}
+  .nav.on i{background:var(--gold)}
+  .soon{margin-left:auto;font-size:7.5px;letter-spacing:1.3px;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:1px 6px}
+  .srcnote{position:absolute;bottom:16px;left:22px;right:14px;font-size:8.5px;line-height:1.5;opacity:.65}
+
+  .eyebrow{left:216px;top:20px;font-size:9.5px;letter-spacing:2.6px;color:var(--better);font-weight:600}
+  .title{left:216px;top:32px;font-size:26px;font-weight:600}
+  .fresh{right:24px;top:20px;height:38px;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border-radius:999px;font-size:10.5px;background:#fff;border:1px solid #0E8A5F55}
+  .fresh .pill{display:flex;align-items:center;gap:6px;color:#fff;font-weight:600;font-size:10px;padding:5px 10px;border-radius:999px;background:var(--better)}
+  .fresh .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff}
+  .fresh .tag{font-size:8px;letter-spacing:1.6px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+  .fresh .msg{font-weight:600}
+  .fresh .facts{color:var(--muted);border-left:1px solid var(--line);padding-left:10px}
+
+  .filters{left:216px;top:72px;width:1040px;height:40px;border-radius:999px;display:flex;align-items:center;padding:0 18px;font-size:8.5px;letter-spacing:1.6px;color:var(--muted)}
+  .f{display:flex;align-items:center;gap:10px;height:100%;padding-right:16px}
+  .f + .f{border-left:1px solid var(--line);padding-left:16px}
+  .tiles{display:flex;gap:4px;letter-spacing:0}
+  .tiles span{font-size:10px;color:var(--ink);background:var(--track);padding:4px 9px;border-radius:6px}
+  .tiles span.on{background:var(--side);color:#fff}
+  .dd{letter-spacing:0;font-size:10px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 26px 4px 9px;position:relative;min-width:90px}
+  .dd::after{content:"▾";position:absolute;right:8px;color:var(--muted)}
+
+  .ptitle{font-size:11.5px;font-weight:600}
+  .psub{font-size:9px;color:var(--muted);margin-top:2px}
+  .buildtag{position:absolute;z-index:50;font-size:8px;letter-spacing:1px;font-weight:700;padding:2px 6px;border-radius:4px;color:#fff;pointer-events:none}
+  .t-html{background:#7A3FC4}.t-native{background:#2F6FD1}
+  body.nolabels .buildtag{display:none}
+
+  .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:9px;color:var(--muted)}
+  .legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;background:var(--c)}
+
+  /* shared hover card (stands in for Power BI tooltips) */
+  .tt{position:absolute;display:none;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 18px rgba(11,61,46,.18);padding:9px 11px;font-size:10px;pointer-events:none;z-index:60}
+  .tt .m{font-weight:700;font-size:11px;letter-spacing:.5px}
+  .tt .sub{color:var(--muted);font-size:9px;margin:2px 0 5px;display:flex;align-items:center;gap:5px}
+  .tt .sub i{width:8px;height:8px;border-radius:2px}
+  .tt .r{display:grid;align-items:center;gap:8px;padding:3px 0;border-top:1px solid var(--line)}
+  .tt .r span:first-child{color:var(--muted);display:flex;align-items:center;gap:5px}
+  .tt .r span:first-child i{width:7px;height:7px;border-radius:2px;flex:none}
+  .tt .r b{font-weight:700;text-align:right}
+  .tt .r .sh{color:var(--muted);text-align:right}
+  .tt .r.tot{font-weight:700}
+  .tt .r.tot span:first-child{color:var(--ink)}
+  .tt .c{font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:4px;text-align:center;white-space:nowrap}
+  .tt .vs{color:var(--muted);font-size:8.5px;margin-top:4px}
+  .tt .def{color:var(--muted);font-size:9.5px;line-height:1.4;margin:3px 0 6px;white-space:normal}
+  #att .r{grid-template-columns:1fr 66px 34px 58px}
+  #att .r span:first-child{white-space:nowrap}
+  #mtt{width:250px}
+  #mtt .r{grid-template-columns:1fr auto}
+  #btt .r{grid-template-columns:1fr auto}
+
+  /* oil derivation bars (native) */
+  .obar{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center;height:21px;font-size:9.5px}
+  .obar .nm{text-align:right;font-weight:600}
+  .obar .tr{position:relative;height:13px}
+  .obar .tr span{position:absolute;left:0;top:0;bottom:0;border-radius:0 3px 3px 0}
+  .obar .tr em{position:absolute;top:-1px;font-style:normal;font-size:9px;font-weight:600}
+
+  /* matrix (native, with SVG bars) */
+  table.mx{width:100%;border-collapse:collapse;font-size:10px;margin-top:8px}
+  .mx th{font-size:8px;letter-spacing:1.3px;color:var(--muted);font-weight:600;text-align:right;padding:4px 6px;border-bottom:1px solid var(--line)}
+  .mx th:first-child{text-align:left}
+  .mx td{padding:4px 6px;height:22px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  .mx td:first-child{text-align:left;font-weight:600}
+  .mx td:first-child i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  .mx tr.tot td{font-weight:700;border-bottom:none;border-top:1.5px solid var(--ink)}
+  .mx tbody tr:not(.tot):hover td{background:#F6F9F7}
+  .mx .c{font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:4px}
+  .mx .shc{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+
+  .banner{left:216px;top:654px;width:1040px;height:50px;border-radius:12px;display:flex;align-items:center;gap:14px;padding:0 18px;
+    background:linear-gradient(90deg,#0B3D2E 0%,#145A43 70%,#1D6B51 100%);color:#fff}
+  .banner .ico{width:28px;height:28px;border-radius:8px;background:rgba(226,181,62,.18);display:flex;align-items:center;justify-content:center;flex:none}
+  .banner .kick{font-size:8.5px;letter-spacing:2px;color:var(--gold);font-weight:600;white-space:nowrap}
+  .banner .txt{font-size:12px;line-height:1.35}
+  .banner .up{color:#6EE0AE;font-weight:700}
+  .banner .dn{color:#FF9A9A;font-weight:700}
+  .banner .hl{color:var(--gold);font-weight:700}
+
+  .explain{max-width:1280px;margin:0 auto 30px;padding:0 20px;font-size:13.5px;line-height:1.55}
+  .explain h2{font-size:16px;margin:18px 0 6px}
+  .explain table{border-collapse:collapse;width:100%;background:#fff;font-size:12.5px}
+  .explain td,.explain th{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+  .explain th{background:var(--side);color:#fff;font-weight:600}
+</style>
+<style>
+  .sel{font:inherit;font-size:10px;letter-spacing:0;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 4px;background:#fff;cursor:pointer}
+  .sel:focus-visible{outline:2px solid var(--gold)}
+  .fresh2{right:24px;top:18px;height:42px;display:flex;align-items:center;gap:8px;padding:0 12px 0 6px;border-radius:999px;font-size:10px;background:#fff;border:1px solid #0E8A5F55}
+  .fresh2 .pill{display:flex;align-items:center;gap:5px;color:#fff;font-weight:600;font-size:9.5px;padding:4px 9px;border-radius:999px;background:var(--better)}
+  .fresh2 .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff}
+  .fresh2 .src{display:flex;flex-direction:column;line-height:1.25}
+  .fresh2 .src b{font-size:8px;letter-spacing:1.4px;color:var(--muted);font-weight:600}
+  .fresh2 .src span{font-weight:600}
+  .fresh2 .sep{width:1px;height:24px;background:var(--line)}
+  .fresh2 .facts{color:var(--muted);border-left:1px solid var(--line);padding-left:9px;line-height:1.3}
+  .pc{padding:14px 16px}
+  .pc .lblh{font-size:9px;letter-spacing:1.8px;color:var(--muted);font-weight:700}
+  .pc .psub{max-width:230px;line-height:1.35}
+  .rows{margin-top:16px;position:relative}
+  .row{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center;height:56px;cursor:default}
+  .row:hover{background:#F6F9F7}
+  .row .nm{font-size:10.5px;font-weight:700;text-align:right;line-height:1.2}
+  .row .nm small{display:block;font-size:8.5px;font-weight:500;color:var(--muted)}
+  .row .tr{position:relative;height:22px}
+  .row .tr span{position:absolute;top:0;bottom:0;border-radius:3px}
+  .row .tr em{position:absolute;top:3px;font-style:normal;font-size:11px;font-weight:700;white-space:nowrap}
+  .row .tr i{position:absolute;top:4px;left:0;font-size:9.5px;color:var(--muted)}
+  .row .tr .hatch{background:repeating-linear-gradient(135deg,var(--c) 0 4px,#fff 4px 6px);opacity:.9}
+  .zero{position:absolute;top:-6px;bottom:-6px;border-left:1.5px solid #14231D;opacity:.35}
+  .info,.backb{font:inherit;font-size:9.5px;font-weight:600;border-radius:999px;cursor:pointer;padding:3px 10px;white-space:nowrap}
+  .info{position:absolute;right:14px;top:12px;color:var(--side);background:#E3F4EC;border:1px solid #BFE3D0}
+  .backb{position:absolute;right:16px;bottom:14px;color:var(--side);background:#fff;border:none}
+  .info:focus-visible,.backb:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .fback{display:none;position:absolute;inset:0;border-radius:12px;background:var(--side);color:#fff;padding:18px 20px;z-index:5}
+  .card.showback .fback{display:block;animation:flipin .45s ease-out}
+  @keyframes flipin{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}
+  .fback .bkh{font-size:9px;letter-spacing:1.8px;color:var(--gold);font-weight:700;margin-top:14px}
+  .fback .bkh:first-child{margin-top:0}
+  .fback p{margin:5px 0 0;font-size:11.5px;line-height:1.55}
+  .fback p b{color:var(--gold)}
+  .cov{left:216px;top:576px;width:1040px;height:64px;display:flex;align-items:center;gap:10px;padding:0 16px;border-left:4px solid var(--gold)}
+  .cov .ch{font-size:8.5px;letter-spacing:1.8px;color:var(--muted);font-weight:700;white-space:nowrap}
+  .cov .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .cov .chip{font-size:9.5px;background:var(--track);border-radius:999px;padding:4px 10px;display:flex;align-items:center;gap:6px}
+  .cov .chip i{width:8px;height:8px;border-radius:2px}
+  .cov .chip b{font-weight:700}
+  .tt.pt{width:236px}
+  .tt.pt .r{grid-template-columns:1fr auto}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <span><b>Mock-up controls</b> <span class="note">(not part of the report)</span></span>
+  <span><button id="lblbtn" class="on">Show build labels</button></span>
+  <span class="note">Sample data only. Change the years: values, ranks, coverage notes and the banner recalculate. Hover a bar; click "ⓘ What it means".</span>
+</div>
+
+<div class="wrap"><div class="scaler" id="scaler"><div class="canvas" role="img" aria-label="Mock-up of the Presidents page: average inflation, naira value over the term and average real growth by president, a coverage strip and an insight banner">
+
+  <div class="abs side">
+    <div class="brand">NIGERIA<br>DATA<small>DASHBOARD</small></div>
+    <div class="sec">FAAC</div>
+    <div class="nav"><i></i>Overview</div>
+    <div class="nav"><i></i>States</div>
+    <div class="nav"><i></i>Revenue mix</div>
+    <div class="nav"><i></i>Deductions</div>
+    <div class="nav"><i></i>Compare</div>
+    <div class="sec">ECONOMY</div>
+    <div class="nav"><i></i>Overview</div>
+    <div class="nav"><i></i>Economy size</div>
+    <div class="nav"><i></i>FAAC in real terms</div>
+    <div class="nav on"><i></i>Presidents</div>
+    <div class="sec">ELECTIONS</div>
+    <div class="nav" style="opacity:.55"><i></i>Results<span class="soon">SOON</span></div>
+    <div class="sec">INFO</div>
+    <div class="nav"><i></i>About</div>
+    <div class="srcnote">Source: World Bank (exchange rate, CPI, GDP, population), via MotherDuck. Can differ from NBS headlines.</div>
+  </div>
+
+  <div class="abs eyebrow">NIGERIA DATA DASHBOARD &nbsp;·&nbsp; ECONOMY</div>
+  <div class="abs title">Presidents</div>
+  <div class="abs fresh2">
+    <span class="pill">On time</span>
+    <span class="src"><b>CPI &amp; FX · MONTHLY</b><span>Sep 2026 is in</span></span>
+    <span class="sep"></span>
+    <span class="src"><b>GDP · YEARLY</b><span>2025 is in</span></span>
+    <span class="facts">Refreshed<br>5 Nov 2026, 08:14</span>
+  </div>
+  <span class="buildtag t-html" style="right:24px;top:6px">HTML · Freshness_html (two sources)</span>
+
+  <div class="abs card filters">
+    <div class="f">YEARS <select class="sel" id="yFrom" aria-label="From year"></select><span style="letter-spacing:0;font-size:10px">to</span><select class="sel" id="yTo" aria-label="To year"></select></div>
+  </div>
+  <span class="buildtag t-native" style="left:216px;top:64px">NATIVE · Years dropdowns</span>
+
+  <div class="abs card pc" id="c_inf" style="left:216px;top:124px;width:336px;height:440px"></div>
+  <div class="abs card pc" id="c_fx"  style="left:568px;top:124px;width:336px;height:440px"></div>
+  <div class="abs card pc" id="c_gr"  style="left:920px;top:124px;width:336px;height:440px"></div>
+  <span class="buildtag t-native" style="left:216px;top:116px">NATIVE · bars in term order, labelled, tooltip card; button + bookmarks for the back</span>
+
+  <div class="abs card cov" id="cov"></div>
+  <span class="buildtag t-html" style="left:216px;top:568px">HTML · Term_coverage_html (only partial terms; disappears after the backfill)</span>
+
+  <div class="abs banner">
+    <div class="ico"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z" fill="#E2B53E"/></svg></div>
+    <div class="kick">IN SHORT</div>
+    <div class="txt" id="btxt"></div>
+  </div>
+  <span class="buildtag t-html" style="left:216px;top:646px">HTML · Administration_insight_html (replaces the narration text)</span>
+
+</div></div></div>
+
+<div class="explain">
+  <h2>What's on this mock-up</h2>
+  <table>
+    <tr><th>Element</th><th>What changes</th><th>Built as</th><th>Trade-off</th></tr>
+    <tr><td>Freshness strip</td><td>Same two-clock strip as the other Economy pages.</td><td>HTML measure</td><td>None.</td></tr>
+    <tr><td>Years</td><td>Dropdowns; every measure counts only the months or years inside the range.</td><td>Native slicer</td><td>None.</td></tr>
+    <tr><td>3 president charts</td><td>Term order, president colours, every bar labelled. Naira bars grow left from zero (losses). Partial terms are shown hatched, never blank. Tooltip card: term, value, rank among presidents with data, coverage. Plain subtitles and "ⓘ What it means" backs.</td><td>Native bar charts, colour + pattern via conditional formatting, report-page tooltip; button + bookmarks for the back</td><td>Hatching needs an SVG/image fill or a second series in Power BI; a lighter colour is the fallback.</td></tr>
+    <tr><td>Coverage strip</td><td>Replaces the coverage table: one chip per partial term, only when coverage is partial. Disappears once the data is backfilled to 1999.</td><td>HTML measure</td><td>None.</td></tr>
+    <tr><td>Insight banner</td><td>Replaces the narration text: highest and lowest inflation, the biggest naira fall, the fastest growth.</td><td>HTML measure</td><td>None.</td></tr>
+  </table>
+</div>
+
+<script>
+  // Sample data only. Monthly CPI and FX from Jan 2010 (as in the warehouse today); yearly growth from 1990.
+  const MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const P=[ // terms; a month goes to the president in office, a year to the president in office on 1 July
+    {n:"Obasanjo", c:"#B9D9C9", from:"1999-06", to:"2007-05", y0:1999, y1:2006},
+    {n:"Yar'Adua", c:"#8FC9AE", from:"2007-06", to:"2010-04", y0:2007, y1:2009},
+    {n:"Jonathan", c:"#4E9C78", from:"2010-05", to:"2015-05", y0:2010, y1:2014},
+    {n:"Buhari",   c:"#0E6B45", from:"2015-06", to:"2023-05", y0:2015, y1:2022},
+    {n:"Tinubu",   c:"#0F2019", from:"2023-06", to:null,      y0:2023, y1:2099}];
+  const M=[]; for(let y=2010;y<=2026;y++) for(let m=0;m<12;m++){ if(y===2026&&m>8) break; M.push({y,m,key:`${y}-${String(m+1).padStart(2,"0")}`,lab:`${MN[m]} ${y}`}); }
+  const LAST=M[M.length-1];
+  const idx=k=>M.findIndex(o=>o.key===k);
+  const interp=a=>{ a=a.map(([k,v])=>[idx(k),v]); return M.map((_,i)=>{ let j=0; while(j<a.length-2&&i>a[j+1][0]) j++; const [x0,y0]=a[j],[x1,y1]=a[j+1],t=Math.max(0,Math.min(1,(i-x0)/(x1-x0||1))); return y0+(y1-y0)*t; }); };
+  const INF=interp([["2010-01",13.1],["2011-01",12.1],["2012-01",12.6],["2013-06",8.4],["2014-06",8.2],["2015-06",9.2],["2016-01",9.6],["2016-08",17.6],["2017-01",18.7],["2018-01",15.1],["2018-12",11.4],["2019-12",12.0],["2020-12",15.8],["2021-03",18.2],["2021-12",15.6],["2022-06",18.6],["2022-12",21.3],["2023-06",22.8],["2023-12",28.9],["2024-06",34.2],["2024-12",34.8],["2025-06",22.2],["2025-12",17.5],["2026-08",15.9],["2026-09",15.2]]);
+  const FX=interp([["2010-01",150],["2014-10",158],["2015-02",197],["2015-05",198],["2016-05",199],["2016-07",282],["2016-09",305],["2020-03",361],["2020-09",380],["2021-06",411],["2022-12",450],["2023-05",465],["2023-06",760],["2023-12",900],["2024-02",1480],["2024-06",1490],["2024-11",1680],["2025-03",1530],["2025-12",1460],["2026-08",1452],["2026-09",1468]]);
+  const GR={}; [11.8,0.4,4.6,-2.0,-1.8,-0.1,4.2,2.9,2.6,0.6,5.0,5.9,15.3,7.3,9.3,6.4,6.1,6.6,6.8,8.0,8.0,5.3,4.2,6.7,6.3,2.7,-1.6,0.8,1.9,2.2,-1.8,3.6,3.3,2.9,3.4,3.9].forEach((g,i)=>GR[1990+i]=g);
+  const termMonths=p=>{ const [a,b]=[p.from,p.to||LAST.key].map(k=>k.split("-").map(Number)); return (b[0]-a[0])*12+(b[1]-a[1])+1; };
+  const fmtKey=k=>{ const [y,m]=k.split("-").map(Number); return `${MN[m-1]} ${y}`; };
+  const GOOD="#0E8A5F", BAD="#C93C3C";
+
+  const yFrom=document.getElementById("yFrom"), yTo=document.getElementById("yTo");
+  for(let y=1999;y<=2026;y++){ yFrom.add(new Option(y,y)); yTo.add(new Option(y,y)); } yFrom.value=1999; yTo.value=2026;
+  [yFrom,yTo].forEach(s=>s.onchange=renderAll);
+
+  function stats(){
+    let a=+yFrom.value,b=+yTo.value; if(a>b){ b=a; yTo.value=b; }
+    return P.map(p=>{
+      const ms=M.map((o,i)=>i).filter(i=>M[i].key>=p.from && M[i].key<=(p.to||"9999") && M[i].y>=a && M[i].y<=b);
+      const ys=Object.keys(GR).map(Number).filter(y=>y>=p.y0 && y<=Math.min(p.y1,2025) && y>=a && y<=b);
+      const inTerm = !( (p.to && +p.to.slice(0,4)<a) || +p.from.slice(0,4)>b );
+      const tM=termMonths(p);
+      // months the term would have inside the selected years if data existed from 2010, to tell a range cut from a data gap
+      const cut = +p.from.slice(0,4) < a || (p.to ? +p.to.slice(0,4) : 2026) > b;
+      return {p, inTerm, ms, ys, cut,
+        inf: ms.length ? ms.reduce((s,i)=>s+INF[i],0)/ms.length : null,
+        fx:  ms.length>1 ? FX[ms[0]]/FX[ms[ms.length-1]]-1 : null,
+        gr:  ys.length ? ys.reduce((s,y)=>s+GR[y],0)/ys.length : null,
+        cover: ms.length, tM, partial: ms.length && ms.length<tM, none: !ms.length, open: !p.to};
+    }).filter(r=>r.inTerm);
+  }
+
+  function chart(id, label, sub, key, fmt, betterLow, info, R){
+    const card=document.getElementById(id), have=R.filter(r=>r[key]!=null), vals=have.map(r=>r[key]);
+    const neg = key==="fx", mx=Math.max(...vals.map(Math.abs), 1);
+    const ranked=have.slice().sort((x,y)=> betterLow ? x[key]-y[key] : y[key]-x[key]);
+    card.innerHTML=`<div class="lblh">${label}</div><div class="psub">${sub}</div>
+      <button class="info" aria-label="What this chart means">ⓘ What it means</button>
+      <div class="rows">${neg?'<div class="zero" style="left:calc(78px + (100% - 78px) * .86)"></div>':""}${R.map(r=>{
+        const v=r[key], nm=`<div class="nm">${r.p.n}<small>${r.p.from.slice(0,4)}–${r.p.to?r.p.to.slice(0,4):"now"}</small></div>`;
+        if(v==null) return `<div class="row" data-n="${r.p.n}">${nm}<div class="tr"><i>No ${key==="gr"?"yearly":"monthly"} data${key!=="gr"?" before 2010":" in range"}</i></div></div>`;
+        const part = key==="gr" ? false : r.partial || r.open;
+        const w = Math.abs(v)/mx*(neg?80:72);
+        const span = neg ? `<span class="${part?"hatch":""}" style="--c:${r.p.c};right:${14}%;width:${w}%;background:${part?"":r.p.c}"></span><em style="right:calc(${14+w}% + 6px);color:${BAD}">▼ ${fmt(Math.abs(v))}</em>`
+                         : `<span class="${part?"hatch":""}" style="--c:${r.p.c};left:0;width:${w}%;background:${part?"":r.p.c}"></span><em style="left:calc(${w}% + 6px)">${fmt(v)}</em>`;
+        return `<div class="row" data-n="${r.p.n}">${nm}<div class="tr">${span}</div></div>`; }).join("")}</div>
+      <div class="tt pt"></div>
+      <div class="fback"><div class="bkh">${info.q}</div><p>${info.def}</p><div class="bkh">WHAT THE CHART SAYS · ${yFrom.value} to ${yTo.value}</div><p>${info.say(ranked)}</p><button class="backb">← Back to chart</button></div>`;
+    card.querySelector(".info").onclick=()=>card.classList.add("showback");
+    card.querySelector(".backb").onclick=()=>card.classList.remove("showback");
+    const tt=card.querySelector(".tt");
+    card.querySelectorAll(".row").forEach(row=>{ const r=R.find(x=>x.p.n===row.dataset.n), v=r[key];
+      row.onmousemove=e=>{ const c=card.getBoundingClientRect(), sc=c.width/336, y=(e.clientY-c.top)/sc;
+        const rk=ranked.findIndex(x=>x.p.n===r.p.n)+1, n=ranked.length;
+        const rankTxt = v==null ? "No data" : rk===1 ? (betterLow?"Lowest":"Highest")+` of ${n} with data` : rk===n ? (betterLow?"Highest":"Lowest")+` of ${n} with data` : `${rk} of ${n} (${betterLow?"lowest":"highest"} first)`;
+        const covTxt = key==="gr" ? `${r.ys.length} year${r.ys.length===1?"":"s"} in range` : r.none ? "No monthly data before 2010" : `${r.cover} of ${r.tM} months${r.open?" (term in progress)":""}`;
+        tt.innerHTML=`<div class="m">${r.p.n.toUpperCase()}</div><div class="sub"><i style="background:${r.p.c}"></i>${fmtKey(r.p.from)} to ${r.p.to?fmtKey(r.p.to):"now"}</div>
+          <div class="r"><span>${label.charAt(0)+label.slice(1).toLowerCase()}</span><b>${v==null?"–":(neg?"▼ ":"")+fmt(Math.abs(v))}</b></div>
+          <div class="r"><span>Rank</span><b>${rankTxt}</b></div><div class="r"><span>Coverage</span><b>${covTxt}</b></div>`;
+        tt.style.display="block"; tt.style.left="50px"; tt.style.top=Math.min(y+14, 440-120)+"px"; };
+      row.onmouseleave=()=>tt.style.display="none"; });
+  }
+
+  function renderAll(){
+    const R=stats();
+    const pct=v=>v.toFixed(1)+"%", pct0=v=>Math.round(v*100)+"%";
+    chart("c_inf","AVERAGE INFLATION","Average yearly price rise in the months each president was in office · lower is better","inf",pct,true,
+      {q:"WHAT IS AVERAGE INFLATION?", def:"Inflation is how much prices rose compared with a year earlier. Here it is averaged over the months each president was in office. Lower means prices rose more slowly for households.",
+       say:k=>k.length?`Prices rose slowest under <b>${k[0].p.n}</b> (${pct(k[0].inf)} a year on average) and fastest under <b>${k[k.length-1].p.n}</b> (${pct(k[k.length-1].inf)}).`:"No monthly data in this range."}, R);
+    chart("c_fx","NAIRA VALUE OVER THE TERM","How much the naira's value against the dollar changed from the first to the last month","fx",v=>pct0(v),false,
+      {q:"WHAT DOES NAIRA VALUE MEAN?", def:"How many more or fewer US dollars a naira buys at the end of a term than at the start. ▼ 50% means a naira bought half as many dollars at the end. A weaker naira makes imports, travel and foreign debt dearer.",
+       say:k=>k.length?`The naira lost most under <b>${k[k.length-1].p.n}</b> (▼ ${pct0(-k[k.length-1].fx)}) and least under <b>${k[0].p.n}</b> (▼ ${pct0(-k[0].fx)}).`:"No monthly data in this range."}, R);
+    chart("c_gr","AVERAGE REAL GDP GROWTH","Average yearly growth after removing price rises · a year goes to the president in office on 1 July","gr",pct,false,
+      {q:"WHAT IS REAL GDP GROWTH?", def:"How much more the economy produced each year than the year before, with price rises removed, averaged over each president's years. The population grows about 2.5% a year, so growth below that means the average Nigerian's share shrank.",
+       say:k=>k.length?`The economy grew fastest under <b>${k[0].p.n}</b> (${pct(k[0].gr)} a year) and slowest under <b>${k[k.length-1].p.n}</b> (${pct(k[k.length-1].gr)}). ${k.filter(r=>r.gr<2.5).map(r=>r.p.n).join(" and ")||"No one"} averaged below population growth.`:"No years in this range."}, R);
+
+    const chips=R.filter(r=>r.none||r.partial||r.open).map(r=>`<span class="chip"><i style="background:${r.p.c}"></i><b>${r.p.n}</b>${
+      r.none?"no monthly CPI or FX before 2010":r.cut?`selected years cover ${r.cover} of ${r.tM} months`:r.open?`term in progress, data to ${LAST.lab}`:`CPI and FX for ${M[r.ms[0]].lab}–${M[r.ms[r.ms.length-1]].lab} only (${r.cover} of ${r.tM} months)`}</span>`).join("");
+    const cov=document.getElementById("cov");
+    cov.innerHTML = chips ? `<span class="ch">PARTIAL TERMS</span><div class="chips">${chips}</div>` : `<span class="ch">FULL COVERAGE</span><span style="font-size:10px;color:var(--muted)">Every term in this range is fully covered.</span>`;
+
+    const hi=R.filter(r=>r.inf!=null).sort((a,b)=>b.inf-a.inf), fx=R.filter(r=>r.fx!=null).sort((a,b)=>a.fx-b.fx), gr=R.filter(r=>r.gr!=null).sort((a,b)=>b.gr-a.gr);
+    const so = r => r.open ? " so far" : "";
+    const one = R.filter(r=>r.inf!=null||r.gr!=null);
+    if (one.length===1){ const r=one[0];
+      document.getElementById("btxt").innerHTML = `Only ${r.p.n}'s term falls in the selected years. `+
+        (r.inf!=null?`Inflation averaged <span class="dn">${pct(r.inf)}</span>, `:"")+(r.fx!=null?`the naira lost <span class="dn">${pct0(-r.fx)}</span> of its value, `:"")+
+        (r.gr!=null?`and real growth averaged <span class="${r.gr>=2.5?"up":"dn"}">${pct(r.gr)}</span> a year${r.gr<2.5?", below population growth":""}.`:"");
+    } else document.getElementById("btxt").innerHTML = hi.length ?
+      `Inflation averaged <span class="dn">${pct(hi[0].inf)}</span> under ${hi[0].p.n}${so(hi[0])}, the highest of the ${hi.length} presidents with data, and the naira lost <span class="dn">${pct0(-fx[0].fx)}</span> of its value under ${fx[0].p.n}${so(fx[0])}. `+
+      `${hi[hi.length-1].p.n} had the lowest inflation (<span class="up">${pct(hi[hi.length-1].inf)}</span>)${gr.length?` and ${gr[0].p.n} the fastest growth (<span class="up">${pct(gr[0].gr)}</span>)`:""}.`
+      : (gr.length?`The economy grew fastest under ${gr[0].p.n} (<span class="up">${pct(gr[0].gr)}</span>). Monthly inflation and naira data start in 2010.`:"No data in this range.");
+  }
+  renderAll();
+
+  document.getElementById("lblbtn").onclick=e=>{document.body.classList.toggle("nolabels"); e.target.classList.toggle("on");};
+  function fit(){ const sc=Math.min(1,(window.innerWidth-40)/1280), el=document.getElementById("scaler");
+    el.style.transform=`scale(${sc})`; el.style.width=1280*sc+"px"; el.style.height=720*sc+"px"; }
+  window.addEventListener("resize",fit); fit();
+</script>
+</body>
+</html>
