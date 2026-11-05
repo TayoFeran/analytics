@@ -54,11 +54,13 @@ at these y positions:
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicers: Period, Zone, State, Currency | 284 | 78 | 960 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Stacked area: revenue lines over time | 226 | 138 | 1020 | 292 |
-| Bar chart: oil derivation by state | 226 | 466 | 492 | 220 |
-| Matrix: revenue lines, current vs previous (metric field parameter) | 754 | 466 | 492 | 220 |
+| Slicers: Period, Dates (From, To), Zone, State, Currency | 278 | 78 | 966 | 28 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| Stacked area: revenue lines over time (TT - Revenue Month) | 226 | 134 | 1020 | 248 |
+| Bar chart: oil derivation by state, coloured by zone | 226 | 414 | 492 | 180 |
+| HTML: zone legend | 234 | 610 | 476 | 20 |
+| Table: revenue lines, this vs previous period, share bars | 754 | 414 | 492 | 216 |
+| HTML: insight banner | 216 | 654 | 1040 | 50 |
 
 ## Deductions (`bg_faac_deductions.png`)
 

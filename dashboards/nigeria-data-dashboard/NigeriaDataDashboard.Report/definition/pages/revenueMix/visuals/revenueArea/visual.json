@@ -3,9 +3,9 @@
   "name": "revenueArea",
   "position": {
     "x": 226,
-    "y": 138,
+    "y": 134,
     "z": 1700,
-    "height": 292,
+    "height": 248,
     "width": 1020,
     "tabOrder": 1700
   },
@@ -519,6 +519,33 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualTooltip": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "type": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Canvas'"
+                }
+              }
+            },
+            "section": {
+              "expr": {
+                "Literal": {
+                  "Value": "'ttRevenueMonth'"
                 }
               }
             }

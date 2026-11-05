@@ -1,19 +1,19 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "revenueMatrix",
+  "name": "revenueTable",
   "position": {
     "x": 754,
-    "y": 466,
-    "z": 1900,
-    "height": 220,
+    "y": 414,
+    "z": 2000,
+    "height": 216,
     "width": 492,
-    "tabOrder": 1900
+    "tabOrder": 2000
   },
   "visual": {
-    "visualType": "pivotTable",
+    "visualType": "tableEx",
     "query": {
       "queryState": {
-        "Rows": {
+        "Values": {
           "projections": [
             {
               "field": {
@@ -29,29 +29,7 @@
               "queryRef": "Metric_param.Metric_label",
               "nativeQueryRef": "Metric_label",
               "displayName": "Revenue line"
-            }
-          ]
-        },
-        "Columns": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Period Calc"
-                    }
-                  },
-                  "Property": "Name"
-                }
-              },
-              "queryRef": "Period Calc.Name",
-              "nativeQueryRef": "Name"
-            }
-          ]
-        },
-        "Values": {
-          "projections": [
+            },
             {
               "field": {
                 "Measure": {
@@ -60,12 +38,57 @@
                       "Entity": "Dax"
                     }
                   },
-                  "Property": "Metric_value"
+                  "Property": "Metric_value_curr_text"
                 }
               },
-              "queryRef": "Dax.Metric_value",
-              "nativeQueryRef": "Metric_value",
-              "displayName": "Value"
+              "queryRef": "Dax.Metric_value_curr_text",
+              "nativeQueryRef": "Metric_value_curr_text",
+              "displayName": "This period"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dax"
+                    }
+                  },
+                  "Property": "Metric_value_prev_text"
+                }
+              },
+              "queryRef": "Dax.Metric_value_prev_text",
+              "nativeQueryRef": "Metric_value_prev_text",
+              "displayName": "Previous"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dax"
+                    }
+                  },
+                  "Property": "Metric_change_short"
+                }
+              },
+              "queryRef": "Dax.Metric_change_short",
+              "nativeQueryRef": "Metric_change_short",
+              "displayName": "Change"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dax"
+                    }
+                  },
+                  "Property": "Metric_share_svg"
+                }
+              },
+              "queryRef": "Dax.Metric_share_svg",
+              "nativeQueryRef": "Metric_share_svg",
+              "displayName": "Share of gross"
             }
           ]
         }
@@ -111,6 +134,20 @@
               "expr": {
                 "Literal": {
                   "Value": "9D"
+                }
+              }
+            },
+            "imageHeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "16D"
+                }
+              }
+            },
+            "imageWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "100D"
                 }
               }
             }
@@ -203,60 +240,120 @@
               }
             }
           }
-        }
-      ],
-      "rowHeaders": [
+        },
         {
           "properties": {
             "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#0F2019'"
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Dax"
+                        }
+                      },
+                      "Property": "Metric_value_colour"
                     }
                   }
                 }
               }
-            },
-            "backColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
-                    }
-                  }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
                 }
               }
-            },
-            "fontSize": {
+            ],
+            "metadata": "Dax.Metric_change_short"
+          }
+        }
+      ],
+      "total": [
+        {
+          "properties": {
+            "totals": {
               "expr": {
                 "Literal": {
-                  "Value": "9D"
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
-      "subTotals": [
+      "columnWidth": [
         {
           "properties": {
-            "rowSubtotals": {
+            "value": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "columnSubtotals": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
+                  "Value": "128D"
                 }
               }
             }
+          },
+          "selector": {
+            "metadata": "Metric_param.Metric_label"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "74D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dax.Metric_value_curr_text"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "74D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dax.Metric_value_prev_text"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "62D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dax.Metric_change_short"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "104D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dax.Metric_share_svg"
           }
         }
       ]
@@ -333,7 +430,39 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Revenue lines, this period vs previous'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#0F2019'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
@@ -415,74 +544,6 @@
                       {
                         "Literal": {
                           "Value": "'Income'"
-                        }
-                      }
-                    ]
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      },
-      {
-        "name": "fPeriodCalc",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Period Calc"
-              }
-            },
-            "Property": "Name"
-          }
-        },
-        "type": "Categorical",
-        "howCreated": "User",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "t",
-              "Entity": "Period Calc",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "t"
-                          }
-                        },
-                        "Property": "Name"
-                      }
-                    }
-                  ],
-                  "Values": [
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'Current'"
-                        }
-                      }
-                    ],
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'Previous'"
-                        }
-                      }
-                    ],
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'Change %'"
                         }
                       }
                     ]

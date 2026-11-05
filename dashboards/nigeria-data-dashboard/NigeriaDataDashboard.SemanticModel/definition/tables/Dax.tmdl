@@ -2329,7 +2329,7 @@ table Dax
 			        & IF ( ROUND ( _nc, 4 ) = 0, UNICHAR ( 9632 ), IF ( _nc > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) ) & " " & FORMAT ( ABS ( _nc ), "0.0%" ) & "</span>" )
 			RETURN
 			    "<style>html{font-size:calc(100vh / 104)}html,body{margin:0;padding:0;overflow:hidden}"
-			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
 			        & ".m{font-weight:700;font-size:12rem;margin-bottom:6rem}.r{display:flex;justify-content:space-between;align-items:center;gap:8rem;padding:4rem 0;border-top:1rem solid #E3E9E6}"
 			        & ".r span:first-child{color:#5E6E67;flex:1}.r b{font-weight:700}.c{font-weight:700;font-size:10rem;padding:1rem 6rem;border-radius:4rem;min-width:52rem;text-align:center}"
 			        & ".vs{color:#5E6E67;font-size:9rem;margin-top:5rem}</style>"
@@ -2406,7 +2406,7 @@ table Dax
 			    IF ( ISBLANK ( _net ),
 			        "<div style='font-family:Segoe UI;padding:12px;font-size:12px'>" & COALESCE ( _st, "FCT" ) & ": not in the FAAC reports</div>",
 			        "<style>html{font-size:calc(100vh / 150)}html,body{margin:0;padding:0;overflow:hidden}"
-			            & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:11rem 13rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff}"
+			            & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:11rem 13rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
 			            & ".m{font-weight:700;font-size:12.5rem;letter-spacing:.6rem}.rk{display:inline-block;font-weight:700;color:#0B3D2E;background:#EDF2EF;border-radius:5rem;padding:1rem 6rem;margin-left:6rem;letter-spacing:0;font-size:10.5rem}"
 			            & ".sub{color:#5E6E67;font-size:9.5rem;margin:3rem 0 7rem}"
 			            & ".r{display:flex;align-items:center;gap:8rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span:first-child{color:#5E6E67;flex:1}.r b{font-weight:700;min-width:62rem;text-align:right}"
@@ -2467,6 +2467,167 @@ table Dax
 			        & "<div class='b'><div class='ic'><svg viewBox='0 0 16 16' style='width:16rem;height:16rem'><path d='M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z' fill='#E2B53E'/></svg></div>"
 			        & "<div class='k'>KEY TAKEAWAY<br>" & UPPER ( [Period_label] ) & "</div><div class='t'>" & IF ( _one, _oneMsg, _manyMsg ) & "</div></div>"
 		displayFolder: 06 Titles & Labels\Insights
+
+	measure Revenue_month_tt_html =
+			-- Tooltip card for the revenue area chart: each revenue line in the hovered month,
+			-- its share of gross and its change on the month before. Month-aware on purpose (not Period Calc)
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _m = MAX ( calendar_table[month_date] )
+			VAR _pm = EOMONTH ( _m, -1 )
+			VAR _t = UNION (
+			        ROW ( "n", "Statutory allocation", "k", "#0E6B45", "o", 0, "v", CALCULATE ( [Statutory], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _m ), "p", CALCULATE ( [Statutory], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _pm ) ),
+			        ROW ( "n", "VAT", "k", "#8FC9AE", "o", 1, "v", CALCULATE ( [VAT], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _m ), "p", CALCULATE ( [VAT], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _pm ) ),
+			        ROW ( "n", "Oil derivation", "k", "#E2B53E", "o", 2, "v", CALCULATE ( [Oil_Derivation], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _m ), "p", CALCULATE ( [Oil_Derivation], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _pm ) ),
+			        ROW ( "n", "Exchange gain", "k", "#4E9C78", "o", 3, "v", CALCULATE ( [Exchange_Gain], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _m ), "p", CALCULATE ( [Exchange_Gain], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _pm ) ),
+			        ROW ( "n", "Ecology fund", "k", "#B9D9C9", "o", 4, "v", CALCULATE ( [Ecology], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _m ), "p", CALCULATE ( [Ecology], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _pm ) ),
+			        ROW ( "n", "Other income", "k", "#7F8C86", "o", 5, "v", CALCULATE ( [Others_Income], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _m ), "p", CALCULATE ( [Others_Income], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _pm ) )
+			    )
+			VAR _g = SUMX ( _t, [v] )
+			VAR _gp = SUMX ( _t, [p] )
+			VAR _rows =
+			    CONCATENATEX (
+			        _t,
+			        "<div class='r'><span><i style='background:" & [k] & "'></i>" & [n] & "</span><b>" & SWITCH ( TRUE (), ABS ( [v] ) >= 1e12, _sym & FORMAT ( [v] / 1e12, "0.00" ) & "tn", ABS ( [v] ) >= 1e9, _sym & FORMAT ( [v] / 1e9, "0.0" ) & "bn", _sym & FORMAT ( [v] / 1e6, "0.0" ) & "m" ) & "</b><em>"
+			            & FORMAT ( DIVIDE ( [v], _g ), "0%" ) & "</em>" & SWITCH ( TRUE (), [p] = 0 && [v] = 0, "<span class='c' style='color:#5E6E67;background:#EDF2EF'>" & "–" & "</span>", [p] = 0, "<span class='c' style='color:#5E6E67;background:#EDF2EF'>" & "Resumed" & "</span>", [v] = 0, "<span class='c' style='color:#5E6E67;background:#EDF2EF'>" & "Not paid" & "</span>", "<span class='c' style='color:" & IF ( ROUND ( DIVIDE ( [v] - [p], [p] ), 4 ) = 0, "#C98A00", IF ( DIVIDE ( [v] - [p], [p] ) > 0, "#0E8A5F", "#C93C3C" ) ) & ";background:" & IF ( ROUND ( DIVIDE ( [v] - [p], [p] ), 4 ) = 0, "#FBF1DC", IF ( DIVIDE ( [v] - [p], [p] ) > 0, "#E3F4EC", "#FBE7E7" ) ) & "'>" & IF ( ROUND ( DIVIDE ( [v] - [p], [p] ), 4 ) = 0, UNICHAR ( 9632 ), IF ( DIVIDE ( [v] - [p], [p] ) > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) ) & " " & FORMAT ( ABS ( DIVIDE ( [v] - [p], [p] ) ), "0.0%" ) & "</span>" ) & "</div>",
+			        "", [o], ASC
+			    )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 230)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;margin-bottom:5rem;letter-spacing:.5rem}"
+			        & ".r{display:grid;grid-template-columns:1fr 64rem 32rem 62rem;gap:6rem;align-items:center;padding:3.5rem 0;border-top:1px solid #E3E9E6}"
+			        & ".r span{color:#5E6E67;white-space:nowrap}.r i{display:inline-block;width:7rem;height:7rem;border-radius:2rem;margin-right:5rem}"
+			        & ".r b{text-align:right;font-weight:700}.r em{font-style:normal;color:#5E6E67;text-align:right}.r.t span{color:#14231D;font-weight:700}"
+			        & ".c{font-weight:700;font-size:9.5rem;padding:1rem 5rem;border-radius:4rem;text-align:center;white-space:nowrap}.vs{color:#5E6E67;font-size:9rem;margin-top:5rem}</style>"
+			        & "<div class='w'><div class='m'>" & UPPER ( FORMAT ( _m, "mmmm yyyy" ) ) & " · " & UPPER ( [Area_label] ) & "</div>" & _rows
+			        & "<div class='r t'><span>Gross allocation</span><b>" & SWITCH ( TRUE (), ABS ( _g ) >= 1e12, _sym & FORMAT ( _g / 1e12, "0.00" ) & "tn", ABS ( _g ) >= 1e9, _sym & FORMAT ( _g / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _g / 1e6, "0.0" ) & "m" ) & "</b><em>100%</em>" & SWITCH ( TRUE (), _gp = 0 && _g = 0, "<span class='c' style='color:#5E6E67;background:#EDF2EF'>" & "–" & "</span>", _gp = 0, "<span class='c' style='color:#5E6E67;background:#EDF2EF'>" & "Resumed" & "</span>", _g = 0, "<span class='c' style='color:#5E6E67;background:#EDF2EF'>" & "Not paid" & "</span>", "<span class='c' style='color:" & IF ( ROUND ( DIVIDE ( _g - _gp, _gp ), 4 ) = 0, "#C98A00", IF ( DIVIDE ( _g - _gp, _gp ) > 0, "#0E8A5F", "#C93C3C" ) ) & ";background:" & IF ( ROUND ( DIVIDE ( _g - _gp, _gp ), 4 ) = 0, "#FBF1DC", IF ( DIVIDE ( _g - _gp, _gp ) > 0, "#E3F4EC", "#FBE7E7" ) ) & "'>" & IF ( ROUND ( DIVIDE ( _g - _gp, _gp ), 4 ) = 0, UNICHAR ( 9632 ), IF ( DIVIDE ( _g - _gp, _gp ) > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) ) & " " & FORMAT ( ABS ( DIVIDE ( _g - _gp, _gp ) ), "0.0%" ) & "</span>" ) & "</div>"
+			        & "<div class='vs'>Change vs " & FORMAT ( _pm, "mmm yyyy" ) & "</div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Oil_share_of_total =
+			-- A state's share of all oil derivation paid this period
+			DIVIDE ( [Oil_Derivation], CALCULATE ( [Oil_Derivation], REMOVEFILTERS ( dim_state ) ) )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 02 Rates & Averages\Shares
+
+	measure Metric_share_svg =
+			-- Share-of-gross bar for the revenue lines table (an image in a native table keeps its tooltip).
+			-- Colours as rgb(): Power BI drew %23-encoded hex colours as black
+			VAR _sh = DIVIDE ( [Metric_value_curr], [Gross_curr] )
+			VAR _w = FORMAT ( MIN ( MAX ( _sh, 0 ), 1 ) * 60, "0.0" )
+			RETURN
+			    IF ( ISBLANK ( [Metric_value_curr] ), BLANK (),
+			        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='14'>"
+			            & "<rect x='0' y='4' width='60' height='7' rx='2' fill='rgb(237,242,239)'/><rect x='0' y='4' width='" & _w & "' height='7' rx='2' fill='rgb(14,107,69)'/>"
+			            & "<text x='66' y='11' font-family='Segoe UI' font-size='10' fill='rgb(20,35,29)'>" & FORMAT ( _sh, "0%" ) & "</text></svg>" )
+		displayFolder: 05 Visual Helpers\SVG
+		dataCategory: ImageUrl
+
+	measure Revenue_insight_html =
+			-- Key takeaway banner for Revenue mix: the biggest line, the line that moved most, the leading oil state
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _up = "<span class='up'>"
+			VAR _dn = "<span class='dn'>"
+			VAR _hl = "<span class='hl'>"
+			VAR _e = "</span>"
+			VAR _g = [Gross_curr]
+			VAR _t = UNION (
+			        ROW ( "n", "Statutory allocation", "c", CALCULATE ( [Statutory], 'Period Calc'[Name] = "Current" ), "p", CALCULATE ( [Statutory], 'Period Calc'[Name] = "Previous" ) ),
+			        ROW ( "n", "VAT", "c", CALCULATE ( [VAT], 'Period Calc'[Name] = "Current" ), "p", CALCULATE ( [VAT], 'Period Calc'[Name] = "Previous" ) ),
+			        ROW ( "n", "Oil derivation", "c", CALCULATE ( [Oil_Derivation], 'Period Calc'[Name] = "Current" ), "p", CALCULATE ( [Oil_Derivation], 'Period Calc'[Name] = "Previous" ) ),
+			        ROW ( "n", "Exchange gain", "c", CALCULATE ( [Exchange_Gain], 'Period Calc'[Name] = "Current" ), "p", CALCULATE ( [Exchange_Gain], 'Period Calc'[Name] = "Previous" ) ),
+			        ROW ( "n", "Ecology fund", "c", CALCULATE ( [Ecology], 'Period Calc'[Name] = "Current" ), "p", CALCULATE ( [Ecology], 'Period Calc'[Name] = "Previous" ) ),
+			        ROW ( "n", "Other income", "c", CALCULATE ( [Others_Income], 'Period Calc'[Name] = "Current" ), "p", CALCULATE ( [Others_Income], 'Period Calc'[Name] = "Previous" ) )
+			    )
+			VAR _big = TOPN ( 1, _t, [c], DESC )
+			-- Fastest mover: biggest change among lines paid in both periods
+			VAR _mv = TOPN ( 1, FILTER ( ADDCOLUMNS ( _t, "@ch", DIVIDE ( [c] - [p], [p] ) ), [p] > 0 && [c] > 0 ), ABS ( [@ch] ), DESC )
+			VAR _mvCh = MAXX ( _mv, [@ch] )
+			VAR _oilTot = CALCULATE ( [Oil_Derivation], 'Period Calc'[Name] = "Current" )
+			VAR _oilTop = TOPN ( 1, FILTER ( ADDCOLUMNS ( VALUES ( dim_state[state] ), "@o", CALCULATE ( [Oil_Derivation], 'Period Calc'[Name] = "Current" ) ), [@o] > 0 ), [@o], DESC )
+			VAR _msg =
+			    MAXX ( _big, [n] ) & " made up " & _hl & FORMAT ( DIVIDE ( MAXX ( _big, [c] ), _g ), "0%" ) & _e & " of the " & SWITCH ( TRUE (), ABS ( _g ) >= 1e12, _sym & FORMAT ( _g / 1e12, "0.00" ) & "tn", ABS ( _g ) >= 1e9, _sym & FORMAT ( _g / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _g / 1e6, "0.0" ) & "m" ) & " gross in " & [Period_label] & ". "
+			        & IF ( COUNTROWS ( _mv ) = 1,
+			            MAXX ( _mv, [n] ) & " moved most, " & IF ( _mvCh >= 0, _up & UNICHAR ( 9650 ), _dn & UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _mvCh ), "0.0%" ) & _e & " " & [Periodic_text]
+			                & IF ( COUNTROWS ( _oilTop ) = 1, ", and ", "." ),
+			            "" )
+			        & IF ( COUNTROWS ( _oilTop ) = 1,
+			            MAXX ( _oilTop, dim_state[state] ) & " took " & _hl & FORMAT ( DIVIDE ( MAXX ( _oilTop, [@o] ), _oilTot ), "0%" ) & _e & " of oil derivation.",
+			            "" )
+			RETURN
+			    [Banner_css]
+			        & "<div class='b'><div class='ic'><svg viewBox='0 0 16 16' style='width:16rem;height:16rem'><path d='M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z' fill='#E2B53E'/></svg></div>"
+			        & "<div class='k'>KEY TAKEAWAY<br>" & UPPER ( [Period_label] ) & "</div><div class='t'>" & _msg & "</div></div>"
+		displayFolder: 06 Titles & Labels\Insights
+
+	measure Metric_value_curr_text =
+			-- Short money text for tables, this period: ₦794.0bn rather than ₦793,977,220,247
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _v = [Metric_value_curr]
+			RETURN SWITCH ( TRUE (), ISBLANK ( _v ), BLANK (), ABS ( _v ) >= 1e12, _sym & FORMAT ( _v / 1e12, "0.00" ) & "tn", ABS ( _v ) >= 1e9, _sym & FORMAT ( _v / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _v / 1e6, "0.0" ) & "m" )
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Metric_value_prev_text =
+			-- Short money text for tables, previous period: ₦794.0bn rather than ₦793,977,220,247
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _v = [Metric_value_prev]
+			RETURN SWITCH ( TRUE (), ISBLANK ( _v ), BLANK (), ABS ( _v ) >= 1e12, _sym & FORMAT ( _v / 1e12, "0.00" ) & "tn", ABS ( _v ) >= 1e9, _sym & FORMAT ( _v / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _v / 1e6, "0.0" ) & "m" )
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Metric_change_short =
+			-- e.g. "▲ 5.4%"; the colour comes from Metric_value_colour
+			VAR _c = [Metric_value_PnP]
+			RETURN IF ( ISBLANK ( _c ), BLANK (), SWITCH ( TRUE (), ROUND ( _c, 4 ) = 0, UNICHAR ( 9632 ), _c > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _c ), "0.0%" ) )
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Oil_state_tt_html =
+			-- Tooltip card for the oil derivation bars: state, zone, amount and share of all oil derivation
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _v = [Oil_Derivation]
+			VAR _z = SELECTEDVALUE ( dim_state[zone] )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 112)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{display:flex;align-items:center;gap:5rem;color:#5E6E67;font-size:9.5rem;margin:3rem 0 6rem}"
+			        & ".sub i{display:inline-block;width:8rem;height:8rem;border-radius:2rem}.def{color:#5E6E67;font-size:9.5rem;line-height:1.4;margin:4rem 0 7rem}"
+			        & ".r{display:flex;justify-content:space-between;align-items:center;gap:12rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span{color:#5E6E67}.r b{font-weight:700}"
+			        & ".c{font-weight:700;font-size:10rem;padding:1rem 6rem;border-radius:4rem}</style>"
+			        & "<div class='w'><div class='m'>" & UPPER ( SELECTEDVALUE ( dim_state[state] ) ) & "</div>"
+			        & "<div class='sub'><i style='background:" & [Zone_colour] & "'></i>" & _z & "</div>"
+			        & "<div class='r'><span>Oil derivation</span><b>" & SWITCH ( TRUE (), ISBLANK ( _v ), "₦0", ABS ( _v ) >= 1e12, _sym & FORMAT ( _v / 1e12, "0.00" ) & "tn", ABS ( _v ) >= 1e9, _sym & FORMAT ( _v / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _v / 1e6, "0.0" ) & "m" ) & "</b></div>"
+			        & "<div class='r'><span>Share of all oil derivation</span><b>" & FORMAT ( [Oil_share_of_total], "0.0%" ) & "</b></div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Metric_tt_html =
+			-- Metric Detail tooltip card (revenue and deduction tables): name, definition, this period vs the previous one.
+			-- Zero periods get a word instead of a %: some lines are only paid in some months
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _cur = [Metric_value_curr]
+			VAR _prev = [Metric_value_prev]
+			VAR _col = [Metric_value_colour]
+			VAR _c = [Metric_value_PnP]
+			VAR _word = "<span class='c' style='color:#5E6E67;background:#EDF2EF'>"
+			VAR _chip =
+			    SWITCH ( TRUE (),
+			        ( ISBLANK ( _prev ) || _prev = 0 ) && ( ISBLANK ( _cur ) || _cur = 0 ), _word & "–</span>",
+			        ISBLANK ( _prev ) || _prev = 0, _word & "Resumed</span>",
+			        ISBLANK ( _cur ) || _cur = 0, _word & "Not paid</span>",
+			        "<span class='c' style='color:" & _col & ";background:" & SWITCH ( _col, "#0E8A5F", "#E3F4EC", "#C93C3C", "#FBE7E7", "#FBF1DC" ) & "'>"
+			            & SWITCH ( TRUE (), ROUND ( _c, 4 ) = 0, UNICHAR ( 9632 ), _c > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _c ), "0.0%" ) & "</span>" )
+			VAR _prevLabel = SUBSTITUTE ( [Periodic_text], "vs ", "" )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 176)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{display:flex;align-items:center;gap:5rem;color:#5E6E67;font-size:9.5rem;margin:3rem 0 6rem}"
+			        & ".sub i{display:inline-block;width:8rem;height:8rem;border-radius:2rem}.def{color:#5E6E67;font-size:9.5rem;line-height:1.4;margin:4rem 0 7rem}"
+			        & ".r{display:flex;justify-content:space-between;align-items:center;gap:12rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span{color:#5E6E67}.r b{font-weight:700}"
+			        & ".c{font-weight:700;font-size:10rem;padding:1rem 6rem;border-radius:4rem}</style>"
+			        & "<div class='w'><div class='m'>" & UPPER ( SELECTEDVALUE ( Metric_param[Metric_label] ) ) & IF ( [Area_label] <> "All states", " · " & UPPER ( [Area_label] ), "" ) & "</div>"
+			        & "<div class='def'>" & [Metric_definition] & "</div>"
+			        & "<div class='r'><span>" & [Period_label] & "</span><b>" & SWITCH ( TRUE (), ISBLANK ( _cur ), "₦0", ABS ( _cur ) >= 1e12, _sym & FORMAT ( _cur / 1e12, "0.00" ) & "tn", ABS ( _cur ) >= 1e9, _sym & FORMAT ( _cur / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _cur / 1e6, "0.0" ) & "m" ) & "</b></div>"
+			        & "<div class='r'><span>" & _prevLabel & "</span><b>" & SWITCH ( TRUE (), ISBLANK ( _prev ), "₦0", ABS ( _prev ) >= 1e12, _sym & FORMAT ( _prev / 1e12, "0.00" ) & "tn", ABS ( _prev ) >= 1e9, _sym & FORMAT ( _prev / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _prev / 1e6, "0.0" ) & "m" ) & "</b></div>"
+			        & "<div class='r'><span>Change</span>" & _chip & "</div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
 
 	column Value
 		dataType: int64

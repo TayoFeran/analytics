@@ -164,20 +164,20 @@ LAYOUT = {
         "title": "Revenue mix",
         "filters": STANDARD_FILTERS,
         "seps": FILTER_SEPARATORS,
+        # Look-and-feel upgrade (2026-11-05): shorter cards leave room for the insight banner
         "cards": [
-            (216, 128, 1256, 440, None, "card"),
-            (216, 456, 728, 696, None, "card"),
-            (744, 456, 1256, 696, None, "card"),
+            (216, 124, 1256, 392, None, "card"),
+            (216, 404, 728, 640, None, "card"),
+            (744, 404, 1256, 640, None, "card"),
         ],
         "visuals": [
-            ("Slicers: Period, Zone, State, Currency", (284, 78, 1244, 106)),
-            ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("Stacked area: revenue lines over time", (226, 138, 1246, 430)),
-            ("Bar chart: oil derivation by state", (226, 466, 718, 686)),
-            (
-                "Matrix: revenue lines, current vs previous (metric field parameter)",
-                (754, 466, 1246, 686),
-            ),
+            ("Slicers: Period, Dates (From, To), Zone, State, Currency", (278, 78, 1244, 106)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
+            ("Stacked area: revenue lines over time (TT - Revenue Month)", (226, 134, 1246, 382)),
+            ("Bar chart: oil derivation by state, coloured by zone", (226, 414, 718, 594)),
+            ("HTML: zone legend", (234, 610, 710, 630)),
+            ("Table: revenue lines, this vs previous period, share bars", (754, 414, 1246, 630)),
+            ("HTML: insight banner", (216, 654, 1256, 704)),
         ],
     },
     "deductions": {

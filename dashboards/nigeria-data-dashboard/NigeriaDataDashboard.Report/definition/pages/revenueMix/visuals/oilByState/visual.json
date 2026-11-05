@@ -3,9 +3,9 @@
   "name": "oilByState",
   "position": {
     "x": 226,
-    "y": 466,
+    "y": 414,
     "z": 1800,
-    "height": 220,
+    "height": 180,
     "width": 492,
     "tabOrder": 1800
   },
@@ -46,7 +46,8 @@
                 }
               },
               "queryRef": "dim_state.state",
-              "nativeQueryRef": "state"
+              "nativeQueryRef": "state",
+              "displayName": "State"
             }
           ]
         },
@@ -60,11 +61,27 @@
                       "Entity": "Dax"
                     }
                   },
-                  "Property": "Oil_Derivation_share"
+                  "Property": "Zone_name"
                 }
               },
-              "queryRef": "Dax.Oil_Derivation_share",
-              "nativeQueryRef": "Oil_Derivation_share"
+              "queryRef": "Dax.Zone_name",
+              "nativeQueryRef": "Zone_name",
+              "displayName": "Zone"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dax"
+                    }
+                  },
+                  "Property": "Oil_share_of_total"
+                }
+              },
+              "queryRef": "Dax.Oil_share_of_total",
+              "nativeQueryRef": "Oil_share_of_total",
+              "displayName": "Share of all oil derivation"
             }
           ]
         }
@@ -254,27 +271,17 @@
       "dataPoint": [
         {
           "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#E2B53E'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        {
-          "properties": {
             "fill": {
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#E2B53E'"
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Dax"
+                        }
+                      },
+                      "Property": "Zone_colour"
                     }
                   }
                 }
@@ -282,7 +289,13 @@
             }
           },
           "selector": {
-            "metadata": "Dax.Oil_Derivation"
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ]
           }
         }
       ]
@@ -397,6 +410,33 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualTooltip": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "type": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Canvas'"
+                }
+              }
+            },
+            "section": {
+              "expr": {
+                "Literal": {
+                  "Value": "'ttOilState'"
                 }
               }
             }
