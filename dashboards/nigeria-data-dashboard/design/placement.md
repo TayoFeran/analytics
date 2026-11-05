@@ -26,12 +26,12 @@ at these y positions:
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicer: Period (field parameter, tiles) | 278 | 78 | 240 | 28 |
-| Slicer: Date range From (dropdown) | 576 | 78 | 106 | 28 |
-| Slicer: Date range To (dropdown) | 694 | 78 | 106 | 28 |
-| Slicer: Zone (dropdown) | 850 | 78 | 72 | 28 |
-| Slicer: State (dropdown) | 974 | 78 | 86 | 28 |
-| Slicer: Currency ₦/$ (tiles) | 1146 | 78 | 98 | 28 |
+| Slicer: Period (field parameter, tiles) | 278 | 78 | 226 | 28 |
+| Slicer: Date range From (dropdown) | 562 | 78 | 86 | 28 |
+| Slicer: Date range To (dropdown) | 656 | 78 | 86 | 28 |
+| Slicer: Zone (dropdown) | 792 | 78 | 154 | 28 |
+| Slicer: State (dropdown) | 998 | 78 | 112 | 28 |
+| Slicer: Currency ₦/$ (dropdown) | 1192 | 78 | 52 | 28 |
 | HTML: freshness strip | 716 | 8 | 540 | 60 |
 | HTML: flip cards Gross, Deductions, Net, Exchange rate | 216 | 124 | 1040 | 96 |
 | Line chart: gross vs net, last 24 months (TT - Overview Month) | 226 | 242 | 540 | 388 |
@@ -43,11 +43,12 @@ at these y positions:
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicers: Period, Zone, State, Currency | 284 | 78 | 960 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Shape map: net received by state (TT - State Detail tooltip) | 226 | 138 | 524 | 356 |
-| Bar chart: all 36 states ranked by net (scrolls) | 786 | 138 | 460 | 548 |
-| Card row: selected state gross, deductions, net, share of national | 226 | 530 | 524 | 156 |
+| Slicers: Period, Dates (From, To), Zone, State, Currency | 278 | 78 | 966 | 28 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| Shape map: net received by state (TT - State Detail, HTML card) | 226 | 134 | 520 | 496 |
+| Bar chart: Zone > State drill, coloured by zone, labels | 782 | 134 | 464 | 470 |
+| HTML: zone legend | 790 | 610 | 450 | 20 |
+| HTML: insight banner | 216 | 654 | 1040 | 50 |
 
 ## Revenue mix (`bg_faac_revenue_mix.png`)
 

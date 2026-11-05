@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "slicerCurrency",
   "position": {
-    "x": 1146,
+    "x": 1192,
     "y": 78,
     "z": 1600,
     "height": 28,
-    "width": 98,
+    "width": 52,
     "tabOrder": 1600
   },
   "visual": {
@@ -41,7 +41,7 @@
             "mode": {
               "expr": {
                 "Literal": {
-                  "Value": "'Basic'"
+                  "Value": "'Dropdown'"
                 }
               }
             }
@@ -112,13 +112,6 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
-                }
-              }
-            },
-            "orientation": {
-              "expr": {
-                "Literal": {
-                  "Value": "1D"
                 }
               }
             }

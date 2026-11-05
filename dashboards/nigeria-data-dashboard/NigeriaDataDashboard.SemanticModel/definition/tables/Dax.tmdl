@@ -2374,6 +2374,100 @@ table Dax
 			)
 		displayFolder: 05 Visual Helpers\Colours
 
+	measure Zone_name =
+			-- The hovered state's zone, for default tooltips
+			SELECTEDVALUE ( dim_state[zone] )
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Zone_legend_html =
+			-- Legend for charts coloured by zone (rule-based colours have no native legend)
+			VAR _z = { ( "North Central", "#2E9B72", 1 ), ( "North East", "#D9A21B", 2 ), ( "North West", "#3A6EA5", 3 ),
+			    ( "South East", "#8E5BB5", 4 ), ( "South South", "#C8693A", 5 ), ( "South West", "#0B3D2E", 6 ) }
+			RETURN
+			    "<style>html{font-size:calc(100vh / 20)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".l{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;align-items:center;gap:2rem 12rem;"
+			        & "font-family:Segoe UI,sans-serif;font-size:9rem;color:#5E6E67}.l i{display:inline-block;width:8rem;height:8rem;border-radius:2rem;margin-right:4rem}</style>"
+			        & "<div class='l'>" & CONCATENATEX ( _z, "<span><i style='background:" & [Value2] & "'></i>" & [Value1] & "</span>", "", [Value3], ASC ) & "</div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure State_tt_html =
+			-- State Detail tooltip (map): rank, share, and gross / deductions / net with change on the previous period
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _st = SELECTEDVALUE ( dim_state[state] )
+			VAR _net = [Net_curr]
+			VAR _rank = CALCULATE ( RANKX ( VALUES ( dim_state[state] ), [Net_curr], _net, DESC ), REMOVEFILTERS ( dim_state ) )
+			VAR _n = CALCULATE ( COUNTROWS ( FILTER ( VALUES ( dim_state[state] ), NOT ISBLANK ( [Net_curr] ) ) ), REMOVEFILTERS ( dim_state ) )
+			VAR _g = [Gross_curr]
+			VAR _d = [Deductions_curr]
+			VAR _gc = [Gross_PnP]
+			VAR _dc = [Deductions_PnP]
+			VAR _nc = [Net_PnP]
+			RETURN
+			    IF ( ISBLANK ( _net ),
+			        "<div style='font-family:Segoe UI;padding:12px;font-size:12px'>" & COALESCE ( _st, "FCT" ) & ": not in the FAAC reports</div>",
+			        "<style>html{font-size:calc(100vh / 150)}html,body{margin:0;padding:0;overflow:hidden}"
+			            & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:11rem 13rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff}"
+			            & ".m{font-weight:700;font-size:12.5rem;letter-spacing:.6rem}.rk{display:inline-block;font-weight:700;color:#0B3D2E;background:#EDF2EF;border-radius:5rem;padding:1rem 6rem;margin-left:6rem;letter-spacing:0;font-size:10.5rem}"
+			            & ".sub{color:#5E6E67;font-size:9.5rem;margin:3rem 0 7rem}"
+			            & ".r{display:flex;align-items:center;gap:8rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span:first-child{color:#5E6E67;flex:1}.r b{font-weight:700;min-width:62rem;text-align:right}"
+			            & ".c{font-weight:700;font-size:10rem;padding:1rem 6rem;border-radius:4rem;min-width:52rem;text-align:center}.vs{color:#5E6E67;font-size:9rem;margin-top:5rem}</style>"
+			            & "<div class='w'><div class='m'>" & UPPER ( _st ) & "<span class='rk'>Rank " & _rank & " of " & _n & "</span></div>"
+			            & "<div class='sub'>" & [Period_label] & " · " & FORMAT ( [Net_share_national], "0.0%" ) & " of the national net</div>"
+			            & "<div class='r'><span>Income (gross)</span><b>" & SWITCH ( TRUE (), ABS ( _g ) >= 1e12, _sym & FORMAT ( _g / 1e12, "0.00" ) & "tn", ABS ( _g ) >= 1e9, _sym & FORMAT ( _g / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _g / 1e6, "0.0" ) & "m" ) & "</b>" & IF ( ISBLANK ( _gc ), "<span class='c' style='color:#5E6E67;background:#EDF2EF'>n/a</span>", "<span class='c' style='color:" & IF ( ROUND ( _gc, 4 ) = 0, "#C98A00", IF ( _gc > 0, "#0E8A5F", "#C93C3C" ) ) & ";background:" & IF ( ROUND ( _gc, 4 ) = 0, "#FBF1DC", IF ( _gc > 0, "#E3F4EC", "#FBE7E7" ) ) & "'>" & IF ( ROUND ( _gc, 4 ) = 0, UNICHAR ( 9632 ), IF ( _gc > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) ) & " " & FORMAT ( ABS ( _gc ), "0.0%" ) & "</span>" ) & "</div>"
+			            & "<div class='r'><span>Deductions</span><b>" & SWITCH ( TRUE (), ABS ( _d ) >= 1e12, _sym & FORMAT ( _d / 1e12, "0.00" ) & "tn", ABS ( _d ) >= 1e9, _sym & FORMAT ( _d / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _d / 1e6, "0.0" ) & "m" ) & "</b>" & IF ( ISBLANK ( _dc ), "<span class='c' style='color:#5E6E67;background:#EDF2EF'>n/a</span>", "<span class='c' style='color:" & IF ( ROUND ( _dc, 4 ) = 0, "#C98A00", IF ( _dc < 0, "#0E8A5F", "#C93C3C" ) ) & ";background:" & IF ( ROUND ( _dc, 4 ) = 0, "#FBF1DC", IF ( _dc < 0, "#E3F4EC", "#FBE7E7" ) ) & "'>" & IF ( ROUND ( _dc, 4 ) = 0, UNICHAR ( 9632 ), IF ( _dc > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) ) & " " & FORMAT ( ABS ( _dc ), "0.0%" ) & "</span>" ) & "</div>"
+			            & "<div class='r'><span>Net received</span><b>" & SWITCH ( TRUE (), ABS ( _net ) >= 1e12, _sym & FORMAT ( _net / 1e12, "0.00" ) & "tn", ABS ( _net ) >= 1e9, _sym & FORMAT ( _net / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _net / 1e6, "0.0" ) & "m" ) & "</b>" & IF ( ISBLANK ( _nc ), "<span class='c' style='color:#5E6E67;background:#EDF2EF'>n/a</span>", "<span class='c' style='color:" & IF ( ROUND ( _nc, 4 ) = 0, "#C98A00", IF ( _nc > 0, "#0E8A5F", "#C93C3C" ) ) & ";background:" & IF ( ROUND ( _nc, 4 ) = 0, "#FBF1DC", IF ( _nc > 0, "#E3F4EC", "#FBE7E7" ) ) & "'>" & IF ( ROUND ( _nc, 4 ) = 0, UNICHAR ( 9632 ), IF ( _nc > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) ) & " " & FORMAT ( ABS ( _nc ), "0.0%" ) & "</span>" ) & "</div>"
+			            & "<div class='vs'>Change " & [Periodic_text] & " · deductions up = red</div></div>"
+			    )
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Banner_css =
+			-- Shared styles for the insight banners (design height 50)
+			"<style>html{font-size:calc(100vh / 50)}html,body{margin:0;padding:0;overflow:hidden}"
+			    & ".b{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14rem;padding:0 18rem;border-radius:12rem;box-sizing:border-box;"
+			    & "background:linear-gradient(90deg,#0B3D2E 0%,#145A43 70%,#1D6B51 100%);color:#fff;font-family:Segoe UI,sans-serif}"
+			    & ".ic{width:28rem;height:28rem;border-radius:8rem;background:rgba(226,181,62,.18);display:flex;align-items:center;justify-content:center;flex:none}"
+			    & ".k{font-size:8.5rem;letter-spacing:2rem;color:#E2B53E;font-weight:600;white-space:nowrap}"
+			    & ".t{font-size:12rem;line-height:1.35}.up{color:#6EE0AE;font-weight:700}.dn{color:#FF9A9A;font-weight:700}.hl{color:#E2B53E;font-weight:700}</style>"
+		displayFolder: 06 Titles & Labels\Insights
+
+	measure State_insight_html =
+			-- Key takeaway banner for FAAC States: one state (map click or State slicer) or the states in view
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _up = "<span class='up'>"
+			VAR _dn = "<span class='dn'>"
+			VAR _hl = "<span class='hl'>"
+			VAR _e = "</span>"
+			VAR _one = HASONEVALUE ( dim_state[state] )
+			VAR _net = [Net_curr]
+			VAR _chg = [Net_PnP]
+			VAR _chgTxt =
+			    IF ( ISBLANK ( _chg ), "",
+			        ", " & IF ( _chg >= 0, _up & UNICHAR ( 9650 ), _dn & UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & _e & " " & [Periodic_text] )
+			-- One state: rank, and its deductions share against all states
+			VAR _rank = CALCULATE ( RANKX ( VALUES ( dim_state[state] ), [Net_curr], _net, DESC ), REMOVEFILTERS ( dim_state ) )
+			VAR _share = DIVIDE ( [Deductions_curr], [Gross_curr] )
+			VAR _natShare = CALCULATE ( DIVIDE ( [Deductions_curr], [Gross_curr] ), REMOVEFILTERS ( dim_state ) )
+			VAR _oneMsg =
+			    SELECTEDVALUE ( dim_state[state] ) & " received " & _hl & SWITCH ( TRUE (), ABS ( _net ) >= 1e12, _sym & FORMAT ( _net / 1e12, "0.00" ) & "tn", ABS ( _net ) >= 1e9, _sym & FORMAT ( _net / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _net / 1e6, "0.0" ) & "m" ) & _e & " net in " & [Period_label] & _chgTxt
+			        & ", ranking " & _hl & _rank & " of 36" & _e & ". Deductions took " & IF ( _share <= _natShare, _up, _dn ) & FORMAT ( _share, "0.0%" ) & _e
+			        & " of its gross, " & IF ( _share <= _natShare, "below", "above" ) & " the " & FORMAT ( _natShare, "0.0%" ) & " for all states."
+			-- Several states: the total, the leader and the smallest share
+			VAR _st = FILTER ( ADDCOLUMNS ( VALUES ( dim_state[state] ), "@v", [Net_curr] ), NOT ISBLANK ( [@v] ) )
+			VAR _cnt = COUNTROWS ( _st )
+			VAR _top = TOPN ( 1, _st, [@v], DESC )
+			VAR _bot = TOPN ( 1, _st, [@v], ASC )
+			VAR _nat = CALCULATE ( [Net_curr], REMOVEFILTERS ( dim_state ) )
+			VAR _who = IF ( [Area_label] = "All states", "The " & _cnt & " states", "The " & _cnt & " " & [Area_label] & " states" )
+			VAR _manyMsg =
+			    _who & " received " & _hl & SWITCH ( TRUE (), ABS ( _net ) >= 1e12, _sym & FORMAT ( _net / 1e12, "0.00" ) & "tn", ABS ( _net ) >= 1e9, _sym & FORMAT ( _net / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _net / 1e6, "0.0" ) & "m" ) & _e & " net in " & [Period_label] & _chgTxt & ". "
+			        & MAXX ( _top, dim_state[state] ) & " led with " & _hl & FORMAT ( DIVIDE ( MAXX ( _top, [@v] ), _nat ), "0.0%" ) & _e & " of the national net; "
+			        & MAXX ( _bot, dim_state[state] ) & " had the smallest share at " & _hl & FORMAT ( DIVIDE ( MAXX ( _bot, [@v] ), _nat ), "0.0%" ) & _e & "."
+			RETURN
+			    [Banner_css]
+			        & "<div class='b'><div class='ic'><svg viewBox='0 0 16 16' style='width:16rem;height:16rem'><path d='M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z' fill='#E2B53E'/></svg></div>"
+			        & "<div class='k'>KEY TAKEAWAY<br>" & UPPER ( [Period_label] ) & "</div><div class='t'>" & IF ( _one, _oneMsg, _manyMsg ) & "</div></div>"
+		displayFolder: 06 Titles & Labels\Insights
+
 	column Value
 		dataType: int64
 		isHidden

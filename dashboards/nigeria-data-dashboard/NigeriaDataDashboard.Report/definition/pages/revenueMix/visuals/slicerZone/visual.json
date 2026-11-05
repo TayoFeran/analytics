@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "slicerZone",
   "position": {
-    "x": 850,
+    "x": 792,
     "y": 78,
     "z": 1400,
     "height": 28,
-    "width": 72,
+    "width": 154,
     "tabOrder": 1400
   },
   "visual": {

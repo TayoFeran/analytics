@@ -3,10 +3,10 @@
   "name": "stateMap",
   "position": {
     "x": 226,
-    "y": 138,
+    "y": 134,
     "z": 1700,
-    "height": 356,
-    "width": 524,
+    "height": 496,
+    "width": 520,
     "tabOrder": 1700
   },
   "visual": {

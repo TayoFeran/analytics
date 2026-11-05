@@ -66,13 +66,13 @@ NAV_H = 28
 STANDARD_FILTERS = [
     # (label, label x, slicer box). DATES (From / To months) added 2026-11-05:
     # the To month is the latest month for every measure.
-    ("PERIOD", 234, (278, 78, 518, 106)),
-    ("DATES", 534, (576, 78, 800, 106)),
-    ("ZONE", 816, (850, 78, 922, 106)),
-    ("STATE", 938, (974, 78, 1060, 106)),
-    ("CURRENCY", 1076, (1146, 78, 1244, 106)),
+    ("PERIOD", 234, (278, 78, 504, 106)),
+    ("DATES", 520, (562, 78, 742, 106)),
+    ("ZONE", 758, (792, 78, 946, 106)),
+    ("STATE", 962, (998, 78, 1110, 106)),
+    ("CURRENCY", 1126, (1192, 78, 1244, 106)),
 ]
-FILTER_SEPARATORS = [526, 808, 930, 1068]
+FILTER_SEPARATORS = [512, 750, 954, 1118]
 
 # Economy pages: a years range slicer and a president dropdown. No currency switch: each
 # chart's title says which currency it shows.
@@ -121,12 +121,12 @@ LAYOUT = {
             (792, 472, 1256, 640, None, "card"),
         ],
         "visuals": [
-            ("Slicer: Period (field parameter, tiles)", (278, 78, 518, 106)),
-            ("Slicer: Date range From (dropdown)", (576, 78, 682, 106)),
-            ("Slicer: Date range To (dropdown)", (694, 78, 800, 106)),
-            ("Slicer: Zone (dropdown)", (850, 78, 922, 106)),
-            ("Slicer: State (dropdown)", (974, 78, 1060, 106)),
-            ("Slicer: Currency ₦/$ (tiles)", (1146, 78, 1244, 106)),
+            ("Slicer: Period (field parameter, tiles)", (278, 78, 504, 106)),
+            ("Slicer: Date range From (dropdown)", (562, 78, 648, 106)),
+            ("Slicer: Date range To (dropdown)", (656, 78, 742, 106)),
+            ("Slicer: Zone (dropdown)", (792, 78, 946, 106)),
+            ("Slicer: State (dropdown)", (998, 78, 1110, 106)),
+            ("Slicer: Currency ₦/$ (dropdown)", (1192, 78, 1244, 106)),
             ("HTML: freshness strip", (716, 8, 1256, 68)),
             ("HTML: flip cards Gross, Deductions, Net, Exchange rate", (216, 124, 1256, 220)),
             (
@@ -142,20 +142,22 @@ LAYOUT = {
         "title": "States",
         "filters": STANDARD_FILTERS,
         "seps": FILTER_SEPARATORS,
+        # Look-and-feel upgrade (2026-11-05): no card row; the map fills the left column and the
+        # insight banner (an HTML visual) sits below both cards
         "cards": [
-            (216, 128, 760, 504, None, "card"),
-            (776, 128, 1256, 696, None, "card"),
-            (216, 520, 760, 696, None, "card"),
+            (216, 124, 756, 640, None, "card"),
+            (772, 124, 1256, 640, None, "card"),
         ],
         "visuals": [
-            ("Slicers: Period, Zone, State, Currency", (284, 78, 1244, 106)),
-            ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("Shape map: net received by state (TT - State Detail tooltip)", (226, 138, 750, 494)),
-            ("Bar chart: all 36 states ranked by net (scrolls)", (786, 138, 1246, 686)),
+            ("Slicers: Period, Dates (From, To), Zone, State, Currency", (278, 78, 1244, 106)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
             (
-                "Card row: selected state gross, deductions, net, share of national",
-                (226, 530, 750, 686),
+                "Shape map: net received by state (TT - State Detail, HTML card)",
+                (226, 134, 746, 630),
             ),
+            ("Bar chart: Zone > State drill, coloured by zone, labels", (782, 134, 1246, 604)),
+            ("HTML: zone legend", (790, 610, 1240, 630)),
+            ("HTML: insight banner", (216, 654, 1256, 704)),
         ],
     },
     "revenue-mix": {

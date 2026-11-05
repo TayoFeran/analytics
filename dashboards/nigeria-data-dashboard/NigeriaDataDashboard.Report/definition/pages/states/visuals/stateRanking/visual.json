@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "stateRanking",
   "position": {
-    "x": 786,
-    "y": 138,
+    "x": 782,
+    "y": 134,
     "z": 1800,
-    "height": 548,
-    "width": 460,
+    "height": 470,
+    "width": 464,
     "tabOrder": 1800
   },
   "visual": {
@@ -42,11 +42,62 @@
                       "Entity": "dim_state"
                     }
                   },
+                  "Property": "zone"
+                }
+              },
+              "queryRef": "dim_state.zone",
+              "nativeQueryRef": "zone",
+              "displayName": "Zone"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_state"
+                    }
+                  },
                   "Property": "state"
                 }
               },
               "queryRef": "dim_state.state",
-              "nativeQueryRef": "state"
+              "nativeQueryRef": "state",
+              "displayName": "State",
+              "active": true
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dax"
+                    }
+                  },
+                  "Property": "Zone_name"
+                }
+              },
+              "queryRef": "Dax.Zone_name",
+              "nativeQueryRef": "Zone_name",
+              "displayName": "Zone"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dax"
+                    }
+                  },
+                  "Property": "Net_share_national"
+                }
+              },
+              "queryRef": "Dax.Net_share_national",
+              "nativeQueryRef": "Net_share_national",
+              "displayName": "Share of national net"
             }
           ]
         }
@@ -236,27 +287,17 @@
       "dataPoint": [
         {
           "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#0E6B45'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        {
-          "properties": {
             "fill": {
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#0E6B45'"
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Dax"
+                        }
+                      },
+                      "Property": "Zone_colour"
                     }
                   }
                 }
@@ -264,7 +305,13 @@
             }
           },
           "selector": {
-            "metadata": "Dax.Net_curr"
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ]
           }
         }
       ]
@@ -379,33 +426,6 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "visualTooltip": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "type": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Canvas'"
-                }
-              }
-            },
-            "section": {
-              "expr": {
-                "Literal": {
-                  "Value": "'ttStateDetail'"
                 }
               }
             }

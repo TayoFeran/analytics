@@ -3,34 +3,18 @@
   "name": "ttStateDetail",
   "displayName": "TT - State Detail",
   "displayOption": "FitToPage",
-  "height": 240,
-  "width": 320,
+  "height": 150,
+  "width": 300,
   "objects": {
     "background": [
       {
         "properties": {
-          "image": {
-            "image": {
-              "name": {
+          "color": {
+            "solid": {
+              "color": {
                 "expr": {
                   "Literal": {
-                    "Value": "'tt_faac_state_detail.png'"
-                  }
-                }
-              },
-              "url": {
-                "expr": {
-                  "ResourcePackageItem": {
-                    "PackageName": "RegisteredResources",
-                    "PackageType": 1,
-                    "ItemName": "tt_faac_state_detail.png"
-                  }
-                }
-              },
-              "scaling": {
-                "expr": {
-                  "Literal": {
-                    "Value": "'Fit'"
+                    "Value": "'#FFFFFF'"
                   }
                 }
               }
