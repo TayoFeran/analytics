@@ -1,18 +1,36 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "deductionsByType",
+  "name": "deductionLines",
   "position": {
     "x": 226,
-    "y": 138,
+    "y": 134,
     "z": 1700,
-    "height": 292,
-    "width": 630,
+    "height": 242,
+    "width": 604,
     "tabOrder": 1700
   },
   "visual": {
-    "visualType": "columnChart",
+    "visualType": "lineChart",
     "query": {
       "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "calendar_table"
+                    }
+                  },
+                  "Property": "month_date"
+                }
+              },
+              "queryRef": "calendar_table.month_date",
+              "nativeQueryRef": "month_date"
+            }
+          ]
+        },
         "Y": {
           "projections": [
             {
@@ -104,24 +122,6 @@
               "queryRef": "Dax.Other_Deduction",
               "nativeQueryRef": "Other_Deduction",
               "displayName": "Other deductions"
-            }
-          ]
-        },
-        "Category": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "calendar_table"
-                    }
-                  },
-                  "Property": "month_date"
-                }
-              },
-              "queryRef": "calendar_table.month_date",
-              "nativeQueryRef": "month_date"
             }
           ]
         }
@@ -290,6 +290,54 @@
           }
         }
       ],
+      "lineStyles": [
+        {
+          "properties": {
+            "lineChartType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'smooth'"
+                }
+              }
+            },
+            "strokeWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "3D"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "lineStyle": {
+              "expr": {
+                "Literal": {
+                  "Value": "'dashed'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dax.Deduction_Misc"
+          }
+        },
+        {
+          "properties": {
+            "lineStyle": {
+              "expr": {
+                "Literal": {
+                  "Value": "'dashed'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dax.Other_Deduction"
+          }
+        }
+      ],
       "dataPoint": [
         {
           "properties": {
@@ -298,7 +346,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#0E6B45'"
+                      "Value": "'#0B3D2E'"
                     }
                   }
                 }
@@ -316,7 +364,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#8FC9AE'"
+                      "Value": "'#0E8A5F'"
                     }
                   }
                 }
@@ -334,7 +382,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E2B53E'"
+                      "Value": "'#6CC49A'"
                     }
                   }
                 }
@@ -352,7 +400,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#4E9C78'"
+                      "Value": "'#E2B53E'"
                     }
                   }
                 }
@@ -370,7 +418,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#B9D9C9'"
+                      "Value": "'#93A59D'"
                     }
                   }
                 }
@@ -388,7 +436,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#7F8C86'"
+                      "Value": "'#3F7D68'"
                     }
                   }
                 }
@@ -480,7 +528,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Deductions by type, last 24 months'"
+                  "Value": "'Deduction lines over time'"
                 }
               }
             },
@@ -511,60 +559,38 @@
             }
           }
         }
+      ],
+      "visualTooltip": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "type": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Canvas'"
+                }
+              }
+            },
+            "section": {
+              "expr": {
+                "Literal": {
+                  "Value": "'ttDeductionsMonth'"
+                }
+              }
+            }
+          }
+        }
       ]
     }
   },
   "filterConfig": {
     "filters": [
-      {
-        "name": "fLast24",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Dax"
-              }
-            },
-            "Property": "Last_24_month_flag"
-          }
-        },
-        "type": "Advanced",
-        "howCreated": "User",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "t",
-              "Entity": "Dax",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "Comparison": {
-                  "ComparisonKind": 0,
-                  "Left": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Source": "t"
-                        }
-                      },
-                      "Property": "Last_24_month_flag"
-                    }
-                  },
-                  "Right": {
-                    "Literal": {
-                      "Value": "1L"
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        }
-      },
       {
         "name": "fInRange",
         "field": {

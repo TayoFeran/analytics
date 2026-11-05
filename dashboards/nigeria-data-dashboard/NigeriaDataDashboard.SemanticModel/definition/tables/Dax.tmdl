@@ -2385,8 +2385,8 @@ table Dax
 			    ( "South East", "#8E5BB5", 4 ), ( "South South", "#C8693A", 5 ), ( "South West", "#0B3D2E", 6 ) }
 			RETURN
 			    "<style>html{font-size:calc(100vh / 20)}html,body{margin:0;padding:0;overflow:hidden}"
-			        & ".l{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;align-items:center;gap:2rem 12rem;"
-			        & "font-family:Segoe UI,sans-serif;font-size:9rem;color:#5E6E67}.l i{display:inline-block;width:8rem;height:8rem;border-radius:2rem;margin-right:4rem}</style>"
+			        & ".l{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;align-items:center;gap:2rem 9rem;white-space:nowrap;"
+			        & "font-family:Segoe UI,sans-serif;font-size:8.5rem;color:#5E6E67}.l i{display:inline-block;width:7rem;height:7rem;border-radius:2rem;margin-right:3rem}</style>"
 			        & "<div class='l'>" & CONCATENATEX ( _z, "<span><i style='background:" & [Value2] & "'></i>" & [Value1] & "</span>", "", [Value3], ASC ) & "</div>"
 		displayFolder: 05 Visual Helpers\HTML
 
@@ -2628,6 +2628,127 @@ table Dax
 			        & "<div class='r'><span>" & _prevLabel & "</span><b>" & SWITCH ( TRUE (), ISBLANK ( _prev ), "₦0", ABS ( _prev ) >= 1e12, _sym & FORMAT ( _prev / 1e12, "0.00" ) & "tn", ABS ( _prev ) >= 1e9, _sym & FORMAT ( _prev / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _prev / 1e6, "0.0" ) & "m" ) & "</b></div>"
 			        & "<div class='r'><span>Change</span>" & _chip & "</div></div>"
 		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Deductions_month_tt_html =
+			-- Tooltip card for the deduction lines chart: each line in the hovered month, its share of all
+			-- deductions and its change on the month before (a rise is red). Month-aware on purpose (not Period Calc)
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _m = MAX ( calendar_table[month_date] )
+			VAR _pm = EOMONTH ( _m, -1 )
+			VAR _t = UNION (
+			        ROW ( "n", "External debt", "k", "#0B3D2E", "o", 0, "v", CALCULATE ( [External_Debt], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _m ), "p", CALCULATE ( [External_Debt], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _pm ) ),
+			        ROW ( "n", "Contractual (ISPO)", "k", "#0E8A5F", "o", 1, "v", CALCULATE ( [Contractual_Obligation], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _m ), "p", CALCULATE ( [Contractual_Obligation], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _pm ) ),
+			        ROW ( "n", "NDDC / HYPPADEC", "k", "#6CC49A", "o", 2, "v", CALCULATE ( [NDDC_Transfer], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _m ), "p", CALCULATE ( [NDDC_Transfer], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _pm ) ),
+			        ROW ( "n", "Other (see note)", "k", "#E2B53E", "o", 3, "v", CALCULATE ( [Other_Deductions_Note], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _m ), "p", CALCULATE ( [Other_Deductions_Note], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _pm ) ),
+			        ROW ( "n", "Unlabelled", "k", "#93A59D", "o", 4, "v", CALCULATE ( [Deduction_Misc], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _m ), "p", CALCULATE ( [Deduction_Misc], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _pm ) ),
+			        ROW ( "n", "Other deductions", "k", "#3F7D68", "o", 5, "v", CALCULATE ( [Other_Deduction], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _m ), "p", CALCULATE ( [Other_Deduction], REMOVEFILTERS ( calendar_table ), calendar_table[month_date] = _pm ) )
+			    )
+			VAR _d = SUMX ( _t, [v] )
+			VAR _dp = SUMX ( _t, [p] )
+			VAR _rows =
+			    CONCATENATEX (
+			        _t,
+			        "<div class='r'><span><i style='background:" & [k] & "'></i>" & [n] & "</span><b>" & SWITCH ( TRUE (), ISBLANK ( [v] ), _sym & "0", ABS ( [v] ) >= 1e12, _sym & FORMAT ( [v] / 1e12, "0.00" ) & "tn", ABS ( [v] ) >= 1e9, _sym & FORMAT ( [v] / 1e9, "0.0" ) & "bn", _sym & FORMAT ( [v] / 1e6, "0.0" ) & "m" ) & "</b><em>"
+			            & FORMAT ( DIVIDE ( [v], _d ), "0%" ) & "</em>" & SWITCH ( TRUE (), ( ISBLANK ( [p] ) || [p] = 0 ) && ( ISBLANK ( [v] ) || [v] = 0 ), "<span class='c' style='color:#5E6E67;background:#EDF2EF'>–</span>", ISBLANK ( [p] ) || [p] = 0, "<span class='c' style='color:#5E6E67;background:#EDF2EF'>Resumed</span>", ISBLANK ( [v] ) || [v] = 0, "<span class='c' style='color:#5E6E67;background:#EDF2EF'>Not paid</span>", "<span class='c' style='color:" & IF ( ROUND ( DIVIDE ( [v] - [p], [p] ), 4 ) = 0, "#C98A00", IF ( DIVIDE ( [v] - [p], [p] ) > 0, "#C93C3C", "#0E8A5F" ) ) & ";background:" & IF ( ROUND ( DIVIDE ( [v] - [p], [p] ), 4 ) = 0, "#FBF1DC", IF ( DIVIDE ( [v] - [p], [p] ) > 0, "#FBE7E7", "#E3F4EC" ) ) & "'>" & IF ( ROUND ( DIVIDE ( [v] - [p], [p] ), 4 ) = 0, UNICHAR ( 9632 ), IF ( DIVIDE ( [v] - [p], [p] ) > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) ) & " " & FORMAT ( ABS ( DIVIDE ( [v] - [p], [p] ) ), "0.0%" ) & "</span>" ) & "</div>",
+			        "", [o], ASC
+			    )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 230)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem;margin-bottom:5rem}.sub{display:flex;align-items:center;gap:5rem;color:#5E6E67;font-size:9.5rem;margin:-2rem 0 6rem}"
+			        & ".sub i{display:inline-block;width:8rem;height:8rem;border-radius:2rem}"
+			        & ".r{display:grid;grid-template-columns:1fr 64rem 32rem 62rem;gap:6rem;align-items:center;padding:3.5rem 0;border-top:1px solid #E3E9E6}"
+			        & ".r span{color:#5E6E67;white-space:nowrap}.r i{display:inline-block;width:10rem;height:3rem;border-radius:2rem;margin-right:5rem;vertical-align:2rem}"
+			        & ".r b{text-align:right;font-weight:700}.r em{font-style:normal;color:#5E6E67;text-align:right}.r.t span{color:#14231D;font-weight:700}"
+			        & ".c{font-weight:700;font-size:9.5rem;padding:1rem 5rem;border-radius:4rem;text-align:center;white-space:nowrap}.vs{color:#5E6E67;font-size:9rem;margin-top:5rem}</style>"
+			        & "<div class='w'><div class='m'>" & UPPER ( FORMAT ( _m, "mmmm yyyy" ) ) & " · " & UPPER ( [Area_label] ) & "</div>" & _rows
+			        & "<div class='r t'><span>All deductions</span><b>" & SWITCH ( TRUE (), ISBLANK ( _d ), _sym & "0", ABS ( _d ) >= 1e12, _sym & FORMAT ( _d / 1e12, "0.00" ) & "tn", ABS ( _d ) >= 1e9, _sym & FORMAT ( _d / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _d / 1e6, "0.0" ) & "m" ) & "</b><em>100%</em>" & SWITCH ( TRUE (), ( ISBLANK ( _dp ) || _dp = 0 ) && ( ISBLANK ( _d ) || _d = 0 ), "<span class='c' style='color:#5E6E67;background:#EDF2EF'>–</span>", ISBLANK ( _dp ) || _dp = 0, "<span class='c' style='color:#5E6E67;background:#EDF2EF'>Resumed</span>", ISBLANK ( _d ) || _d = 0, "<span class='c' style='color:#5E6E67;background:#EDF2EF'>Not paid</span>", "<span class='c' style='color:" & IF ( ROUND ( DIVIDE ( _d - _dp, _dp ), 4 ) = 0, "#C98A00", IF ( DIVIDE ( _d - _dp, _dp ) > 0, "#C93C3C", "#0E8A5F" ) ) & ";background:" & IF ( ROUND ( DIVIDE ( _d - _dp, _dp ), 4 ) = 0, "#FBF1DC", IF ( DIVIDE ( _d - _dp, _dp ) > 0, "#FBE7E7", "#E3F4EC" ) ) & "'>" & IF ( ROUND ( DIVIDE ( _d - _dp, _dp ), 4 ) = 0, UNICHAR ( 9632 ), IF ( DIVIDE ( _d - _dp, _dp ) > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) ) & " " & FORMAT ( ABS ( DIVIDE ( _d - _dp, _dp ) ), "0.0%" ) & "</span>" ) & "</div>"
+			        & "<div class='vs'>Change vs " & FORMAT ( _pm, "mmm yyyy" ) & " · deductions up = red</div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure External_debt_share_of_total =
+			-- A state's share of all external debt deducted this period
+			DIVIDE ( [External_Debt], CALCULATE ( [External_Debt], REMOVEFILTERS ( dim_state ) ) )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 02 Rates & Averages\Shares
+
+	measure External_debt_state_tt_html =
+			-- Tooltip card for the external debt bars: state, zone, amount, share of all external debt, change (a rise is red)
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _v = [External_Debt]
+			VAR _p = CALCULATE ( [External_Debt], 'Period Calc'[Name] = "Previous" )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 136)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem;margin-bottom:5rem}.sub{display:flex;align-items:center;gap:5rem;color:#5E6E67;font-size:9.5rem;margin:-2rem 0 6rem}"
+			        & ".sub i{display:inline-block;width:8rem;height:8rem;border-radius:2rem}"
+			        & ".r{display:grid;grid-template-columns:1fr auto;gap:6rem;align-items:center;padding:3.5rem 0;border-top:1px solid #E3E9E6}"
+			        & ".r span{color:#5E6E67;white-space:nowrap}.r i{display:inline-block;width:10rem;height:3rem;border-radius:2rem;margin-right:5rem;vertical-align:2rem}"
+			        & ".r b{text-align:right;font-weight:700}.r em{font-style:normal;color:#5E6E67;text-align:right}.r.t span{color:#14231D;font-weight:700}"
+			        & ".c{font-weight:700;font-size:9.5rem;padding:1rem 5rem;border-radius:4rem;text-align:center;white-space:nowrap}.vs{color:#5E6E67;font-size:9rem;margin-top:5rem}</style>"
+			        & "<div class='w'><div class='m'>" & UPPER ( SELECTEDVALUE ( dim_state[state] ) ) & "</div>"
+			        & "<div class='sub'><i style='background:" & [Zone_colour] & "'></i>" & SELECTEDVALUE ( dim_state[zone] ) & "</div>"
+			        & "<div class='r'><span>External debt</span><b>" & SWITCH ( TRUE (), ISBLANK ( _v ), _sym & "0", ABS ( _v ) >= 1e12, _sym & FORMAT ( _v / 1e12, "0.00" ) & "tn", ABS ( _v ) >= 1e9, _sym & FORMAT ( _v / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _v / 1e6, "0.0" ) & "m" ) & "</b></div>"
+			        & "<div class='r'><span>Share of all external debt</span><b>" & FORMAT ( [External_debt_share_of_total], "0.0%" ) & "</b></div>"
+			        & "<div class='r'><span>Change " & [Periodic_text] & "</span>" & SWITCH ( TRUE (), ( ISBLANK ( _p ) || _p = 0 ) && ( ISBLANK ( _v ) || _v = 0 ), "<span class='c' style='color:#5E6E67;background:#EDF2EF'>–</span>", ISBLANK ( _p ) || _p = 0, "<span class='c' style='color:#5E6E67;background:#EDF2EF'>Resumed</span>", ISBLANK ( _v ) || _v = 0, "<span class='c' style='color:#5E6E67;background:#EDF2EF'>Not paid</span>", "<span class='c' style='color:" & IF ( ROUND ( DIVIDE ( _v - _p, _p ), 4 ) = 0, "#C98A00", IF ( DIVIDE ( _v - _p, _p ) > 0, "#C93C3C", "#0E8A5F" ) ) & ";background:" & IF ( ROUND ( DIVIDE ( _v - _p, _p ), 4 ) = 0, "#FBF1DC", IF ( DIVIDE ( _v - _p, _p ) > 0, "#FBE7E7", "#E3F4EC" ) ) & "'>" & IF ( ROUND ( DIVIDE ( _v - _p, _p ), 4 ) = 0, UNICHAR ( 9632 ), IF ( DIVIDE ( _v - _p, _p ) > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) ) & " " & FORMAT ( ABS ( DIVIDE ( _v - _p, _p ) ), "0.0%" ) & "</span>" ) & "</div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Metric_heat_colour =
+			-- Matrix heat shading: darker green for bigger values within each column (each deduction line)
+			VAR _v = [Metric_value]
+			VAR _mx = MAXX ( ALLSELECTED ( dim_state[state] ), [Metric_value] )
+			VAR _t = DIVIDE ( _v, _mx )
+			RETURN
+			    SWITCH ( TRUE (),
+			        ISBLANK ( _v ) || _v <= 0, "#FFFFFF",
+			        _t < 0.2, "#EFF8F3",
+			        _t < 0.4, "#DAF0E4",
+			        _t < 0.6, "#BFE4D1",
+			        _t < 0.8, "#9BD3B8",
+			        "#74BE9C" )
+		displayFolder: 05 Visual Helpers\Colours
+
+	measure Deductions_insight_html =
+			-- Key takeaway banner for Deductions: total and change (a fall is good), share of gross, biggest line, most external debt
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _up = "<span class='up'>"
+			VAR _dn = "<span class='dn'>"
+			VAR _hl = "<span class='hl'>"
+			VAR _e = "</span>"
+			VAR _d = [Deductions_curr]
+			VAR _chg = [Deductions_PnP]
+			VAR _t = UNION (
+			        ROW ( "n", "External debt", "c", CALCULATE ( [External_Debt], 'Period Calc'[Name] = "Current" ) ),
+			        ROW ( "n", "Contractual (ISPO)", "c", CALCULATE ( [Contractual_Obligation], 'Period Calc'[Name] = "Current" ) ),
+			        ROW ( "n", "NDDC / HYPPADEC", "c", CALCULATE ( [NDDC_Transfer], 'Period Calc'[Name] = "Current" ) ),
+			        ROW ( "n", "Other (see note)", "c", CALCULATE ( [Other_Deductions_Note], 'Period Calc'[Name] = "Current" ) ),
+			        ROW ( "n", "Unlabelled", "c", CALCULATE ( [Deduction_Misc], 'Period Calc'[Name] = "Current" ) ),
+			        ROW ( "n", "Other deductions", "c", CALCULATE ( [Other_Deduction], 'Period Calc'[Name] = "Current" ) )
+			    )
+			VAR _big = TOPN ( 1, _t, [c], DESC )
+			VAR _ext = TOPN ( 1, FILTER ( ADDCOLUMNS ( VALUES ( dim_state[state] ), "@x", CALCULATE ( [External_Debt], 'Period Calc'[Name] = "Current" ) ), [@x] > 0 ), [@x], DESC )
+			VAR _who = IF ( [Area_label] = "All states", "States", [Area_label] )
+			VAR _msg =
+			    _who & " lost " & _hl & SWITCH ( TRUE (), ISBLANK ( _d ), _sym & "0", ABS ( _d ) >= 1e12, _sym & FORMAT ( _d / 1e12, "0.00" ) & "tn", ABS ( _d ) >= 1e9, _sym & FORMAT ( _d / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _d / 1e6, "0.0" ) & "m" ) & _e & " to deductions in " & [Period_label]
+			        & IF ( ISBLANK ( _chg ), "",
+			            ", " & IF ( _chg <= 0, _up & UNICHAR ( 9660 ), _dn & UNICHAR ( 9650 ) ) & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & _e & " " & [Periodic_text] )
+			        & ", " & FORMAT ( DIVIDE ( _d, [Gross_curr] ), "0.0%" ) & " of gross. "
+			        & MAXX ( _big, [n] ) & " was the biggest line at " & _hl & FORMAT ( DIVIDE ( MAXX ( _big, [c] ), _d ), "0%" ) & _e
+			        & IF ( COUNTROWS ( _ext ) = 1 && COUNTROWS ( VALUES ( dim_state[state] ) ) > 1,
+			            ", and " & MAXX ( _ext, dim_state[state] ) & " had the most external debt deducted, " & _hl & SWITCH ( TRUE (), ISBLANK ( MAXX ( _ext, [@x] ) ), _sym & "0", ABS ( MAXX ( _ext, [@x] ) ) >= 1e12, _sym & FORMAT ( MAXX ( _ext, [@x] ) / 1e12, "0.00" ) & "tn", ABS ( MAXX ( _ext, [@x] ) ) >= 1e9, _sym & FORMAT ( MAXX ( _ext, [@x] ) / 1e9, "0.0" ) & "bn", _sym & FORMAT ( MAXX ( _ext, [@x] ) / 1e6, "0.0" ) & "m" ) & _e & ".",
+			            "." )
+			RETURN
+			    [Banner_css]
+			        & "<div class='b'><div class='ic'><svg viewBox='0 0 16 16' style='width:16rem;height:16rem'><path d='M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z' fill='#E2B53E'/></svg></div>"
+			        & "<div class='k'>KEY TAKEAWAY<br>" & UPPER ( [Period_label] ) & "</div><div class='t'>" & _msg & "</div></div>"
+		displayFolder: 06 Titles & Labels\Insights
+
+	measure Metric_value_short =
+			-- Short money text for matrix cells: ₦3.3bn rather than ₦3,312,404,118
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _v = [Metric_value]
+			RETURN SWITCH ( TRUE (), ISBLANK ( _v ) || _v = 0, "–", ABS ( _v ) >= 1e12, _sym & FORMAT ( _v / 1e12, "0.00" ) & "tn", ABS ( _v ) >= 1e9, _sym & FORMAT ( _v / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _v / 1e6, "0.0" ) & "m" )
+		displayFolder: 06 Titles & Labels\Text
 
 	column Value
 		dataType: int64

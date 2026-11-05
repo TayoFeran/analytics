@@ -1,12 +1,12 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "deductionsShare",
+  "name": "externalDebtByState",
   "position": {
-    "x": 892,
-    "y": 138,
+    "x": 866,
+    "y": 134,
     "z": 1800,
-    "height": 292,
-    "width": 354,
+    "height": 216,
+    "width": 380,
     "tabOrder": 1800
   },
   "visual": {
@@ -23,12 +23,12 @@
                       "Entity": "Dax"
                     }
                   },
-                  "Property": "Deductions_share"
+                  "Property": "External_Debt"
                 }
               },
-              "queryRef": "Dax.Deductions_share",
-              "nativeQueryRef": "Deductions_share",
-              "displayName": "Deductions % of gross"
+              "queryRef": "Dax.External_Debt",
+              "nativeQueryRef": "External_Debt",
+              "displayName": "External debt"
             }
           ]
         },
@@ -46,39 +46,8 @@
                 }
               },
               "queryRef": "dim_state.state",
-              "nativeQueryRef": "state"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Dax"
-                    }
-                  },
-                  "Property": "Deductions"
-                }
-              },
-              "queryRef": "Dax.Deductions",
-              "nativeQueryRef": "Deductions"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Dax"
-                    }
-                  },
-                  "Property": "Gross"
-                }
-              },
-              "queryRef": "Dax.Gross",
-              "nativeQueryRef": "Gross"
+              "nativeQueryRef": "state",
+              "displayName": "State"
             }
           ]
         }
@@ -93,7 +62,7 @@
                     "Entity": "Dax"
                   }
                 },
-                "Property": "Deductions_share"
+                "Property": "External_Debt"
               }
             },
             "direction": "Descending"
@@ -268,27 +237,17 @@
       "dataPoint": [
         {
           "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#C93C3C'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        {
-          "properties": {
             "fill": {
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#C93C3C'"
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Dax"
+                        }
+                      },
+                      "Property": "Zone_colour"
                     }
                   }
                 }
@@ -296,7 +255,13 @@
             }
           },
           "selector": {
-            "metadata": "Dax.Deductions_share"
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ]
           }
         }
       ]
@@ -380,7 +345,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Deductions as a share of gross'"
+                  "Value": "'External debt deducted by state'"
                 }
               }
             },
@@ -406,6 +371,33 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualTooltip": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "type": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Canvas'"
+                }
+              }
+            },
+            "section": {
+              "expr": {
+                "Literal": {
+                  "Value": "'ttExternalDebtState'"
                 }
               }
             }
@@ -464,6 +456,55 @@
                       }
                     ]
                   ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "fExtPositive",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Dax"
+              }
+            },
+            "Property": "External_Debt"
+          }
+        },
+        "type": "Advanced",
+        "howCreated": "User",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "t",
+              "Entity": "Dax",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 1,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "t"
+                        }
+                      },
+                      "Property": "External_Debt"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "0D"
+                    }
+                  }
                 }
               }
             }

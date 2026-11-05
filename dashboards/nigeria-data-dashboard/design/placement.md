@@ -66,11 +66,13 @@ at these y positions:
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicers: Period, Zone, State, Currency | 284 | 78 | 960 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Stacked column: deductions by type over time | 226 | 138 | 630 | 292 |
-| Bar chart: deductions as % of gross, by state | 892 | 138 | 354 | 292 |
-| Matrix: state x deduction type (metric field parameter, tooltips) | 226 | 466 | 1020 | 220 |
+| Slicers: Period, Dates (From, To), Zone, State, Currency | 278 | 78 | 966 | 28 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| Line chart: deduction lines over time (TT - Deductions Month) | 226 | 134 | 604 | 242 |
+| Bar chart: external debt by state, coloured by zone | 866 | 134 | 380 | 216 |
+| HTML: zone legend | 872 | 356 | 368 | 20 |
+| Matrix: state x deduction line, green heat (TT - Metric Detail) | 226 | 408 | 1020 | 222 |
+| HTML: insight banner | 216 | 654 | 1040 | 50 |
 
 ## Compare (`bg_faac_compare.png`)
 

@@ -184,20 +184,20 @@ LAYOUT = {
         "title": "Deductions",
         "filters": STANDARD_FILTERS,
         "seps": FILTER_SEPARATORS,
+        # Look-and-feel upgrade (2026-11-05): shorter cards leave room for the insight banner
         "cards": [
-            (216, 128, 866, 440, None, "card"),
-            (882, 128, 1256, 440, None, "card"),
-            (216, 456, 1256, 696, None, "card"),
+            (216, 124, 840, 386, None, "card"),
+            (856, 124, 1256, 386, None, "card"),
+            (216, 398, 1256, 640, None, "card"),
         ],
         "visuals": [
-            ("Slicers: Period, Zone, State, Currency", (284, 78, 1244, 106)),
-            ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("Stacked column: deductions by type over time", (226, 138, 856, 430)),
-            ("Bar chart: deductions as % of gross, by state", (892, 138, 1246, 430)),
-            (
-                "Matrix: state x deduction type (metric field parameter, tooltips)",
-                (226, 466, 1246, 686),
-            ),
+            ("Slicers: Period, Dates (From, To), Zone, State, Currency", (278, 78, 1244, 106)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
+            ("Line chart: deduction lines over time (TT - Deductions Month)", (226, 134, 830, 376)),
+            ("Bar chart: external debt by state, coloured by zone", (866, 134, 1246, 350)),
+            ("HTML: zone legend", (872, 356, 1240, 376)),
+            ("Matrix: state x line, green heat (TT - Metric Detail)", (226, 408, 1246, 630)),
+            ("HTML: insight banner", (216, 654, 1256, 704)),
         ],
     },
     "compare": {

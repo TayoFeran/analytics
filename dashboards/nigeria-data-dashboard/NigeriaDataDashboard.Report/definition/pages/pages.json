@@ -13,6 +13,8 @@
     "about",
     "ttOverviewMonth",
     "ttRevenueMonth",
+    "ttDeductionsMonth",
+    "ttExternalDebtState",
     "ttMetricDetail",
     "ttOilState",
     "ttStateDetail",
