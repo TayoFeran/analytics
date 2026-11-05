@@ -10,7 +10,7 @@ Design agreed on 2026-11-02 (step 5 of the build). Positions are in [`placement.
 | Revenue mix matrix; Deductions matrix (state × type) | TT - Metric Detail |
 | States map; 36-state ranking bar | TT - State Detail |
 | Compare page, Side A and Side B tables | TT - Compare Metric |
-| Overview line chart (gross vs net) | Default: month, `Gross`, `Net`, `Net_rate` |
+| Overview line chart (gross vs net) | TT - Overview Month: HTML card (`Overview_month_tt_html`), gross and net for the hovered month with change vs the month before |
 | Revenue mix stacked area | Default: month, revenue line, value, `VAT_share` / `Oil_Derivation_share` |
 | Deductions stacked column | Default: month, deduction line, value, `Deductions_share` |
 | Top 5 states bar; oil derivation by state | Default: state, value, `Net_share_national` |

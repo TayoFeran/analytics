@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "revenueMix",
   "position": {
-    "x": 892,
-    "y": 242,
-    "z": 2800,
-    "height": 204,
-    "width": 354,
-    "tabOrder": 2800
+    "x": 802,
+    "y": 482,
+    "z": 2300,
+    "height": 148,
+    "width": 444,
+    "tabOrder": 2300
   },
   "visual": {
     "visualType": "hundredPercentStackedBarChart",
@@ -58,7 +58,7 @@
               },
               "queryRef": "Dax.Oil_Derivation",
               "nativeQueryRef": "Oil_Derivation",
-              "displayName": "Oil derivation"
+              "displayName": "Oil"
             },
             {
               "field": {
@@ -73,7 +73,7 @@
               },
               "queryRef": "Dax.Exchange_Gain",
               "nativeQueryRef": "Exchange_Gain",
-              "displayName": "Exchange gain"
+              "displayName": "FX gain"
             },
             {
               "field": {
@@ -88,7 +88,7 @@
               },
               "queryRef": "Dax.Ecology",
               "nativeQueryRef": "Ecology",
-              "displayName": "Ecology fund"
+              "displayName": "Ecology"
             },
             {
               "field": {
@@ -103,7 +103,7 @@
               },
               "queryRef": "Dax.Others_Income",
               "nativeQueryRef": "Others_Income",
-              "displayName": "Other income"
+              "displayName": "Other"
             }
           ]
         }

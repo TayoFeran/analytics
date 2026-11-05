@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "slicerCurrency",
   "position": {
-    "x": 1090,
+    "x": 1146,
     "y": 78,
-    "z": 1400,
+    "z": 1600,
     "height": 28,
-    "width": 154,
-    "tabOrder": 1400
+    "width": 98,
+    "tabOrder": 1600
   },
   "visual": {
     "visualType": "slicer",

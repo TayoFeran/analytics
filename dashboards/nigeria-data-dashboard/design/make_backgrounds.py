@@ -64,13 +64,15 @@ NAV = [
 NAV_H = 28
 
 STANDARD_FILTERS = [
-    # (label, label x, slicer box)
-    ("PERIOD", 234, (284, 78, 524, 106)),
-    ("ZONE", 552, (590, 78, 754, 106)),
-    ("STATE", 770, (812, 78, 992, 106)),
-    ("CURRENCY", 1020, (1090, 78, 1244, 106)),
+    # (label, label x, slicer box). DATES (From / To months) added 2026-11-05:
+    # the To month is the latest month for every measure.
+    ("PERIOD", 234, (278, 78, 518, 106)),
+    ("DATES", 534, (576, 78, 800, 106)),
+    ("ZONE", 816, (850, 78, 922, 106)),
+    ("STATE", 938, (974, 78, 1060, 106)),
+    ("CURRENCY", 1076, (1146, 78, 1244, 106)),
 ]
-FILTER_SEPARATORS = [538, 1006]
+FILTER_SEPARATORS = [526, 808, 930, 1068]
 
 # Economy pages: a years range slicer and a president dropdown. No currency switch: each
 # chart's title says which currency it shows.
@@ -111,28 +113,29 @@ LAYOUT = {
         "title": "Overview",
         "filters": STANDARD_FILTERS,
         "seps": FILTER_SEPARATORS,
+        # Look-and-feel upgrade (2026-11-05): the KPI cards and the banner are HTML
+        # visuals that draw their own boxes, so the background only holds the chart cards
         "cards": [
-            (216, 128, 464, 216, "GROSS ALLOCATION", "kpi"),
-            (480, 128, 728, 216, "DEDUCTIONS", "kpi"),
-            (744, 128, 992, 216, "NET RECEIVED", "kpi"),
-            (1008, 128, 1256, 216, "EXCHANGE RATE", "kpi"),
-            (216, 232, 866, 696, None, "card"),
-            (882, 232, 1256, 456, None, "card"),
-            (882, 472, 1256, 696, None, "card"),
+            (216, 232, 776, 640, None, "card"),
+            (792, 232, 1256, 460, None, "card"),
+            (792, 472, 1256, 640, None, "card"),
         ],
         "visuals": [
-            ("Slicer: Period (field parameter, tiles)", (284, 78, 524, 106)),
-            ("Slicer: Zone (dropdown)", (590, 78, 754, 106)),
-            ("Slicer: State (dropdown)", (812, 78, 992, 106)),
-            ("Slicer: Currency ₦/$ (tiles)", (1090, 78, 1244, 106)),
-            ("Text: refresh stamp + latest data month", (1040, 22, 1256, 58)),
-            ("KPI group: Gross (value, sparkline, change line)", (226, 146, 454, 210)),
-            ("KPI group: Deductions", (490, 146, 718, 210)),
-            ("KPI group: Net received", (754, 146, 982, 210)),
-            ("KPI group: Exchange rate", (1018, 146, 1246, 210)),
-            ("Line chart: gross vs net, last 24 months (dynamic title)", (226, 242, 856, 686)),
-            ("100% stacked bar: revenue mix, latest period (dynamic title)", (892, 242, 1246, 446)),
-            ("Bar chart: top 5 states by net (dynamic title)", (892, 482, 1246, 686)),
+            ("Slicer: Period (field parameter, tiles)", (278, 78, 518, 106)),
+            ("Slicer: Date range From (dropdown)", (576, 78, 682, 106)),
+            ("Slicer: Date range To (dropdown)", (694, 78, 800, 106)),
+            ("Slicer: Zone (dropdown)", (850, 78, 922, 106)),
+            ("Slicer: State (dropdown)", (974, 78, 1060, 106)),
+            ("Slicer: Currency ₦/$ (tiles)", (1146, 78, 1244, 106)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
+            ("HTML: flip cards Gross, Deductions, Net, Exchange rate", (216, 124, 1256, 220)),
+            (
+                "Line chart: gross vs net, last 24 months (TT - Overview Month)",
+                (226, 242, 766, 630),
+            ),
+            ("HTML: rotating shelf, top 5 states", (792, 232, 1256, 460)),
+            ("100% stacked bar: revenue mix, latest period (dynamic title)", (802, 482, 1246, 630)),
+            ("HTML: insight banner", (216, 654, 1256, 704)),
         ],
     },
     "states": {

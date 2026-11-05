@@ -32,5 +32,7 @@ ref table Compare_A
 ref table Compare_B
 ref table 'Compare Side'
 ref table 'Refresh Time'
+ref table Date_from
+ref table Date_to
 
 ref cultureInfo en-US

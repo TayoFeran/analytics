@@ -4,10 +4,10 @@
   "position": {
     "x": 226,
     "y": 138,
-    "z": 1500,
+    "z": 1700,
     "height": 292,
     "width": 630,
-    "tabOrder": 1500
+    "tabOrder": 1700
   },
   "visual": {
     "visualType": "columnChart",
@@ -552,6 +552,55 @@
                         }
                       },
                       "Property": "Last_24_month_flag"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "1L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "fInRange",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Dax"
+              }
+            },
+            "Property": "Month_in_range"
+          }
+        },
+        "type": "Advanced",
+        "howCreated": "User",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "t",
+              "Entity": "Dax",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 0,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "t"
+                        }
+                      },
+                      "Property": "Month_in_range"
                     }
                   },
                   "Right": {

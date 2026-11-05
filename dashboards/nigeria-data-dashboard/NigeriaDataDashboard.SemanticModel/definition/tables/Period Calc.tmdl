@@ -5,8 +5,9 @@ table 'Period Calc'
 
 		calculationItem Current =
 				VAR _p = SWITCH ( SELECTEDVALUE ( Period[Period Order] ), 1, "Quarterly", 2, "Yearly", "Monthly" )
-				-- "Current" is the latest month with FAAC data, not today
-				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
+				-- "Current" is the latest month with FAAC data up to the To month of the date range, not today
+				VAR _to = MAX ( COALESCE ( SELECTEDVALUE ( Date_from[month] ), EOMONTH ( CALCULATE ( MIN ( faac[disbursement_date] ), REMOVEFILTERS () ), 0 ) ), COALESCE ( SELECTEDVALUE ( Date_to[month] ), EOMONTH ( CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () ), 0 ) ) )
+				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_state ), REMOVEFILTERS ( dim_administration ), faac[disbursement_date] <= _to )
 				-- Quarterly and Yearly are to date, compared with the same months a year earlier
 				VAR _from =
 				    SWITCH (
@@ -36,8 +37,9 @@ table 'Period Calc'
 
 		calculationItem Previous =
 				VAR _p = SWITCH ( SELECTEDVALUE ( Period[Period Order] ), 1, "Quarterly", 2, "Yearly", "Monthly" )
-				-- "Current" is the latest month with FAAC data, not today
-				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
+				-- "Current" is the latest month with FAAC data up to the To month of the date range, not today
+				VAR _to = MAX ( COALESCE ( SELECTEDVALUE ( Date_from[month] ), EOMONTH ( CALCULATE ( MIN ( faac[disbursement_date] ), REMOVEFILTERS () ), 0 ) ), COALESCE ( SELECTEDVALUE ( Date_to[month] ), EOMONTH ( CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () ), 0 ) ) )
+				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_state ), REMOVEFILTERS ( dim_administration ), faac[disbursement_date] <= _to )
 				-- Quarterly and Yearly are to date, compared with the same months a year earlier
 				VAR _from =
 				    SWITCH (
@@ -67,8 +69,9 @@ table 'Period Calc'
 
 		calculationItem 'Change %' =
 				VAR _p = SWITCH ( SELECTEDVALUE ( Period[Period Order] ), 1, "Quarterly", 2, "Yearly", "Monthly" )
-				-- "Current" is the latest month with FAAC data, not today
-				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
+				-- "Current" is the latest month with FAAC data up to the To month of the date range, not today
+				VAR _to = MAX ( COALESCE ( SELECTEDVALUE ( Date_from[month] ), EOMONTH ( CALCULATE ( MIN ( faac[disbursement_date] ), REMOVEFILTERS () ), 0 ) ), COALESCE ( SELECTEDVALUE ( Date_to[month] ), EOMONTH ( CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () ), 0 ) ) )
+				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_state ), REMOVEFILTERS ( dim_administration ), faac[disbursement_date] <= _to )
 				-- Quarterly and Yearly are to date, compared with the same months a year earlier
 				VAR _from =
 				    SWITCH (
@@ -98,8 +101,9 @@ table 'Period Calc'
 
 		calculationItem Trend =
 				VAR _p = SWITCH ( SELECTEDVALUE ( Period[Period Order] ), 1, "Quarterly", 2, "Yearly", "Monthly" )
-				-- "Current" is the latest month with FAAC data, not today
-				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () )
+				-- "Current" is the latest month with FAAC data up to the To month of the date range, not today
+				VAR _to = MAX ( COALESCE ( SELECTEDVALUE ( Date_from[month] ), EOMONTH ( CALCULATE ( MIN ( faac[disbursement_date] ), REMOVEFILTERS () ), 0 ) ), COALESCE ( SELECTEDVALUE ( Date_to[month] ), EOMONTH ( CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () ), 0 ) ) )
+				VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_state ), REMOVEFILTERS ( dim_administration ), faac[disbursement_date] <= _to )
 				-- Quarterly and Yearly are to date, compared with the same months a year earlier
 				VAR _from =
 				    SWITCH (

@@ -4,10 +4,10 @@
   "position": {
     "x": 226,
     "y": 242,
-    "z": 2700,
-    "height": 444,
-    "width": 630,
-    "tabOrder": 2700
+    "z": 2100,
+    "height": 388,
+    "width": 540,
+    "tabOrder": 2100
   },
   "visual": {
     "visualType": "lineChart",
@@ -62,24 +62,6 @@
               "queryRef": "Dax.Net",
               "nativeQueryRef": "Net",
               "displayName": "Net received"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Dax"
-                    }
-                  },
-                  "Property": "Net_rate"
-                }
-              },
-              "queryRef": "Dax.Net_rate",
-              "nativeQueryRef": "Net_rate"
             }
           ]
         }
@@ -144,7 +126,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
@@ -189,7 +171,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },
@@ -208,6 +190,27 @@
               "expr": {
                 "Literal": {
                   "Value": "8D"
+                }
+              }
+            },
+            "labelDensity": {
+              "expr": {
+                "Literal": {
+                  "Value": "35D"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1000000000D"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
                 }
               }
             }
@@ -422,6 +425,33 @@
             }
           }
         }
+      ],
+      "visualTooltip": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "type": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Canvas'"
+                }
+              }
+            },
+            "section": {
+              "expr": {
+                "Literal": {
+                  "Value": "'ttOverviewMonth'"
+                }
+              }
+            }
+          }
+        }
       ]
     }
   },
@@ -463,6 +493,55 @@
                         }
                       },
                       "Property": "Last_24_month_flag"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "1L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "fInRange",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Dax"
+              }
+            },
+            "Property": "Month_in_range"
+          }
+        },
+        "type": "Advanced",
+        "howCreated": "User",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "t",
+              "Entity": "Dax",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 0,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "t"
+                        }
+                      },
+                      "Property": "Month_in_range"
                     }
                   },
                   "Right": {

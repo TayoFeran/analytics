@@ -4,10 +4,10 @@
   "position": {
     "x": 786,
     "y": 138,
-    "z": 1600,
+    "z": 1800,
     "height": 548,
     "width": 460,
-    "tabOrder": 1600
+    "tabOrder": 1800
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -398,7 +398,7 @@
             "type": {
               "expr": {
                 "Literal": {
-                  "Value": "'ReportPage'"
+                  "Value": "'Canvas'"
                 }
               }
             },

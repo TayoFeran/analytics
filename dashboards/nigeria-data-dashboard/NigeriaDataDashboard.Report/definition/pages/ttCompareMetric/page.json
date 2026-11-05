@@ -47,6 +47,7 @@
       }
     ]
   },
+  "type": "Tooltip",
   "pageBinding": {
     "name": "ttCompareMetricBinding",
     "type": "Tooltip",

@@ -26,18 +26,18 @@ at these y positions:
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicer: Period (field parameter, tiles) | 284 | 78 | 240 | 28 |
-| Slicer: Zone (dropdown) | 590 | 78 | 164 | 28 |
-| Slicer: State (dropdown) | 812 | 78 | 180 | 28 |
-| Slicer: Currency ₦/$ (tiles) | 1090 | 78 | 154 | 28 |
-| Text: refresh stamp + latest data month | 1040 | 22 | 216 | 36 |
-| KPI group: Gross (value, sparkline, change line) | 226 | 146 | 228 | 64 |
-| KPI group: Deductions | 490 | 146 | 228 | 64 |
-| KPI group: Net received | 754 | 146 | 228 | 64 |
-| KPI group: Exchange rate | 1018 | 146 | 228 | 64 |
-| Line chart: gross vs net, last 24 months (dynamic title) | 226 | 242 | 630 | 444 |
-| 100% stacked bar: revenue mix, latest period (dynamic title) | 892 | 242 | 354 | 204 |
-| Bar chart: top 5 states by net (dynamic title) | 892 | 482 | 354 | 204 |
+| Slicer: Period (field parameter, tiles) | 278 | 78 | 240 | 28 |
+| Slicer: Date range From (dropdown) | 576 | 78 | 106 | 28 |
+| Slicer: Date range To (dropdown) | 694 | 78 | 106 | 28 |
+| Slicer: Zone (dropdown) | 850 | 78 | 72 | 28 |
+| Slicer: State (dropdown) | 974 | 78 | 86 | 28 |
+| Slicer: Currency ₦/$ (tiles) | 1146 | 78 | 98 | 28 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| HTML: flip cards Gross, Deductions, Net, Exchange rate | 216 | 124 | 1040 | 96 |
+| Line chart: gross vs net, last 24 months (TT - Overview Month) | 226 | 242 | 540 | 388 |
+| HTML: rotating shelf, top 5 states | 792 | 232 | 464 | 228 |
+| 100% stacked bar: revenue mix, latest period (dynamic title) | 802 | 482 | 444 | 148 |
+| HTML: insight banner | 216 | 654 | 1040 | 50 |
 
 ## States (`bg_faac_states.png`)
 
