@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nigeria Data Dashboard: FAAC Overview look-and-feel mock-up</title>
+<style>
+  :root{
+    --side:#0B3D2E; --side2:#1B5A45; --canvas:#F3F6F4; --gold:#E2B53E;
+    --better:#0E8A5F; --worse:#C93C3C; --equal:#C98A00;
+    --ink:#14231D; --muted:#5E6E67; --line:#E3E9E6; --track:#EDF2EF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#DCE3DF;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:var(--ink)}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:12px 20px;background:#fff;border-bottom:1px solid var(--line);font-size:13px}
+  .controls b{font-weight:600}
+  .controls button{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer}
+  .controls button.on{background:var(--side);color:#fff;border-color:var(--side)}
+  .note{color:var(--muted)}
+  .wrap{padding:20px;display:flex;justify-content:center}
+  .scaler{transform-origin:top left}
+  .canvas{position:relative;width:1280px;height:720px;background:var(--canvas);overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+  .abs{position:absolute}
+  .card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(11,61,46,.08),0 4px 14px rgba(11,61,46,.05)}
+
+  /* sidebar */
+  .side{left:0;top:0;width:192px;height:720px;background:var(--side);color:#fff;padding:26px 14px 0 22px}
+  .brand{font-weight:700;font-size:19px;line-height:1.1;letter-spacing:.5px}
+  .brand small{display:block;font-weight:400;font-size:9px;letter-spacing:2.4px;opacity:.7;margin-top:6px}
+  .sec{font-size:8.5px;letter-spacing:2.2px;opacity:.6;margin:22px 0 6px}
+  .nav{display:flex;align-items:center;gap:9px;font-size:11.5px;height:30px;padding-left:6px;margin-left:-8px;border-radius:7px;opacity:.82}
+  .nav i{width:6px;height:6px;border-radius:50%;background:#B9CCC3;flex:none}
+  .nav.on{background:var(--side2);opacity:1;font-weight:600}
+  .nav.on i{background:var(--gold)}
+  .soon{margin-left:auto;font-size:7.5px;letter-spacing:1.3px;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:1px 6px}
+  .srcnote{position:absolute;bottom:16px;left:22px;right:14px;font-size:8.5px;line-height:1.5;opacity:.65}
+
+  /* header */
+  .eyebrow{left:216px;top:20px;font-size:9.5px;letter-spacing:2.6px;color:var(--better);font-weight:600}
+  .title{left:216px;top:32px;font-size:26px;font-weight:600}
+
+  /* freshness strip */
+  .fresh{right:24px;top:20px;height:38px;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border-radius:999px;font-size:10.5px;background:#fff;border:1px solid var(--line)}
+  .fresh .pill{display:flex;align-items:center;gap:6px;color:#fff;font-weight:600;font-size:10px;padding:5px 10px;border-radius:999px}
+  .fresh .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff}
+  .fresh .tag{font-size:8px;letter-spacing:1.6px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+  .fresh .msg{font-weight:600}
+  .fresh .facts{color:var(--muted);border-left:1px solid var(--line);padding-left:10px}
+
+  /* filter bar */
+  .filters{left:216px;top:72px;width:1040px;height:40px;border-radius:999px;display:flex;align-items:center;padding:0 18px;gap:0;font-size:8.5px;letter-spacing:1.6px;color:var(--muted)}
+  .f{display:flex;align-items:center;gap:10px;height:100%;padding-right:16px}
+  .f + .f{border-left:1px solid var(--line);padding-left:16px}
+  .tiles{display:flex;gap:4px;letter-spacing:0}
+  .tiles span{font-size:10px;color:var(--ink);background:var(--track);padding:4px 9px;border-radius:6px}
+  .tiles span.on{background:var(--side);color:#fff}
+  .dd{letter-spacing:0;font-size:10px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 26px 4px 9px;position:relative}
+  .dd::after{content:"▾";position:absolute;right:8px;color:var(--muted)}
+
+  /* insight banner */
+  .banner{left:216px;top:654px;width:1040px;height:50px;border-radius:12px;display:flex;align-items:center;gap:14px;padding:0 18px;
+    background:linear-gradient(90deg,#0B3D2E 0%,#145A43 70%,#1D6B51 100%);color:#fff}
+  .banner .ico{width:28px;height:28px;border-radius:8px;background:rgba(226,181,62,.18);display:flex;align-items:center;justify-content:center;flex:none}
+  .banner .kick{font-size:8.5px;letter-spacing:2px;color:var(--gold);font-weight:600;white-space:nowrap}
+  .banner .txt{font-size:12px;line-height:1.35}
+  .banner .up{color:#6EE0AE;font-weight:700}
+  .banner .dn{color:#FF9A9A;font-weight:700}
+  .banner .hl{color:var(--gold);font-weight:700}
+
+  /* flip cards */
+  .fc{width:248px;height:96px;top:124px;perspective:1000px}
+  .fc-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+  .fc:hover .fc-inner{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;overflow:hidden}
+  .front{background:#fff;box-shadow:0 1px 3px rgba(11,61,46,.08),0 4px 14px rgba(11,61,46,.05);padding:12px 14px 0 16px}
+  .front::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:var(--side)}
+  .lbl{font-size:8.5px;letter-spacing:1.8px;color:var(--muted);font-weight:600}
+  .val{font-size:22px;font-weight:700;margin-top:3px;letter-spacing:-.3px}
+  .val small{font-size:12px;font-weight:600;color:var(--muted);margin-left:2px}
+  .chg{display:flex;align-items:center;gap:6px;font-size:9.5px;margin-top:4px;color:var(--muted)}
+  .badge{font-weight:700;padding:2px 6px;border-radius:5px;font-size:9.5px}
+  .spark{position:absolute;right:12px;top:30px}
+  .hint{position:absolute;right:12px;bottom:7px;font-size:7.5px;color:#9AABA3;letter-spacing:.4px}
+  .back{background:var(--side);color:#fff;transform:rotateY(180deg);padding:12px 14px}
+  .back .bt{font-size:8.5px;letter-spacing:1.8px;color:var(--gold);font-weight:600}
+  .back p{margin:5px 0 0;font-size:10.5px;line-height:1.4}
+  .top3{display:grid;grid-template-columns:14px 1fr auto 30px;gap:3px 8px;margin-top:7px;font-size:10.5px;align-items:center}
+  .top3 span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .top3 b{color:var(--gold)}
+  .top3 .v{font-weight:700;text-align:right}
+  .top3 .sh{opacity:.75;text-align:right;font-size:9.5px}
+  .back .tip{margin-top:5px;font-size:8.5px;opacity:.75;border-left:2px solid var(--gold);padding-left:6px}
+
+  /* panels */
+  .ptitle{font-size:11.5px;font-weight:600}
+  .psub{font-size:9px;color:var(--muted);margin-top:2px}
+  .buildtag{position:absolute;z-index:50;font-size:8px;letter-spacing:1px;font-weight:700;padding:2px 6px;border-radius:4px;color:#fff;pointer-events:none}
+  .t-html{background:#7A3FC4}.t-native{background:#2F6FD1}.t-svg{background:#C2660A}
+  body.nolabels .buildtag{display:none}
+
+  .ltt{position:absolute;display:none;width:178px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 18px rgba(11,61,46,.18);padding:9px 11px;font-size:10px;pointer-events:none;z-index:60}
+  .ltt .m{font-weight:700;font-size:11px;margin-bottom:5px}
+  .ltt .r{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:3px 0;border-top:1px solid var(--line)}
+  .ltt .r span:first-child{color:var(--muted)}
+  .ltt .r b{font-weight:700}
+  .ltt .c{font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:4px}
+  .ltt .vs{color:var(--muted);font-size:8.5px;margin-top:4px}
+
+  /* rotating shelf */
+  .stage{position:relative;height:160px;margin-top:6px}
+  .item{position:absolute;left:50%;top:4px;width:156px;margin-left:-78px;height:148px;border-radius:14px;color:#fff;padding:10px 12px;
+        animation:spin 15s linear infinite;box-shadow:0 6px 16px rgba(11,61,46,.25)}
+  .stage:hover .item{animation-play-state:paused}
+  .item .rk{position:absolute;top:8px;right:9px;font-size:17px;font-weight:800;background:rgba(255,255,255,.22);border-radius:8px;padding:3px 9px;line-height:1.2}
+  .item .code{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px}
+  .item .nm{font-size:13px;font-weight:700;margin-top:9px}
+  .item .amt{font-size:25px;font-weight:700;line-height:1.05;margin-top:3px;letter-spacing:-.3px}
+  .item .amt small{font-size:11px;font-weight:600;opacity:.85;margin-left:1px}
+  .item .share{font-size:11px;font-weight:600;opacity:.92;margin-top:5px}
+  .r1{background:linear-gradient(150deg,#0B3D2E,#0E8A5F)}
+  .r2{background:linear-gradient(150deg,#145A43,#2E9B72)}
+  .r3{background:linear-gradient(150deg,#1D6B51,#4FAE88)}
+  .r4{background:linear-gradient(150deg,#7A5A0A,#E2B53E)}
+  .r5{background:linear-gradient(150deg,#5E6E67,#93A59D)}
+  .r1{animation-delay:0s}.r2{animation-delay:-12s}.r3{animation-delay:-9s}.r4{animation-delay:-6s}.r5{animation-delay:-3s}
+  @keyframes spin{
+    0%,16%  {transform:translateX(0) scale(1);opacity:1;z-index:5;filter:none}
+    20%,36% {transform:translateX(-120px) scale(.7);opacity:.55;z-index:3;filter:saturate(.5)}
+    40%,56% {transform:translateX(-190px) scale(.5);opacity:.3;z-index:1;filter:saturate(.3)}
+    58%     {transform:translateX(-190px) scale(.5);opacity:0;z-index:0}
+    59%     {transform:translateX(190px) scale(.5);opacity:0;z-index:0}
+    62%,76% {transform:translateX(190px) scale(.5);opacity:.3;z-index:1;filter:saturate(.3)}
+    80%,96% {transform:translateX(120px) scale(.7);opacity:.55;z-index:3;filter:saturate(.5)}
+    100%    {transform:translateX(0) scale(1);opacity:1;z-index:5;filter:none}
+  }
+  .shelfsub{font-size:12px;font-weight:600;color:var(--better);margin-top:3px}
+
+  /* revenue mix mock */
+  .mixrow{display:flex;height:26px;border-radius:6px;overflow:hidden;margin-top:14px}
+  .mixrow div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:9.5px;font-weight:600}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:9.5px;color:var(--muted)}
+  .legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;background:var(--c)}
+
+  .explain{max-width:1280px;margin:0 auto 30px;padding:0 20px;font-size:13.5px;line-height:1.55}
+  .explain h2{font-size:16px;margin:18px 0 6px}
+  .explain table{border-collapse:collapse;width:100%;background:#fff;font-size:12.5px}
+  .explain td,.explain th{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+  .explain th{background:var(--side);color:#fff;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <span><b>Mock-up controls</b> <span class="note">(not part of the report)</span></span>
+  <span>Freshness:
+    <button data-f="green" class="on">Green</button>
+    <button data-f="amber">Amber</button>
+    <button data-f="red">Red</button>
+  </span>
+  <span><button id="lblbtn" class="on">Show build labels</button></span>
+  <span class="note">Sample data only. Hover a KPI card to flip it; hover the shelf to pause it.</span>
+</div>
+
+<div class="wrap"><div class="scaler" id="scaler"><div class="canvas" id="canvas" role="img" aria-label="Mock-up of the FAAC Overview page with freshness strip, insight banner, flip cards, line chart, rotating shelf of top 5 states and revenue mix">
+
+  <!-- sidebar -->
+  <div class="abs side">
+    <div class="brand">NIGERIA<br>DATA<small>DASHBOARD</small></div>
+    <div class="sec">FAAC</div>
+    <div class="nav on"><i></i>Overview</div>
+    <div class="nav"><i></i>States</div>
+    <div class="nav"><i></i>Revenue mix</div>
+    <div class="nav"><i></i>Deductions</div>
+    <div class="nav"><i></i>Compare</div>
+    <div class="sec">ECONOMY</div>
+    <div class="nav"><i></i>Overview</div>
+    <div class="nav"><i></i>Economy size</div>
+    <div class="nav"><i></i>FAAC in real terms</div>
+    <div class="nav"><i></i>Presidents</div>
+    <div class="sec">ELECTIONS</div>
+    <div class="nav" style="opacity:.55"><i></i>Results<span class="soon">SOON</span></div>
+    <div class="sec">INFO</div>
+    <div class="nav"><i></i>About</div>
+    <div class="srcnote">Source: FAAC monthly disbursement reports, via MotherDuck. 36 states; FCT isn't in the reports.</div>
+  </div>
+
+  <!-- header -->
+  <div class="abs eyebrow">NIGERIA DATA DASHBOARD &nbsp;·&nbsp; FAAC</div>
+  <div class="abs title">Overview</div>
+
+  <div class="abs fresh" id="fresh">
+    <span class="pill" id="fpill">On time</span>
+    <span class="tag">MONTHLY</span>
+    <span class="msg" id="fmsg">September 2026 data is in.</span>
+    <span class="facts" id="ffacts">Data up to Sep 2026 · Refreshed 5 Nov 2026, 08:14</span>
+  </div>
+  <span class="buildtag t-html" style="right:24px;top:8px">HTML · Freshness_html</span>
+
+  <!-- filter bar -->
+  <div class="abs card filters">
+    <div class="f">PERIOD <span class="tiles"><span class="on">Current</span><span>Quarterly</span><span>Yearly</span></span></div>
+    <div class="f">ZONE <span class="dd">All</span></div>
+    <div class="f">STATE <span class="dd">All</span></div>
+    <div class="f">CURRENCY <span class="tiles"><span class="on">₦</span><span>$</span></span></div>
+  </div>
+
+  <!-- insight banner -->
+  <div class="abs banner">
+    <div class="ico"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z" fill="#E2B53E"/></svg></div>
+    <div class="kick">KEY TAKEAWAY<br>SEPTEMBER 2026</div>
+    <div class="txt">States received <span class="hl">₦673.8bn</span> net in September, <span class="up">▲ 6.2%</span> on August.
+      Deductions took <span class="up">15.0%</span> of gross, the lowest in 6 months. Lagos led with <span class="hl">5.7%</span>.</div>
+  </div>
+  <span class="buildtag t-html" style="left:216px;top:646px">HTML · Page_insight_html</span>
+
+  <!-- KPI flip cards (filled by script) -->
+  <div id="kpis"></div>
+  <span class="buildtag t-html" style="left:216px;top:116px">HTML · *_flipcard (SVG sparkline inside)</span>
+
+  <!-- line chart (native) -->
+  <div class="abs card" style="left:216px;top:234px;width:560px;height:406px;padding:14px 16px">
+    <div class="ptitle">Gross vs net allocation, last 24 months</div>
+    <div class="psub">All 36 states · ₦ billions</div>
+    <svg id="line" width="528" height="338" style="margin-top:6px"></svg>
+    <div class="ltt" id="ltt"></div>
+  </div>
+  <span class="buildtag t-native" style="left:216px;top:226px">NATIVE · line chart (data labels added)</span>
+
+  <!-- rotating shelf -->
+  <div class="abs card" style="left:792px;top:234px;width:464px;height:226px;padding:14px 16px 0">
+    <div class="ptitle">Top 5 states by net received</div>
+    <div class="shelfsub">September 2026 · net received and share of the national net</div>
+    <div class="stage">
+      <div class="item r1"><span class="rk">#1</span><div class="code">LA</div><div class="nm">Lagos</div><div class="amt">₦38.2<small>bn</small></div><div class="share">5.7% of national net</div></div>
+      <div class="item r2"><span class="rk">#2</span><div class="code">DE</div><div class="nm">Delta</div><div class="amt">₦35.9<small>bn</small></div><div class="share">5.3% of national net</div></div>
+      <div class="item r3"><span class="rk">#3</span><div class="code">RI</div><div class="nm">Rivers</div><div class="amt">₦33.1<small>bn</small></div><div class="share">4.9% of national net</div></div>
+      <div class="item r4"><span class="rk">#4</span><div class="code">AK</div><div class="nm">Akwa Ibom</div><div class="amt">₦29.4<small>bn</small></div><div class="share">4.4% of national net</div></div>
+      <div class="item r5"><span class="rk">#5</span><div class="code">BY</div><div class="nm">Bayelsa</div><div class="amt">₦24.8<small>bn</small></div><div class="share">3.7% of national net</div></div>
+    </div>
+  </div>
+  <span class="buildtag t-html" style="left:792px;top:226px">HTML · State_shelf_html (rotating shelf)</span>
+
+  <!-- revenue mix (native) -->
+  <div class="abs card" style="left:792px;top:472px;width:464px;height:168px;padding:14px 16px">
+    <div class="ptitle">Revenue mix, September 2026</div>
+    <div class="psub">Share of gross allocation by revenue stream</div>
+    <div class="mixrow">
+      <div style="width:47%;background:#0B3D2E">Statutory 47%</div>
+      <div style="width:36%;background:#0E8A5F">VAT 36%</div>
+      <div style="width:9%;background:#E2B53E;color:#14231D">9%</div>
+      <div style="width:5%;background:#93A59D"></div>
+      <div style="width:3%;background:#C8D3CE"></div>
+    </div>
+    <div class="legend">
+      <span style="--c:#0B3D2E">Statutory allocation</span><span style="--c:#0E8A5F">VAT</span>
+      <span style="--c:#E2B53E">Oil derivation</span><span style="--c:#93A59D">Exchange gain</span><span style="--c:#C8D3CE">Ecology + other</span>
+    </div>
+  </div>
+  <span class="buildtag t-native" style="left:792px;top:464px">NATIVE · 100% stacked bar (unchanged)</span>
+
+</div></div></div>
+
+<div class="explain">
+  <h2>What's on this mock-up</h2>
+  <table>
+    <tr><th>Element</th><th>What changes</th><th>Built as</th><th>Trade-off</th></tr>
+    <tr><td>Freshness strip</td><td>Replaces the refresh stamp. Monthly cadence, grace 45 days, warn 15 days: a month is due 45 days after it ends (September by 14 Nov). Up to 15 days late is amber, later is red. Use the buttons at the top to see each state.</td><td>HTML measure</td><td>Agreed.</td></tr>
+    <tr><td>Insight banner</td><td>New, at the bottom of the page as the closing takeaway. Two rule-based sentences: net vs previous period, deductions share, and the top state. It follows the Period and Currency switches.</td><td>HTML measure</td><td>Takes about 60 px of height, so the charts get a little shorter.</td></tr>
+    <tr><td>Flip cards</td><td>The four KPI groups become flip cards. Front: value, coloured change (▲▼■, same rule as today) and a 6-month SVG sparkline. Back: top 3 revenue streams for Gross and top 3 deduction lines for Deductions (amount and share, ranked live from the six lines each); a "What it means" sentence for Net and Exchange rate. A weaker naira shows red.</td><td>HTML + SVG</td><td>Hover doesn't exist on phones, so the front must stand on its own. The existing tooltip moves to the native visuals only.</td></tr>
+    <tr><td>Line chart</td><td>Data labels on every 3rd month and the latest month (gross above, net below). Hover tooltip card: gross and net for the month, each with % change vs the previous month.</td><td>Native + report-page tooltip</td><td>Labelling all 24 months on 2 lines would overlap.</td></tr><tr><td>Revenue mix</td><td>No change.</td><td>Native</td><td>Keeps tooltips and cross-filtering.</td></tr>
+    <tr><td>Rotating shelf</td><td>Replaces the top-5 states bar chart. The leader sits in the centre with its net received as the big number and its share of the national net underneath. Large rank badge; the month sits in the subtitle. Rotates every 3 s and pauses on hover.</td><td>HTML measure</td><td>Agreed: no State Detail tooltip and no click-to-filter here. The States page keeps the full native ranking. Must confirm that HTML Content (lite) runs CSS animation in Desktop and Publish to Web.</td></tr>
+  </table>
+</div>
+
+<script>
+  // Sample data only, shaped like the real measures.
+  const kpis = [
+    {lbl:"GROSS ALLOCATION", val:"₦792.4", unit:"bn", chg:"▲ 4.1%", col:"#0E8A5F", spark:[702,731,718,744,761,792],
+     bt:"TOP 3 REVENUE STREAMS", top:[["Statutory allocation","₦372.4bn","47%"],["VAT","₦285.3bn","36%"],["Oil derivation","₦71.3bn","9%"]]},
+    {lbl:"DEDUCTIONS", val:"₦118.6", unit:"bn", chg:"▼ 8.9%", col:"#0E8A5F", spark:[131,128,136,129,130,118.6],
+     bt:"TOP 3 DEDUCTION LINES", top:[["External debt","₦58.1bn","49%"],["Contractual (ISPO)","₦31.4bn","26%"],["NDDC / HYPPADEC","₦17.8bn","15%"]]},
+    {lbl:"NET RECEIVED", val:"₦673.8", unit:"bn", chg:"▲ 6.2%", col:"#0E8A5F", spark:[571,603,582,615,631,673.8],
+     bt:"WHAT IT MEANS", back:"States kept ₦85 of every ₦100 allocated, the highest share since March.", tip:"Detail: States page"},
+    {lbl:"EXCHANGE RATE", val:"₦1,468", unit:"/ $", chg:"▲ 1.1%", col:"#C93C3C", vs:"naira weaker vs Aug 2026", spark:[1402,1421,1447,1439,1452,1468],
+     bt:"WHAT IT MEANS", back:"The naira weakened 1.1% against the dollar. In dollars, net received is $459m.", tip:"Switch Currency to $ to see every figure in dollars"}
+  ];
+  function sparkSvg(a, col){
+    const w=80,h=30,min=Math.min(...a),max=Math.max(...a);
+    const pts=a.map((v,i)=>[i*(w-6)/(a.length-1)+3, h-3-(v-min)/(max-min||1)*(h-8)]);
+    const last=pts[pts.length-1];
+    return `<svg width="${w}" height="${h}"><polyline points="${pts.map(p=>p.map(n=>n.toFixed(1)).join(",")).join(" ")}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3" fill="${col}"/></svg>`;
+  }
+  const host=document.getElementById("kpis");
+  kpis.forEach((k,i)=>{
+    const bg = k.col==="#5E6E67" ? "#EDF2EF" : (k.col==="#0E8A5F" ? "#E3F4EC" : "#FBE7E7");
+    host.insertAdjacentHTML("beforeend",
+      `<div class="abs fc" style="left:${216+i*264}px"><div class="fc-inner">
+        <div class="face front">
+          <div class="lbl">${k.lbl}</div>
+          <div class="val">${k.val}<small>${k.unit}</small></div>
+          <div class="chg"><span class="badge" style="color:${k.col};background:${bg}">${k.chg}</span>${k.vs||"vs August 2026"}</div>
+          <div class="spark">${sparkSvg(k.spark, "#0B3D2E")}</div>
+          <div class="hint">HOVER FOR INSIGHT ↻</div>
+        </div>
+        <div class="face back"><div class="bt">${k.bt}</div>${k.top ? `<div class="top3">${k.top.map((t,j)=>`<b>${j+1}</b><span>${t[0]}</span><span class="v">${t[1]}</span><span class="sh">${t[2]}</span>`).join("")}</div>` : `<p>${k.back}</p><div class="tip">${k.tip}</div>`}</div>
+      </div></div>`);
+  });
+
+  // Line chart mock: monotone-looking curve via Catmull-Rom, no gridlines, no Y axis, last point labelled.
+  (function(){
+    const svg=document.getElementById("line"), W=528, H=340, padL=8, padR=66, padT=30, padB=46;
+    const months=["Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"];
+    const lab=[]; for(let i=0;i<24;i++){ const m=months[i%12]; const y=(i<3?"24":(i<15?"25":"26")); lab.push(m+" "+y); }
+    const gross=[], net=[];
+    for(let i=0;i<24;i++){ const g=560+i*9.6+Math.sin(i*0.9)*22; gross.push(g); net.push(g*(0.81+Math.cos(i*0.7)*0.02)); }
+    gross[22]=761; net[22]=631; gross[23]=792.4; net[23]=673.8;
+    const all=gross.concat(net), mn=Math.min(...all)-1, mx=Math.max(...all)+1;
+    const X=i=>padL+i*(W-padL-padR)/23, Y=v=>padT+(mx-v)/(mx-mn)*(H-padT-padB);
+    function path(a){
+      const p=a.map((v,i)=>[X(i),Y(v)]); let d=`M${p[0][0]},${p[0][1]}`;
+      for(let i=0;i<p.length-1;i++){ const p0=p[i-1]||p[i], p1=p[i], p2=p[i+1], p3=p[i+2]||p2;
+        d+=` C${p1[0]+(p2[0]-p0[0])/6},${p1[1]+(p2[1]-p0[1])/6} ${p2[0]-(p3[0]-p1[0])/6},${p2[1]-(p3[1]-p1[1])/6} ${p2[0]},${p2[1]}`; }
+      return d;
+    }
+    let s=`<path d="${path(gross)}" fill="none" stroke="#0B3D2E" stroke-width="2.4"/>`;
+    s+=`<path d="${path(net)}" fill="none" stroke="#E2B53E" stroke-width="2.4"/>`;
+    s+=`<circle cx="${X(23)}" cy="${Y(gross[23])}" r="3.5" fill="#0B3D2E"/><text x="${X(23)+7}" y="${Y(gross[23])+4}" font-size="10.5" font-weight="700" fill="#0B3D2E">₦792.4bn</text>`;
+    s+=`<circle cx="${X(23)}" cy="${Y(net[23])}" r="3.5" fill="#C99A1E"/><text x="${X(23)+7}" y="${Y(net[23])+4}" font-size="10.5" font-weight="700" fill="#9A7414">₦673.8bn</text>`;
+    const fmt=v=>'₦'+Math.round(v)+'bn';
+    for(let i=0;i<23;i+=3){
+      s+=`<circle cx="${X(i)}" cy="${Y(gross[i])}" r="2.5" fill="#0B3D2E"/><text x="${X(i)}" y="${Y(gross[i])-8}" font-size="9" font-weight="600" fill="#0B3D2E" text-anchor="${i===0?'start':'middle'}">${fmt(gross[i])}</text>`;
+      s+=`<circle cx="${X(i)}" cy="${Y(net[i])}" r="2.5" fill="#C99A1E"/><text x="${X(i)}" y="${Y(net[i])+15}" font-size="9" font-weight="600" fill="#9A7414" text-anchor="${i===0?'start':'middle'}">${fmt(net[i])}</text>`;
+    }
+    for(let i=0;i<24;i+=3) s+=`<text x="${X(i)}" y="${H-8}" font-size="9.5" font-weight="600" fill="#14231D" text-anchor="${i===0?'start':'middle'}">${lab[i]}</text>`;
+    s+=`<rect x="${padL}" y="2" width="10" height="3" fill="#0B3D2E"/><text x="${padL+14}" y="7" font-size="9.5" fill="#5E6E67">Gross</text>`;
+    s+=`<rect x="${padL+56}" y="2" width="10" height="3" fill="#E2B53E"/><text x="${padL+70}" y="7" font-size="9.5" fill="#5E6E67">Net received</text>`;
+    s+=`<line id="lguide" x1="0" x2="0" y1="${padT-10}" y2="${H-padB+6}" stroke="#9AABA3" stroke-dasharray="3 3" visibility="hidden"/>`;
+    s+=`<rect x="0" y="0" width="${W}" height="${H}" fill="transparent"/>`;
+    svg.innerHTML=s;
+    const tt=document.getElementById("ltt"), guide=document.getElementById("lguide");
+    const full=lab.map(l=>{const [m,y]=l.split(" ");return m+" 20"+y;});
+    const pill=(cur,prev)=>{ if(prev==null) return '<span class="c" style="color:#5E6E67;background:#EDF2EF">n/a</span>';
+      const c=(cur-prev)/prev, up=c>0, eq=Math.abs(c)<0.0005;
+      const col=eq?"#C98A00":(up?"#0E8A5F":"#C93C3C"), bg=eq?"#FBF1DC":(up?"#E3F4EC":"#FBE7E7");
+      return `<span class="c" style="color:${col};background:${bg}">${eq?"■":(up?"▲":"▼")} ${Math.abs(c*100).toFixed(1)}%</span>`; };
+    svg.addEventListener("mousemove",e=>{
+      const r=svg.getBoundingClientRect(), sc=r.width/W, x=(e.clientX-r.left)/sc;
+      const i=Math.max(0,Math.min(23,Math.round((x-padL)/((W-padL-padR)/23))));
+      guide.setAttribute("x1",X(i)); guide.setAttribute("x2",X(i)); guide.setAttribute("visibility","visible");
+      tt.innerHTML=`<div class="m">${full[i]}</div>
+        <div class="r"><span>Gross</span><b>₦${gross[i].toFixed(1)}bn</b>${pill(gross[i],i?gross[i-1]:null)}</div>
+        <div class="r"><span>Net received</span><b>₦${net[i].toFixed(1)}bn</b>${pill(net[i],i?net[i-1]:null)}</div>
+        <div class="vs">${i?"Change vs "+full[i-1]:"No earlier month in view"}</div>`;
+      tt.style.display="block";
+      const left=16+X(i)+14, flip=left+178>544;
+      tt.style.left=(flip?16+X(i)-192:left)+"px"; tt.style.top=(70+Math.min(Y(gross[i]),200))+"px";
+    });
+    svg.addEventListener("mouseleave",()=>{tt.style.display="none"; guide.setAttribute("visibility","hidden");});
+  })();
+
+  // Freshness states (cadence Monthly; wording matches the planned DAX messages)
+  const fstates={
+    green:{c:"#0E8A5F",p:"On time",m:"September 2026 data is in.",f:"Data up to Sep 2026 · Refreshed 5 Nov 2026, 08:14"},
+    amber:{c:"#C98A00",p:"Late",m:"October 2026 data is overdue. Expected by 14 Dec.",f:"Data up to Sep 2026 · Refreshed 20 Dec 2026, 08:10"},
+    red:{c:"#C93C3C",p:"Refresh missed",m:"October 2026 data was due 14 Dec. Newer data is likely in the warehouse.",f:"Data up to Sep 2026 · Refreshed 13 Dec 2026, 08:12"}
+  };
+  function setFresh(k){ const s=fstates[k];
+    document.getElementById("fpill").style.background=s.c; document.getElementById("fpill").textContent=s.p;
+    document.getElementById("fmsg").textContent=s.m; document.getElementById("ffacts").textContent=s.f;
+    document.getElementById("fresh").style.borderColor=s.c+"55";
+    document.querySelectorAll("[data-f]").forEach(b=>b.classList.toggle("on",b.dataset.f===k));
+  }
+  document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>setFresh(b.dataset.f));
+  setFresh("green");
+  document.getElementById("lblbtn").onclick=e=>{document.body.classList.toggle("nolabels"); e.target.classList.toggle("on");};
+
+  // Fit the 1280x720 canvas to the window width.
+  function fit(){ const sc=Math.min(1,(window.innerWidth-40)/1280); const el=document.getElementById("scaler");
+    el.style.transform=`scale(${sc})`; el.style.width=1280*sc+"px"; el.style.height=720*sc+"px"; }
+  window.addEventListener("resize",fit); fit();
+</script>
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAAC States look-and-feel mock-up</title>
+<style>
+  :root{
+    /* Green & White palette from the Nigeria Data Dashboard; layout = 1280x720 Power BI canvas */
+    --side:#0B3D2E; --side2:#1B5A45; --canvas:#F3F6F4; --gold:#E2B53E;
+    --better:#0E8A5F; --worse:#C93C3C; --equal:#C98A00;
+    --ink:#14231D; --muted:#5E6E67; --line:#E3E9E6; --track:#EDF2EF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#DCE3DF;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:var(--ink)}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:12px 20px;background:#fff;border-bottom:1px solid var(--line);font-size:13px}
+  .controls b{font-weight:600}
+  .controls button{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer}
+  .controls button.on{background:var(--side);color:#fff;border-color:var(--side)}
+  .note{color:var(--muted)}
+  .wrap{padding:20px;display:flex;justify-content:center}
+  .scaler{transform-origin:top left}
+  .canvas{position:relative;width:1280px;height:720px;background:var(--canvas);overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+  .abs{position:absolute}
+  .card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(11,61,46,.08),0 4px 14px rgba(11,61,46,.05)}
+
+  .side{left:0;top:0;width:192px;height:720px;background:var(--side);color:#fff;padding:26px 14px 0 22px}
+  .brand{font-weight:700;font-size:19px;line-height:1.1;letter-spacing:.5px}
+  .brand small{display:block;font-weight:400;font-size:9px;letter-spacing:2.4px;opacity:.7;margin-top:6px}
+  .sec{font-size:8.5px;letter-spacing:2.2px;opacity:.6;margin:22px 0 6px}
+  .nav{display:flex;align-items:center;gap:9px;font-size:11.5px;height:30px;padding-left:6px;margin-left:-8px;border-radius:7px;opacity:.82}
+  .nav i{width:6px;height:6px;border-radius:50%;background:#B9CCC3;flex:none}
+  .nav.on{background:var(--side2);opacity:1;font-weight:600}
+  .nav.on i{background:var(--gold)}
+  .soon{margin-left:auto;font-size:7.5px;letter-spacing:1.3px;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:1px 6px}
+  .srcnote{position:absolute;bottom:16px;left:22px;right:14px;font-size:8.5px;line-height:1.5;opacity:.65}
+
+  .eyebrow{left:216px;top:20px;font-size:9.5px;letter-spacing:2.6px;color:var(--better);font-weight:600}
+  .title{left:216px;top:32px;font-size:26px;font-weight:600}
+  .fresh{right:24px;top:20px;height:38px;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border-radius:999px;font-size:10.5px;background:#fff;border:1px solid #0E8A5F55}
+  .fresh .pill{display:flex;align-items:center;gap:6px;color:#fff;font-weight:600;font-size:10px;padding:5px 10px;border-radius:999px;background:var(--better)}
+  .fresh .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff}
+  .fresh .tag{font-size:8px;letter-spacing:1.6px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+  .fresh .msg{font-weight:600}
+  .fresh .facts{color:var(--muted);border-left:1px solid var(--line);padding-left:10px}
+
+  .filters{left:216px;top:72px;width:1040px;height:40px;border-radius:999px;display:flex;align-items:center;padding:0 18px;font-size:8.5px;letter-spacing:1.6px;color:var(--muted)}
+  .f{display:flex;align-items:center;gap:10px;height:100%;padding-right:16px}
+  .f + .f{border-left:1px solid var(--line);padding-left:16px}
+  .tiles{display:flex;gap:4px;letter-spacing:0}
+  .tiles span{font-size:10px;color:var(--ink);background:var(--track);padding:4px 9px;border-radius:6px}
+  .tiles span.on{background:var(--side);color:#fff}
+  .dd{letter-spacing:0;font-size:10px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 26px 4px 9px;position:relative;min-width:90px}
+  .dd::after{content:"▾";position:absolute;right:8px;color:var(--muted)}
+
+  .ptitle{font-size:11.5px;font-weight:600}
+  .psub{font-size:9px;color:var(--muted);margin-top:2px}
+  .buildtag{position:absolute;z-index:50;font-size:8px;letter-spacing:1px;font-weight:700;padding:2px 6px;border-radius:4px;color:#fff;pointer-events:none}
+  .t-html{background:#7A3FC4}.t-native{background:#2F6FD1}
+  body.nolabels .buildtag{display:none}
+
+  /* map */
+  #map path{stroke:#fff;stroke-width:.8;cursor:pointer}
+  #map path.sel{stroke:var(--gold);stroke-width:2.4}
+  #map path.fct{fill:#D5DDD9;cursor:default}
+  .maplegend{display:flex;align-items:center;gap:6px;font-size:8.5px;color:var(--muted)}
+  .maplegend i{display:inline-block;width:18px;height:8px}
+  .hov{position:absolute;display:none;width:206px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 18px rgba(11,61,46,.18);padding:9px 11px;font-size:10px;pointer-events:none;z-index:60}
+  .hov .m{font-weight:700;font-size:11.5px;letter-spacing:.6px}
+  .hov .sub{color:var(--muted);font-size:9px;margin:1px 0 6px}
+  .hov .rk{display:inline-block;font-weight:700;color:var(--side);background:var(--track);border-radius:5px;padding:1px 6px;margin-left:4px}
+  .hov .r{display:grid;grid-template-columns:1fr auto 58px;gap:6px;align-items:center;padding:3px 0;border-top:1px solid var(--line)}
+  .hov .r span:first-child{color:var(--muted)}
+  .hov .r b{font-weight:700;text-align:right}
+  .hov .c{font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:4px;text-align:center}
+  .hov .vs{color:var(--muted);font-size:8.5px;margin-top:4px}
+
+  /* ranked bars (native) */
+  .bars{height:418px;overflow-y:auto;margin-top:6px;padding-right:6px}
+  .drill{position:absolute;right:14px;top:12px;display:flex;gap:4px}
+  .drill button{font:inherit;font-size:11px;width:24px;height:22px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;color:var(--ink);padding:0}
+  .drill button:disabled{opacity:.35;cursor:default}
+  .drill button:focus-visible{outline:2px solid var(--gold)}
+  .zleg{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:9px;color:var(--muted)}
+  .zleg span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;background:var(--c)}
+  .bar.zone{height:30px;font-size:10.5px}
+  .bar.zone .tr{height:20px}
+  .bar.zone .tr em{top:2px;font-size:10px}
+  .btt{position:absolute;display:none;min-width:150px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 18px rgba(11,61,46,.18);padding:8px 11px;font-size:10px;pointer-events:none;z-index:60}
+  .btt .m{font-weight:700;font-size:11px;letter-spacing:.5px}
+  .btt .z{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:9.5px;margin:2px 0 5px}
+  .btt .z i{width:8px;height:8px;border-radius:2px}
+  .btt .r{display:flex;justify-content:space-between;gap:14px;border-top:1px solid var(--line);padding-top:4px}
+  .btt .r b{font-weight:700}
+  .bar{display:grid;grid-template-columns:78px 1fr;gap:8px;align-items:center;height:20px;cursor:pointer;font-size:9.5px}
+  .bar .nm{text-align:right;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar .tr{position:relative;height:13px}
+  .bar .tr span{position:absolute;left:0;top:0;bottom:0;border-radius:0 3px 3px 0;transition:opacity .2s}
+  .bar .tr em{position:absolute;top:-1px;font-style:normal;font-size:9px;font-weight:600;color:var(--ink)}
+  .bars.hassel .bar:not(.sel) .tr span{opacity:.28}
+  .bar.sel .nm{color:var(--side)}
+
+  /* flip cards */
+  .fc{width:264px;height:96px;perspective:1000px}
+  .fc-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+  .fc:hover .fc-inner{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;overflow:hidden}
+  .front{background:#fff;box-shadow:0 1px 3px rgba(11,61,46,.08),0 4px 14px rgba(11,61,46,.05);padding:12px 14px 0 16px}
+  .front::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:var(--side)}
+  .lbl{font-size:8.5px;letter-spacing:1.8px;color:var(--muted);font-weight:600}
+  .lbl b{color:var(--better)}
+  .val{font-size:22px;font-weight:700;margin-top:3px;letter-spacing:-.3px}
+  .val small{font-size:12px;font-weight:600;color:var(--muted);margin-left:2px}
+  .chg{display:flex;align-items:center;gap:6px;font-size:9.5px;margin-top:4px;color:var(--muted)}
+  .badge{font-weight:700;padding:2px 6px;border-radius:5px;font-size:9.5px}
+  .spark{position:absolute;right:12px;top:30px}
+  .hint{position:absolute;right:12px;bottom:7px;font-size:7.5px;color:#9AABA3;letter-spacing:.4px}
+  .back{background:var(--side);color:#fff;transform:rotateY(180deg);padding:12px 14px}
+  .back .bt{font-size:8.5px;letter-spacing:1.8px;color:var(--gold);font-weight:600}
+  .back p{margin:5px 0 0;font-size:10.5px;line-height:1.4}
+  .back .tip{margin-top:5px;font-size:8.5px;opacity:.75;border-left:2px solid var(--gold);padding-left:6px}
+  .top3{display:grid;grid-template-columns:14px 1fr auto 30px;gap:3px 8px;margin-top:7px;font-size:10.5px;align-items:center}
+  .top3 span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .top3 b{color:var(--gold)}
+  .top3 .v{font-weight:700;text-align:right}
+  .top3 .sh{opacity:.75;text-align:right;font-size:9.5px}
+
+  /* banner */
+  .banner{left:216px;top:654px;width:1040px;height:50px;border-radius:12px;display:flex;align-items:center;gap:14px;padding:0 18px;
+    background:linear-gradient(90deg,#0B3D2E 0%,#145A43 70%,#1D6B51 100%);color:#fff}
+  .banner .ico{width:28px;height:28px;border-radius:8px;background:rgba(226,181,62,.18);display:flex;align-items:center;justify-content:center;flex:none}
+  .banner .kick{font-size:8.5px;letter-spacing:2px;color:var(--gold);font-weight:600;white-space:nowrap}
+  .banner .txt{font-size:12px;line-height:1.35}
+  .banner .up{color:#6EE0AE;font-weight:700}
+  .banner .dn{color:#FF9A9A;font-weight:700}
+  .banner .hl{color:var(--gold);font-weight:700}
+
+  .explain{max-width:1280px;margin:0 auto 30px;padding:0 20px;font-size:13.5px;line-height:1.55}
+  .explain h2{font-size:16px;margin:18px 0 6px}
+  .explain table{border-collapse:collapse;width:100%;background:#fff;font-size:12.5px}
+  .explain td,.explain th{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+  .explain th{background:var(--side);color:#fff;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <span><b>Mock-up controls</b> <span class="note">(not part of the report)</span></span>
+  <span><button id="lblbtn" class="on">Show build labels</button></span>
+  <span class="note">Sample data only. Click a state on the map or in the ranking to select it; click it again for all 36. Hover a state for its detail. Use the ↑ and ⇊ icons on the ranking to drill.</span>
+</div>
+
+<div class="wrap"><div class="scaler" id="scaler"><div class="canvas" role="img" aria-label="Mock-up of the FAAC States page: map, ranking of 36 states, flip cards for the selected state and insight banner">
+
+  <div class="abs side">
+    <div class="brand">NIGERIA<br>DATA<small>DASHBOARD</small></div>
+    <div class="sec">FAAC</div>
+    <div class="nav"><i></i>Overview</div>
+    <div class="nav on"><i></i>States</div>
+    <div class="nav"><i></i>Revenue mix</div>
+    <div class="nav"><i></i>Deductions</div>
+    <div class="nav"><i></i>Compare</div>
+    <div class="sec">ECONOMY</div>
+    <div class="nav"><i></i>Overview</div>
+    <div class="nav"><i></i>Economy size</div>
+    <div class="nav"><i></i>FAAC in real terms</div>
+    <div class="nav"><i></i>Presidents</div>
+    <div class="sec">ELECTIONS</div>
+    <div class="nav" style="opacity:.55"><i></i>Results<span class="soon">SOON</span></div>
+    <div class="sec">INFO</div>
+    <div class="nav"><i></i>About</div>
+    <div class="srcnote">Source: FAAC monthly disbursement reports, via MotherDuck. 36 states; FCT isn't in the reports.</div>
+  </div>
+
+  <div class="abs eyebrow">NIGERIA DATA DASHBOARD &nbsp;·&nbsp; FAAC</div>
+  <div class="abs title">States</div>
+  <div class="abs fresh">
+    <span class="pill">On time</span><span class="tag">MONTHLY</span>
+    <span class="msg">September 2026 data is in.</span>
+    <span class="facts">Data up to Sep 2026 · Refreshed 5 Nov 2026, 08:14</span>
+  </div>
+  <span class="buildtag t-html" style="right:24px;top:8px">HTML · Freshness_html</span>
+
+  <div class="abs card filters">
+    <div class="f">PERIOD <span class="tiles"><span class="on">Current</span><span>Quarterly</span><span>Yearly</span></span></div>
+    <div class="f">ZONE <span class="dd">All</span></div>
+    <div class="f">STATE <span class="dd" id="statedd">All</span></div>
+    <div class="f">CURRENCY <span class="tiles"><span class="on">₦</span><span>$</span></span></div>
+  </div>
+
+  <!-- map (native shape map) -->
+  <div class="abs card" style="left:216px;top:124px;width:540px;height:516px;padding:14px 16px">
+    <div class="ptitle">Net received by state, September 2026</div>
+    <div class="psub">Darker = more · FCT in grey (not in FAAC reports) · hover a state for detail</div>
+    <svg id="map" width="508" height="440" style="margin-top:4px"></svg>
+    <div class="maplegend abs" style="left:16px;bottom:12px">Less <i style="background:#D7EDE2"></i><i style="background:#9FD2B9"></i><i style="background:#5DB28D"></i><i style="background:#1F8A60"></i><i style="background:#0B5A3E"></i> More</div>
+    <div class="hov" id="hov"></div>
+  </div>
+  <span class="buildtag t-native" style="left:216px;top:116px">NATIVE · shape map (bigger) + TT - State Detail (adds % change)</span>
+
+
+  <!-- ranking (native bar) -->
+  <div class="abs card" style="left:772px;top:124px;width:484px;height:516px;padding:14px 16px">
+    <div class="ptitle" id="btitle">All 36 states ranked by net received</div>
+    <div class="psub" id="bsub">September 2026 · ₦ billions · coloured by zone · scroll for the rest</div>
+    <div class="drill">
+      <button id="dUp" title="Drill up to zones" aria-label="Drill up to zones">↑</button>
+      <button id="dAll" title="Expand to all states" aria-label="Expand to all states">⇊</button>
+    </div>
+    <div class="zleg" id="zleg"></div>
+    <div class="bars" id="bars"></div>
+    <div class="btt" id="btt"></div>
+  </div>
+  <span class="buildtag t-native" style="left:772px;top:116px">NATIVE · bar chart: Zone → State drill, coloured by zone</span>
+
+  <div class="abs banner">
+    <div class="ico"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z" fill="#E2B53E"/></svg></div>
+    <div class="kick" id="kick">KEY TAKEAWAY<br>SEPTEMBER 2026</div>
+    <div class="txt" id="btxt"></div>
+  </div>
+  <span class="buildtag t-html" style="left:216px;top:646px">HTML · State_insight_html</span>
+
+</div></div></div>
+
+<div class="explain">
+  <h2>What's on this mock-up</h2>
+  <table>
+    <tr><th>Element</th><th>What changes</th><th>Built as</th><th>Trade-off</th></tr>
+    <tr><td>Freshness strip</td><td>Replaces the refresh stamp. Same settings as Overview (monthly, grace 45, warn 15).</td><td>HTML measure</td><td>None.</td></tr>
+    <tr><td>Map</td><td>Bigger: fills the left column. Net by state, FCT grey, click to select. Tooltip (TT - State Detail) gains income, deductions and net with % change vs the previous month, and keeps "Rank # of 36". Income and net up = green; deductions up = red.</td><td>Native shape map + report-page tooltip</td><td>None.</td></tr>
+    <tr><td>Ranking of 36 states</td><td>Axis is a Zone → State hierarchy: drill up to the 6 zones, click a zone to drill down to its states, or expand to all 36. Bars coloured by zone, with a legend. Data labels on every bar; the selected state keeps its colour and the rest fade. Tooltip: state, zone and net (zone level: zone, states, net and share of national).</td><td>Native bar chart, default tooltip with chosen fields</td><td>Stays native: 36 rows, scrolls, drills.</td></tr>
+    <tr><td>Insight banner</td><td>At the bottom. For one state: net, change, rank, and deductions share vs national. For all states: the total, the leader and the smallest share.</td><td>HTML measure</td><td>None.</td></tr>
+  </table>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script>
+  const TOPO = {"type":"Topology","objects":{"states":{"geometries":[{"properties":{"name":"Cross River"},"type":"Polygon","arcs":[[-11,-62,-105,-28,0]],"id":"feature_00"},{"properties":{"name":"Federal Capital Territory"},"type":"Polygon","arcs":[[-25,-80,-86,-45]],"id":"feature_01"},{"properties":{"name":"Ogun"},"type":"Polygon","arcs":[[1,-9,2,-4,-70,-14]],"id":"feature_02"},{"properties":{"name":"Oyo"},"type":"Polygon","arcs":[[3,4,-23,-71]],"id":"feature_03"},{"properties":{"name":"Sokoto"},"type":"Polygon","arcs":[[5,-7,-49]],"id":"feature_04"},{"properties":{"name":"Zamfara"},"type":"Polygon","arcs":[[6,7,-32,-88,-85,-50]],"id":"feature_05"},{"properties":{"name":"Lagos"},"type":"Polygon","arcs":[[8,9]],"id":"feature_06"},{"properties":{"name":"Akwa Ibom"},"type":"Polygon","arcs":[[10,11,-19,-63]],"id":"feature_07"},{"properties":{"name":"Bayelsa"},"type":"Polygon","arcs":[[-16,-21,12]],"id":"feature_08"},{"properties":{"name":"Ondo"},"type":"Polygon","arcs":[[13,-74,-67,-26,-34,-18,14]],"id":"feature_09"},{"properties":{"name":"Delta"},"type":"Polygon","arcs":[[15,16,17,-36,-39,-22]],"id":"feature_10"},{"properties":{"name":"Rivers"},"type":"Polygon","arcs":[[18,19,20,21,-42,-52,-64]],"id":"feature_11"},{"properties":{"name":"Kwara"},"type":"Polygon","arcs":[[22,23,-82,-27,-68,-72]],"id":"feature_12"},{"properties":{"name":"Kogi"},"type":"Polygon","arcs":[[24,-48,-29,-94,-41,-35,25,-69,26,-81]],"id":"feature_13"},{"properties":{"name":"Benue"},"type":"Polygon","arcs":[[27,-108,-95,28,-47,-98,29]],"id":"feature_14"},{"properties":{"name":"Borno"},"type":"Polygon","arcs":[[-54,-58,30,-55]],"id":"feature_15"},{"properties":{"name":"Katsina"},"type":"Polygon","arcs":[[31,32,-37,-43,-89]],"id":"feature_16"},{"properties":{"name":"Plateau"},"type":"Polygon","arcs":[[-46,-92,-75,-100]],"id":"feature_17"},{"properties":{"name":"Edo"},"type":"Polygon","arcs":[[33,34,-40,35]],"id":"feature_18"},{"properties":{"name":"Jigawa"},"type":"Polygon","arcs":[[36,37,-60,-77,-44]],"id":"feature_19"},{"properties":{"name":"Anambra"},"type":"Polygon","arcs":[[38,39,40,-97,-66,-53,41]],"id":"feature_20"},{"properties":{"name":"Kano"},"type":"Polygon","arcs":[[42,43,-76,-90]],"id":"feature_21"},{"properties":{"name":"Nasarawa"},"type":"Polygon","arcs":[[44,-93,45,-99,46,47]],"id":"feature_22"},{"properties":{"name":"Kebbi"},"type":"Polygon","arcs":[[48,49,-84,50]],"id":"feature_23"},{"properties":{"name":"Imo"},"type":"Polygon","arcs":[[51,52,-65]],"id":"feature_24"},{"properties":{"name":"Gombe"},"type":"Polygon","arcs":[[53,-57,-102,-79,-59]],"id":"feature_25"},{"properties":{"name":"Adamawa"},"type":"Polygon","arcs":[[54,55,-103,56]],"id":"feature_26"},{"properties":{"name":"Yobe"},"type":"Polygon","arcs":[[57,58,-78,59,60]],"id":"feature_27"},{"properties":{"name":"Abia"},"type":"Polygon","arcs":[[61,62,63,64,65,-96,-106]],"id":"feature_28"},{"properties":{"name":"Ekiti"},"type":"Polygon","arcs":[[66,-73,67,68]],"id":"feature_29"},{"properties":{"name":"Osun"},"type":"Polygon","arcs":[[69,70,71,72,73]],"id":"feature_30"},{"properties":{"name":"Bauchi"},"type":"Polygon","arcs":[[74,-91,75,76,77,78,-101]],"id":"feature_31"},{"properties":{"name":"Niger"},"type":"Polygon","arcs":[[79,80,81,82,83,84,-87]],"id":"feature_32"},{"properties":{"name":"Kaduna"},"type":"Polygon","arcs":[[85,86,87,88,89,90,91,92]],"id":"feature_33"},{"properties":{"name":"Enugu"},"type":"Polygon","arcs":[[93,94,-107,95,96]],"id":"feature_34"},{"properties":{"name":"Taraba"},"type":"Polygon","arcs":[[97,98,99,100,101,102,103]],"id":"feature_35"},{"properties":{"name":"Ebonyi"},"type":"Polygon","arcs":[[104,105,106,107]],"id":"feature_36"}],"type":"GeometryCollection"}},"bbox":[2.692612538038247,4.270203986225056,14.677967754208566,13.885713987110876],"transform":{"scale":[0.00011984875791174685,9.615606156947389e-05],"translate":[2.692612538038247,4.270203986225056]},"arcs":[[[56528,22163],[-270,-765],[-598,-20],[-1168,-1823],[-2172,-2533],[-241,-38],[-575,-638],[-120,-1242],[591,-1324],[-515,-1016],[-371,-3513],[-724,-886],[-30,-320],[-332,-452],[103,-162],[-393,-434],[12,-290],[-406,-335],[207,-628],[-339,-219],[-353,11],[-192,-715],[79,-243],[-424,-225],[-224,111],[95,299],[136,14],[-153,246],[-272,-275],[-282,87],[-102,187],[98,286],[-277,-8],[-264,257],[4,178],[-484,344]],[[14941,21380],[-1031,435]],[[100,22772],[78,208],[-104,338],[348,529],[-125,633],[432,739],[58,572],[-525,327],[222,903],[-396,997],[-1,259],[285,363],[104,729],[-276,5245],[221,2057],[-255,578]],[[11646,29777],[-757,-76],[-490,-439],[-1764,-4],[-1,138],[559,444],[-257,946],[-11,733],[-400,40],[45,859],[-220,6],[114,617],[-1390,-79],[-551,-529],[70,295],[-308,797],[-441,-395],[-60,-568],[-555,-907],[-270,109],[-316,447],[-783,111],[-606,633],[-151,840],[-481,375],[-281,524],[209,366],[-75,423],[206,225],[-71,83],[204,457],[23,416],[-177,361],[-202,257],[-217,-1153],[-315,-365],[-52,508],[-260,114],[17,1259],[357,393],[-491,-10],[-587,226],[-136,-368],[-608,-637]],[[166,37249],[-166,566],[509,3126],[-371,1372],[97,890],[265,390],[32,1178]],[[11964,93384],[0,2273],[884,325],[1351,1602],[2022,723],[598,369],[1378,238],[295,-369],[345,-120],[1066,180],[1415,-91],[281,137],[577,812],[1499,536],[5220,-2506],[1175,357],[1382,-926],[278,-225],[2002,-2980],[148,-778],[331,-778]],[[18760,77589],[-178,614],[128,574],[277,318],[-847,594],[-49,1194],[115,735],[-107,430],[111,729],[629,16],[21,865],[1366,-323],[364,341],[1262,412],[609,-328],[315,302],[446,-1049],[545,213],[214,818],[716,-34],[325,-276],[531,96],[146,546],[-462,1076],[48,1390],[-380,118],[139,595],[-65,257],[-309,572],[-510,366],[388,820],[829,-584],[660,134],[289,-302],[296,101],[654,-682],[524,-62],[80,367],[-236,1404],[359,304],[-16,862],[1201,724],[322,361],[264,3],[-23,255],[349,230],[466,-190],[113,-157],[-86,-124],[363,-83],[385,304],[146,-289],[-116,-142],[470,152],[140,-765],[466,-369],[850,881],[38,267],[465,-150],[411,143]],[[34211,92163],[1173,-1404],[984,-18]],[[100,22772],[1282,-112],[15,185],[240,149],[-27,314],[1599,-198],[694,163],[342,255],[-68,470],[372,438],[5,426],[205,409],[684,-287],[64,-211],[333,-143],[496,25],[-74,468],[132,-129],[4338,191],[939,-127],[16,-348],[-290,-122],[-33,-200],[126,-444],[243,-7],[90,-184],[569,519],[373,-87],[154,-251],[-68,-257],[-577,-415],[48,-203],[463,-146],[294,-304],[135,122],[646,-51],[125,-131],[-75,-734]],[[13910,21815],[-4168,706],[-3586,-124],[-240,-262],[-3976,-43],[-1880,-200],[40,880]],[[43286,11404],[177,-324],[-507,19],[184,-232],[417,-116],[527,-995],[139,-17],[201,419],[207,-128],[198,-372],[-4,-559],[287,-396],[6,-766],[213,-535],[487,-172],[385,-363],[369,-788]],[[46572,6079],[294,-526],[-70,-331],[145,-260],[213,-1461],[-437,-730],[-2208,65],[-2145,-308],[-1369,-447],[-77,273],[-575,555],[159,367],[-202,474],[105,724]],[[32180,573],[-707,-105],[-100,-168],[-182,116],[-1599,-183],[173,681],[183,179],[-95,167],[-248,-321],[10,416],[-225,-669],[45,-594],[-1106,-92],[-922,436],[-112,231],[-1009,708],[-1192,1194],[-1321,2218],[-817,2005],[-18,546],[-555,1564],[611,78]],[[14941,21380],[43,106],[697,-405],[192,360],[29,357],[-136,124],[-909,157],[254,232],[263,-75],[207,443],[37,500],[341,-71],[-142,418],[104,893],[-117,240],[-185,-78],[-566,-1339],[-322,1016],[-589,284],[-95,345],[382,1027],[1041,825],[125,1529],[400,444]],[[19059,16822],[-1896,2424],[-2222,2134]],[[31648,11533],[142,-418],[-75,-135],[-362,17],[-345,-238],[-628,134],[-406,-401],[46,-468],[-645,48],[-144,-163],[-42,-670],[-209,27],[-302,-332],[-366,224],[-257,-558],[-421,68],[-367,557],[-228,77],[-156,-588],[-282,15],[-109,-431],[-637,184],[-103,-289],[-355,-15],[-218,-341],[-364,47],[-157,-172],[-528,452],[-429,80],[-253,307],[-291,8],[11,246],[-174,175]],[[22994,8980],[-140,187],[-364,-132],[-295,301],[-268,2044],[417,-81],[805,156],[500,369],[-164,380],[102,597],[671,162],[-631,-34],[-434,-1185],[-344,-145],[-635,45],[-961,524],[-690,1008],[420,641],[1501,-137],[255,565],[409,-92],[364,-364],[-58,211],[-489,396],[-381,-179],[-215,-403],[-1054,245],[-643,-294],[-406,514],[-348,1077],[-325,374],[-534,1092]],[[19059,16822],[1315,2929]],[[40071,5804],[121,-449],[184,-174],[29,-707]],[[40405,4474],[-147,-215],[1,-480],[218,-559],[-186,-308],[177,-369],[390,-262],[-76,-410],[-1350,-193],[-710,126],[-40,-280],[-171,-82],[-1425,-357],[-21,373],[690,1147],[-6,251],[-221,678],[-313,520],[-420,192],[-140,465],[-18,-406],[557,-453],[216,-584],[-85,-372],[95,-350],[-154,-534],[-1124,-234],[-216,1721],[-121,108],[-68,-1183],[366,-1328],[-517,-27],[-829,263],[-67,-85],[209,-344],[-1320,-73],[-165,1519],[291,793],[-64,420],[-289,-980],[88,-1028],[-156,-106],[207,-735],[-496,-128],[-50,-151],[-175,144],[-590,-5]],[[32180,573],[-39,308],[-254,146],[-13,653],[311,816],[-41,242],[178,212],[-194,151],[49,186],[-308,591],[794,1074],[-582,96],[-637,-440],[-164,333],[27,315],[-123,-101],[-256,755],[14,381],[331,708],[-242,638],[619,1548],[564,379],[-5,382],[116,108],[-299,495],[270,371],[54,540],[-702,73]],[[31648,11533],[-20,431],[214,53],[217,346],[-33,759],[450,309],[274,726],[-131,582]],[[15656,39358],[-528,387],[-210,1233],[-740,973],[-1524,3917],[-157,755],[39,656],[218,463],[833,847],[116,400],[-154,176],[-526,-320],[-358,32],[-1655,672],[-179,143],[-578,1295],[-796,96],[-462,-367],[-231,-1040],[-430,-522],[-799,28],[36,-441],[-628,-295],[-1141,-896],[-1257,-623],[-616,272],[-500,-608],[-744,-415],[-782,-1023],[-987,-16],[-384,-366]],[[532,44771],[-112,2034],[432,2976],[1445,253],[163,-210],[897,306],[596,2208],[5,655],[-211,783],[248,575],[1513,2149],[-181,549],[84,541],[212,306],[921,205],[403,-133],[703,1080],[624,2170]],[[34504,43547],[943,14],[333,-157]],[[27630,33893],[-554,1243],[-75,1018],[-937,-195],[-362,202]],[[23407,39940],[290,376],[37,610],[-299,102],[-293,-133],[-366,267],[-33,578],[-177,86],[-338,-181],[-29,367],[-264,324],[627,1011],[831,944],[232,82],[991,-770],[1167,-363],[2463,-313],[279,346],[115,1294],[696,1839]],[[56528,22163],[31,1285],[-917,1154],[-480,852],[-400,4],[-887,-351],[-660,-436],[-294,50],[-359,469],[-191,13],[214,631],[-170,360],[-1052,797],[-598,232],[-609,89],[-326,-296],[-486,-91],[293,-421],[-174,-392],[-1268,-359],[-409,111],[-489,-665],[-556,-151]],[[40367,28725],[109,81],[535,-234],[-48,759],[343,704],[400,349],[225,-85],[512,263],[148,252],[34,618],[-271,97],[283,649],[-27,383],[-294,338],[-70,1006],[-153,91],[-110,846],[254,283],[-17,1004],[-743,1681],[111,1129]],[[57618,23188],[-607,-730],[-483,-295]],[[81244,91547],[247,-72],[411,766],[399,224],[23,415],[-208,61],[491,498],[-17,291],[289,-44],[172,302],[-21,-199],[275,-129],[126,277],[-83,185],[315,-116],[-94,146],[258,30],[-23,226],[304,474],[870,956],[1543,669],[89,-151],[-98,-83],[229,-118],[131,247],[176,-188],[-23,202],[202,97],[-52,-342],[339,207],[139,-251],[74,371],[276,166],[-112,250],[210,-93],[93,157],[-161,219],[165,34],[-43,118],[303,288],[125,391],[218,-28],[25,289],[209,-141],[2255,6],[3752,-6499],[1001,-5671],[-26,-381],[-200,-232],[51,-334],[123,20],[-177,-410],[438,-491],[420,93],[111,-148],[3,153],[137,-129],[152,159],[412,-157],[460,113],[109,-210],[318,26],[315,-263],[-73,-325],[302,-160],[97,-222],[-78,-244],[360,-78],[132,-288],[-96,-64],[134,-92],[233,124],[211,-89],[88,-301],[-347,-707],[148,-292],[-186,-58],[-81,-234],[291,-767],[-187,-310],[77,-212],[-322,-444],[63,-459],[-197,-731],[0,-653],[438,-471],[45,-739],[-239,-731],[-1261,-927],[-466,-130],[-2056,-1765],[-1341,511],[-1610,-2409],[-501,-1431]],[[35018,73978],[122,1763],[-394,373],[-40,329],[410,1840],[135,-122],[834,309],[356,-267],[123,287],[560,331],[-9,645],[492,-113],[391,334],[-219,179],[-80,371],[-475,417],[-197,445],[51,179],[-159,87],[330,948],[-54,483],[-476,531],[-408,3913],[-462,152],[598,690],[-39,868],[104,93],[-144,1698]],[[36368,90741],[328,-2],[1071,1355],[1342,-269],[3671,2626],[2524,-506],[866,-832],[510,-263],[1013,-1144],[1112,-138],[610,-552],[406,-818],[2675,-1118],[473,108]],[[20374,19751],[-100,379],[-277,-50],[-132,401],[-505,650],[187,275],[-50,364],[621,402],[-8,408],[422,589],[73,665],[-284,272],[-137,439],[242,1048],[470,445],[483,1131],[146,59],[2414,-93],[79,-355],[-230,-338],[276,-1131],[439,435],[318,-190],[293,89],[539,580],[273,1346],[-119,489],[58,554],[260,622],[261,155],[-104,226],[429,674],[-80,177],[160,180],[-58,425],[229,397],[-39,425],[562,189],[-152,620],[152,368],[-195,105],[-121,371],[224,355],[237,-10]],[[27630,33893],[328,502],[629,145],[123,-409],[279,-71],[-474,-532],[19,-473],[395,-11],[192,-189],[368,433],[573,293],[704,-1050],[404,178],[62,-579],[260,58],[254,-336],[118,-686],[1053,283],[465,-808],[187,-996],[-321,-901],[-36,-1024],[-519,-1181],[174,-552],[-114,-667],[290,-734],[75,-794]],[[33178,23202],[-189,-130],[-312,112],[-714,-124],[-922,-952],[-1095,-402],[-576,-813],[-376,544],[-342,256],[-113,-73],[-304,-732],[297,-393],[185,-1095],[510,-844],[412,-8],[-101,-207],[199,-178],[-461,-1245],[-671,-595],[-227,-475],[-934,-478],[-477,2],[-154,229],[-100,294],[226,818],[-734,663],[-177,446],[-142,-45],[-1052,754],[-96,-196],[-533,-157],[-394,-341],[-409,594],[-343,-209],[-112,198],[-123,-357],[-123,150],[-659,-1],[-62,-403],[265,-135],[-690,-654],[-228,805],[180,729],[-302,109],[-97,865],[-320,-6],[-128,169],[-60,-217],[-133,-11],[-93,288]],[[46338,86570],[-466,308],[-69,288],[-241,38],[57,297],[-129,388],[338,117],[-273,669],[-204,0],[202,227],[1547,180],[816,-216],[1067,197],[216,-266],[123,-742],[400,-43],[303,-467],[474,-224],[1000,25],[723,718],[263,714],[538,98],[-54,312]],[[52969,89188],[4957,-455],[226,326]],[[32619,14739],[-11,199],[359,424],[144,1135],[459,1179],[80,737],[-186,108],[11,312],[424,412],[117,491],[-320,740],[-518,2726]],[[33178,23202],[-60,590]],[[33118,23792],[1221,231],[-65,1178],[506,624]],[[33178,14765],[-559,-26]],[[42204,73851],[-237,459],[-232,50],[-161,654],[37,421],[324,471],[-114,244],[518,376],[607,37],[261,281],[262,-62],[-48,451],[-298,680],[-71,769],[106,390],[-297,505],[-27,326],[447,946],[-213,1152],[199,1023],[-113,283],[232,516],[792,442],[126,216],[1288,486],[124,543],[156,132],[-134,149],[47,463],[553,316]],[[46338,86570],[354,56],[95,-755],[456,-495],[91,-498],[775,1614],[283,156],[1238,-93],[42,-345],[613,70],[154,-162],[-418,-709],[67,-416],[120,-279],[450,41],[261,-391],[-126,-428],[-204,29],[-267,-511],[290,-14],[136,-188],[542,341],[586,-75],[354,-1203],[-76,-319],[-100,6],[61,-431],[-196,-391],[526,80],[245,-219],[556,112],[89,-480],[406,82],[130,-165],[61,500],[354,159],[244,-712],[-224,-545],[8,-595],[204,43],[29,-148],[-358,-624],[-360,-84],[-20,-699],[248,-590],[455,345],[193,-406],[-133,-209],[70,-325],[272,-13],[66,-323],[654,-543],[-248,-460],[-386,-146],[-440,-552],[8,-456],[-313,-822]],[[35780,43404],[827,-7],[30,-247],[340,36],[139,130],[-62,148],[1934,397],[1091,1733],[798,1877],[-25,3060],[659,1816],[471,266]],[[49772,51349],[81,-186],[815,-256],[-42,-624],[329,-354],[-11,-412],[2208,-139],[76,-758],[-216,-233],[-187,-593],[-541,-170],[-113,-520],[-372,-250],[-72,-366],[183,-563],[220,-197],[91,-478],[269,-257],[-8,-721],[309,-180],[249,101],[172,-332],[262,-147],[-35,-343],[294,-124],[355,401],[951,-68],[554,232],[2054,-939],[128,-217]],[[54123,37833],[-388,866],[-631,897],[-264,-156],[-956,-66],[-1087,197],[-2138,854],[-485,-188],[-629,-634],[-165,-332],[-90,-874],[-133,116],[-39,-130],[69,-341],[360,-392],[242,-1121],[-141,-172],[-1836,905],[-924,252],[-1630,1103],[-1670,322]],[[41588,38939],[-1431,341],[-1667,-203],[-1942,-883],[-911,-660],[-92,401],[214,708],[-61,459],[265,1424],[-568,1491],[385,1387]],[[11964,93384],[1450,104],[619,-609],[805,-231],[1269,-1131],[660,32],[246,-212],[-712,-1084],[401,-159],[939,-1184],[-5,-159],[-300,-155],[-333,-909],[13,-309],[524,-1006],[10,-655],[133,-92],[-454,-561],[-30,-893],[-373,12],[-150,364],[-512,343],[-350,-384],[39,-511],[-367,-472],[5,-527],[-234,7],[342,-223],[-82,-1376],[300,-612],[-52,-440],[-261,-1088],[-15,-1003],[-939,-880],[-160,-24],[-194,509],[-134,52],[26,-231],[-102,70],[53,-337],[435,-458],[-67,-586],[647,-643],[-117,-212],[334,-18],[393,451],[-187,247],[-11,385],[198,-16],[134,229],[310,19],[99,162],[266,-49],[-45,274],[126,-125],[371,134],[824,750],[251,-331],[330,157],[37,-426],[393,225]],[[18760,77589],[552,196],[193,-311],[272,-121],[155,251],[440,-40],[361,163],[51,229],[-145,143],[98,130],[501,-380],[274,251],[144,-110],[179,252],[67,-164],[-179,-235],[266,175],[183,-653],[753,-5],[178,-390],[298,-161],[558,296],[881,-238],[295,276],[628,-42],[405,-615],[-104,-1137],[159,-833],[821,13],[285,315],[347,-44],[362,-636],[222,-136],[1042,-50],[-248,-252],[132,-263],[-458,-403],[-225,-592],[71,-323],[-94,-250],[-493,-216],[192,671],[-90,28],[-360,-955]],[[8989,69154],[-440,1041],[118,652],[-74,518],[-496,161],[-819,1089],[-639,553],[-93,1557],[279,720],[2,1511],[860,308],[426,620],[-38,529],[-240,158],[-108,863],[442,700],[-361,1557],[314,851],[-69,3346],[2462,2288],[1270,2574],[310,1721],[-131,913]],[[38146,9832],[-185,-205],[-268,7],[-1419,552],[-1135,-313],[-837,517],[-399,564],[56,902],[-177,872],[-853,-7],[249,2044]],[[33178,14765],[186,102],[31,483],[162,157],[309,-122],[442,380],[627,-422],[100,659],[475,309],[456,692],[417,253],[1133,-311],[194,305],[408,104]],[[74183,65765],[-88,-222],[226,-399],[525,-389],[-53,-376],[-450,-347],[-46,-335],[-372,-276],[-51,-428],[-141,-143],[128,47],[56,-291],[320,-79],[278,-758],[732,-379],[660,-1393],[382,-56]],[[76289,59941],[709,-96],[588,111],[230,328],[568,-66],[133,341],[-115,512],[392,979],[640,459],[371,821],[189,-323],[222,76],[53,-218],[618,22],[-63,346],[353,218],[1133,246],[6,528],[173,482],[198,-85],[39,-344],[378,-124],[768,1461],[1091,-62],[695,-264],[779,-871],[1210,-577],[142,404],[117,-45],[166,671],[40,337],[-165,189],[-4,315],[215,241],[510,1303],[220,2010],[358,-360],[-47,-182],[1689,739],[705,-50],[674,-318]],[[92267,69095],[-1584,-2813],[-350,-2598],[-223,-42],[-38,-1161],[249,-216],[-81,-446],[-369,31],[-11,-473],[-434,-543],[-770,-209],[-608,-646],[345,-691],[-99,-340],[-326,-319],[202,-1623],[-172,-1797],[-171,-377],[-267,-166],[-1358,-318],[-465,-460],[-587,-1080],[372,-2959],[-143,-732],[-675,-228],[307,-1307],[-20,-989],[-179,-669],[-338,-371],[80,-891],[-596,75],[-198,-619],[-417,-470],[-655,272],[-139,-297],[-1211,-99],[-874,-370],[-332,153],[-354,-274],[-139,-1018],[153,-1169],[-451,-946],[1,-669],[163,-499],[-1570,-2907],[-67,-566],[155,-861],[-1593,-1940]],[[72900,54905],[321,508],[792,69],[423,532],[174,-300],[1019,949],[162,-120],[343,351],[312,547],[-23,214],[-422,277],[280,925],[-101,418],[109,666]],[[81244,91547],[-293,-1629],[123,-590],[632,-603],[158,-1147],[-328,-808],[-309,-116],[135,-431],[-208,-381],[-349,-48],[-199,-625],[-554,-365],[-5,-985],[-148,-67],[135,-86],[2,-509],[-288,-557],[111,-355],[-227,-429],[13,-496],[356,-980],[-205,-1142],[119,-615],[-217,-178],[-405,-1579],[233,-256],[427,636],[219,-511],[-10,-377],[405,-266],[209,-346],[-429,-1029],[-1003,-981],[-125,-568],[-698,-562],[144,-1120],[272,-214],[117,-354],[-118,-367],[-225,-129],[-697,119],[-874,-1056],[-248,-88],[-70,308],[-373,-353],[-597,17],[-511,-422],[-683,-211],[-54,-443],[980,-210],[131,-1115],[-110,-449],[-329,-296],[-1093,-418]],[[74183,65765],[-465,-273],[-124,183],[32,1527],[188,1236],[-98,951],[-657,1084],[-646,539],[-432,913],[-66,-180],[-525,152],[-207,-195],[-349,356],[-751,282],[-122,630],[-798,-1122]],[[65963,85817],[-102,172],[138,250],[-143,76],[93,488],[-130,322],[160,493],[-351,1188],[-170,147],[-356,-80],[66,-92],[-231,-177],[-750,532],[-454,63],[-48,-372],[-289,42],[118,474],[-340,975],[162,76],[-11,179],[-482,369],[-1048,-305],[42,-200],[-125,180],[-266,-100],[-47,-220],[-185,128],[-539,-216],[-178,-345],[-112,77],[-119,-574],[-477,-449],[-595,-60],[-11,-159],[-170,-31],[-861,391]],[[58152,89059],[2061,2892],[227,43],[215,412],[1554,1083],[4893,1327],[3098,-279],[2889,176],[3066,-1086],[2258,-1575],[759,-47],[153,139],[280,-251],[212,119],[185,-219],[1242,-246]],[[43367,14711],[230,-365],[-81,-1184],[664,-1801],[-894,43]],[[43286,11404],[-126,537],[-605,222],[-297,736],[-511,81],[34,-902],[-360,146],[-291,-598],[24,-246],[301,28],[37,-240],[-166,-211],[-612,5],[-310,-213],[151,-292],[-210,-1245],[158,-707],[-233,-362],[118,-113],[-607,-672],[260,-190],[-121,-535],[181,-508],[-30,-321]],[[40071,5804],[-657,400],[-805,134],[-850,-232],[-590,343],[103,469],[486,272],[195,337],[428,1858],[-235,447]],[[38146,9832],[488,1996],[680,1259],[233,840],[-184,670],[-239,331],[156,74],[-115,1540],[79,486],[-930,113],[-196,213]],[[38118,17354],[25,547],[453,74],[173,453]],[[25702,36161],[-614,-670],[-154,-615],[-216,52],[-101,-174],[-206,-500],[-158,-1183],[-652,-1224],[-331,-290],[-778,-223],[-251,130],[-96,892],[-266,641],[-812,-92],[-1270,270],[-506,-481]],[[19733,39199],[224,-158],[279,399],[204,-8],[446,-454],[1140,-90],[235,302],[88,602],[1058,148]],[[23407,39940],[134,6],[-44,-974],[566,558],[665,36],[-136,-217],[235,-536],[-189,-409],[-389,-47],[128,-966],[238,-384],[720,-3],[223,-340],[299,-141],[-155,-362]],[[15995,28712],[-778,-88],[-229,-320],[-537,111],[-285,-225],[-134,187],[-48,627],[-587,327],[-837,-430],[-242,1299],[-672,-423]],[[11646,29777],[-144,58],[120,127],[-107,169],[180,631],[260,308],[50,434],[-171,285],[174,326],[18,1107],[179,463],[-139,930],[-378,238],[-337,556],[177,68],[-108,756],[241,1101],[476,-109],[464,198],[-96,432],[357,218],[12,262],[341,155],[432,-377],[358,-897],[218,497],[299,-52],[140,484],[833,341],[161,872]],[[15656,39358],[440,218],[366,-337],[840,258],[437,-151],[325,198],[-29,238],[607,-162],[334,-345],[53,-264],[555,525],[149,-337]],[[19733,39199],[-343,-876],[-621,-575],[-258,-518],[26,-698],[-420,-1667],[320,-481],[380,-1266],[474,-424]],[[19291,32694],[-125,-378],[-1960,-172],[-167,-802],[100,-634],[-315,-607],[-309,17],[9,-269],[-385,-377],[-144,-760]],[[65485,54217],[-150,51],[-284,668],[-968,528],[-937,871],[-904,-87],[-76,139],[-287,-16],[-46,301],[-292,118],[-700,-186],[-98,-140],[155,-636],[-241,-267],[-1030,-120],[-626,-635],[-596,-184],[-205,134],[-162,-136],[-577,306],[-73,-235],[162,-182],[-173,-404],[-1199,43],[-234,565],[-387,11],[-392,409],[44,285],[149,-34],[-312,194],[-43,870],[-146,-183],[-422,37],[-552,666],[570,262],[439,717],[-327,203],[-149,1621],[338,131],[-209,188],[-390,-103],[-492,205],[-543,-416],[-459,143],[-10,-447],[-211,-14],[-323,407],[320,1399],[-27,300],[-363,261],[205,975],[-210,450],[-930,295]],[[50819,65797],[601,1148],[-280,643],[-300,291],[-163,561],[-176,87],[181,855],[183,6],[-74,720],[108,742],[80,-89],[25,305],[424,-54],[310,194],[222,628],[632,520],[259,517],[471,381],[156,-73],[231,230],[377,-236],[169,212]],[[54255,73385],[769,237],[139,-121],[353,93],[547,-486],[716,-228],[119,365],[815,24],[-115,-706],[684,-273],[1229,606],[305,-846],[162,-22],[67,-1063],[-300,-289],[133,-692],[503,-83],[643,-374],[34,150],[299,-43],[549,273],[-6,-308],[190,-157],[720,-7],[-134,298],[-406,314],[110,546],[343,355],[318,-135],[180,90],[367,443],[170,-130],[263,914],[-718,-29],[-368,216],[-498,4],[-465,136],[-298,336],[-715,-53],[-341,226],[-135,287],[-237,26],[44,322],[-298,120],[-65,975],[-159,138],[-453,-235],[-140,259],[27,379],[358,371],[-94,411],[128,197],[-202,270],[146,102],[-3,600],[-215,-9],[-187,469],[-633,-164],[-534,127],[-164,215],[177,261],[235,58],[109,857],[212,-175],[1048,421],[461,481],[1095,488],[284,-57],[322,167],[33,256],[234,-45],[416,260],[-184,525],[149,781],[-190,761],[493,766],[-97,169],[105,272],[387,383],[-242,445],[276,268],[677,-190],[456,248],[542,-255],[669,387],[130,30],[26,-142],[367,187],[-29,384]],[[65963,85817],[443,76],[828,-553],[321,-2057],[87,-1563],[227,-335],[-25,-1234],[-198,-346],[142,-601],[505,-594],[232,-18],[187,-527],[98,-2315],[-243,-2320],[190,-167],[-127,-480],[250,-31],[-182,-151],[465,-753]],[[69163,71848],[223,-309],[-659,-607],[-1088,-67],[-223,-249],[-284,422],[-254,-168],[-150,-391],[-171,-77],[-81,-571],[-142,-82],[-13,-168],[301,-312],[-255,-391],[45,-123],[-695,-734],[-621,-1274],[286,-402],[284,-77],[-37,-433],[865,-1136],[570,-42],[505,-543],[163,131],[-51,-242],[261,-259],[-135,-901],[364,-465],[-48,-338],[-414,-1017],[-577,-177],[-224,-465],[50,-274],[1902,-1762],[302,-1099],[-208,-659],[2,-445],[275,-292],[-173,-262]],[[39100,52688],[-1326,-2319],[-1706,1617],[-1896,12],[-29,-8451],[361,0]],[[34504,43547],[-26,-555],[100,-133],[-245,-507],[-292,-77],[-46,-277],[-130,-38],[84,-335],[-345,19],[-61,-755],[-179,-197],[-692,1364],[-1296,1395],[-395,1702],[-391,755],[-468,450],[-786,48]],[[29336,46406],[-492,-122],[-150,322],[-393,93],[-2409,-195],[-563,812],[-720,161],[-973,1089],[-2640,987],[-413,748],[-1194,1023],[-374,-49],[-1196,-690],[-358,11],[-278,463],[22,708],[-142,218],[-820,409],[-247,557],[-905,818],[-1257,1539],[-1650,2846],[-284,-68],[-32,272],[-164,-41],[-99,-272],[-513,55],[-164,517],[-142,-136],[-410,235],[287,340],[-300,187],[123,256],[-520,-34],[27,289],[110,34],[-328,324],[-260,-35],[-125,207],[-279,-46],[30,-295],[-109,-8],[-268,530],[-103,-166],[-387,919]],[[8274,61218],[-31,251],[-304,194],[-519,788],[461,1419],[390,378],[915,-442],[512,1866],[-52,1017],[-835,1251],[178,1214]],[[8989,69154],[269,273],[1090,-31],[502,764],[897,102],[1391,-11],[-88,-363],[172,-374],[439,-32],[73,-497],[355,-245],[577,62],[747,354],[626,-328],[669,321],[231,-545],[-205,-683],[-61,-1439],[-752,-958],[-756,-370],[-255,-1184],[29,-963],[491,-432],[224,-428],[-344,-1071],[21,-441],[791,21],[181,1065],[205,71],[-14,148],[1039,359],[647,-440],[626,697],[32,1085],[-153,518],[-655,216],[-290,488],[42,913],[-231,357],[112,713],[703,91],[121,-171],[323,-1],[67,167],[476,184],[124,277],[237,-129],[382,242],[66,358],[-517,305],[-153,356],[-28,322],[474,383],[-346,1298],[-373,22],[-134,276],[-594,14],[-576,332],[-310,2],[-471,349],[-356,842],[297,235],[-293,175],[67,303],[1394,600],[159,373],[568,-297],[382,-1145],[388,192],[-47,-676],[154,334],[1353,-202],[135,949],[697,489],[467,-1304],[5,-599],[198,-546],[-164,-33],[-40,-835],[486,-561],[446,-86],[181,158],[283,-448],[183,223],[486,-40],[772,347],[595,876],[811,322],[146,328],[523,228],[319,-302]],[[27729,71423],[254,-869],[553,72],[417,-190],[867,-800]],[[41982,52613],[-644,826],[-875,-222],[-275,-336],[-1088,-193]],[[39100,52688],[-1222,-195],[-261,1478],[421,636],[-146,456],[599,654],[-245,647],[-597,711],[160,305],[414,-44],[147,175],[-112,2248],[-379,280],[-365,-166],[-695,-9],[-336,167],[-941,52],[-426,300],[-159,423],[26,351],[248,393],[228,-84],[102,119],[233,541],[215,-17],[355,777],[-255,385],[-784,167],[228,1165],[-342,580],[-363,181],[-247,-247],[21,426],[-212,684],[-808,54],[51,-563],[-657,42],[-817,-501],[-201,200],[-7,317],[-248,216],[-492,-259],[-320,-189],[-119,-335],[-466,-470],[-46,-538],[-204,-264],[-357,97],[-157,-444],[-158,48],[-392,-322],[63,284],[-133,331],[113,256],[-138,610],[-551,218],[11,254],[268,109],[69,348],[-161,173],[220,691],[-243,282],[-160,-15],[199,430],[-122,358],[88,408],[199,119],[-115,203],[317,95],[33,407],[444,124],[407,635]],[[29820,69636],[114,-26],[405,661],[302,-99],[324,159],[278,-264],[616,375],[188,45],[367,-274],[216,253],[614,118],[88,358],[239,151],[-210,153],[-49,318],[153,910],[509,294],[81,573],[514,-129],[-23,437],[472,329]],[[35018,73978],[249,13],[351,-272],[374,32],[21,-707],[-342,-506],[482,-370],[363,-66],[694,-774],[401,238],[163,442],[-208,659],[272,219],[518,59],[570,-209],[102,717],[232,467],[583,-4],[181,-265],[257,98],[12,-221],[436,-222],[280,-491],[823,398],[126,155],[-6,465],[252,18]],[[42204,73851],[156,80],[163,-200],[79,175],[237,-74],[435,173],[124,426],[622,535],[228,135],[428,-53],[455,390],[405,-50],[97,-229],[-178,-421],[25,-379],[-247,-123],[76,-226],[700,-707],[255,87],[226,-144],[-60,-349],[241,-119],[98,-354],[1134,-79],[258,-593],[451,-76],[-106,-313],[113,-180],[732,-454],[62,-556],[-386,-1147],[138,-478],[-220,-752],[108,-426],[-754,-337],[209,-680],[236,-185],[493,129],[419,-152],[562,-906],[601,558]],[[50819,65797],[83,-328],[-136,-894],[-230,-403],[576,-627]],[[51112,63545],[-158,-806],[-543,-289],[-46,-279],[-356,-386],[-118,-676],[66,-1468],[-378,-1437],[78,-952],[-377,-493],[2,-512],[-158,-62],[-209,-958],[112,-634],[285,-386],[125,-497],[256,-407],[394,-179],[22,-601],[-337,-1174]],[[49772,51349],[-309,-965],[-450,-563],[80,-275],[-360,-312],[-241,-30],[-482,1156],[-495,656],[-367,195],[-125,-139],[-583,19],[-214,-812],[-341,-545],[-775,-133],[-312,129],[214,1858],[-220,365],[-1183,536],[-389,-285],[-664,-149],[-574,558]],[[34780,25825],[427,491],[149,-147],[124,126],[278,534],[105,-671],[428,-25],[328,180],[625,860],[449,213],[241,394],[20,311],[1196,836],[81,428],[634,11],[502,-641]],[[40367,28725],[340,-962],[408,-213],[453,-663],[631,237],[296,-57],[52,171],[223,27],[376,-124],[204,-271],[-13,-622],[141,-131],[-211,-222],[-504,-1276]],[[40364,18052],[-164,160],[-790,-158],[-242,317],[-399,57]],[[38769,18428],[-329,62],[83,321],[-402,4],[-266,502],[-46,663],[-204,451],[-468,8],[-7,557],[160,276],[-149,755],[-454,395],[-478,169],[34,326],[112,6],[48,737],[451,499],[163,689],[-1152,557],[-677,-173],[-408,593]],[[57618,23188],[400,2483],[-2,1624],[770,1906],[717,980],[94,467],[-86,389],[482,1660],[16,974],[-324,692],[-822,837],[-869,1508],[-347,308],[-1793,158],[-2139,-590],[-121,213],[551,866],[-22,170]],[[54123,37833],[1305,805],[666,795],[-237,904],[207,292],[-737,796],[332,905],[221,90],[780,-448],[1055,-154],[60,838]],[[57775,42656],[299,129],[867,-176],[941,665],[1522,1669],[1642,2251],[1321,1316],[474,296],[1110,134],[339,829],[-124,398],[110,339],[-185,231],[6,353],[-285,655],[1,844],[-170,251],[159,913],[-317,464]],[[65485,54217],[1941,-376],[1199,1115],[433,632]],[[69058,55588],[194,-583],[701,-82],[316,-268],[903,454],[464,-223],[1264,19]],[[72900,54905],[89,-581],[368,-308],[347,-586],[40,-850],[570,-255],[407,40],[330,-789],[-80,-198],[207,-517],[-64,-561],[99,-337],[1037,-687],[355,-736],[-252,-738],[-136,-1327],[-483,-281],[-218,-358],[382,-379],[-261,-249],[293,-549],[-56,-439],[-466,-534],[-683,-296],[-83,-297],[-212,-105],[141,-179],[-697,-1463],[-1532,-1887],[-176,-476],[1237,-2276],[203,166],[312,911],[324,48],[467,-439],[20,-780],[-132,-420],[781,-324],[263,58],[122,-762],[-6,-1701],[673,-1006]],[[76430,32458],[-444,-984],[-415,-329],[378,-153],[730,-1228],[-153,-494],[-846,-846],[-1043,-618],[-419,-538],[-274,-739],[288,-428],[-260,-1268],[-396,-586],[-612,-113],[-204,-1106],[-299,-341],[-867,-191],[-1240,49],[-519,1647],[-22,480],[189,574],[-323,578],[-204,263],[-633,-6],[-336,300],[-169,217],[-30,520],[-288,823],[-547,107],[-102,-121],[-1267,1176],[-459,-488],[-389,-1494],[-2299,0],[-357,413],[-251,1075],[-2422,-2551],[-660,269],[-724,-2917],[-592,22],[-332,-244]],[[46741,25048],[233,-461],[19,-467],[413,-270],[7,-184],[137,47],[-4,-283],[235,-90],[-110,-307],[273,-396],[-53,-142],[204,-52],[-98,-444],[-383,-331],[-62,-491],[219,-472],[-144,-463],[-823,-1128],[-232,-1135],[-246,197],[-250,-59],[-842,-771],[-108,237],[-422,-104],[-78,494],[-458,-174],[-31,-572],[188,-277],[-133,22],[-250,-612],[-224,-144],[316,-636],[-403,-87],[-264,-782]],[[43367,14711],[-719,626],[-91,485],[-197,230],[-1691,314],[-268,-96],[-260,681],[214,539],[9,562]],[[40364,18052],[359,-384],[761,-406],[229,-56],[192,222],[-427,1053],[418,381],[103,322],[57,1162],[-208,746],[362,907],[-13,535],[-198,1280],[-182,188],[-135,532],[266,183],[815,-98]],[[42763,24619],[117,10],[387,-798],[556,-225],[120,527],[233,213],[-104,822],[82,314],[297,134],[655,-274],[243,48],[378,642],[394,57],[76,222],[307,-609],[-121,-62],[284,-264],[74,-328]]]};
+
+  // Sample net received, Sep 2026, ₦ billions (not real figures)
+  const NET = {"Lagos":38.2,"Delta":35.9,"Rivers":33.1,"Akwa Ibom":29.4,"Bayelsa":24.8,"Kano":23.6,"Ondo":19.2,"Edo":17.5,"Kaduna":17.1,"Katsina":16.8,
+    "Oyo":16.2,"Borno":16.0,"Bauchi":15.4,"Jigawa":15.1,"Niger":15.0,"Imo":14.6,"Sokoto":14.3,"Benue":14.1,"Kebbi":13.6,"Zamfara":13.2,
+    "Adamawa":13.0,"Plateau":12.7,"Taraba":12.5,"Kogi":12.4,"Anambra":12.2,"Yobe":12.1,"Abia":12.0,"Enugu":11.9,"Ogun":11.6,"Cross River":11.4,
+    "Gombe":11.2,"Kwara":11.0,"Nasarawa":10.8,"Osun":10.2,"Ebonyi":10.1,"Ekiti":10.0};
+  // Scale states ranked 6+ so the total matches Overview (₦673.8bn) and the top 5 match its shelf
+  (function(){ const keys=Object.keys(NET).slice(5); const restSum=keys.reduce((a,k)=>a+NET[k],0);
+    const top=Object.keys(NET).slice(0,5).reduce((a,k)=>a+NET[k],0); const add=(673.8-top-restSum)/keys.length;
+    keys.forEach(k=>NET[k]=+(NET[k]+add).toFixed(1)); const over=NET["Kano"]-24.1; NET["Kano"]=24.1;
+    const others=keys.filter(k=>k!=="Kano"); others.forEach(k=>NET[k]=+(NET[k]+over/others.length).toFixed(2)); })();
+  const OIL = {"Delta":.34,"Rivers":.31,"Akwa Ibom":.36,"Bayelsa":.42,"Ondo":.18,"Edo":.10,"Imo":.06,"Abia":.05};
+  const NDDC = new Set(["Delta","Rivers","Akwa Ibom","Bayelsa","Ondo","Edo","Imo","Abia","Cross River","Niger","Kogi","Kwara","Kebbi","Kaduna","Plateau","Taraba","Benue","Nasarawa"]);
+  const hash = s => { let h=7; for (const c of s) h=(h*31+c.charCodeAt(0))%9973; return h/9973; };
+
+  const S = {};
+  Object.entries(NET).forEach(([s,n])=>{
+    const r = hash(s), ded = s==="Lagos" ? .098 : .09 + r*.15;
+    const gross = n/(1-ded), dedAmt = gross-n;
+    const oil = OIL[s]||0, eg=.05, eco=.02, oth=.01, rest=1-oil-eg-eco-oth, vat = s==="Lagos" ? .52 : .40;
+    const rev = [["Statutory allocation",rest*(1-vat)],["VAT",rest*vat],["Oil derivation",oil],["Exchange gain",eg],["Ecology fund",eco],["Other income",oth]]
+      .map(([k,w])=>[k,gross*w]);
+    const dw = [["External debt",.3+r*.3],["Contractual (ISPO)",.2+hash(s+"i")*.25],["NDDC / HYPPADEC",NDDC.has(s)?.12:0],
+      ["Other (see note)",.05],["Unlabelled",.02],["Other deductions",.03]];
+    const dt = dw.reduce((a,b)=>a+b[1],0);
+    const dl = dw.map(([k,w])=>[k,dedAmt*w/dt]);
+    const chg = -0.06 + hash(s+"c")*0.18;
+    S[s] = {net:n, gross, ded:dedAmt, rev, dl, chg, dchg:-0.12+hash(s+"d")*0.2};
+  });
+  const states = Object.keys(S).sort((a,b)=>S[b].net-S[a].net);
+  states.forEach((s,i)=>S[s].rank=i+1);
+  const T = {net:0,gross:0,ded:0,rev:{},dl:{}};
+  states.forEach(s=>{ const o=S[s]; T.net+=o.net; T.gross+=o.gross; T.ded+=o.ded;
+    o.rev.forEach(([k,v])=>T.rev[k]=(T.rev[k]||0)+v); o.dl.forEach(([k,v])=>T.dl[k]=(T.dl[k]||0)+v); });
+  T.rev=Object.entries(T.rev); T.dl=Object.entries(T.dl); T.chg=.062; T.dchg=-.089;
+  T.prevNet = states.reduce((a,s)=>a+S[s].net/(1+S[s].chg),0); T.chg=(T.net-T.prevNet)/T.prevNet;
+
+  const bn = v => "₦"+v.toFixed(1)+"bn";
+  const pct = (v,d=1) => (v*100).toFixed(d)+"%";
+  const ord = n => n+(["th","st","nd","rd"][(n%100-20)%10]||["th","st","nd","rd"][n%100]||"th");
+  const GOOD="#0E8A5F", BAD="#C93C3C";
+  const badge = (c, higherIsGood) => { const good = higherIsGood ? c>0 : c<0, col = good?GOOD:BAD, bg = good?"#E3F4EC":"#FBE7E7";
+    return `<span class="badge" style="color:${col};background:${bg}">${c>0?"▲":"▼"} ${pct(Math.abs(c))}</span>`; };
+  function spark(end, chg, seed){
+    const a=[]; let v=end/(1+chg); for(let i=0;i<5;i++){ a.unshift(v); v=v*(1.01-hash(seed+i)*0.06); } a.push(end);
+    const w=80,h=30,mn=Math.min(...a),mx=Math.max(...a);
+    const p=a.map((x,i)=>[i*(w-6)/5+3, h-3-(x-mn)/(mx-mn||1)*(h-8)]);
+    return `<svg width="${w}" height="${h}"><polyline points="${p.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" ")}" fill="none" stroke="#0B3D2E" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${p[5][0].toFixed(1)}" cy="${p[5][1].toFixed(1)}" r="3" fill="#0B3D2E"/></svg>`;
+  }
+  const chip = (c, higherIsGood) => { const eq=Math.abs(c)<0.0005, good = higherIsGood ? c>0 : c<0;
+    const col = eq?"#C98A00":(good?GOOD:BAD), bg = eq?"#FBF1DC":(good?"#E3F4EC":"#FBE7E7");
+    return `<span class="c" style="color:${col};background:${bg}">${eq?"■":(c>0?"▲":"▼")} ${pct(Math.abs(c))}</span>`; };
+  const top3 = (list,total) => `<div class="top3">${list.slice().sort((a,b)=>b[1]-a[1]).slice(0,3)
+      .map(([k,v],j)=>`<b>${j+1}</b><span>${k}</span><span class="v">${bn(v)}</span><span class="sh">${Math.round(v/total*100)}%</span>`).join("")}</div>`;
+
+  let sel = null;
+  function render(){
+    const o = sel ? S[sel] : null, d = o || T, who = sel || "ALL STATES";
+    const keepNat = 100*T.net/T.gross, keep = 100*d.net/d.gross, share = d.net/T.net, equal = 1/36;
+    const cards = [
+      {lbl:"GROSS ALLOCATION", v:bn(d.gross).replace("bn",""), u:"bn", front:`${badge(d.chg*0.9,true)}vs August 2026`, sp:spark(d.gross,d.chg*0.9,who+"g"),
+       back:`<div class="bt">TOP 3 REVENUE STREAMS</div>${top3(d.rev,d.gross)}`},
+      {lbl:"DEDUCTIONS", v:bn(d.ded).replace("bn",""), u:"bn", front:`${badge(d.dchg,false)}vs August 2026`, sp:spark(d.ded,d.dchg,who+"d"),
+       back:`<div class="bt">TOP 3 DEDUCTION LINES</div>${top3(d.dl,d.ded)}`},
+      {lbl:"NET RECEIVED", v:bn(d.net).replace("bn",""), u:"bn", front:`${badge(d.chg,true)}vs August 2026`, sp:spark(d.net,d.chg,who+"n"),
+       back:`<div class="bt">WHAT IT MEANS</div><p>${sel?sel+" kept":"States kept"} ₦${Math.round(keep)} of every ₦100 allocated${sel?`. Across all states it was ₦${Math.round(keepNat)}.`:"."}</p><div class="tip">Detail: hover the state on the map</div>`},
+      sel ? {lbl:"SHARE OF NATIONAL NET", v:pct(share), u:"", front:`<span class="badge" style="color:#0B3D2E;background:#EDF2EF">#${o.rank} of 36</span>by net received`, sp:spark(share*100,d.chg*0.4,who+"s"),
+       back:`<div class="bt">WHAT IT MEANS</div><p>An equal split would give each state ${pct(equal)}. ${sel} gets ${(share/equal).toFixed(1)}× that.</p><div class="tip">Rank and share use all 36 states, even with a Zone filter</div>`}
+          : {lbl:"SHARE OF NATIONAL NET", v:"100%", u:"", front:`<span class="badge" style="color:#0B3D2E;background:#EDF2EF">36 states</span>select a state to compare`, sp:"",
+       back:`<div class="bt">WHAT IT MEANS</div><p>An equal split would give each state ${pct(equal)}. Click a state on the map to see its share.</p>`}
+    ];
+    if (document.getElementById("kpis")) document.getElementById("kpis").innerHTML = cards.map((k,i)=>`<div class="abs fc" style="left:${216+(i%2)*276}px;top:${436+Math.floor(i/2)*108}px"><div class="fc-inner">
+      <div class="face front"><div class="lbl">${k.lbl} · <b>${who.toUpperCase()}</b></div><div class="val">${k.v}<small>${k.u}</small></div>
+        <div class="chg">${k.front}</div><div class="spark">${k.sp}</div><div class="hint">HOVER FOR INSIGHT ↻</div></div>
+      <div class="face back">${k.back}</div></div></div>`).join("");
+
+    const dedShare = d.ded/d.gross, natDed = T.ded/T.gross;
+    document.getElementById("btxt").innerHTML = sel
+      ? `${sel} received <span class="hl">${bn(o.net)}</span> net in September, <span class="${o.chg>0?"up":"dn"}">${o.chg>0?"▲":"▼"} ${pct(Math.abs(o.chg))}</span> on August, ranking <span class="hl">${ord(o.rank)} of 36</span>. Deductions took <span class="${dedShare<natDed?"up":"dn"}">${pct(dedShare)}</span> of its gross, ${dedShare<natDed?"below":"above"} the national ${pct(natDed)}.`
+      : `The 36 states received <span class="hl">${bn(T.net)}</span> net in September. ${states[0]} led with <span class="hl">${pct(S[states[0]].net/T.net)}</span>; ${states[35]} had the smallest share at <span class="hl">${pct(S[states[35]].net/T.net)}</span>.`;
+    document.getElementById("statedd").textContent = sel || "All";
+    d3.selectAll("#map path").classed("sel", f => f.properties.name===sel); d3.selectAll("#map path.sel").raise();
+    if (barsEl.children.length) highlight();
+  }
+  const pick = s => { if(!S[s]) return; sel = sel===s ? null : s; render(); };
+
+  // ranking bars: Zone -> State hierarchy, coloured by zone
+  const ZONES = {"North Central":["Benue","Kogi","Kwara","Nasarawa","Niger","Plateau"],
+    "North East":["Adamawa","Bauchi","Borno","Gombe","Taraba","Yobe"],
+    "North West":["Jigawa","Kaduna","Kano","Katsina","Kebbi","Sokoto","Zamfara"],
+    "South East":["Abia","Anambra","Ebonyi","Enugu","Imo"],
+    "South South":["Akwa Ibom","Bayelsa","Cross River","Delta","Edo","Rivers"],
+    "South West":["Ekiti","Lagos","Ogun","Ondo","Osun","Oyo"]};
+  const ZCOL = {"North Central":"#2E9B72","North East":"#D9A21B","North West":"#3A6EA5","South East":"#8E5BB5","South South":"#C8693A","South West":"#0B3D2E"};
+  const ZONE_OF = {}; Object.entries(ZONES).forEach(([z,l])=>l.forEach(s=>ZONE_OF[s]=z));
+  let level = "state", zoneFilter = null;
+  const btt = document.getElementById("btt"), barsEl = document.getElementById("bars");
+  document.getElementById("zleg").innerHTML = Object.keys(ZONES).map(z=>`<span style="--c:${ZCOL[z]}">${z}</span>`).join("");
+  function drawBars(){
+    let rows;
+    if (level==="zone"){
+      rows = Object.keys(ZONES).map(z=>({key:z, z, v:ZONES[z].reduce((a,s)=>a+S[s].net,0)})).sort((a,b)=>b.v-a.v);
+      document.getElementById("btitle").textContent = "Net received by zone";
+      document.getElementById("bsub").textContent = "September 2026 · ₦ billions · click a zone to drill down to its states";
+    } else {
+      rows = states.filter(s=>!zoneFilter || ZONE_OF[s]===zoneFilter).map(s=>({key:s, z:ZONE_OF[s], v:S[s].net}));
+      document.getElementById("btitle").textContent = zoneFilter ? `${zoneFilter} states ranked by net received` : "All 36 states ranked by net received";
+      document.getElementById("bsub").textContent = zoneFilter ? "September 2026 · ₦ billions · drill up to compare zones"
+        : "September 2026 · ₦ billions · coloured by zone · scroll for the rest";
+    }
+    const mx = Math.max(...rows.map(r=>r.v));
+    barsEl.innerHTML = rows.map(r=>{ const w=r.v/mx*80;
+      return `<div class="bar${level==="zone"?" zone":""}" data-k="${r.key}" data-s="${level==="state"?r.key:""}"><div class="nm">${r.key}</div><div class="tr"><span style="width:${w}%;background:${ZCOL[r.z]}"></span><em style="left:calc(${w}% + 5px)">${r.v.toFixed(1)}</em></div></div>`; }).join("");
+    barsEl.querySelectorAll(".bar").forEach(b=>{
+      const k=b.dataset.k;
+      b.onclick = () => { if(level==="zone"){ level="state"; zoneFilter=k; drawBars(); } else pick(k); };
+      b.onmousemove = e => {
+        const card=btt.parentElement.getBoundingClientRect(), sc=card.width/484, x=(e.clientX-card.left)/sc, y=(e.clientY-card.top)/sc;
+        if (level==="zone"){ const v=ZONES[k].reduce((a,s)=>a+S[s].net,0);
+          btt.innerHTML = `<div class="m">${k.toUpperCase()}</div><div class="z"><i style="background:${ZCOL[k]}"></i>${ZONES[k].length} states</div>
+            <div class="r"><span>Net received</span><b>${bn(v)}</b></div><div class="r"><span>Share of national</span><b>${pct(v/T.net)}</b></div>`;
+        } else {
+          btt.innerHTML = `<div class="m">${k.toUpperCase()}</div><div class="z"><i style="background:${ZCOL[ZONE_OF[k]]}"></i>${ZONE_OF[k]}</div>
+            <div class="r"><span>Net received</span><b>${bn(S[k].net)}</b></div>`;
+        }
+        btt.style.display="block"; btt.style.left=Math.min(x+14, 484-170)+"px"; btt.style.top=(y+14)+"px";
+      };
+      b.onmouseleave = () => btt.style.display="none";
+    });
+    document.getElementById("dUp").disabled = level==="zone";
+    document.getElementById("dAll").disabled = level==="state" && !zoneFilter;
+    highlight();
+  }
+  function highlight(){
+    barsEl.classList.toggle("hassel", !!sel && level==="state");
+    barsEl.querySelectorAll(".bar").forEach(b=>b.classList.toggle("sel", b.dataset.s===sel));
+  }
+  document.getElementById("dUp").onclick = () => { level="zone"; zoneFilter=null; drawBars(); };
+  document.getElementById("dAll").onclick = () => { level="state"; zoneFilter=null; drawBars(); };
+
+  // map
+  const fc = topojson.feature(TOPO, TOPO.objects.states);
+  const proj = d3.geoMercator().fitExtent([[10,4],[498,436]], fc), path = d3.geoPath(proj);
+  const col = d3.scaleQuantize().domain([12,38.2]).range(["#D7EDE2","#9FD2B9","#5DB28D","#1F8A60","#0B5A3E"]);
+  const hov = document.getElementById("hov");
+  d3.select("#map").selectAll("path").data(fc.features).join("path").attr("d",path)
+    .attr("class", f => S[f.properties.name] ? "" : "fct")
+    .attr("fill", f => S[f.properties.name] ? col(S[f.properties.name].net) : null)
+    .on("click", (e,f)=>pick(f.properties.name))
+    .on("mousemove", (e,f)=>{ const s=f.properties.name, o=S[s], card=hov.parentElement.getBoundingClientRect(), sc=card.width/540;
+      hov.innerHTML = o ? `<div class="m">${s.toUpperCase()}<span class="rk">Rank ${o.rank} of 36</span></div>
+        <div class="sub">September 2026 · ${pct(o.net/T.net)} of the national net</div>
+        <div class="r"><span>Income (gross)</span><b>${bn(o.gross)}</b>${chip(o.chg*0.9,true)}</div>
+        <div class="r"><span>Deductions</span><b>${bn(o.ded)}</b>${chip(o.dchg,false)}</div>
+        <div class="r"><span>Net received</span><b>${bn(o.net)}</b>${chip(o.chg,true)}</div>
+        <div class="vs">Change vs August 2026</div>`
+        : `<div class="m">FCT</div><div class="sub">Not in the FAAC reports</div>`;
+      hov.style.display="block"; const x=(e.clientX-card.left)/sc, y=(e.clientY-card.top)/sc;
+      hov.style.left=(x+228>540 ? x-220 : x+14)+"px"; hov.style.top=Math.min(y-10, 516-130)+"px"; })
+    .on("mouseleave", ()=>hov.style.display="none");
+  d3.select("#map").selectAll("path.sel").raise();
+
+  drawBars();
+  render();
+  document.getElementById("lblbtn").onclick=e=>{document.body.classList.toggle("nolabels"); e.target.classList.toggle("on");};
+  function fit(){ const sc=Math.min(1,(window.innerWidth-40)/1280), el=document.getElementById("scaler");
+    el.style.transform=`scale(${sc})`; el.style.width=1280*sc+"px"; el.style.height=720*sc+"px"; }
+  window.addEventListener("resize",fit); fit();
+</script>
+</body>
+</html>
