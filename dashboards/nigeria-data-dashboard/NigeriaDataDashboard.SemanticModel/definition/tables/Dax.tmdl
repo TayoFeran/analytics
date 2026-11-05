@@ -832,11 +832,6 @@ table Dax
 			SELECTEDVALUE ( Basis[Basis], "Total" ) & ", " & [Currency_label]
 		displayFolder: 06 Titles & Labels\Text
 
-	measure Refresh_text =
-			"Updated " & FORMAT ( MAX ( 'Refresh Time'[refreshed_at] ), "dd-mmm-yy | hh:mm" ) & " Lagos"
-			    & UNICHAR ( 10 ) & "FAAC data to " & FORMAT ( [Latest_month], "mmm yyyy" )
-		displayFolder: 06 Titles & Labels\Text
-
 	measure Comparison_narrative =
 			-- e.g. "Under Tinubu, states were allocated ₦607.0bn a month on average, 2.3× as much as
 			-- under Buhari (₦265.3bn). Deductions took 9.8% of gross under Tinubu and 12.3% under Buhari."
@@ -1792,6 +1787,232 @@ table Dax
 			-- Card text, so Power BI's auto units don't shorten $1,224 to $1K
 			FORMAT ( [GDP_per_person_usd_latest], "$#,0" )
 		displayFolder: 06 Titles & Labels\Text
+
+	measure Fresh_FAAC_grace_days =
+			-- Days after a month ends before its FAAC data counts as due
+			45
+		formatString: 0
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_FAAC_warn_days =
+			-- Days late that still count as amber; later is red
+			15
+		formatString: 0
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_FAAC_data_month =
+			-- Newest month of FAAC data in the warehouse; ignores slicers on purpose
+			[Latest_month]
+		formatString: mmm yyyy
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_FAAC_status =
+			-- 0 on time, 1 late (amber), 2 overdue (red), 3 refresh missed (red)
+			VAR _grace = [Fresh_FAAC_grace_days]
+			VAR _now = UTCNOW () + TIME ( 1, 0, 0 ) -- Lagos is UTC+1
+			VAR _today = DATE ( YEAR ( _now ), MONTH ( _now ), DAY ( _now ) )
+			VAR _x = _today - _grace
+			-- Latest month whose grace period has passed
+			VAR _required = IF ( _x = EOMONTH ( _x, 0 ), _x, EOMONTH ( _x, -1 ) )
+			VAR _dataEnd = EOMONTH ( [Fresh_FAAC_data_month], 0 )
+			VAR _lag = INT ( _required - _dataEnd )
+			VAR _due = EOMONTH ( _dataEnd, 1 ) + _grace
+			VAR _refreshed = MAX ( 'Refresh Time'[refreshed_at] )
+			RETURN
+			    SWITCH ( TRUE (),
+			        _lag <= 0, 0,
+			        _refreshed < _due, 3, -- late, and the dashboard hasn't refreshed since the data was due
+			        _lag <= [Fresh_FAAC_warn_days], 1,
+			        2
+			    )
+		formatString: 0
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_FAAC_text =
+			-- e.g. "Sep 2026 is in" or "Oct 2026 is overdue, due 14 Dec"
+			VAR _m = [Fresh_FAAC_data_month]
+			VAR _due = EOMONTH ( _m, 1 ) + [Fresh_FAAC_grace_days]
+			RETURN
+			    SWITCH ( [Fresh_FAAC_status],
+			        0, FORMAT ( _m, "mmm yyyy" ) & " is in",
+			        3, "Refresh missed: newer data is likely in the warehouse",
+			        FORMAT ( EOMONTH ( _m, 0 ) + 1, "mmm yyyy" ) & " is overdue, due " & FORMAT ( _due, "d mmm" )
+			    )
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_CPI_grace_days =
+			-- Days after a month ends before its World Bank CPI and exchange-rate data counts as due
+			60
+		formatString: 0
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_CPI_warn_days =
+			-- Days late that still count as amber; later is red
+			30
+		formatString: 0
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_CPI_data_month =
+			-- Newest month of World Bank CPI and exchange-rate data in the warehouse; ignores slicers on purpose
+			-- CPI and FX must both have arrived, so take the earlier of the two
+			MIN (
+			    CALCULATE ( MAX ( econ_month[month_date] ), REMOVEFILTERS (), NOT ISBLANK ( econ_month[inflation_yoy] ) ),
+			    CALCULATE ( MAX ( econ_month[month_date] ), REMOVEFILTERS (), NOT ISBLANK ( econ_month[naira_per_usd] ) )
+			)
+		formatString: mmm yyyy
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_CPI_status =
+			-- 0 on time, 1 late (amber), 2 overdue (red), 3 refresh missed (red)
+			VAR _grace = [Fresh_CPI_grace_days]
+			VAR _now = UTCNOW () + TIME ( 1, 0, 0 ) -- Lagos is UTC+1
+			VAR _today = DATE ( YEAR ( _now ), MONTH ( _now ), DAY ( _now ) )
+			VAR _x = _today - _grace
+			-- Latest month whose grace period has passed
+			VAR _required = IF ( _x = EOMONTH ( _x, 0 ), _x, EOMONTH ( _x, -1 ) )
+			VAR _dataEnd = EOMONTH ( [Fresh_CPI_data_month], 0 )
+			VAR _lag = INT ( _required - _dataEnd )
+			VAR _due = EOMONTH ( _dataEnd, 1 ) + _grace
+			VAR _refreshed = MAX ( 'Refresh Time'[refreshed_at] )
+			RETURN
+			    SWITCH ( TRUE (),
+			        _lag <= 0, 0,
+			        _refreshed < _due, 3, -- late, and the dashboard hasn't refreshed since the data was due
+			        _lag <= [Fresh_CPI_warn_days], 1,
+			        2
+			    )
+		formatString: 0
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_CPI_text =
+			-- e.g. "Sep 2026 is in" or "Oct 2026 is overdue, due 14 Dec"
+			VAR _m = [Fresh_CPI_data_month]
+			VAR _due = EOMONTH ( _m, 1 ) + [Fresh_CPI_grace_days]
+			RETURN
+			    SWITCH ( [Fresh_CPI_status],
+			        0, FORMAT ( _m, "mmm yyyy" ) & " is in",
+			        3, "Refresh missed: newer data is likely in the warehouse",
+			        FORMAT ( EOMONTH ( _m, 0 ) + 1, "mmm yyyy" ) & " is overdue, due " & FORMAT ( _due, "d mmm" )
+			    )
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_GDP_grace_days =
+			-- Days after a year ends before its GDP counts as due
+			270
+		formatString: 0
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_GDP_warn_days =
+			-- Days late that still count as amber; later is red
+			90
+		formatString: 0
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_GDP_data_year =
+			-- Newest year with GDP in the warehouse; ignores slicers on purpose
+			CALCULATE ( MAX ( econ_year[year] ), REMOVEFILTERS (), NOT ISBLANK ( econ_year[gdp_usd] ) )
+		formatString: 0
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_GDP_status =
+			-- 0 on time, 1 late (amber), 2 overdue (red), 3 refresh missed (red)
+			VAR _grace = [Fresh_GDP_grace_days]
+			VAR _now = UTCNOW () + TIME ( 1, 0, 0 ) -- Lagos is UTC+1
+			VAR _today = DATE ( YEAR ( _now ), MONTH ( _now ), DAY ( _now ) )
+			VAR _x = _today - _grace
+			-- Latest year whose grace period has passed
+			VAR _requiredYear = IF ( _x >= DATE ( YEAR ( _x ), 12, 31 ), YEAR ( _x ), YEAR ( _x ) - 1 )
+			VAR _dataYear = [Fresh_GDP_data_year]
+			VAR _lag = INT ( DATE ( _requiredYear, 12, 31 ) - DATE ( _dataYear, 12, 31 ) )
+			VAR _due = DATE ( _dataYear + 1, 12, 31 ) + _grace
+			VAR _refreshed = MAX ( 'Refresh Time'[refreshed_at] )
+			RETURN
+			    SWITCH ( TRUE (),
+			        _lag <= 0, 0,
+			        _refreshed < _due, 3,
+			        _lag <= [Fresh_GDP_warn_days], 1,
+			        2
+			    )
+		formatString: 0
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_GDP_text =
+			-- e.g. "2025 is in" or "2026 is overdue, due 27 Sep"
+			VAR _y = [Fresh_GDP_data_year]
+			RETURN
+			    SWITCH ( [Fresh_GDP_status],
+			        0, _y & " is in",
+			        3, "Refresh missed: newer data is likely in the warehouse",
+			        ( _y + 1 ) & " is overdue, due " & FORMAT ( DATE ( _y + 1, 12, 31 ) + [Fresh_GDP_grace_days], "d mmm" )
+			    )
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_refreshed_text =
+			-- e.g. "5 Nov 2026, 08:14" (Lagos time)
+			FORMAT ( MAX ( 'Refresh Time'[refreshed_at] ), "d mmm yyyy, hh:nn" )
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Fresh_css =
+			-- Shared styles for the freshness strips (HTML attributes use single quotes)
+			"<style>"
+			    & "html,body{margin:0;padding:0;overflow:hidden}"
+			    & ".fw{position:fixed;top:3px;right:3px;font-family:Segoe UI,sans-serif}"
+			    & ".fs{display:inline-flex;align-items:center;gap:8px;padding:4px 12px 4px 5px;border-radius:999px;background:#fff;border:1px solid;font-size:10px;color:#14231D;white-space:nowrap}"
+			    & ".pl{display:inline-flex;align-items:center;gap:5px;color:#fff;font-weight:600;font-size:9.5px;padding:4px 10px;border-radius:999px}"
+			    & ".pl i{width:6px;height:6px;border-radius:50%;background:#fff;display:inline-block}"
+			    & ".sr{display:inline-flex;flex-direction:column;line-height:1.25;text-align:left}"
+			    & ".sr b{font-size:8px;letter-spacing:1.4px;color:#5E6E67;font-weight:600}"
+			    & ".sr span{font-weight:600}"
+			    & ".sp{width:1px;height:24px;background:#E3E9E6;display:inline-block}"
+			    & ".fc{color:#5E6E67;border-left:1px solid #E3E9E6;padding-left:9px;line-height:1.3;text-align:left}"
+			    & "</style>"
+		displayFolder: 05 Visual Helpers\Freshness
+
+	measure Freshness_faac_html =
+			-- Freshness strip: FAAC pages. The worse source sets the pill.
+			VAR _w = [Fresh_FAAC_status]
+			VAR _col = SWITCH ( _w, 0, "#0E8A5F", 1, "#C98A00", "#C93C3C" )
+			VAR _lab = SWITCH ( _w, 0, "On time", 1, "Late", 2, "Overdue", "Refresh missed" )
+			RETURN
+			    [Fresh_css]
+			    & "<div class='fw'><div class='fs' style='border-color:" & _col & "55'>"
+			    & "<span class='pl' style='background:" & _col & "'><i></i>" & _lab & "</span>"
+			    & "<span class='sr'><b>FAAC · MONTHLY</b><span>" & [Fresh_FAAC_text] & "</span></span>"
+			    & "<span class='fc'>Refreshed<br>" & [Fresh_refreshed_text] & "</span>"
+			    & "</div></div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure Freshness_real_html =
+			-- Freshness strip: FAAC in real terms. The worse source sets the pill.
+			VAR _w = MAX ( [Fresh_FAAC_status], [Fresh_CPI_status] )
+			VAR _col = SWITCH ( _w, 0, "#0E8A5F", 1, "#C98A00", "#C93C3C" )
+			VAR _lab = SWITCH ( _w, 0, "On time", 1, "Late", 2, "Overdue", "Refresh missed" )
+			RETURN
+			    [Fresh_css]
+			    & "<div class='fw'><div class='fs' style='border-color:" & _col & "55'>"
+			    & "<span class='pl' style='background:" & _col & "'><i></i>" & _lab & "</span>"
+			    & "<span class='sr'><b>FAAC · MONTHLY</b><span>" & [Fresh_FAAC_text] & "</span></span>"
+			    & "<span class='sp'></span>"
+			    & "<span class='sr'><b>CPI · MONTHLY</b><span>" & [Fresh_CPI_text] & "</span></span>"
+			    & "<span class='fc'>Refreshed<br>" & [Fresh_refreshed_text] & "</span>"
+			    & "</div></div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure Freshness_econ_html =
+			-- Freshness strip: Economy pages. The worse source sets the pill.
+			VAR _w = MAX ( [Fresh_CPI_status], [Fresh_GDP_status] )
+			VAR _col = SWITCH ( _w, 0, "#0E8A5F", 1, "#C98A00", "#C93C3C" )
+			VAR _lab = SWITCH ( _w, 0, "On time", 1, "Late", 2, "Overdue", "Refresh missed" )
+			RETURN
+			    [Fresh_css]
+			    & "<div class='fw'><div class='fs' style='border-color:" & _col & "55'>"
+			    & "<span class='pl' style='background:" & _col & "'><i></i>" & _lab & "</span>"
+			    & "<span class='sr'><b>CPI &amp; FX · MONTHLY</b><span>" & [Fresh_CPI_text] & "</span></span>"
+			    & "<span class='sp'></span>"
+			    & "<span class='sr'><b>GDP · YEARLY</b><span>" & [Fresh_GDP_text] & "</span></span>"
+			    & "<span class='fc'>Refreshed<br>" & [Fresh_refreshed_text] & "</span>"
+			    & "</div></div>"
+		displayFolder: 05 Visual Helpers\HTML
 
 	column Value
 		dataType: int64
