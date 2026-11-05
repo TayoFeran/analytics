@@ -4,6 +4,7 @@ table dim_administration
 		dataType: string
 		summarizeBy: none
 		sourceColumn: president
+		sortByColumn: term_start
 
 		annotation SummarizationSetBy = Automatic
 

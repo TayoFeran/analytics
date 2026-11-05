@@ -4,10 +4,10 @@
   "position": {
     "x": 758,
     "y": 100,
-    "z": 800,
+    "z": 1200,
     "height": 266,
     "width": 484,
-    "tabOrder": 800
+    "tabOrder": 1200
   },
   "visual": {
     "visualType": "textbox",
@@ -57,6 +57,30 @@
                 "textRuns": [
                   {
                     "value": "Python loads the data into MotherDuck and dbt models it into a warehouse. A GitHub Actions pipeline rebuilds it every day at 06:00 Lagos time.",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "10pt",
+                      "color": "#0F2019"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "10pt",
+                      "color": "#0F2019"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Economy: World Bank official exchange rate, consumer price index, GDP and population. These can differ from NBS headline figures.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",

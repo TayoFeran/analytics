@@ -4,10 +4,10 @@
   "position": {
     "x": 230,
     "y": 100,
-    "z": 700,
+    "z": 1100,
     "height": 266,
     "width": 484,
-    "tabOrder": 700
+    "tabOrder": 1100
   },
   "visual": {
     "visualType": "textbox",
@@ -56,7 +56,31 @@
               {
                 "textRuns": [
                   {
-                    "value": "It's for anyone who wants to see how federal revenue reaches the states: journalists, researchers, students and curious citizens. Economy and elections sections are coming.",
+                    "value": "The Economy section tracks inflation, the naira, the size of the economy, FAAC in real terms (after inflation) and how each administration did.",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "10pt",
+                      "color": "#0F2019"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "10pt",
+                      "color": "#0F2019"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "It's for anyone who wants to see how federal revenue reaches the states: journalists, researchers, students and curious citizens. An elections section is coming.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",

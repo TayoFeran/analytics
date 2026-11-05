@@ -6,10 +6,18 @@
     "revenueMix",
     "deductions",
     "compare",
+    "econOverview",
+    "econSize",
+    "realTerms",
+    "presidents",
     "about",
     "ttMetricDetail",
     "ttStateDetail",
-    "ttCompareMetric"
+    "ttCompareMetric",
+    "ttEconMonth",
+    "ttEconYear",
+    "ttRealTerms",
+    "ttPresident"
   ],
   "activePageName": "667bbbfbb392d0e3b3b2"
 }
