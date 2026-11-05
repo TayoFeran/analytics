@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Economy Overview look-and-feel mock-up</title>
+<style>
+  :root{
+    /* Green & White palette from the Nigeria Data Dashboard; layout = 1280x720 Power BI canvas */
+    --side:#0B3D2E; --side2:#1B5A45; --canvas:#F3F6F4; --gold:#E2B53E;
+    --better:#0E8A5F; --worse:#C93C3C; --equal:#C98A00;
+    --ink:#14231D; --muted:#5E6E67; --line:#E3E9E6; --track:#EDF2EF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#DCE3DF;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:var(--ink)}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:12px 20px;background:#fff;border-bottom:1px solid var(--line);font-size:13px}
+  .controls b{font-weight:600}
+  .controls button{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer}
+  .controls button.on{background:var(--side);color:#fff;border-color:var(--side)}
+  .note{color:var(--muted)}
+  .wrap{padding:20px;display:flex;justify-content:center}
+  .scaler{transform-origin:top left}
+  .canvas{position:relative;width:1280px;height:720px;background:var(--canvas);overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+  .abs{position:absolute}
+  .card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(11,61,46,.08),0 4px 14px rgba(11,61,46,.05)}
+
+  .side{left:0;top:0;width:192px;height:720px;background:var(--side);color:#fff;padding:26px 14px 0 22px}
+  .brand{font-weight:700;font-size:19px;line-height:1.1;letter-spacing:.5px}
+  .brand small{display:block;font-weight:400;font-size:9px;letter-spacing:2.4px;opacity:.7;margin-top:6px}
+  .sec{font-size:8.5px;letter-spacing:2.2px;opacity:.6;margin:22px 0 6px}
+  .nav{display:flex;align-items:center;gap:9px;font-size:11.5px;height:30px;padding-left:6px;margin-left:-8px;border-radius:7px;opacity:.82}
+  .nav i{width:6px;height:6px;border-radius:50%;background:#B9CCC3;flex:none}
+  .nav.on{background:var(--side2);opacity:1;font-weight:600}
+  .nav.on i{background:var(--gold)}
+  .soon{margin-left:auto;font-size:7.5px;letter-spacing:1.3px;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:1px 6px}
+  .srcnote{position:absolute;bottom:16px;left:22px;right:14px;font-size:8.5px;line-height:1.5;opacity:.65}
+
+  .eyebrow{left:216px;top:20px;font-size:9.5px;letter-spacing:2.6px;color:var(--better);font-weight:600}
+  .title{left:216px;top:32px;font-size:26px;font-weight:600}
+  .fresh{right:24px;top:20px;height:38px;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border-radius:999px;font-size:10.5px;background:#fff;border:1px solid #0E8A5F55}
+  .fresh .pill{display:flex;align-items:center;gap:6px;color:#fff;font-weight:600;font-size:10px;padding:5px 10px;border-radius:999px;background:var(--better)}
+  .fresh .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff}
+  .fresh .tag{font-size:8px;letter-spacing:1.6px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+  .fresh .msg{font-weight:600}
+  .fresh .facts{color:var(--muted);border-left:1px solid var(--line);padding-left:10px}
+
+  .filters{left:216px;top:72px;width:1040px;height:40px;border-radius:999px;display:flex;align-items:center;padding:0 18px;font-size:8.5px;letter-spacing:1.6px;color:var(--muted)}
+  .f{display:flex;align-items:center;gap:10px;height:100%;padding-right:16px}
+  .f + .f{border-left:1px solid var(--line);padding-left:16px}
+  .tiles{display:flex;gap:4px;letter-spacing:0}
+  .tiles span{font-size:10px;color:var(--ink);background:var(--track);padding:4px 9px;border-radius:6px}
+  .tiles span.on{background:var(--side);color:#fff}
+  .dd{letter-spacing:0;font-size:10px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 26px 4px 9px;position:relative;min-width:90px}
+  .dd::after{content:"▾";position:absolute;right:8px;color:var(--muted)}
+
+  .ptitle{font-size:11.5px;font-weight:600}
+  .psub{font-size:9px;color:var(--muted);margin-top:2px}
+  .buildtag{position:absolute;z-index:50;font-size:8px;letter-spacing:1px;font-weight:700;padding:2px 6px;border-radius:4px;color:#fff;pointer-events:none}
+  .t-html{background:#7A3FC4}.t-native{background:#2F6FD1}
+  body.nolabels .buildtag{display:none}
+
+  .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:9px;color:var(--muted)}
+  .legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;background:var(--c)}
+
+  /* shared hover card (stands in for Power BI tooltips) */
+  .tt{position:absolute;display:none;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 18px rgba(11,61,46,.18);padding:9px 11px;font-size:10px;pointer-events:none;z-index:60}
+  .tt .m{font-weight:700;font-size:11px;letter-spacing:.5px}
+  .tt .sub{color:var(--muted);font-size:9px;margin:2px 0 5px;display:flex;align-items:center;gap:5px}
+  .tt .sub i{width:8px;height:8px;border-radius:2px}
+  .tt .r{display:grid;align-items:center;gap:8px;padding:3px 0;border-top:1px solid var(--line)}
+  .tt .r span:first-child{color:var(--muted);display:flex;align-items:center;gap:5px}
+  .tt .r span:first-child i{width:7px;height:7px;border-radius:2px;flex:none}
+  .tt .r b{font-weight:700;text-align:right}
+  .tt .r .sh{color:var(--muted);text-align:right}
+  .tt .r.tot{font-weight:700}
+  .tt .r.tot span:first-child{color:var(--ink)}
+  .tt .c{font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:4px;text-align:center;white-space:nowrap}
+  .tt .vs{color:var(--muted);font-size:8.5px;margin-top:4px}
+  .tt .def{color:var(--muted);font-size:9.5px;line-height:1.4;margin:3px 0 6px;white-space:normal}
+  #att .r{grid-template-columns:1fr 66px 34px 58px}
+  #att .r span:first-child{white-space:nowrap}
+  #mtt{width:250px}
+  #mtt .r{grid-template-columns:1fr auto}
+  #btt .r{grid-template-columns:1fr auto}
+
+  /* oil derivation bars (native) */
+  .obar{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center;height:21px;font-size:9.5px}
+  .obar .nm{text-align:right;font-weight:600}
+  .obar .tr{position:relative;height:13px}
+  .obar .tr span{position:absolute;left:0;top:0;bottom:0;border-radius:0 3px 3px 0}
+  .obar .tr em{position:absolute;top:-1px;font-style:normal;font-size:9px;font-weight:600}
+
+  /* matrix (native, with SVG bars) */
+  table.mx{width:100%;border-collapse:collapse;font-size:10px;margin-top:8px}
+  .mx th{font-size:8px;letter-spacing:1.3px;color:var(--muted);font-weight:600;text-align:right;padding:4px 6px;border-bottom:1px solid var(--line)}
+  .mx th:first-child{text-align:left}
+  .mx td{padding:4px 6px;height:22px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  .mx td:first-child{text-align:left;font-weight:600}
+  .mx td:first-child i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  .mx tr.tot td{font-weight:700;border-bottom:none;border-top:1.5px solid var(--ink)}
+  .mx tbody tr:not(.tot):hover td{background:#F6F9F7}
+  .mx .c{font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:4px}
+  .mx .shc{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+
+  .banner{left:216px;top:654px;width:1040px;height:50px;border-radius:12px;display:flex;align-items:center;gap:14px;padding:0 18px;
+    background:linear-gradient(90deg,#0B3D2E 0%,#145A43 70%,#1D6B51 100%);color:#fff}
+  .banner .ico{width:28px;height:28px;border-radius:8px;background:rgba(226,181,62,.18);display:flex;align-items:center;justify-content:center;flex:none}
+  .banner .kick{font-size:8.5px;letter-spacing:2px;color:var(--gold);font-weight:600;white-space:nowrap}
+  .banner .txt{font-size:12px;line-height:1.35}
+  .banner .up{color:#6EE0AE;font-weight:700}
+  .banner .dn{color:#FF9A9A;font-weight:700}
+  .banner .hl{color:var(--gold);font-weight:700}
+
+  .explain{max-width:1280px;margin:0 auto 30px;padding:0 20px;font-size:13.5px;line-height:1.55}
+  .explain h2{font-size:16px;margin:18px 0 6px}
+  .explain table{border-collapse:collapse;width:100%;background:#fff;font-size:12.5px}
+  .explain td,.explain th{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+  .explain th{background:var(--side);color:#fff;font-weight:600}
+</style>
+<style>
+  /* Economy Overview extras */
+  .sel{font:inherit;font-size:10px;letter-spacing:0;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 4px;background:#fff;cursor:pointer}
+  .sel:focus-visible{outline:2px solid var(--gold)}
+  .fresh2{right:24px;top:18px;height:42px;display:flex;align-items:center;gap:8px;padding:0 12px 0 6px;border-radius:999px;font-size:10px;background:#fff;border:1px solid #0E8A5F55}
+  .fresh2 .pill{display:flex;align-items:center;gap:5px;color:#fff;font-weight:600;font-size:9.5px;padding:4px 9px;border-radius:999px;background:var(--better)}
+  .fresh2 .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff}
+  .fresh2 .src{display:flex;flex-direction:column;line-height:1.25}
+  .fresh2 .src b{font-size:8px;letter-spacing:1.4px;color:var(--muted);font-weight:600}
+  .fresh2 .src span{font-weight:600}
+  .fresh2 .sep{width:1px;height:24px;background:var(--line)}
+  .fresh2 .facts{color:var(--muted);border-left:1px solid var(--line);padding-left:9px;line-height:1.3}
+  /* flip cards */
+  .fc{width:248px;height:96px;top:124px;perspective:1000px}
+  .fc-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+  .fc:hover .fc-inner{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;overflow:hidden}
+  .front{background:#fff;box-shadow:0 1px 3px rgba(11,61,46,.08),0 4px 14px rgba(11,61,46,.05);padding:12px 14px 0 16px}
+  .front::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:var(--side)}
+  .lbl{font-size:8.5px;letter-spacing:1.8px;color:var(--muted);font-weight:600}
+  .val{font-size:22px;font-weight:700;margin-top:3px;letter-spacing:-.3px}
+  .val small{font-size:11px;font-weight:600;color:var(--muted);margin-left:3px}
+  .chg{display:flex;align-items:center;gap:6px;font-size:9.5px;margin-top:4px;color:var(--muted)}
+  .badge{font-weight:700;padding:2px 6px;border-radius:5px;font-size:9.5px}
+  .spark{position:absolute;right:12px;top:30px}
+  .hint{position:absolute;right:12px;bottom:7px;font-size:7.5px;color:#9AABA3;letter-spacing:.4px}
+  .asof{position:absolute;left:16px;bottom:7px;font-size:8px;color:#9AABA3}
+  .back{background:var(--side);color:#fff;transform:rotateY(180deg);padding:12px 14px}
+  .back .bt{font-size:8.5px;letter-spacing:1.8px;color:var(--gold);font-weight:600}
+  .back p{margin:5px 0 0;font-size:10.5px;line-height:1.4}
+  /* line charts */
+  /* explain-the-metric back: in Power BI a bookmark swaps it in; the HTML back plays a short flip-in */
+  .info,.backb{font:inherit;font-size:9.5px;font-weight:600;border-radius:999px;cursor:pointer;padding:3px 10px;white-space:nowrap}
+  .info{position:absolute;right:14px;top:12px;color:var(--side);background:#E3F4EC;border:1px solid #BFE3D0}
+  .backb{position:absolute;right:18px;bottom:16px;color:var(--side);background:#fff;border:none}
+  .info:focus-visible,.backb:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .fback{display:none;position:absolute;inset:0;border-radius:12px;background:var(--side);color:#fff;padding:20px 22px;z-index:5;transform-origin:center}
+  .card.showback .fback{display:block;animation:flipin .45s ease-out}
+  @keyframes flipin{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}
+  .fback .bkh{font-size:9px;letter-spacing:1.8px;color:var(--gold);font-weight:700;margin-top:14px}
+  .fback .bkh:first-child{margin-top:0}
+  .fback p{margin:5px 0 0;font-size:12px;line-height:1.55}
+  .fback p b{color:var(--gold)}
+  #itt,#ntt{width:236px}
+  #itt .r,#ntt .r{grid-template-columns:1fr auto}
+  .plegend{display:flex;gap:10px;font-size:9px;color:var(--muted);margin-top:5px}
+  .plegend span::before{content:"";display:inline-block;width:12px;height:3px;border-radius:2px;margin-right:4px;vertical-align:2px;background:var(--c)}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <span><b>Mock-up controls</b> <span class="note">(not part of the report)</span></span>
+  <span><button id="lblbtn" class="on">Show build labels</button></span>
+  <span class="note">Sample data only. Change the years or president: the last month in the range becomes the latest. Hover cards to flip; hover the lines for tooltips; click "ⓘ What it means" on a chart.</span>
+</div>
+
+<div class="wrap"><div class="scaler" id="scaler"><div class="canvas" role="img" aria-label="Mock-up of the Economy Overview page: freshness strip for two sources, four flip cards, inflation and naira line charts coloured by president, and an insight banner">
+
+  <div class="abs side">
+    <div class="brand">NIGERIA<br>DATA<small>DASHBOARD</small></div>
+    <div class="sec">FAAC</div>
+    <div class="nav"><i></i>Overview</div>
+    <div class="nav"><i></i>States</div>
+    <div class="nav"><i></i>Revenue mix</div>
+    <div class="nav"><i></i>Deductions</div>
+    <div class="nav"><i></i>Compare</div>
+    <div class="sec">ECONOMY</div>
+    <div class="nav on"><i></i>Overview</div>
+    <div class="nav"><i></i>Economy size</div>
+    <div class="nav"><i></i>FAAC in real terms</div>
+    <div class="nav"><i></i>Presidents</div>
+    <div class="sec">ELECTIONS</div>
+    <div class="nav" style="opacity:.55"><i></i>Results<span class="soon">SOON</span></div>
+    <div class="sec">INFO</div>
+    <div class="nav"><i></i>About</div>
+    <div class="srcnote">Source: World Bank (exchange rate, CPI, GDP, population), via MotherDuck. Can differ from NBS headlines.</div>
+  </div>
+
+  <div class="abs eyebrow">NIGERIA DATA DASHBOARD &nbsp;·&nbsp; ECONOMY</div>
+  <div class="abs title">Overview</div>
+  <div class="abs fresh2">
+    <span class="pill">On time</span>
+    <span class="src"><b>CPI &amp; FX · MONTHLY</b><span>Sep 2026 is in</span></span>
+    <span class="sep"></span>
+    <span class="src"><b>GDP · YEARLY</b><span>2025 is in</span></span>
+    <span class="facts">Refreshed<br>5 Nov 2026, 08:14</span>
+  </div>
+  <span class="buildtag t-html" style="right:24px;top:6px">HTML · Freshness_html (two sources, worse one wins)</span>
+
+  <div class="abs card filters">
+    <div class="f">YEARS <select class="sel" id="yFrom" aria-label="From year"></select><span style="letter-spacing:0;font-size:10px">to</span><select class="sel" id="yTo" aria-label="To year"></select></div>
+    <div class="f">PRESIDENT <select class="sel" id="pres" aria-label="President"><option value="">All</option></select></div>
+  </div>
+  <span class="buildtag t-native" style="left:216px;top:64px">NATIVE · Years + President dropdown slicers</span>
+
+  <div id="kpis"></div>
+  <span class="buildtag t-html" style="left:216px;top:116px">HTML · *_flipcard (SVG sparkline inside)</span>
+
+  <div class="abs card" id="icard" style="left:216px;top:232px;width:512px;height:408px;padding:14px 16px">
+    <div class="ptitle" id="ititle"></div>
+    <div class="psub">How much more everyday things cost than a year earlier · World Bank</div>
+    <div class="plegend" id="ileg"></div>
+    <svg id="iline" width="480" height="330" style="margin-top:4px"></svg>
+    <div class="tt" id="itt"></div>
+    <button class="info" data-c="icard" aria-label="What this chart means">ⓘ What it means</button>
+    <div class="fback" id="iback"></div>
+  </div>
+  <span class="buildtag t-native" style="left:216px;top:224px">NATIVE · line by president + labels + tooltip card</span>
+
+  <div class="abs card" id="ncard" style="left:744px;top:232px;width:512px;height:408px;padding:14px 16px">
+    <div class="ptitle" id="ntitle"></div>
+    <div class="psub">How many naira buy one US dollar · higher = weaker naira · World Bank</div>
+    <div class="plegend" id="nleg"></div>
+    <svg id="nline" width="480" height="330" style="margin-top:4px"></svg>
+    <div class="tt" id="ntt"></div>
+    <button class="info" data-c="ncard" aria-label="What this chart means">ⓘ What it means</button>
+    <div class="fback" id="nback"></div>
+  </div>
+  <span class="buildtag t-native" style="left:744px;top:224px">NATIVE · line by president + labels + tooltip card</span>
+
+  <div class="abs banner">
+    <div class="ico"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z" fill="#E2B53E"/></svg></div>
+    <div class="kick" id="bkick"></div>
+    <div class="txt" id="btxt"></div>
+  </div>
+  <span class="buildtag t-html" style="left:216px;top:646px">HTML · Economy_insight_html (replaces the narration text)</span>
+
+</div></div></div>
+
+<div class="explain">
+  <h2>What's on this mock-up</h2>
+  <table>
+    <tr><th>Element</th><th>What changes</th><th>Built as</th><th>Trade-off</th></tr>
+    <tr><td>Freshness strip</td><td>Two clocks: CPI and FX monthly (grace 60 days, warn 30), GDP yearly (grace 270 days, warn 90). One pill shows the worse of the two; each source shows its latest period.</td><td>HTML measure</td><td>Grace and warn days to confirm.</td></tr>
+    <tr><td>Years + President</td><td>Dropdowns. Every visual follows them, and the last month in the range becomes the latest month for the cards and banner.</td><td>Native slicers</td><td>None.</td></tr>
+    <tr><td>4 flip cards</td><td>Inflation, Naira per US dollar, Real GDP growth, GDP per person. Front: value, coloured change, sparkline, as-of date. Back: "What it means". Inflation down = green; naira weaker = red; growth up = green.</td><td>HTML + SVG</td><td>Fronts stand on their own (no hover on phones).</td></tr>
+    <tr><td>Inflation and naira lines</td><td>Still coloured by president (existing greens). Data labels on the latest month and each president's peak. Tooltip card: month, president, value, change vs the previous month and vs a year earlier.</td><td>Native line charts + report-page tooltip</td><td>Labels only on key points: about 200 months each.</td></tr>
+    <tr><td>What it means</td><td>Plain-language subtitles, and an "ⓘ What it means" button on each chart that shows a definition with an everyday example and what the chart says for the selected range, then "← Back to chart".</td><td>Button + two bookmarks per chart; HTML back with a CSS flip-in</td><td>Flip-in needs the CSS animation test.</td></tr>
+    <tr><td>Insight banner</td><td>Replaces the narration text, at the bottom. Rule-based: inflation now vs its peak in the range, and the naira now vs the start of the range.</td><td>HTML measure</td><td>None.</td></tr>
+  </table>
+</div>
+
+<script>
+  // Sample data only, shaped like the World Bank series. Months Jan 2010 to Sep 2026.
+  const PRES = [ // month goes to the president in office; colours from the existing report
+    {n:"Yar'Adua", c:"#8FC9AE", to:"2010-04"}, {n:"Jonathan", c:"#4E9C78", to:"2015-05"},
+    {n:"Buhari", c:"#0E6B45", to:"2023-05"},   {n:"Tinubu", c:"#0F2019", to:"2099-12"}];
+  const MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const LONG=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const M=[]; for(let y=2010;y<=2026;y++) for(let m=0;m<12;m++){ if(y===2026&&m>8) break; M.push({y,m,key:`${y}-${String(m+1).padStart(2,"0")}`,lab:`${MN[m]} ${y}`}); }
+  M.forEach(o=>o.p=PRES.find(p=>o.key<=p.to).n);
+  const idx = k => M.findIndex(o=>o.key===k);
+  const interp = anchors => { const a=anchors.map(([k,v])=>[idx(k),v]); return M.map((_,i)=>{ let j=0; while(j<a.length-2 && i>a[j+1][0]) j++;
+      const [x0,y0]=a[j],[x1,y1]=a[j+1], t=Math.max(0,Math.min(1,(i-x0)/(x1-x0||1))); return y0+(y1-y0)*t; }); };
+  const INF = interp([["2010-01",13.1],["2011-01",12.1],["2012-01",12.6],["2013-06",8.4],["2014-06",8.2],["2015-06",9.2],["2016-01",9.6],["2016-08",17.6],
+    ["2017-01",18.7],["2018-01",15.1],["2018-12",11.4],["2019-12",12.0],["2020-12",15.8],["2021-03",18.2],["2021-12",15.6],["2022-06",18.6],["2022-12",21.3],
+    ["2023-06",22.8],["2023-12",28.9],["2024-06",34.2],["2024-12",34.8],["2025-06",22.2],["2025-12",17.5],["2026-08",15.9],["2026-09",15.2]])
+    .map((v,i)=>i>=M.length-2?v:v+Math.sin(i*1.7)*0.35);
+  const FX = interp([["2010-01",150],["2014-10",158],["2015-02",197],["2016-05",199],["2016-07",282],["2016-09",305],["2020-03",361],["2020-09",380],
+    ["2021-06",411],["2022-12",450],["2023-05",465],["2023-06",760],["2023-12",900],["2024-02",1480],["2024-06",1490],["2024-11",1680],["2025-03",1530],
+    ["2025-12",1460],["2026-08",1452],["2026-09",1468]]).map((v,i)=>i>=M.length-2?v:v*(1+Math.sin(i*2.3)*0.006));
+  const YEARS = {2019:{g:2.2,pp:2230},2020:{g:-1.8,pp:2075},2021:{g:3.6,pp:2065},2022:{g:3.3,pp:2160},2023:{g:2.9,pp:1620},2024:{g:3.4,pp:880},2025:{g:3.9,pp:1084}};
+  const GOOD="#0E8A5F", BAD="#C93C3C", EQ="#C98A00";
+  const pcol = n => PRES.find(p=>p.n===n).c;
+
+  // slicers
+  const yFrom=document.getElementById("yFrom"), yTo=document.getElementById("yTo"), pres=document.getElementById("pres");
+  for(let y=2010;y<=2026;y++){ yFrom.add(new Option(y,y)); yTo.add(new Option(y,y)); }
+  yFrom.value=2010; yTo.value=2026; PRES.forEach(p=>pres.add(new Option(p.n,p.n)));
+  const inRange = () => { let a=+yFrom.value, b=+yTo.value; if(a>b){ b=a; yTo.value=b; } return M.map((o,i)=>i).filter(i=>M[i].y>=a && M[i].y<=b && (!pres.value || M[i].p===pres.value)); };
+  [yFrom,yTo,pres].forEach(s=>s.onchange=renderAll);
+
+  const chip = (txt,col) => `<span class="c" style="color:${col};background:${col===GOOD?"#E3F4EC":col===BAD?"#FBE7E7":"#FBF1DC"}">${txt}</span>`;
+  const spark = (a,col) => { const w=80,h=30,mn=Math.min(...a),mx=Math.max(...a); const p=a.map((v,i)=>[i*(w-6)/(a.length-1)+3, h-3-(v-mn)/(mx-mn||1)*(h-8)]);
+    return `<svg width="${w}" height="${h}"><polyline points="${p.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" ")}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${p[p.length-1][0].toFixed(1)}" cy="${p[p.length-1][1].toFixed(1)}" r="3" fill="${col}"/></svg>`; };
+
+  function cards(L){
+    const i=L, prev=i-1, M0=M[i], gy=Math.min(M0.y-(M0.m<9?1:0),2025), gy0=gy-1, G=YEARS[gy]||YEARS[2025], G0=YEARS[gy0]||YEARS[2024];
+    const dInf=INF[i]-INF[prev], dFx=(FX[i]-FX[prev])/FX[prev], dG=G.g-G0.g, dPP=(G.pp-G0.pp)/G0.pp;
+    const peak = (()=>{ let k=0; for(let j=0;j<=i;j++) if(INF[j]>INF[k]) k=j; return k; })();
+    const tinStart = idx("2023-06");
+    const K=[
+      {lbl:"INFLATION", v:INF[i].toFixed(1)+"%", u:"", ch:chip(`${dInf<0?"▼":"▲"} ${Math.abs(dInf).toFixed(1)} pts`, dInf<0?GOOD:BAD), vs:`vs ${M[prev].lab}`,
+       sp:spark(INF.slice(i-5,i+1),"#0B3D2E"), asof:`Year to ${M0.lab}`, back:`Prices were ${INF[i].toFixed(1)}% higher than a year earlier, down from the ${INF[peak].toFixed(1)}% peak in ${M[peak].lab}.`},
+      {lbl:"NAIRA PER US DOLLAR", v:"₦"+Math.round(FX[i]).toLocaleString(), u:"", ch:chip(`${dFx>0?"▲":"▼"} ${Math.abs(dFx*100).toFixed(1)}%`, dFx>0?BAD:GOOD), vs:dFx>0?"naira weaker":"naira stronger",
+       sp:spark(FX.slice(i-5,i+1),"#0B3D2E"), asof:`${M0.lab} average`, back: i>=tinStart ? `A dollar cost ₦${Math.round(FX[i]).toLocaleString()}, ${(FX[i]/FX[tinStart-1]).toFixed(1)}× the ₦${Math.round(FX[tinStart-1])} when Tinubu took office.` : `A dollar cost ₦${Math.round(FX[i]).toLocaleString()} in ${M0.lab}.`},
+      {lbl:"REAL GDP GROWTH", v:G.g.toFixed(1)+"%", u:"", ch:chip(`${dG>0?"▲":"▼"} ${Math.abs(dG).toFixed(1)} pts`, dG>0?GOOD:BAD), vs:`vs ${gy0}`,
+       sp:spark([YEARS[gy-5]||YEARS[2020],YEARS[gy-4]||YEARS[2021],YEARS[gy-3]||YEARS[2022],YEARS[gy-2]||YEARS[2023],G0,G].map(o=>o.g),"#0B3D2E"), asof:`${gy}, World Bank`, back:`The economy grew ${G.g.toFixed(1)}% in ${gy} after removing price rises.`},
+      {lbl:"GDP PER PERSON", v:"$"+G.pp.toLocaleString(), u:"₦"+(G.pp*FX[i]/1e6).toFixed(2)+"m", ch:chip(`${dPP>0?"▲":"▼"} ${Math.abs(dPP*100).toFixed(1)}%`, dPP>0?GOOD:BAD), vs:`vs ${gy0}`,
+       sp:spark([YEARS[gy-5]||YEARS[2020],YEARS[gy-4]||YEARS[2021],YEARS[gy-3]||YEARS[2022],YEARS[gy-2]||YEARS[2023],G0,G].map(o=>o.pp),"#0B3D2E"), asof:`${gy}, in US dollars`, back:`Output per Nigerian was $${G.pp.toLocaleString()} in ${gy}. In dollars it is well below 2019's $2,230, mostly because the naira fell.`}
+    ];
+    document.getElementById("kpis").innerHTML = K.map((k,j)=>`<div class="abs fc" style="left:${216+j*264}px"><div class="fc-inner">
+      <div class="face front"><div class="lbl">${k.lbl}</div><div class="val">${k.v}<small>${k.u}</small></div>
+        <div class="chg">${k.ch}${k.vs}</div><div class="spark">${k.sp}</div><div class="asof">${k.asof}</div><div class="hint">HOVER ↻</div></div>
+      <div class="face back"><div class="bt">WHAT IT MEANS</div><p>${k.back}</p></div></div></div>`).join("");
+  }
+
+  function line(svgId, cardId, ttId, series, fmtV, kind){
+    const R=inRange(), svg=document.getElementById(svgId), W=480, H=330, pl=6, pr=58, pt=18, pb=22;
+    const vals=R.map(i=>series[i]), mn=Math.min(...vals), mx=Math.max(...vals), pad=(mx-mn)*0.08||1;
+    const X=k=>pl+(R.length===1?(W-pl-pr)/2:k*(W-pl-pr)/(R.length-1)), Y=v=>pt+(1-(v-(mn-pad))/((mx+pad)-(mn-pad)))*(H-pt-pb);
+    let s="";
+    // one path per president run, joined at the boundary so the line is continuous
+    let start=0; for(let k=1;k<=R.length;k++){ if(k===R.length || M[R[k]].p!==M[R[start]].p){ const seg=R.slice(start, Math.min(k+1,R.length));
+        s+=`<polyline points="${seg.map((i,q)=>`${X(start+q).toFixed(1)},${Y(series[i]).toFixed(1)}`).join(" ")}" fill="none" stroke="${pcol(M[R[start]].p)}" stroke-width="2" stroke-linejoin="round"/>`; start=k; } }
+    // labels: latest point and each president's peak in view
+    const labels=[]; const last=R.length-1; labels.push({k:last, latest:true});
+    [...new Set(R.map(i=>M[i].p))].forEach(n=>{ let best=-1; R.forEach((i,k)=>{ if(M[i].p===n && (best<0 || series[i]>series[R[best]])) best=k; }); if(best>=0 && best!==last) labels.push({k:best}); });
+    const placed=[];
+    labels.forEach(l=>{ const i=R[l.k], x=X(l.k), y=Y(series[i]);
+      // skip a peak label that would sit on top of one already drawn
+      if(!l.latest && placed.some(q=>Math.abs(q[0]-x)<34 && Math.abs(q[1]-y)<16)) return; placed.push([x,y]);
+      s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${l.latest?3.5:2.5}" fill="${pcol(M[i].p)}"/>`;
+      const anchor = l.latest ? "start" : (x>W-pr-30 ? "end" : x<40 ? "start" : "middle");
+      s+=`<text x="${(l.latest?x+6:x).toFixed(1)}" y="${(l.latest?y+4:y-7).toFixed(1)}" font-size="${l.latest?10.5:9}" font-weight="700" fill="#14231D" text-anchor="${anchor}">${fmtV(series[i])}</text>`; });
+    const yrs=[...new Set(R.map(i=>M[i].y))], step=Math.max(1,Math.ceil(yrs.length/7));
+    yrs.forEach((y,q)=>{ if(q%step) return; const k=R.findIndex(i=>M[i].y===y); s+=`<text x="${X(k).toFixed(1)}" y="${H-5}" font-size="9" font-weight="600" fill="#14231D" text-anchor="${k===0?"start":"middle"}">${y}</text>`; });
+    s+=`<line id="${svgId}g" y1="${pt}" y2="${H-pb}" stroke="#14231D" stroke-opacity=".45" stroke-dasharray="3 3" visibility="hidden"/><rect width="${W}" height="${H}" fill="transparent"/>`;
+    svg.innerHTML=s;
+    const tt=document.getElementById(ttId), g=document.getElementById(svgId+"g");
+    svg.onmousemove=e=>{ const r=svg.getBoundingClientRect(), sc=r.width/W, x=(e.clientX-r.left)/sc;
+      const k=R.length===1?0:Math.max(0,Math.min(R.length-1,Math.round((x-pl)/((W-pl-pr)/(R.length-1))))), i=R[k];
+      g.setAttribute("x1",X(k)); g.setAttribute("x2",X(k)); g.setAttribute("visibility","visible");
+      const p=i-1, ya=i-12;
+      const ch = j => { if(j<0) return chip("n/a",EQ).replace(EQ,"#5E6E67");
+        if(kind==="inf"){ const d=series[i]-series[j]; return chip(`${d<0?"▼":"▲"} ${Math.abs(d).toFixed(1)} pts`, Math.abs(d)<0.05?EQ:(d<0?GOOD:BAD)); }
+        const d=(series[i]-series[j])/series[j]; return chip(`${d>0?"▲":"▼"} ${Math.abs(d*100).toFixed(1)}%`, Math.abs(d)<0.0005?EQ:(d>0?BAD:GOOD)); };
+      tt.innerHTML=`<div class="m">${M[i].lab.toUpperCase()}</div><div class="sub"><i style="background:${pcol(M[i].p)}"></i>${M[i].p}</div>
+        <div class="r"><span>${kind==="inf"?"Inflation":"Naira per US dollar"}</span><b>${fmtV(series[i])}</b></div>
+        <div class="r"><span>vs ${p>=0?M[p].lab:"previous month"}</span>${ch(p)}</div>
+        <div class="r"><span>vs ${ya>=0?M[ya].lab:"a year earlier"}</span>${ch(ya)}</div>
+        <div class="vs">${kind==="inf"?"Inflation down = green":"Naira weaker (more ₦ per $) = red"}</div>`;
+      tt.style.display="block"; const left=16+X(k)+14; tt.style.left=(left+236>500?16+X(k)-250:left)+"px"; tt.style.top="60px"; };
+    svg.onmouseleave=()=>{ tt.style.display="none"; g.setAttribute("visibility","hidden"); };
+    return R;
+  }
+
+  function renderAll(){
+    const R=inRange(); if(!R.length) return; const L=R[R.length-1], F=R[0];
+    document.getElementById("ititle").textContent=`Inflation by month, ${M[F].lab} to ${M[L].lab}`;
+    document.getElementById("ntitle").textContent=`Naira per US dollar by month, ${M[F].lab} to ${M[L].lab}`;
+    const used=[...new Set(R.map(i=>M[i].p))], leg=used.map(n=>`<span style="--c:${pcol(n)}">${n}</span>`).join("");
+    document.getElementById("ileg").innerHTML=leg; document.getElementById("nleg").innerHTML=leg;
+    line("iline","icard","itt",INF,v=>v.toFixed(1)+"%","inf");
+    line("nline","ncard","ntt",FX,v=>"₦"+Math.round(v).toLocaleString(),"fx");
+    cards(L);
+    let pkI=R[0], jump=R[1]??R[0]; R.forEach(i=>{ if(INF[i]>INF[pkI]) pkI=i; if(i>0 && R.includes(i-1) && FX[i]/FX[i-1] > FX[jump]/FX[jump-1]) jump=i; });
+    const avgI=R.reduce((a,i)=>a+INF[i],0)/R.length, lost=1-FX[F]/FX[L];
+    document.getElementById("iback").innerHTML=`<div class="bkh">WHAT IS INFLATION?</div>
+      <p>The % rise in the prices of everyday goods and services compared with the same month a year earlier. At <b>15%</b>, something that cost ₦1,000 a year ago now costs about ₦1,150. Falling inflation means prices are still rising, just more slowly.</p>
+      <div class="bkh">WHAT THE CHART SAYS · ${M[F].lab} to ${M[L].lab}</div>
+      <p>Inflation averaged <b>${avgI.toFixed(1)}%</b>. It peaked at <b>${INF[pkI].toFixed(1)}%</b> in ${M[pkI].lab}${pkI!==L?` and was <b>${INF[L].toFixed(1)}%</b> in ${M[L].lab}`:""}. ${INF[L]>15?"Prices are still rising fast: at this rate they double in about "+Math.round(Math.log(2)/Math.log(1+INF[L]/100))+" years.":""}</p>
+      <button class="backb" data-c="icard">← Back to chart</button>`;
+    document.getElementById("nback").innerHTML=`<div class="bkh">WHAT DOES NAIRA PER US DOLLAR MEAN?</div>
+      <p>How many naira you need to buy one US dollar. A higher number means a <b>weaker naira</b>: imports, travel, school fees abroad and foreign debt all cost more in naira.</p>
+      <div class="bkh">WHAT THE CHART SAYS · ${M[F].lab} to ${M[L].lab}</div>
+      <p>A dollar went from <b>₦${Math.round(FX[F]).toLocaleString()}</b> to <b>₦${Math.round(FX[L]).toLocaleString()}</b>${lost>0.005?`, so the naira lost <b>${Math.round(lost*100)}%</b> of its value against the dollar`:""}. ${R.length>1?`The biggest one-month jump was ${M[jump].lab} (<b>+${Math.round((FX[jump]/FX[jump-1]-1)*100)}%</b>)${M[jump].key==="2023-06"?", when the official and market rates were merged":""}.`:""}</p>
+      <button class="backb" data-c="ncard">← Back to chart</button>`;
+    document.querySelectorAll(".info,.backb").forEach(btn=>btn.onclick=()=>document.getElementById(btn.dataset.c).classList.toggle("showback", btn.classList.contains("info")));
+    let pk=R[0]; R.forEach(i=>{ if(INF[i]>INF[pk]) pk=i; });
+    document.getElementById("bkick").innerHTML=`KEY TAKEAWAY<br>${M[L].lab.toUpperCase()}`;
+    const fxx=FX[L]/FX[F];
+    document.getElementById("btxt").innerHTML =
+      `Inflation was <span class="hl">${INF[L].toFixed(1)}%</span> in ${LONG[M[L].m]} ${M[L].y}`+(pk!==L?`, down from its <span class="dn">${INF[pk].toFixed(1)}%</span> peak in ${M[pk].lab}. `:`, the highest in the selected range. `)+
+      `A dollar cost <span class="hl">₦${Math.round(FX[L]).toLocaleString()}</span>, `+(fxx>1.01?`<span class="dn">${fxx.toFixed(1)}×</span> its level in ${M[F].lab}.`:`about the same as in ${M[F].lab}.`);
+  }
+  renderAll();
+
+  document.getElementById("lblbtn").onclick=e=>{document.body.classList.toggle("nolabels"); e.target.classList.toggle("on");};
+  function fit(){ const sc=Math.min(1,(window.innerWidth-40)/1280), el=document.getElementById("scaler");
+    el.style.transform=`scale(${sc})`; el.style.width=1280*sc+"px"; el.style.height=720*sc+"px"; }
+  window.addEventListener("resize",fit); fit();
+</script>
+</body>
+</html>

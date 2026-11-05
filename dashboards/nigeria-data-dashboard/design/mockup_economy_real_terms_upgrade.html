@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAAC in real terms look-and-feel mock-up</title>
+<style>
+  :root{
+    /* Green & White palette from the Nigeria Data Dashboard; layout = 1280x720 Power BI canvas */
+    --side:#0B3D2E; --side2:#1B5A45; --canvas:#F3F6F4; --gold:#E2B53E;
+    --better:#0E8A5F; --worse:#C93C3C; --equal:#C98A00;
+    --ink:#14231D; --muted:#5E6E67; --line:#E3E9E6; --track:#EDF2EF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#DCE3DF;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:var(--ink)}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:12px 20px;background:#fff;border-bottom:1px solid var(--line);font-size:13px}
+  .controls b{font-weight:600}
+  .controls button{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer}
+  .controls button.on{background:var(--side);color:#fff;border-color:var(--side)}
+  .note{color:var(--muted)}
+  .wrap{padding:20px;display:flex;justify-content:center}
+  .scaler{transform-origin:top left}
+  .canvas{position:relative;width:1280px;height:720px;background:var(--canvas);overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+  .abs{position:absolute}
+  .card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(11,61,46,.08),0 4px 14px rgba(11,61,46,.05)}
+
+  .side{left:0;top:0;width:192px;height:720px;background:var(--side);color:#fff;padding:26px 14px 0 22px}
+  .brand{font-weight:700;font-size:19px;line-height:1.1;letter-spacing:.5px}
+  .brand small{display:block;font-weight:400;font-size:9px;letter-spacing:2.4px;opacity:.7;margin-top:6px}
+  .sec{font-size:8.5px;letter-spacing:2.2px;opacity:.6;margin:22px 0 6px}
+  .nav{display:flex;align-items:center;gap:9px;font-size:11.5px;height:30px;padding-left:6px;margin-left:-8px;border-radius:7px;opacity:.82}
+  .nav i{width:6px;height:6px;border-radius:50%;background:#B9CCC3;flex:none}
+  .nav.on{background:var(--side2);opacity:1;font-weight:600}
+  .nav.on i{background:var(--gold)}
+  .soon{margin-left:auto;font-size:7.5px;letter-spacing:1.3px;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:1px 6px}
+  .srcnote{position:absolute;bottom:16px;left:22px;right:14px;font-size:8.5px;line-height:1.5;opacity:.65}
+
+  .eyebrow{left:216px;top:20px;font-size:9.5px;letter-spacing:2.6px;color:var(--better);font-weight:600}
+  .title{left:216px;top:32px;font-size:26px;font-weight:600}
+  .fresh{right:24px;top:20px;height:38px;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border-radius:999px;font-size:10.5px;background:#fff;border:1px solid #0E8A5F55}
+  .fresh .pill{display:flex;align-items:center;gap:6px;color:#fff;font-weight:600;font-size:10px;padding:5px 10px;border-radius:999px;background:var(--better)}
+  .fresh .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff}
+  .fresh .tag{font-size:8px;letter-spacing:1.6px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+  .fresh .msg{font-weight:600}
+  .fresh .facts{color:var(--muted);border-left:1px solid var(--line);padding-left:10px}
+
+  .filters{left:216px;top:72px;width:1040px;height:40px;border-radius:999px;display:flex;align-items:center;padding:0 18px;font-size:8.5px;letter-spacing:1.6px;color:var(--muted)}
+  .f{display:flex;align-items:center;gap:10px;height:100%;padding-right:16px}
+  .f + .f{border-left:1px solid var(--line);padding-left:16px}
+  .tiles{display:flex;gap:4px;letter-spacing:0}
+  .tiles span{font-size:10px;color:var(--ink);background:var(--track);padding:4px 9px;border-radius:6px}
+  .tiles span.on{background:var(--side);color:#fff}
+  .dd{letter-spacing:0;font-size:10px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 26px 4px 9px;position:relative;min-width:90px}
+  .dd::after{content:"▾";position:absolute;right:8px;color:var(--muted)}
+
+  .ptitle{font-size:11.5px;font-weight:600}
+  .psub{font-size:9px;color:var(--muted);margin-top:2px}
+  .buildtag{position:absolute;z-index:50;font-size:8px;letter-spacing:1px;font-weight:700;padding:2px 6px;border-radius:4px;color:#fff;pointer-events:none}
+  .t-html{background:#7A3FC4}.t-native{background:#2F6FD1}
+  body.nolabels .buildtag{display:none}
+
+  .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:9px;color:var(--muted)}
+  .legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;background:var(--c)}
+
+  /* shared hover card (stands in for Power BI tooltips) */
+  .tt{position:absolute;display:none;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 18px rgba(11,61,46,.18);padding:9px 11px;font-size:10px;pointer-events:none;z-index:60}
+  .tt .m{font-weight:700;font-size:11px;letter-spacing:.5px}
+  .tt .sub{color:var(--muted);font-size:9px;margin:2px 0 5px;display:flex;align-items:center;gap:5px}
+  .tt .sub i{width:8px;height:8px;border-radius:2px}
+  .tt .r{display:grid;align-items:center;gap:8px;padding:3px 0;border-top:1px solid var(--line)}
+  .tt .r span:first-child{color:var(--muted);display:flex;align-items:center;gap:5px}
+  .tt .r span:first-child i{width:7px;height:7px;border-radius:2px;flex:none}
+  .tt .r b{font-weight:700;text-align:right}
+  .tt .r .sh{color:var(--muted);text-align:right}
+  .tt .r.tot{font-weight:700}
+  .tt .r.tot span:first-child{color:var(--ink)}
+  .tt .c{font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:4px;text-align:center;white-space:nowrap}
+  .tt .vs{color:var(--muted);font-size:8.5px;margin-top:4px}
+  .tt .def{color:var(--muted);font-size:9.5px;line-height:1.4;margin:3px 0 6px;white-space:normal}
+  #att .r{grid-template-columns:1fr 66px 34px 58px}
+  #att .r span:first-child{white-space:nowrap}
+  #mtt{width:250px}
+  #mtt .r{grid-template-columns:1fr auto}
+  #btt .r{grid-template-columns:1fr auto}
+
+  /* oil derivation bars (native) */
+  .obar{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center;height:21px;font-size:9.5px}
+  .obar .nm{text-align:right;font-weight:600}
+  .obar .tr{position:relative;height:13px}
+  .obar .tr span{position:absolute;left:0;top:0;bottom:0;border-radius:0 3px 3px 0}
+  .obar .tr em{position:absolute;top:-1px;font-style:normal;font-size:9px;font-weight:600}
+
+  /* matrix (native, with SVG bars) */
+  table.mx{width:100%;border-collapse:collapse;font-size:10px;margin-top:8px}
+  .mx th{font-size:8px;letter-spacing:1.3px;color:var(--muted);font-weight:600;text-align:right;padding:4px 6px;border-bottom:1px solid var(--line)}
+  .mx th:first-child{text-align:left}
+  .mx td{padding:4px 6px;height:22px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  .mx td:first-child{text-align:left;font-weight:600}
+  .mx td:first-child i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  .mx tr.tot td{font-weight:700;border-bottom:none;border-top:1.5px solid var(--ink)}
+  .mx tbody tr:not(.tot):hover td{background:#F6F9F7}
+  .mx .c{font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:4px}
+  .mx .shc{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+
+  .banner{left:216px;top:654px;width:1040px;height:50px;border-radius:12px;display:flex;align-items:center;gap:14px;padding:0 18px;
+    background:linear-gradient(90deg,#0B3D2E 0%,#145A43 70%,#1D6B51 100%);color:#fff}
+  .banner .ico{width:28px;height:28px;border-radius:8px;background:rgba(226,181,62,.18);display:flex;align-items:center;justify-content:center;flex:none}
+  .banner .kick{font-size:8.5px;letter-spacing:2px;color:var(--gold);font-weight:600;white-space:nowrap}
+  .banner .txt{font-size:12px;line-height:1.35}
+  .banner .up{color:#6EE0AE;font-weight:700}
+  .banner .dn{color:#FF9A9A;font-weight:700}
+  .banner .hl{color:var(--gold);font-weight:700}
+
+  .explain{max-width:1280px;margin:0 auto 30px;padding:0 20px;font-size:13.5px;line-height:1.55}
+  .explain h2{font-size:16px;margin:18px 0 6px}
+  .explain table{border-collapse:collapse;width:100%;background:#fff;font-size:12.5px}
+  .explain td,.explain th{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+  .explain th{background:var(--side);color:#fff;font-weight:600}
+</style>
+<style>
+  .sel{font:inherit;font-size:10px;letter-spacing:0;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 4px;background:#fff;cursor:pointer}
+  .sel:focus-visible{outline:2px solid var(--gold)}
+  .fresh2{right:24px;top:18px;height:42px;display:flex;align-items:center;gap:8px;padding:0 12px 0 6px;border-radius:999px;font-size:10px;background:#fff;border:1px solid #0E8A5F55}
+  .fresh2 .pill{display:flex;align-items:center;gap:5px;color:#fff;font-weight:600;font-size:9.5px;padding:4px 9px;border-radius:999px;background:var(--better)}
+  .fresh2 .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff}
+  .fresh2 .src{display:flex;flex-direction:column;line-height:1.25}
+  .fresh2 .src b{font-size:8px;letter-spacing:1.4px;color:var(--muted);font-weight:600}
+  .fresh2 .src span{font-weight:600}
+  .fresh2 .sep{width:1px;height:24px;background:var(--line)}
+  .fresh2 .facts{color:var(--muted);border-left:1px solid var(--line);padding-left:9px;line-height:1.3}
+  /* flip cards */
+  .fc{width:248px;height:96px;top:124px;perspective:1000px}
+  .fc-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+  .fc:hover .fc-inner{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;overflow:hidden}
+  .front{background:#fff;box-shadow:0 1px 3px rgba(11,61,46,.08),0 4px 14px rgba(11,61,46,.05);padding:12px 14px 0 16px}
+  .front::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:var(--side)}
+  .lbl{font-size:8.5px;letter-spacing:1.8px;color:var(--muted);font-weight:600}
+  .val{font-size:22px;font-weight:700;margin-top:3px;letter-spacing:-.3px}
+  .val small{font-size:11px;font-weight:600;color:var(--muted);margin-left:3px}
+  .chg{display:flex;align-items:center;gap:6px;font-size:9.5px;margin-top:4px;color:var(--muted)}
+  .badge{font-weight:700;padding:2px 6px;border-radius:5px;font-size:9.5px}
+  .hint{position:absolute;right:12px;bottom:7px;font-size:7.5px;color:#9AABA3;letter-spacing:.4px}
+  .asof{position:absolute;left:16px;bottom:7px;font-size:8px;color:#9AABA3}
+  .back{background:var(--side);color:#fff;transform:rotateY(180deg);padding:12px 14px}
+  .back .bt{font-size:8.5px;letter-spacing:1.8px;color:var(--gold);font-weight:600}
+  .back p{margin:5px 0 0;font-size:10.5px;line-height:1.4}
+  /* chart with explain-the-metric back */
+  .ch{padding:0;perspective:1400px}
+  .flipw{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+  .ch.flipped .flipw{transform:rotateY(180deg)}
+  .ffront,.fback{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;padding:14px 16px}
+  .fback{transform:rotateY(180deg);background:var(--side);color:#fff;padding:22px 26px}
+  .fback .bkh{font-size:9px;letter-spacing:1.8px;color:var(--gold);font-weight:700;margin-top:14px}
+  .fback .bkh:first-child{margin-top:0}
+  .fback p{margin:5px 0 0;font-size:12.5px;line-height:1.55;max-width:760px}
+  .fback p b{color:var(--gold)}
+  .fback .ex{display:flex;gap:12px;margin-top:10px}
+  .fback .ex div{background:rgba(255,255,255,.08);border-radius:10px;padding:10px 14px;font-size:11px;line-height:1.45;min-width:200px}
+  .fback .ex b{display:block;font-size:18px;color:#fff}
+  .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .hdr{display:flex;align-items:center;gap:10px}
+  .info,.backb{font:inherit;font-size:9.5px;font-weight:600;border-radius:999px;cursor:pointer;padding:3px 10px;white-space:nowrap}
+  .info{color:var(--side);background:#E3F4EC;border:1px solid #BFE3D0}
+  .backb{position:absolute;right:20px;bottom:18px;color:var(--side);background:#fff;border:none}
+  .info:focus-visible,.backb:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .plegend{display:flex;gap:10px;font-size:9px;color:var(--muted)}
+  .plegend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px;background:var(--c)}
+  .plegend span.ln::before{width:14px;height:0;border-top:2px dashed var(--c);border-radius:0;vertical-align:3px;background:none}
+  #rtt{width:256px}
+  #rtt .r{grid-template-columns:1fr auto}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <span><b>Mock-up controls</b> <span class="note">(not part of the report)</span></span>
+  <span><button id="lblbtn" class="on">Show build labels</button></span>
+  <span class="note">Sample data only. Switch Prices, years or president. Hover cards to flip; hover a month; click "ⓘ What it means" on the chart.</span>
+</div>
+
+<div class="wrap"><div class="scaler" id="scaler"><div class="canvas" role="img" aria-label="Mock-up of the FAAC in real terms page: four flip cards, monthly net received as paid or in today's prices, an explanation side and an insight banner">
+
+  <div class="abs side">
+    <div class="brand">NIGERIA<br>DATA<small>DASHBOARD</small></div>
+    <div class="sec">FAAC</div>
+    <div class="nav"><i></i>Overview</div>
+    <div class="nav"><i></i>States</div>
+    <div class="nav"><i></i>Revenue mix</div>
+    <div class="nav"><i></i>Deductions</div>
+    <div class="nav"><i></i>Compare</div>
+    <div class="sec">ECONOMY</div>
+    <div class="nav"><i></i>Overview</div>
+    <div class="nav"><i></i>Economy size</div>
+    <div class="nav on"><i></i>FAAC in real terms</div>
+    <div class="nav"><i></i>Presidents</div>
+    <div class="sec">ELECTIONS</div>
+    <div class="nav" style="opacity:.55"><i></i>Results<span class="soon">SOON</span></div>
+    <div class="sec">INFO</div>
+    <div class="nav"><i></i>About</div>
+    <div class="srcnote">Source: FAAC disbursement reports and World Bank CPI, via MotherDuck. Can differ from NBS headlines.</div>
+  </div>
+
+  <div class="abs eyebrow">NIGERIA DATA DASHBOARD &nbsp;·&nbsp; ECONOMY</div>
+  <div class="abs title">FAAC in real terms</div>
+  <div class="abs fresh2">
+    <span class="pill">On time</span>
+    <span class="src"><b>FAAC · MONTHLY</b><span>Sep 2026 is in</span></span>
+    <span class="sep"></span>
+    <span class="src"><b>CPI · MONTHLY</b><span>Sep 2026 is in</span></span>
+    <span class="facts">Refreshed<br>5 Nov 2026, 08:14</span>
+  </div>
+  <span class="buildtag t-html" style="right:24px;top:6px">HTML · Freshness_html (FAAC + CPI)</span>
+
+  <div class="abs card filters">
+    <div class="f">YEARS <select class="sel" id="yFrom" aria-label="From year"></select><span style="letter-spacing:0;font-size:10px">to</span><select class="sel" id="yTo" aria-label="To year"></select></div>
+    <div class="f">PRESIDENT <select class="sel" id="pres" aria-label="President"><option value="">All</option><option>Buhari</option><option>Tinubu</option></select></div>
+    <div class="f">PRICES <select class="sel" id="prices" aria-label="Prices"><option value="paid">As paid</option><option value="today" selected>Today's prices</option></select></div>
+  </div>
+  <span class="buildtag t-native" style="left:216px;top:64px">NATIVE · Years, President, Prices dropdowns</span>
+
+  <div id="kpis"></div>
+  <span class="buildtag t-html" style="left:216px;top:116px">HTML · *_flipcard</span>
+
+  <div class="abs card ch" id="rcard" style="left:216px;top:232px;width:1040px;height:408px"></div>
+  <span class="buildtag t-native" style="left:216px;top:224px">NATIVE · columns by president + as-paid line + labels + TT - Real Terms Month; button + bookmarks for the back</span>
+
+  <div class="abs banner">
+    <div class="ico"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z" fill="#E2B53E"/></svg></div>
+    <div class="kick" id="bkick"></div>
+    <div class="txt" id="btxt"></div>
+  </div>
+  <span class="buildtag t-html" style="left:216px;top:646px">HTML · Real_terms_insight_html (replaces the narration text)</span>
+
+</div></div></div>
+
+<div class="explain">
+  <h2>What's on this mock-up</h2>
+  <table>
+    <tr><th>Element</th><th>What changes</th><th>Built as</th><th>Trade-off</th></tr>
+    <tr><td>Freshness strip</td><td>Two clocks: FAAC (monthly, grace 45, warn 15) and CPI (monthly, grace 60, warn 30).</td><td>HTML measure</td><td>None.</td></tr>
+    <tr><td>Years, President, Prices</td><td>Dropdowns. The first and last months in the range drive the cards and banner. "Today's prices" always means the latest FAAC month (Sep 2026), whatever the range.</td><td>Native slicers</td><td>None.</td></tr>
+    <tr><td>4 flip cards</td><td>First month, latest month, change as paid, change in real terms. Fronts show both bases where it helps; backs say what it means. Real-terms fall = red.</td><td>HTML</td><td>None.</td></tr>
+    <tr><td>Monthly chart</td><td>Columns in the selected Prices basis, coloured by president, with a dashed line for the other basis so the gap between them is visible. Labels on the first, latest and peak months. Tooltip card (TT - Real Terms Month restyled): as paid, today's prices, how many times prices rose, change vs the previous month.</td><td>Native combo chart + report-page tooltip</td><td>None.</td></tr>
+    <tr><td>What it means</td><td>Plain subtitle and a button that swaps the chart for an explanation of "real terms" with a worked example from the data, then "← Back to chart".</td><td>Button + bookmarks; HTML back with CSS flip-in</td><td>Instant swap in Power BI; flip-in needs the CSS test.</td></tr>
+    <tr><td>Insight banner</td><td>Replaces the narration text: as paid vs real change over the range, and the real peak.</td><td>HTML measure</td><td>None.</td></tr>
+  </table>
+</div>
+
+<script>
+  // Sample data only. Net received by all 36 states, Jan 2020 to Sep 2026; Sep 2026 matches the FAAC Overview mock-up (₦673.8bn).
+  const MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"], LONG=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const M=[]; for(let y=2020;y<=2026;y++) for(let m=0;m<12;m++){ if(y===2026&&m>8) break; M.push({y,m,key:`${y}-${String(m+1).padStart(2,"0")}`,lab:`${MN[m]} ${y}`}); }
+  M.forEach(o=>o.p = o.key<="2023-05" ? "Buhari" : "Tinubu");
+  const PCOL={Buhari:"#0E6B45",Tinubu:"#0F2019"};
+  const idx=k=>M.findIndex(o=>o.key===k);
+  const interp=a=>{ a=a.map(([k,v])=>[idx(k),v]); return M.map((_,i)=>{ let j=0; while(j<a.length-2&&i>a[j+1][0]) j++; const [x0,y0]=a[j],[x1,y1]=a[j+1],t=Math.max(0,Math.min(1,(i-x0)/(x1-x0||1))); return y0+(y1-y0)*t; }); };
+  const PAID=interp([["2020-01",206.8],["2020-06",165],["2020-12",220],["2021-12",258],["2022-12",290],["2023-05",300],["2023-07",420],["2023-12",480],["2024-06",590],["2024-12",640],["2025-06",610],["2025-12",650],["2026-08",631],["2026-09",673.8]])
+    .map((v,i)=>i>=M.length-2?v:v*(1+Math.sin(i*1.9)*0.04));
+  const INFL=interp([["2020-01",12.1],["2020-12",15.8],["2021-12",15.6],["2022-12",21.3],["2023-12",28.9],["2024-12",34.8],["2025-12",17.5],["2026-09",15.2]]);
+  // price index from monthly inflation, scaled so the latest month = 1; multiplier = how many times prices rose since month i
+  const PI=[1]; for(let i=1;i<M.length;i++) PI.push(PI[i-1]*Math.pow(1+INFL[i]/100,1/12));
+  const MULT=M.map((_,i)=>PI[M.length-1]/PI[i]);
+  const TODAY=PAID.map((v,i)=>v*MULT[i]);
+  const GOOD="#0E8A5F", BAD="#C93C3C", EQ="#C98A00";
+  const bn=v=>"₦"+(v>=100?v.toFixed(0):v.toFixed(1))+"bn";
+  const chip=(t,c)=>`<span class="c" style="color:${c};background:${c===GOOD?"#E3F4EC":c===BAD?"#FBE7E7":"#FBF1DC"}">${t}</span>`;
+
+  const yFrom=document.getElementById("yFrom"), yTo=document.getElementById("yTo"), pres=document.getElementById("pres"), prices=document.getElementById("prices");
+  for(let y=2020;y<=2026;y++){ yFrom.add(new Option(y,y)); yTo.add(new Option(y,y)); } yFrom.value=2020; yTo.value=2026;
+  [yFrom,yTo,pres,prices].forEach(s=>s.onchange=renderAll);
+  const view=()=>{ let a=+yFrom.value,b=+yTo.value; if(a>b){ b=a; yTo.value=b; } return M.map((o,i)=>i).filter(i=>M[i].y>=a&&M[i].y<=b&&(!pres.value||M[i].p===pres.value)); };
+  const BASE=M[M.length-1].lab;
+
+  function cards(F,L){
+    const cp=(PAID[L]-PAID[F])/PAID[F], cr=(TODAY[L]-TODAY[F])/TODAY[F], prev=L-1, cl=(PAID[L]-PAID[prev])/PAID[prev];
+    const K=[
+      {lbl:`FIRST MONTH · ${M[F].lab.toUpperCase()}`, v:bn(PAID[F]), u:"as paid", ch:`<span class="badge" style="color:#0B3D2E;background:#EDF2EF">${bn(TODAY[F])}</span>in ${BASE} prices`, asof:"Net received, all 36 states",
+       back:`In ${M[F].lab} states received ${bn(PAID[F])}. Prices have risen ${MULT[F].toFixed(2)}× since, so that money would be worth ${bn(TODAY[F])} today.`},
+      {lbl:`LATEST MONTH · ${M[L].lab.toUpperCase()}`, v:bn(PAID[L]), u:"as paid", ch: prev>=0?chip(`${cl>0?"▲":"▼"} ${Math.abs(cl*100).toFixed(1)}%`, cl>0?GOOD:BAD)+`vs ${M[prev].lab}`:"", asof: L===M.length-1?"This is the price base month":`${bn(TODAY[L])} in ${BASE} prices`,
+       back: L===M.length-1?`This is the latest month, so today's prices and the amount paid are the same.`:`${bn(PAID[L])} paid in ${M[L].lab} is worth ${bn(TODAY[L])} in ${BASE} prices.`},
+      {lbl:"CHANGE AS PAID", v:`${cp>0?"+":""}${Math.round(cp*100)}%`, u:`${(PAID[L]/PAID[F]).toFixed(1)}×`, ch:chip(`${cp>0?"▲":"▼"} in naira`, cp>0?GOOD:BAD)+`${M[F].lab} to ${M[L].lab}`, asof:"Not adjusted for prices",
+       back:`Counting naira as paid, monthly FAAC money is ${(PAID[L]/PAID[F]).toFixed(1)}× what it was in ${M[F].lab}. But prices rose too, so this overstates what states can buy.`},
+      {lbl:"CHANGE IN REAL TERMS", v:`${cr>0?"+":""}${Math.round(cr*100)}%`, u:"after prices", ch:chip(`${cr>0?"▲":"▼"} buying power`, cr>0?GOOD:BAD)+`${M[F].lab} to ${M[L].lab}`, asof:`In ${BASE} prices`,
+       back: cr<0 ? `After allowing for price rises, states can buy ${Math.round(-cr*100)}% less with their monthly FAAC money than in ${M[F].lab}.` : `After allowing for price rises, states can buy ${Math.round(cr*100)}% more with their monthly FAAC money than in ${M[F].lab}.`}
+    ];
+    document.getElementById("kpis").innerHTML=K.map((k,j)=>`<div class="abs fc" style="left:${216+j*264}px"><div class="fc-inner">
+      <div class="face front"><div class="lbl">${k.lbl}</div><div class="val">${k.v}<small>${k.u}</small></div><div class="chg">${k.ch}</div><div class="asof">${k.asof}</div><div class="hint">HOVER ↻</div></div>
+      <div class="face back"><div class="bt">WHAT IT MEANS</div><p>${k.back}</p></div></div></div>`).join("");
+  }
+
+  function chart(V){
+    const card=document.getElementById("rcard"), basis=prices.value, S = basis==="today"?TODAY:PAID, O = basis==="today"?PAID:TODAY;
+    const F=V[0], L=V[V.length-1], rng=`${M[F].lab} to ${M[L].lab}`, used=[...new Set(V.map(i=>M[i].p))];
+    const title = basis==="today" ? `Net received in ${BASE} prices, ${rng}` : `Net received as paid, ${rng}`;
+    const sub = basis==="today" ? "Each month's money restated in today's prices, so months can be compared fairly · dashed line = as paid" : "Naira as actually paid, not adjusted for rising prices · dashed line = in today's prices";
+    let pk=F; V.forEach(i=>{ if(TODAY[i]>TODAY[pk]) pk=i; });
+    card.innerHTML=`<div class="flipw"><div class="ffront"><div class="hd"><div><div class="ptitle">${title}</div><div class="psub">${sub}</div></div>
+      <div class="hdr"><div class="plegend">${used.map(n=>`<span style="--c:${PCOL[n]}">${n}</span>`).join("")}<span class="ln" style="--c:#E2B53E">${basis==="today"?"As paid":"Today's prices"}</span></div>
+      <button class="info" aria-label="What real terms means">ⓘ What it means</button></div></div>
+      <svg width="1008" height="330" style="margin-top:4px"></svg><div class="tt" id="rtt"></div></div>
+      <div class="fback"><div class="bkh">WHAT DOES "IN REAL TERMS" MEAN?</div>
+        <p>Prices in Nigeria rise every year, so ₦100 buys less today than it did a few years ago. To compare FAAC money fairly across months, we restate each month's amount in <b>${BASE} prices</b> using the consumer price index. That's "today's prices". "As paid" is the naira actually received.</p>
+        <div class="bkh">A WORKED EXAMPLE FROM THIS DATA</div>
+        <div class="ex"><div>${M[F].lab}, as paid<b>${bn(PAID[F])}</b></div><div>Prices since then<b>× ${MULT[F].toFixed(2)}</b></div><div>In ${BASE} prices<b>${bn(TODAY[F])}</b></div><div>${M[L].lab}, as paid<b>${bn(PAID[L])}</b></div></div>
+        <div class="bkh">WHAT THE CHART SAYS · ${rng}</div>
+        <p>${TODAY[L]<TODAY[F]?`In naira, states got <b>${(PAID[L]/PAID[F]).toFixed(1)}× more</b> in ${M[L].lab} than in ${M[F].lab}. In real terms it was <b>${Math.round((1-TODAY[L]/TODAY[F])*100)}% less</b>: prices rose faster than FAAC money.`:`States got <b>${Math.round((TODAY[L]/TODAY[F]-1)*100)}% more</b> in real terms in ${M[L].lab} than in ${M[F].lab}.`} The real peak was <b>${bn(TODAY[pk])}</b> in ${M[pk].lab}.</p>
+        <button class="backb">← Back to chart</button></div></div>`;
+    card.querySelector(".info").onclick=()=>card.classList.add("flipped");
+    card.querySelector(".backb").onclick=()=>card.classList.remove("flipped");
+    const svg=card.querySelector("svg"), W=1008, H=330, pl=4, pr=60, pt=24, pb=20, n=V.length, slot=(W-pl-pr)/n, bw=slot*0.7;
+    const mx=Math.max(...V.map(i=>Math.max(S[i],O[i])))*1.1, X=k=>pl+k*slot+slot/2, Y=v=>pt+(1-v/mx)*(H-pt-pb);
+    let s="";
+    V.forEach((i,k)=>{ s+=`<rect x="${(X(k)-bw/2).toFixed(1)}" y="${Y(S[i]).toFixed(1)}" width="${bw.toFixed(1)}" height="${(Y(0)-Y(S[i])).toFixed(1)}" fill="${PCOL[M[i].p]}" rx="1"/>`; });
+    s+=`<polyline points="${V.map((i,k)=>`${X(k).toFixed(1)},${Y(O[i]).toFixed(1)}`).join(" ")}" fill="none" stroke="#E2B53E" stroke-width="2" stroke-dasharray="5 3"/>`;
+    const peakS=V.reduce((b,i)=>S[i]>S[b]?i:b,F);
+    const ks = n<=12 ? V : [...new Set([F,peakS,L])];
+    const placed=[];
+    ks.forEach(i=>{ const k=V.indexOf(i), x=X(k), y=Y(S[i])-5; if(placed.some(q=>Math.abs(q[0]-x)<40&&Math.abs(q[1]-y)<12)) return; placed.push([x,y]);
+      s+=`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="${i===L?10.5:9.5}" font-weight="700" fill="#14231D" text-anchor="${x>W-pr-20?"end":x<30?"start":"middle"}">${bn(S[i])}</text>`; });
+    const yrs=[...new Set(V.map(i=>M[i].y))];
+    yrs.forEach(y=>{ const k=V.findIndex(i=>M[i].y===y); s+=`<text x="${(pl+k*slot).toFixed(1)}" y="${H-4}" font-size="9" font-weight="600" fill="#14231D">${n<=12?"":y}</text>`; });
+    if(n<=12) V.forEach((i,k)=>{ s+=`<text x="${X(k).toFixed(1)}" y="${H-4}" font-size="9" font-weight="600" fill="#14231D" text-anchor="middle">${MN[M[i].m]}</text>`; });
+    s+=`<rect id="rh" y="${pt-8}" height="${H-pt-pb+8}" width="${slot.toFixed(1)}" fill="#14231D" fill-opacity=".06" visibility="hidden"/><rect width="${W}" height="${H}" fill="transparent"/>`;
+    svg.innerHTML=s;
+    const tt=card.querySelector("#rtt"), hl=svg.querySelector("#rh");
+    svg.onmousemove=e=>{ const r=svg.getBoundingClientRect(), sc=r.width/W, x=(e.clientX-r.left)/sc, k=Math.max(0,Math.min(n-1,Math.floor((x-pl)/slot))), i=V[k], p=i-1;
+      hl.setAttribute("x",(pl+k*slot).toFixed(1)); hl.setAttribute("visibility","visible");
+      const d = p>=0 ? (S[i]-S[p])/S[p] : null;
+      tt.innerHTML=`<div class="m">${M[i].lab.toUpperCase()}</div><div class="sub"><i style="background:${PCOL[M[i].p]}"></i>${M[i].p}</div>
+        <div class="r"><span>As paid</span><b>${bn(PAID[i])}</b></div><div class="r"><span>In ${BASE} prices</span><b>${bn(TODAY[i])}</b></div>
+        <div class="r"><span>vs ${p>=0?M[p].lab:"previous month"} (${basis==="today"?"real":"as paid"})</span>${d==null?chip("n/a",EQ):chip(`${d>0?"▲":"▼"} ${Math.abs(d*100).toFixed(1)}%`, Math.abs(d)<0.0005?EQ:(d>0?GOOD:BAD))}</div>
+        <div class="def" style="margin-top:6px">${i===M.length-1?"This is the base month, so today's prices equal what was paid.":`Prices rose ${MULT[i].toFixed(2)}× from ${M[i].lab} to ${BASE}, so ${bn(PAID[i])} then is worth ${bn(TODAY[i])} now.`}</div>`;
+      tt.style.display="block"; const left=16+X(k)+14; tt.style.left=(left+256>1030?16+X(k)-270:left)+"px"; tt.style.top="70px"; };
+    svg.onmouseleave=()=>{ tt.style.display="none"; hl.setAttribute("visibility","hidden"); };
+  }
+
+  function renderAll(){
+    const V=view(); if(!V.length) return; const F=V[0], L=V[V.length-1];
+    const flipped=document.getElementById("rcard").classList.contains("flipped");
+    cards(F,L); chart(V);
+    let pk=F; V.forEach(i=>{ if(TODAY[i]>TODAY[pk]) pk=i; });
+    const cr=(TODAY[L]-TODAY[F])/TODAY[F];
+    document.getElementById("bkick").innerHTML=`KEY TAKEAWAY<br>${M[L].lab.toUpperCase()}`;
+    document.getElementById("btxt").innerHTML=
+      `In naira, states received <span class="hl">${(PAID[L]/PAID[F]).toFixed(1)}×</span> more in ${LONG[M[L].m]} ${M[L].y} than in ${M[F].lab}. `+
+      `After price rises, that is <span class="${cr<0?"dn":"up"}">${Math.round(Math.abs(cr)*100)}% ${cr<0?"less":"more"}</span> in real terms. `+
+      `The real peak was ${bn(TODAY[pk])} in ${M[pk].lab}.`;
+  }
+  renderAll();
+
+  document.getElementById("lblbtn").onclick=e=>{document.body.classList.toggle("nolabels"); e.target.classList.toggle("on");};
+  function fit(){ const sc=Math.min(1,(window.innerWidth-40)/1280), el=document.getElementById("scaler");
+    el.style.transform=`scale(${sc})`; el.style.width=1280*sc+"px"; el.style.height=720*sc+"px"; }
+  window.addEventListener("resize",fit); fit();
+</script>
+</body>
+</html>
