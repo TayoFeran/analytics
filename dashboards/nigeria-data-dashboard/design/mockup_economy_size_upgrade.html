@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Economy size look-and-feel mock-up</title>
+<style>
+  :root{
+    /* Green & White palette from the Nigeria Data Dashboard; layout = 1280x720 Power BI canvas */
+    --side:#0B3D2E; --side2:#1B5A45; --canvas:#F3F6F4; --gold:#E2B53E;
+    --better:#0E8A5F; --worse:#C93C3C; --equal:#C98A00;
+    --ink:#14231D; --muted:#5E6E67; --line:#E3E9E6; --track:#EDF2EF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#DCE3DF;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:var(--ink)}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:12px 20px;background:#fff;border-bottom:1px solid var(--line);font-size:13px}
+  .controls b{font-weight:600}
+  .controls button{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer}
+  .controls button.on{background:var(--side);color:#fff;border-color:var(--side)}
+  .note{color:var(--muted)}
+  .wrap{padding:20px;display:flex;justify-content:center}
+  .scaler{transform-origin:top left}
+  .canvas{position:relative;width:1280px;height:720px;background:var(--canvas);overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+  .abs{position:absolute}
+  .card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(11,61,46,.08),0 4px 14px rgba(11,61,46,.05)}
+
+  .side{left:0;top:0;width:192px;height:720px;background:var(--side);color:#fff;padding:26px 14px 0 22px}
+  .brand{font-weight:700;font-size:19px;line-height:1.1;letter-spacing:.5px}
+  .brand small{display:block;font-weight:400;font-size:9px;letter-spacing:2.4px;opacity:.7;margin-top:6px}
+  .sec{font-size:8.5px;letter-spacing:2.2px;opacity:.6;margin:22px 0 6px}
+  .nav{display:flex;align-items:center;gap:9px;font-size:11.5px;height:30px;padding-left:6px;margin-left:-8px;border-radius:7px;opacity:.82}
+  .nav i{width:6px;height:6px;border-radius:50%;background:#B9CCC3;flex:none}
+  .nav.on{background:var(--side2);opacity:1;font-weight:600}
+  .nav.on i{background:var(--gold)}
+  .soon{margin-left:auto;font-size:7.5px;letter-spacing:1.3px;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:1px 6px}
+  .srcnote{position:absolute;bottom:16px;left:22px;right:14px;font-size:8.5px;line-height:1.5;opacity:.65}
+
+  .eyebrow{left:216px;top:20px;font-size:9.5px;letter-spacing:2.6px;color:var(--better);font-weight:600}
+  .title{left:216px;top:32px;font-size:26px;font-weight:600}
+  .fresh{right:24px;top:20px;height:38px;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border-radius:999px;font-size:10.5px;background:#fff;border:1px solid #0E8A5F55}
+  .fresh .pill{display:flex;align-items:center;gap:6px;color:#fff;font-weight:600;font-size:10px;padding:5px 10px;border-radius:999px;background:var(--better)}
+  .fresh .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff}
+  .fresh .tag{font-size:8px;letter-spacing:1.6px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+  .fresh .msg{font-weight:600}
+  .fresh .facts{color:var(--muted);border-left:1px solid var(--line);padding-left:10px}
+
+  .filters{left:216px;top:72px;width:1040px;height:40px;border-radius:999px;display:flex;align-items:center;padding:0 18px;font-size:8.5px;letter-spacing:1.6px;color:var(--muted)}
+  .f{display:flex;align-items:center;gap:10px;height:100%;padding-right:16px}
+  .f + .f{border-left:1px solid var(--line);padding-left:16px}
+  .tiles{display:flex;gap:4px;letter-spacing:0}
+  .tiles span{font-size:10px;color:var(--ink);background:var(--track);padding:4px 9px;border-radius:6px}
+  .tiles span.on{background:var(--side);color:#fff}
+  .dd{letter-spacing:0;font-size:10px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 26px 4px 9px;position:relative;min-width:90px}
+  .dd::after{content:"▾";position:absolute;right:8px;color:var(--muted)}
+
+  .ptitle{font-size:11.5px;font-weight:600}
+  .psub{font-size:9px;color:var(--muted);margin-top:2px}
+  .buildtag{position:absolute;z-index:50;font-size:8px;letter-spacing:1px;font-weight:700;padding:2px 6px;border-radius:4px;color:#fff;pointer-events:none}
+  .t-html{background:#7A3FC4}.t-native{background:#2F6FD1}
+  body.nolabels .buildtag{display:none}
+
+  .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:9px;color:var(--muted)}
+  .legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;background:var(--c)}
+
+  /* shared hover card (stands in for Power BI tooltips) */
+  .tt{position:absolute;display:none;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 18px rgba(11,61,46,.18);padding:9px 11px;font-size:10px;pointer-events:none;z-index:60}
+  .tt .m{font-weight:700;font-size:11px;letter-spacing:.5px}
+  .tt .sub{color:var(--muted);font-size:9px;margin:2px 0 5px;display:flex;align-items:center;gap:5px}
+  .tt .sub i{width:8px;height:8px;border-radius:2px}
+  .tt .r{display:grid;align-items:center;gap:8px;padding:3px 0;border-top:1px solid var(--line)}
+  .tt .r span:first-child{color:var(--muted);display:flex;align-items:center;gap:5px}
+  .tt .r span:first-child i{width:7px;height:7px;border-radius:2px;flex:none}
+  .tt .r b{font-weight:700;text-align:right}
+  .tt .r .sh{color:var(--muted);text-align:right}
+  .tt .r.tot{font-weight:700}
+  .tt .r.tot span:first-child{color:var(--ink)}
+  .tt .c{font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:4px;text-align:center;white-space:nowrap}
+  .tt .vs{color:var(--muted);font-size:8.5px;margin-top:4px}
+  .tt .def{color:var(--muted);font-size:9.5px;line-height:1.4;margin:3px 0 6px;white-space:normal}
+  #att .r{grid-template-columns:1fr 66px 34px 58px}
+  #att .r span:first-child{white-space:nowrap}
+  #mtt{width:250px}
+  #mtt .r{grid-template-columns:1fr auto}
+  #btt .r{grid-template-columns:1fr auto}
+
+  /* oil derivation bars (native) */
+  .obar{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center;height:21px;font-size:9.5px}
+  .obar .nm{text-align:right;font-weight:600}
+  .obar .tr{position:relative;height:13px}
+  .obar .tr span{position:absolute;left:0;top:0;bottom:0;border-radius:0 3px 3px 0}
+  .obar .tr em{position:absolute;top:-1px;font-style:normal;font-size:9px;font-weight:600}
+
+  /* matrix (native, with SVG bars) */
+  table.mx{width:100%;border-collapse:collapse;font-size:10px;margin-top:8px}
+  .mx th{font-size:8px;letter-spacing:1.3px;color:var(--muted);font-weight:600;text-align:right;padding:4px 6px;border-bottom:1px solid var(--line)}
+  .mx th:first-child{text-align:left}
+  .mx td{padding:4px 6px;height:22px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  .mx td:first-child{text-align:left;font-weight:600}
+  .mx td:first-child i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  .mx tr.tot td{font-weight:700;border-bottom:none;border-top:1.5px solid var(--ink)}
+  .mx tbody tr:not(.tot):hover td{background:#F6F9F7}
+  .mx .c{font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:4px}
+  .mx .shc{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+
+  .banner{left:216px;top:654px;width:1040px;height:50px;border-radius:12px;display:flex;align-items:center;gap:14px;padding:0 18px;
+    background:linear-gradient(90deg,#0B3D2E 0%,#145A43 70%,#1D6B51 100%);color:#fff}
+  .banner .ico{width:28px;height:28px;border-radius:8px;background:rgba(226,181,62,.18);display:flex;align-items:center;justify-content:center;flex:none}
+  .banner .kick{font-size:8.5px;letter-spacing:2px;color:var(--gold);font-weight:600;white-space:nowrap}
+  .banner .txt{font-size:12px;line-height:1.35}
+  .banner .up{color:#6EE0AE;font-weight:700}
+  .banner .dn{color:#FF9A9A;font-weight:700}
+  .banner .hl{color:var(--gold);font-weight:700}
+
+  .explain{max-width:1280px;margin:0 auto 30px;padding:0 20px;font-size:13.5px;line-height:1.55}
+  .explain h2{font-size:16px;margin:18px 0 6px}
+  .explain table{border-collapse:collapse;width:100%;background:#fff;font-size:12.5px}
+  .explain td,.explain th{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+  .explain th{background:var(--side);color:#fff;font-weight:600}
+</style>
+<style>
+  .sel{font:inherit;font-size:10px;letter-spacing:0;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 4px;background:#fff;cursor:pointer}
+  .sel:focus-visible{outline:2px solid var(--gold)}
+  .fresh2{right:24px;top:18px;height:42px;display:flex;align-items:center;gap:8px;padding:0 12px 0 6px;border-radius:999px;font-size:10px;background:#fff;border:1px solid #0E8A5F55}
+  .fresh2 .pill{display:flex;align-items:center;gap:5px;color:#fff;font-weight:600;font-size:9.5px;padding:4px 9px;border-radius:999px;background:var(--better)}
+  .fresh2 .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff}
+  .fresh2 .src{display:flex;flex-direction:column;line-height:1.25}
+  .fresh2 .src b{font-size:8px;letter-spacing:1.4px;color:var(--muted);font-weight:600}
+  .fresh2 .src span{font-weight:600}
+  .fresh2 .sep{width:1px;height:24px;background:var(--line)}
+  .fresh2 .facts{color:var(--muted);border-left:1px solid var(--line);padding-left:9px;line-height:1.3}
+  .ch{padding:12px 14px}
+  .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .plegend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:2px 9px;font-size:8.5px;color:var(--muted);max-width:210px}
+  .plegend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px;background:var(--c)}
+  /* explain-the-metric back side (Power BI: button + bookmarks, HTML back with a flip-in animation) */
+  .ch{padding:0;perspective:1200px}
+  .flipw{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+  .ch.flipped .flipw{transform:rotateY(180deg)}
+  .ffront,.fback{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;padding:12px 14px}
+  .fback{transform:rotateY(180deg);background:var(--side);color:#fff;padding:16px 20px}
+  .fback .bkh{font-size:8.5px;letter-spacing:1.8px;color:var(--gold);font-weight:700;margin-top:10px}
+  .fback .bkh:first-child{margin-top:0}
+  .fback p{margin:4px 0 0;font-size:11.5px;line-height:1.5;max-width:450px}
+  .fback p b{color:var(--gold)}
+  .hdr{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+  .info,.backb{font:inherit;font-size:9.5px;font-weight:600;border-radius:999px;cursor:pointer;padding:3px 10px;white-space:nowrap}
+  .info{color:var(--side);background:#E3F4EC;border:1px solid #BFE3D0}
+  .backb{position:absolute;right:16px;bottom:14px;color:var(--side);background:#fff;border:none}
+  .info:focus-visible,.backb:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .tt.yr{width:210px}
+  .tt.yr .r{grid-template-columns:1fr auto}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <span><b>Mock-up controls</b> <span class="note">(not part of the report)</span></span>
+  <span><button id="lblbtn" class="on">Show build labels</button></span>
+  <span class="note">Sample data only. Change the years or president: the last year in the range becomes the latest. Narrow to 12 years or fewer to see every bar labelled. Hover any bar or point. Click "ⓘ What it means" on a chart to see its explanation.</span>
+</div>
+
+<div class="wrap"><div class="scaler" id="scaler"><div class="canvas" role="img" aria-label="Mock-up of the Economy size page: GDP in naira and dollars coloured by president, real growth and GDP per person, with an insight banner">
+
+  <div class="abs side">
+    <div class="brand">NIGERIA<br>DATA<small>DASHBOARD</small></div>
+    <div class="sec">FAAC</div>
+    <div class="nav"><i></i>Overview</div>
+    <div class="nav"><i></i>States</div>
+    <div class="nav"><i></i>Revenue mix</div>
+    <div class="nav"><i></i>Deductions</div>
+    <div class="nav"><i></i>Compare</div>
+    <div class="sec">ECONOMY</div>
+    <div class="nav"><i></i>Overview</div>
+    <div class="nav on"><i></i>Economy size</div>
+    <div class="nav"><i></i>FAAC in real terms</div>
+    <div class="nav"><i></i>Presidents</div>
+    <div class="sec">ELECTIONS</div>
+    <div class="nav" style="opacity:.55"><i></i>Results<span class="soon">SOON</span></div>
+    <div class="sec">INFO</div>
+    <div class="nav"><i></i>About</div>
+    <div class="srcnote">Source: World Bank (exchange rate, CPI, GDP, population), via MotherDuck. Can differ from NBS headlines.</div>
+  </div>
+
+  <div class="abs eyebrow">NIGERIA DATA DASHBOARD &nbsp;·&nbsp; ECONOMY</div>
+  <div class="abs title">Economy size</div>
+  <div class="abs fresh2">
+    <span class="pill">On time</span>
+    <span class="src"><b>CPI &amp; FX · MONTHLY</b><span>Sep 2026 is in</span></span>
+    <span class="sep"></span>
+    <span class="src"><b>GDP · YEARLY</b><span>2025 is in</span></span>
+    <span class="facts">Refreshed<br>5 Nov 2026, 08:14</span>
+  </div>
+  <span class="buildtag t-html" style="right:24px;top:6px">HTML · Freshness_html (two sources)</span>
+
+  <div class="abs card filters">
+    <div class="f">YEARS <select class="sel" id="yFrom" aria-label="From year"></select><span style="letter-spacing:0;font-size:10px">to</span><select class="sel" id="yTo" aria-label="To year"></select></div>
+    <div class="f">PRESIDENT <select class="sel" id="pres" aria-label="President"><option value="">All</option></select></div>
+  </div>
+  <span class="buildtag t-native" style="left:216px;top:64px">NATIVE · Years + President dropdown slicers</span>
+
+  <div class="abs card ch" id="c_ngn" style="left:216px;top:124px;width:512px;height:252px"></div>
+  <div class="abs card ch" id="c_usd" style="left:744px;top:124px;width:512px;height:252px"></div>
+  <div class="abs card ch" id="c_gr"  style="left:216px;top:388px;width:512px;height:252px"></div>
+  <div class="abs card ch" id="c_pp"  style="left:744px;top:388px;width:512px;height:252px"></div>
+  <span class="buildtag t-native" style="left:216px;top:116px">NATIVE · columns by president + key labels + tooltip card</span>
+  <span class="buildtag t-native" style="left:744px;top:116px">NATIVE · columns by president + key labels + tooltip card</span>
+  <span class="buildtag t-native" style="left:216px;top:380px">NATIVE · growth columns, green above 0 / red below</span>
+  <span class="buildtag t-native" style="left:744px;top:380px">NATIVE · line + key labels + tooltip card</span>
+
+  <div class="abs banner">
+    <div class="ico"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z" fill="#E2B53E"/></svg></div>
+    <div class="kick" id="bkick"></div>
+    <div class="txt" id="btxt"></div>
+  </div>
+  <span class="buildtag t-html" style="left:216px;top:646px">HTML · GDP_insight_html (replaces the narration text)</span>
+
+</div></div></div>
+
+<div class="explain">
+  <h2>What's on this mock-up</h2>
+  <table>
+    <tr><th>Element</th><th>What changes</th><th>Built as</th><th>Trade-off</th></tr>
+    <tr><td>Freshness strip</td><td>Same two-clock strip as Economy Overview.</td><td>HTML measure</td><td>None.</td></tr>
+    <tr><td>Years + President</td><td>Dropdowns; the last year in the range becomes the latest year for the banner.</td><td>Native slicers</td><td>None.</td></tr>
+    <tr><td>GDP in naira, GDP in US dollars</td><td>Columns coloured by president (existing greens; before 1999 in grey, no elected president). Labels on the latest year and the peak, or every bar when 12 years or fewer are shown. Tooltip card: year, president, value, change vs the previous year (the dollar card also shows the year's naira rate).</td><td>Native column charts, conditional colour measure, report-page tooltip</td><td>Labels only on key bars over long ranges.</td></tr>
+    <tr><td>Real GDP growth</td><td>Green above 0, red below. Labels on the latest year, the highest and the lowest.</td><td>Native column chart</td><td>None.</td></tr>
+    <tr><td>GDP per person</td><td>Line in US dollars, labels on the latest year and the peak; tooltip adds the naira value.</td><td>Native line chart</td><td>None.</td></tr>
+    <tr><td>Explain-the-metric back</td><td>Every chart gets a plain-language subtitle and an "ⓘ What it means" button. The back says what the metric is and what the chart shows for the selected years, then "← Back to chart". Growth chart adds a dashed population-growth line (≈2.5%).</td><td>Button + two bookmarks per chart (chart / explanation, selected visuals only); the back is an HTML measure with a short CSS flip-in on load</td><td>Power BI swaps instantly; the flip-in animation needs the same CSS test as the rotating shelf.</td></tr>
+    <tr><td>Insight banner</td><td>Replaces the narration text. Rule-based: size in naira and dollars in the latest year, the dollar peak in range, and real growth.</td><td>HTML measure</td><td>None.</td></tr>
+  </table>
+</div>
+
+<script>
+  // Sample data only, shaped like the World Bank series, 1990 to 2025.
+  const PRES=[{n:"Before 1999",c:"#D5DDD9",from:1990,to:1998},{n:"Obasanjo",c:"#B9D9C9",from:1999,to:2006},{n:"Yar'Adua",c:"#8FC9AE",from:2007,to:2009},
+    {n:"Jonathan",c:"#4E9C78",from:2010,to:2014},{n:"Buhari",c:"#0E6B45",from:2015,to:2022},{n:"Tinubu",c:"#0F2019",from:2023,to:2099}];
+  const pOf=y=>PRES.find(p=>y>=p.from&&y<=p.to);
+  const YRS=[]; for(let y=1990;y<=2025;y++) YRS.push(y);
+  const lerp=(pts)=>YRS.map(y=>{ let j=0; while(j<pts.length-2 && y>pts[j+1][0]) j++; const [x0,a]=pts[j],[x1,b]=pts[j+1], t=Math.max(0,Math.min(1,(y-x0)/(x1-x0))); return a+(b-a)*t; });
+  const USD=lerp([[1990,54],[1995,44],[2000,69],[2005,176],[2008,337],[2010,369],[2012,460],[2014,574],[2015,493],[2016,405],[2017,376],[2018,422],[2019,448],[2020,432],[2021,441],[2022,477],[2023,363],[2024,200],[2025,253]]);
+  const NGN=lerp([[1990,0.5],[1995,2.9],[2000,6.7],[2005,22],[2010,55],[2014,90],[2015,95],[2016,102],[2017,114],[2018,129],[2019,145],[2020,154],[2021,176],[2022,202],[2023,234],[2024,280],[2025,372]]);
+  const GR=[11.8,0.4,4.6,-2.0,-1.8,-0.1,4.2,2.9,2.6,0.6,5.0,5.9,15.3,7.3,9.3,6.4,6.1,6.6,6.8,8.0,8.0,5.3,4.2,6.7,6.3,2.7,-1.6,0.8,1.9,2.2,-1.8,3.6,3.3,2.9,3.4,3.9];
+  const POP=lerp([[1990,95],[2025,232]]);
+  const PP=YRS.map((y,i)=>USD[i]*1e3/POP[i]);   // US dollars per person
+  const RATE=YRS.map((y,i)=>NGN[i]*1e3/USD[i]); // naira per dollar implied
+  const GOOD="#0E8A5F", BAD="#C93C3C", EQ="#C98A00";
+  const fN=v=>v>=1?"₦"+(v>=10?Math.round(v):v.toFixed(1))+"tn":"₦"+Math.round(v*1000)+"bn";
+  const fU=v=>"$"+Math.round(v)+"bn", fG=v=>v.toFixed(1)+"%", fP=v=>"$"+Math.round(v).toLocaleString();
+
+  const yFrom=document.getElementById("yFrom"), yTo=document.getElementById("yTo"), pres=document.getElementById("pres");
+  YRS.forEach(y=>{ yFrom.add(new Option(y,y)); yTo.add(new Option(y,y)); }); yFrom.value=1990; yTo.value=2025;
+  PRES.filter(p=>p.n!=="Before 1999").forEach(p=>pres.add(new Option(p.n,p.n)));
+  [yFrom,yTo,pres].forEach(s=>s.onchange=renderAll);
+  const view=()=>{ let a=+yFrom.value,b=+yTo.value; if(a>b){ b=a; yTo.value=b; } return YRS.map((y,i)=>i).filter(i=>YRS[i]>=a&&YRS[i]<=b&&(!pres.value||pOf(YRS[i]).n===pres.value)); };
+  const chip=(t,col)=>`<span class="c" style="color:${col};background:${col===GOOD?"#E3F4EC":col===BAD?"#FBE7E7":col===EQ?"#FBF1DC":"#EDF2EF"}">${t}</span>`;
+
+  function chart(id, title, sub, series, fmt, mode, info){
+    const V=view(), card=document.getElementById(id), W=484, H=184, pl=4, pr=46, pt=18, pb=18;
+    const used=[...new Set(V.map(i=>pOf(YRS[i]).n))];
+    const legend=mode==="growth"?`<div class="plegend"><span style="--c:${GOOD}">Grew</span><span style="--c:${BAD}">Shrank</span></div>`:`<div class="plegend">${used.map(n=>`<span style="--c:${pOf(PRES.find(p=>p.n===n).from).c}">${n}</span>`).join("")}</div>`;
+    const rng = V.length>1 ? `${YRS[V[0]]} to ${YRS[V[V.length-1]]}` : `${YRS[V[0]]}`;
+    card.innerHTML=`<div class="flipw"><div class="ffront"><div class="hd"><div><div class="ptitle">${title}</div><div class="psub">${sub}</div></div>
+      <div class="hdr"><button class="info" aria-label="What this chart means">ⓘ What it means</button>${legend}</div></div>
+      <svg width="${W}" height="${H}" style="margin-top:2px"></svg><div class="tt yr"></div></div>
+      <div class="fback"><div class="bkh">${info.q}</div><p>${info.def}</p><div class="bkh">WHAT THE CHART SAYS · ${rng}</div><p>${info.say(V)}</p>
+      <button class="backb">← Back to chart</button></div></div>`;
+    card.querySelector(".info").onclick=()=>card.classList.add("flipped");
+    card.querySelector(".backb").onclick=()=>card.classList.remove("flipped");
+    const svg=card.querySelector("svg"), tt=card.querySelector(".tt");
+    const vals=V.map(i=>series[i]), mx=Math.max(0,...vals)*1.12, mn=Math.min(0,...vals)*1.25;
+    const n=V.length, slot=(W-pl-pr)/n, bw=Math.max(2,slot*0.72), Y=v=>pt+(mx-v)/(mx-mn||1)*(H-pt-pb), X=k=>pl+k*slot+slot/2;
+    let s="";
+    if(mode==="line"){ s+=`<polyline points="${V.map((i,k)=>`${X(k).toFixed(1)},${Y(series[i]).toFixed(1)}`).join(" ")}" fill="none" stroke="#0B3D2E" stroke-width="2" stroke-linejoin="round"/>`; }
+    else V.forEach((i,k)=>{ const v=series[i], col = mode==="growth" ? (v>=0?GOOD:BAD) : pOf(YRS[i]).c;
+      s+=`<rect x="${(X(k)-bw/2).toFixed(1)}" y="${Math.min(Y(v),Y(0)).toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.abs(Y(v)-Y(0)).toFixed(1)}" fill="${col}" rx="1"/>`; });
+    if(mode==="growth") s+=`<line x1="${pl}" x2="${W-pr+8}" y1="${Y(0)}" y2="${Y(0)}" stroke="#14231D" stroke-opacity=".3"/>`;
+    if(mode==="growth") s+=`<line x1="${pl}" x2="${W-pr+4}" y1="${Y(2.5)}" y2="${Y(2.5)}" stroke="#C98A00" stroke-width="1.4" stroke-dasharray="5 3"/><text x="${W-2}" y="${Y(2.5)-4}" font-size="8.5" font-weight="700" fill="#9A6A00" text-anchor="end">population +2.5%</text>`;
+    // labels: every bar when 12 years or fewer, otherwise the latest, the peak and (growth) the lowest
+    const ks = n<=12 ? V.map((_,k)=>k) : (()=>{ let hi=0,lo=0; V.forEach((i,k)=>{ if(series[i]>series[V[hi]]) hi=k; if(series[i]<series[V[lo]]) lo=k; });
+      return [...new Set([n-1,hi].concat(mode==="growth"?[lo]:[]))]; })();
+    const placed=[];
+    ks.forEach(k=>{ const i=V[k], v=series[i], x=X(k), below = mode==="growth" && v<0, y = below ? Y(v)+11 : Y(v)-5;
+      if(placed.some(q=>Math.abs(q[0]-x)<30 && Math.abs(q[1]-y)<12)) return; placed.push([x,y]);
+      if(mode==="line") s+=`<circle cx="${x}" cy="${Y(v)}" r="3" fill="#0B3D2E"/>`;
+      s+=`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="${k===n-1?10:9}" font-weight="700" fill="#14231D" text-anchor="${x>W-pr-10?"end":x<24?"start":"middle"}">${fmt(v)}</text>`; });
+    const step=Math.max(1,Math.ceil(n/8));
+    V.forEach((i,k)=>{ if(k%step && k!==n-1) return; if(k!==n-1 && n-1-k<step/2) return; s+=`<text x="${X(k).toFixed(1)}" y="${H-3}" font-size="8.5" font-weight="600" fill="#14231D" text-anchor="middle">${YRS[i]}</text>`; });
+    s+=`<rect id="${id}h" y="${pt-6}" height="${H-pt-pb+6}" width="${slot.toFixed(1)}" fill="#14231D" fill-opacity=".06" visibility="hidden"/><rect width="${W}" height="${H}" fill="transparent"/>`;
+    svg.innerHTML=s;
+    const hl=svg.querySelector(`#${id}h`);
+    svg.onmousemove=e=>{ const r=svg.getBoundingClientRect(), sc=r.width/W, x=(e.clientX-r.left)/sc, k=Math.max(0,Math.min(n-1,Math.floor((x-pl)/slot))), i=V[k], y=YRS[i], p=pOf(y);
+      hl.setAttribute("x",(pl+k*slot).toFixed(1)); hl.setAttribute("visibility","visible");
+      let change="";
+      if(i>0){ if(mode==="growth"){ const d=series[i]-series[i-1]; change=chip(`${d>0?"▲":"▼"} ${Math.abs(d).toFixed(1)} pts`, Math.abs(d)<0.05?EQ:(d>0?GOOD:BAD)); }
+        else { const d=(series[i]-series[i-1])/series[i-1]; change=chip(`${d>0?"▲":"▼"} ${Math.abs(d*100).toFixed(1)}%`, Math.abs(d)<0.0005?EQ:(d>0?GOOD:BAD)); } }
+      else change=chip("n/a","#5E6E67");
+      const extra = mode==="usd" ? `<div class="r"><span>Naira per dollar</span><b>₦${Math.round(RATE[i]).toLocaleString()}</b></div>` :
+                    mode==="line" ? `<div class="r"><span>In naira</span><b>₦${(PP[i]*RATE[i]/1e6).toFixed(2)}m</b></div>` : "";
+      tt.innerHTML=`<div class="m">${y}</div><div class="sub"><i style="background:${p.c}"></i>${p.n==="Before 1999"?"Before 1999 (no elected president)":p.n}</div>
+        <div class="r"><span>${title.split(",")[0]}</span><b>${fmt(series[i])}</b></div>${extra}
+        <div class="r"><span>vs ${y-1}</span>${change}</div>`;
+      tt.style.display="block"; const left=14+X(k)+12; tt.style.left=(left+210>500?14+X(k)-222:left)+"px"; tt.style.top="46px"; };
+    svg.onmouseleave=()=>{ tt.style.display="none"; hl.setAttribute("visibility","hidden"); };
+    return V;
+  }
+
+  function renderAll(){
+    const V=view(); if(!V.length) return; const a=YRS[V[0]], b=YRS[V[V.length-1]], L=V[V.length-1];
+    const rng=a===b?`${a}`:`${a} to ${b}`;
+    const realGrowth = V => V.slice(1).reduce((a,i)=>a*(1+GR[i]/100),1);
+    chart("c_ngn",`GDP in naira, ${rng}`,"Total value of everything produced in a year · trillions of naira",NGN,fN,"ngn",{
+      q:"WHAT IS GDP?", def:"Gross domestic product: the total value of all the goods and services Nigeria produces in a year. In naira it rises every year partly because prices rise, so a bigger number doesn't always mean more was produced.",
+      say:V=>V.length<2?`GDP was <b>${fN(NGN[V[0]])}</b> in ${YRS[V[0]]}.`:`GDP grew from <b>${fN(NGN[V[0]])}</b> in ${YRS[V[0]]} to <b>${fN(NGN[V[V.length-1]])}</b> in ${YRS[V[V.length-1]]}, ${(NGN[V[V.length-1]]/NGN[V[0]]).toFixed(1)}× bigger. Most of that is rising prices: after removing them, the economy produced about <b>${Math.round((realGrowth(V)-1)*100)}% more</b>.`});
+    chart("c_usd",`GDP in US dollars, ${rng}`,"The same total in US dollars, at each year's exchange rate",USD,fU,"usd",{
+      q:"WHY SHOW IT IN DOLLARS?", def:"Converting GDP to US dollars lets you compare Nigeria with other countries and over time. It falls when the naira loses value, even if Nigerians are producing more.",
+      say:V=>{ let pk=V[0]; V.forEach(i=>{ if(USD[i]>USD[pk]) pk=i; }); const L=V[V.length-1];
+        return pk===L?`GDP in dollars was at its highest in ${YRS[L]}: <b>${fU(USD[L])}</b>.`:`GDP in dollars peaked at <b>${fU(USD[pk])}</b> in ${YRS[pk]}. In ${YRS[L]} it was <b>${fU(USD[L])}</b>, ${Math.round((1-USD[L]/USD[pk])*100)}% lower, mainly because a dollar cost ₦${Math.round(RATE[L]).toLocaleString()} instead of ₦${Math.round(RATE[pk]).toLocaleString()}.`; }});
+    chart("c_gr",`Real GDP growth, ${rng}`,"How much more was produced than the year before, after removing price rises",GR,fG,"growth",{
+      q:"WHAT IS REAL GDP GROWTH?", def:"The % increase in what the economy produced compared with the year before, with price rises taken out. Below 0 means the economy shrank (a recession). The dashed line is population growth: below it, the average Nigerian's share is shrinking.",
+      say:V=>{ const sh=V.filter(i=>GR[i]<0), below=V.filter(i=>GR[i]<2.5), avg=V.reduce((a,i)=>a+GR[i],0)/V.length;
+        return `Average growth was <b>${avg.toFixed(1)}%</b> a year. The economy shrank in <b>${sh.length} of ${V.length}</b> years${sh.length?` (${sh.map(i=>YRS[i]).join(", ")})`:""}, and grew slower than the population in <b>${below.length}</b>.`; }});
+    chart("c_pp",`GDP per person, ${rng}`,"GDP divided by the population: the average Nigerian's share, in US dollars",PP,fP,"line",{
+      q:"WHAT IS GDP PER PERSON?", def:"GDP divided by the number of people. It's a rough measure of the average Nigerian's share of what the country produces, not what any one person earns.",
+      say:V=>{ let pk=V[0]; V.forEach(i=>{ if(PP[i]>PP[pk]) pk=i; }); const L=V[V.length-1];
+        return pk===L?`At <b>${fP(PP[L])}</b>, ${YRS[L]} was the highest in the selected years (₦${(PP[L]*RATE[L]/1e6).toFixed(2)}m).`:`It was <b>${fP(PP[L])}</b> in ${YRS[L]} (₦${(PP[L]*RATE[L]/1e6).toFixed(2)}m), <b>${Math.round((1-PP[L]/PP[pk])*100)}% below</b> its ${YRS[pk]} peak of ${fP(PP[pk])}.`; }});
+    let pk=V[0]; V.forEach(i=>{ if(USD[i]>USD[pk]) pk=i; });
+    document.getElementById("bkick").innerHTML=`KEY TAKEAWAY<br>${b}`;
+    document.getElementById("btxt").innerHTML=
+      `Nigeria's economy was <span class="hl">${fN(NGN[L])}</span> in ${b}, or <span class="hl">${fU(USD[L])}</span> in dollars`+
+      (pk!==L?`, <span class="dn">${Math.round((1-USD[L]/USD[pk])*100)}% below</span> its ${YRS[pk]} peak of ${fU(USD[pk])} as the naira fell. `:`, the biggest in the selected range. `)+
+      `Real growth was <span class="${GR[L]>=0?"up":"dn"}">${fG(GR[L])}</span>.`;
+  }
+  renderAll();
+
+  document.getElementById("lblbtn").onclick=e=>{document.body.classList.toggle("nolabels"); e.target.classList.toggle("on");};
+  function fit(){ const sc=Math.min(1,(window.innerWidth-40)/1280), el=document.getElementById("scaler");
+    el.style.transform=`scale(${sc})`; el.style.width=1280*sc+"px"; el.style.height=720*sc+"px"; }
+  window.addEventListener("resize",fit); fit();
+</script>
+</body>
+</html>
