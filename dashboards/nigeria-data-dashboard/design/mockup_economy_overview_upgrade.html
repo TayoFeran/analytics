@@ -148,6 +148,18 @@
   .back .bt{font-size:8.5px;letter-spacing:1.8px;color:var(--gold);font-weight:600}
   .back p{margin:5px 0 0;font-size:10.5px;line-height:1.4}
   /* line charts */
+  /* explain-the-metric back: in Power BI a bookmark swaps it in; the HTML back plays a short flip-in */
+  .info,.backb{font:inherit;font-size:9.5px;font-weight:600;border-radius:999px;cursor:pointer;padding:3px 10px;white-space:nowrap}
+  .info{position:absolute;right:14px;top:12px;color:var(--side);background:#E3F4EC;border:1px solid #BFE3D0}
+  .backb{position:absolute;right:18px;bottom:16px;color:var(--side);background:#fff;border:none}
+  .info:focus-visible,.backb:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .fback{display:none;position:absolute;inset:0;border-radius:12px;background:var(--side);color:#fff;padding:20px 22px;z-index:5;transform-origin:center}
+  .card.showback .fback{display:block;animation:flipin .45s ease-out}
+  @keyframes flipin{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}
+  .fback .bkh{font-size:9px;letter-spacing:1.8px;color:var(--gold);font-weight:700;margin-top:14px}
+  .fback .bkh:first-child{margin-top:0}
+  .fback p{margin:5px 0 0;font-size:12px;line-height:1.55}
+  .fback p b{color:var(--gold)}
   #itt,#ntt{width:236px}
   #itt .r,#ntt .r{grid-template-columns:1fr auto}
   .plegend{display:flex;gap:10px;font-size:9px;color:var(--muted);margin-top:5px}
@@ -159,7 +171,7 @@
 <div class="controls">
   <span><b>Mock-up controls</b> <span class="note">(not part of the report)</span></span>
   <span><button id="lblbtn" class="on">Show build labels</button></span>
-  <span class="note">Sample data only. Change the years or president: the last month in the range becomes the latest. Hover cards to flip; hover the lines for tooltips.</span>
+  <span class="note">Sample data only. Change the years or president: the last month in the range becomes the latest. Hover cards to flip; hover the lines for tooltips; click "ⓘ What it means" on a chart.</span>
 </div>
 
 <div class="wrap"><div class="scaler" id="scaler"><div class="canvas" role="img" aria-label="Mock-up of the Economy Overview page: freshness strip for two sources, four flip cards, inflation and naira line charts coloured by president, and an insight banner">
@@ -206,19 +218,23 @@
 
   <div class="abs card" id="icard" style="left:216px;top:232px;width:512px;height:408px;padding:14px 16px">
     <div class="ptitle" id="ititle"></div>
-    <div class="psub">% change in consumer prices vs the same month a year earlier · World Bank</div>
+    <div class="psub">How much more everyday things cost than a year earlier · World Bank</div>
     <div class="plegend" id="ileg"></div>
     <svg id="iline" width="480" height="330" style="margin-top:4px"></svg>
     <div class="tt" id="itt"></div>
+    <button class="info" data-c="icard" aria-label="What this chart means">ⓘ What it means</button>
+    <div class="fback" id="iback"></div>
   </div>
   <span class="buildtag t-native" style="left:216px;top:224px">NATIVE · line by president + labels + tooltip card</span>
 
   <div class="abs card" id="ncard" style="left:744px;top:232px;width:512px;height:408px;padding:14px 16px">
     <div class="ptitle" id="ntitle"></div>
-    <div class="psub">Naira per US dollar, monthly average · higher = weaker naira · World Bank</div>
+    <div class="psub">How many naira buy one US dollar · higher = weaker naira · World Bank</div>
     <div class="plegend" id="nleg"></div>
     <svg id="nline" width="480" height="330" style="margin-top:4px"></svg>
     <div class="tt" id="ntt"></div>
+    <button class="info" data-c="ncard" aria-label="What this chart means">ⓘ What it means</button>
+    <div class="fback" id="nback"></div>
   </div>
   <span class="buildtag t-native" style="left:744px;top:224px">NATIVE · line by president + labels + tooltip card</span>
 
@@ -239,6 +255,7 @@
     <tr><td>Years + President</td><td>Dropdowns. Every visual follows them, and the last month in the range becomes the latest month for the cards and banner.</td><td>Native slicers</td><td>None.</td></tr>
     <tr><td>4 flip cards</td><td>Inflation, Naira per US dollar, Real GDP growth, GDP per person. Front: value, coloured change, sparkline, as-of date. Back: "What it means". Inflation down = green; naira weaker = red; growth up = green.</td><td>HTML + SVG</td><td>Fronts stand on their own (no hover on phones).</td></tr>
     <tr><td>Inflation and naira lines</td><td>Still coloured by president (existing greens). Data labels on the latest month and each president's peak. Tooltip card: month, president, value, change vs the previous month and vs a year earlier.</td><td>Native line charts + report-page tooltip</td><td>Labels only on key points: about 200 months each.</td></tr>
+    <tr><td>What it means</td><td>Plain-language subtitles, and an "ⓘ What it means" button on each chart that shows a definition with an everyday example and what the chart says for the selected range, then "← Back to chart".</td><td>Button + two bookmarks per chart; HTML back with a CSS flip-in</td><td>Flip-in needs the CSS animation test.</td></tr>
     <tr><td>Insight banner</td><td>Replaces the narration text, at the bottom. Rule-based: inflation now vs its peak in the range, and the naira now vs the start of the range.</td><td>HTML measure</td><td>None.</td></tr>
   </table>
 </div>
@@ -347,6 +364,19 @@
     line("iline","icard","itt",INF,v=>v.toFixed(1)+"%","inf");
     line("nline","ncard","ntt",FX,v=>"₦"+Math.round(v).toLocaleString(),"fx");
     cards(L);
+    let pkI=R[0], jump=R[1]??R[0]; R.forEach(i=>{ if(INF[i]>INF[pkI]) pkI=i; if(i>0 && R.includes(i-1) && FX[i]/FX[i-1] > FX[jump]/FX[jump-1]) jump=i; });
+    const avgI=R.reduce((a,i)=>a+INF[i],0)/R.length, lost=1-FX[F]/FX[L];
+    document.getElementById("iback").innerHTML=`<div class="bkh">WHAT IS INFLATION?</div>
+      <p>The % rise in the prices of everyday goods and services compared with the same month a year earlier. At <b>15%</b>, something that cost ₦1,000 a year ago now costs about ₦1,150. Falling inflation means prices are still rising, just more slowly.</p>
+      <div class="bkh">WHAT THE CHART SAYS · ${M[F].lab} to ${M[L].lab}</div>
+      <p>Inflation averaged <b>${avgI.toFixed(1)}%</b>. It peaked at <b>${INF[pkI].toFixed(1)}%</b> in ${M[pkI].lab}${pkI!==L?` and was <b>${INF[L].toFixed(1)}%</b> in ${M[L].lab}`:""}. ${INF[L]>15?"Prices are still rising fast: at this rate they double in about "+Math.round(Math.log(2)/Math.log(1+INF[L]/100))+" years.":""}</p>
+      <button class="backb" data-c="icard">← Back to chart</button>`;
+    document.getElementById("nback").innerHTML=`<div class="bkh">WHAT DOES NAIRA PER US DOLLAR MEAN?</div>
+      <p>How many naira you need to buy one US dollar. A higher number means a <b>weaker naira</b>: imports, travel, school fees abroad and foreign debt all cost more in naira.</p>
+      <div class="bkh">WHAT THE CHART SAYS · ${M[F].lab} to ${M[L].lab}</div>
+      <p>A dollar went from <b>₦${Math.round(FX[F]).toLocaleString()}</b> to <b>₦${Math.round(FX[L]).toLocaleString()}</b>${lost>0.005?`, so the naira lost <b>${Math.round(lost*100)}%</b> of its value against the dollar`:""}. ${R.length>1?`The biggest one-month jump was ${M[jump].lab} (<b>+${Math.round((FX[jump]/FX[jump-1]-1)*100)}%</b>)${M[jump].key==="2023-06"?", when the official and market rates were merged":""}.`:""}</p>
+      <button class="backb" data-c="ncard">← Back to chart</button>`;
+    document.querySelectorAll(".info,.backb").forEach(btn=>btn.onclick=()=>document.getElementById(btn.dataset.c).classList.toggle("showback", btn.classList.contains("info")));
     let pk=R[0]; R.forEach(i=>{ if(INF[i]>INF[pk]) pk=i; });
     document.getElementById("bkick").innerHTML=`KEY TAKEAWAY<br>${M[L].lab.toUpperCase()}`;
     const fxx=FX[L]/FX[F];
