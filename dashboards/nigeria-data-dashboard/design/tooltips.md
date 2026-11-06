@@ -247,7 +247,8 @@ Design agreed on 2026-11-02. Positions are in [`placement.md`](placement.md), an
 
 | Visual | Tooltip |
 |---|---|
-| Overview: inflation and naira line charts | TT - Economy Month |
+| Overview: inflation line chart | TT - Inflation Month: HTML card (`Inflation_month_tt_html`), inflation for the hovered month with the change vs the month before and a year earlier (down = green) |
+| Overview: naira line chart | TT - Naira Month: HTML card (`Naira_month_tt_html`), naira per US dollar for the hovered month with the change vs the month before and a year earlier (weaker naira = red) |
 | Economy size: all four charts | TT - Economy Year |
 | FAAC in real terms: monthly column chart | TT - Real Terms Month |
 | Presidents: all three bar charts | TT - President Detail |
@@ -277,6 +278,8 @@ President_definitions =
 ```
 
 ## Measures behind TT - Economy Month
+
+Replaced on 2026-11-06 by two HTML cards, one per chart: TT - Inflation Month (`Inflation_month_tt_html`) and TT - Naira Month (`Naira_month_tt_html`). The original design is kept below for reference.
 
 ```dax
 Econ_month_tooltip_title =

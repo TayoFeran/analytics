@@ -19,7 +19,8 @@
     "ttOilState",
     "ttStateDetail",
     "ttCompareMetric",
-    "ttEconMonth",
+    "ttInflationMonth",
+    "ttNairaMonth",
     "ttEconYear",
     "ttRealTerms",
     "ttPresident"

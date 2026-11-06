@@ -4,10 +4,10 @@
   "position": {
     "x": 754,
     "y": 242,
-    "z": 2600,
-    "height": 332,
+    "z": 2100,
+    "height": 388,
     "width": 492,
-    "tabOrder": 2600
+    "tabOrder": 2100
   },
   "visual": {
     "visualType": "lineChart",
@@ -506,7 +506,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             }
@@ -519,7 +519,32 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'How many naira buy one US dollar · higher = weaker naira · World Bank'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5B6B63'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
                 }
               }
             }
@@ -591,7 +616,7 @@
             "section": {
               "expr": {
                 "Literal": {
-                  "Value": "'ttEconMonth'"
+                  "Value": "'ttNairaMonth'"
                 }
               }
             }

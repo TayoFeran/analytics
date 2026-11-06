@@ -2018,6 +2018,7 @@ table Dax
 			    & ".bd{font-weight:700;padding:2rem 6rem;border-radius:5rem}"
 			    & ".sp{position:absolute;right:12rem;top:28rem}"
 			    & ".hint{position:absolute;right:12rem;bottom:6rem;font-size:7.5rem;color:#9AABA3;letter-spacing:.4rem}"
+			    & ".asof{position:absolute;left:16rem;bottom:6rem;font-size:8rem;color:#9AABA3}"
 			    & ".back{background:#0B3D2E;color:#fff;transform:rotateY(180deg);padding:12rem 14rem}"
 			    & ".bt{font-size:8.5rem;letter-spacing:1.8rem;color:#E2B53E;font-weight:600}"
 			    & ".back p{margin:5rem 0 0;font-size:10.5rem;line-height:1.4}"
@@ -2875,6 +2876,274 @@ table Dax
 			        & "<div class='k'>IN SHORT</div><div class='t'>" & _msg & "</div>"
 			        & "<div class='lg'><i style='background:#3FD08F'></i>Better <i style='background:#FF8A8A'></i>Worse <i style='background:#F2C14E'></i>Equal<br>Each side vs the other · deductions: higher is worse</div></div>"
 		displayFolder: 06 Titles & Labels\Insights
+
+	measure Inflation_flipcard =
+			-- Flip card: inflation. Front = value, change, sparkline; back = what it means
+			VAR _last = [Inflation_latest_month]
+			VAR _v = [Inflation_latest]
+			-- Peak in the selected years
+			VAR _pk = TOPN ( 1, FILTER ( ADDCOLUMNS ( VALUES ( econ_month[month_date] ), "@i", CALCULATE ( [Inflation_yoy] ) ), NOT ISBLANK ( [@i] ) ), [@i], DESC )
+			VAR _col = [Inflation_colour]
+			VAR _pts = ADDCOLUMNS ( FILTER ( ALL ( econ_month[month_date] ), econ_month[month_date] > EDATE ( _last, -6 ) && econ_month[month_date] <= _last ), "@k", econ_month[month_date], "@v", VAR _mm = econ_month[month_date] RETURN CALCULATE ( [Inflation_yoy], REMOVEFILTERS ( calendar_table ), econ_month[month_date] = _mm ) )
+			VAR _pi = ADDCOLUMNS ( _pts, "@i", RANKX ( _pts, [@k], , ASC ) - 1 )
+			VAR _n = COUNTROWS ( _pts )
+			VAR _lo = MINX ( _pts, [@v] )
+			VAR _hi = MAXX ( _pts, [@v] )
+			VAR _xy = ADDCOLUMNS ( _pi, "@x", 3 + [@i] * 74 / MAX ( _n - 1, 1 ), "@y", 27 - DIVIDE ( [@v] - _lo, _hi - _lo, 0.5 ) * 22 )
+			VAR _poly = CONCATENATEX ( _xy, FORMAT ( [@x], "0.0" ) & "," & FORMAT ( [@y], "0.0" ), " ", [@i], ASC )
+			VAR _end = TOPN ( 1, _xy, [@i], DESC )
+			VAR _spark =
+			    "<svg viewBox='0 0 80 30' style='width:80rem;height:30rem'><polyline points='" & _poly & "' fill='none' stroke='#0B3D2E' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/>"
+			        & "<circle cx='" & FORMAT ( MAXX ( _end, [@x] ), "0.0" ) & "' cy='" & FORMAT ( MAXX ( _end, [@y] ), "0.0" ) & "' r='3' fill='#0B3D2E'/></svg>"
+			VAR _back = "Prices were " & FORMAT ( _v, "0.0%" ) & " higher than a year earlier" & IF ( MAXX ( _pk, econ_month[month_date] ) = _last, ", the highest in the selected years.", ", down from the " & FORMAT ( MAXX ( _pk, [@i] ), "0.0%" ) & " peak in " & FORMAT ( MAXX ( _pk, econ_month[month_date] ), "mmm yyyy" ) & "." )
+			RETURN
+			    [Flip_css]
+			        & "<div class='fc'><div class='fi'><div class='face front'><div class='lbl'>INFLATION</div>"
+			        & "<div class='val'>" & FORMAT ( _v, "0.0%" ) & "</div>"
+			        & "<div class='chg'><span class='bd' style='color:" & _col & ";background:" & SWITCH ( _col, "#0E8A5F", "#E3F4EC", "#C93C3C", "#FBE7E7", "#FBF1DC" ) & "'>" & [Inflation_change_text] & "</span></div>"
+			        & "<div class='sp'>" & _spark & "</div><div class='asof'>" & [Inflation_as_of_text] & "</div><div class='hint'>HOVER &#8635;</div></div>"
+			        & "<div class='face back'><div class='bt'>WHAT IT MEANS</div><p>" & _back & "</p></div></div></div>"
+		displayFolder: 05 Visual Helpers\Flip Cards
+
+	measure Naira_flipcard =
+			-- Flip card: naira per US dollar. Front = value, change, sparkline; back = what it means
+			VAR _last = [Naira_latest_month]
+			VAR _v = [Naira_latest]
+			VAR _first = CALCULATE ( MIN ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) )
+			VAR _v0 = CALCULATE ( [Naira_per_usd], econ_month[month_date] = _first )
+			VAR _col = [Naira_colour]
+			VAR _pts = ADDCOLUMNS ( FILTER ( ALL ( econ_month[month_date] ), econ_month[month_date] > EDATE ( _last, -6 ) && econ_month[month_date] <= _last ), "@k", econ_month[month_date], "@v", VAR _mm = econ_month[month_date] RETURN CALCULATE ( [Naira_per_usd], REMOVEFILTERS ( calendar_table ), econ_month[month_date] = _mm ) )
+			VAR _pi = ADDCOLUMNS ( _pts, "@i", RANKX ( _pts, [@k], , ASC ) - 1 )
+			VAR _n = COUNTROWS ( _pts )
+			VAR _lo = MINX ( _pts, [@v] )
+			VAR _hi = MAXX ( _pts, [@v] )
+			VAR _xy = ADDCOLUMNS ( _pi, "@x", 3 + [@i] * 74 / MAX ( _n - 1, 1 ), "@y", 27 - DIVIDE ( [@v] - _lo, _hi - _lo, 0.5 ) * 22 )
+			VAR _poly = CONCATENATEX ( _xy, FORMAT ( [@x], "0.0" ) & "," & FORMAT ( [@y], "0.0" ), " ", [@i], ASC )
+			VAR _end = TOPN ( 1, _xy, [@i], DESC )
+			VAR _spark =
+			    "<svg viewBox='0 0 80 30' style='width:80rem;height:30rem'><polyline points='" & _poly & "' fill='none' stroke='#0B3D2E' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/>"
+			        & "<circle cx='" & FORMAT ( MAXX ( _end, [@x] ), "0.0" ) & "' cy='" & FORMAT ( MAXX ( _end, [@y] ), "0.0" ) & "' r='3' fill='#0B3D2E'/></svg>"
+			VAR _back = "A dollar cost ₦" & FORMAT ( _v, "#,0" ) & " in " & FORMAT ( _last, "mmm yyyy" ) & ", " & FORMAT ( DIVIDE ( _v, _v0 ), "0.0" ) & "× the ₦" & FORMAT ( _v0, "#,0" ) & " of " & FORMAT ( _first, "mmm yyyy" ) & "."
+			RETURN
+			    [Flip_css]
+			        & "<div class='fc'><div class='fi'><div class='face front'><div class='lbl'>NAIRA PER US DOLLAR</div>"
+			        & "<div class='val'>" & "₦" & FORMAT ( _v, "#,0" ) & "<small>/ $</small>" & "</div>"
+			        & "<div class='chg'><span class='bd' style='color:" & _col & ";background:" & SWITCH ( _col, "#0E8A5F", "#E3F4EC", "#C93C3C", "#FBE7E7", "#FBF1DC" ) & "'>" & [Naira_change_text] & "</span></div>"
+			        & "<div class='sp'>" & _spark & "</div><div class='asof'>" & [Naira_as_of_text] & " average" & "</div><div class='hint'>HOVER &#8635;</div></div>"
+			        & "<div class='face back'><div class='bt'>WHAT IT MEANS</div><p>" & _back & "</p></div></div></div>"
+		displayFolder: 05 Visual Helpers\Flip Cards
+
+	measure Growth_flipcard =
+			-- Flip card: real GDP growth. Front = value, change, sparkline; back = what it means
+			VAR _y = [GDP_latest_year]
+			VAR _v = [Growth_latest]
+			VAR _col = [Growth_colour]
+			VAR _pts = ADDCOLUMNS ( FILTER ( ALL ( econ_year[year] ), econ_year[year] > _y - 6 && econ_year[year] <= _y ), "@k", econ_year[year], "@v", VAR _yy = econ_year[year] RETURN CALCULATE ( [Real_GDP_growth], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _yy ) )
+			VAR _pi = ADDCOLUMNS ( _pts, "@i", RANKX ( _pts, [@k], , ASC ) - 1 )
+			VAR _n = COUNTROWS ( _pts )
+			VAR _lo = MINX ( _pts, [@v] )
+			VAR _hi = MAXX ( _pts, [@v] )
+			VAR _xy = ADDCOLUMNS ( _pi, "@x", 3 + [@i] * 74 / MAX ( _n - 1, 1 ), "@y", 27 - DIVIDE ( [@v] - _lo, _hi - _lo, 0.5 ) * 22 )
+			VAR _poly = CONCATENATEX ( _xy, FORMAT ( [@x], "0.0" ) & "," & FORMAT ( [@y], "0.0" ), " ", [@i], ASC )
+			VAR _end = TOPN ( 1, _xy, [@i], DESC )
+			VAR _spark =
+			    "<svg viewBox='0 0 80 30' style='width:80rem;height:30rem'><polyline points='" & _poly & "' fill='none' stroke='#0B3D2E' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/>"
+			        & "<circle cx='" & FORMAT ( MAXX ( _end, [@x] ), "0.0" ) & "' cy='" & FORMAT ( MAXX ( _end, [@y] ), "0.0" ) & "' r='3' fill='#0B3D2E'/></svg>"
+			VAR _back = "The economy grew " & FORMAT ( _v, "0.0%" ) & " in " & _y & " after removing price rises. With the population growing about 2.5% a year, the average Nigerian's share " & IF ( _v >= 0.025, "grew.", "shrank." )
+			RETURN
+			    [Flip_css]
+			        & "<div class='fc'><div class='fi'><div class='face front'><div class='lbl'>REAL GDP GROWTH</div>"
+			        & "<div class='val'>" & FORMAT ( _v, "0.0%" ) & "</div>"
+			        & "<div class='chg'><span class='bd' style='color:" & _col & ";background:" & SWITCH ( _col, "#0E8A5F", "#E3F4EC", "#C93C3C", "#FBE7E7", "#FBF1DC" ) & "'>" & [Growth_change_text] & "</span></div>"
+			        & "<div class='sp'>" & _spark & "</div><div class='asof'>" & [GDP_as_of_text] & ", World Bank" & "</div><div class='hint'>HOVER &#8635;</div></div>"
+			        & "<div class='face back'><div class='bt'>WHAT IT MEANS</div><p>" & _back & "</p></div></div></div>"
+		displayFolder: 05 Visual Helpers\Flip Cards
+
+	measure PerPerson_flipcard =
+			-- Flip card: GDP per person. Front = value, change, sparkline; back = what it means
+			VAR _y = [GDP_latest_year]
+			VAR _v = [GDP_per_person_usd_latest]
+			VAR _p = CALCULATE ( [GDP_per_person_usd], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _y - 1 )
+			VAR _c = DIVIDE ( _v - _p, _p )
+			-- Peak year in the selected years
+			VAR _pk = TOPN ( 1, FILTER ( ADDCOLUMNS ( VALUES ( econ_year[year] ), "@p", CALCULATE ( [GDP_per_person_usd] ) ), NOT ISBLANK ( [@p] ) ), [@p], DESC )
+			VAR _col = SWITCH ( TRUE (), ISBLANK ( _p ) || ROUND ( _c, 4 ) = 0, "#C98A00", _c > 0, "#0E8A5F", "#C93C3C" )
+			VAR _pts = ADDCOLUMNS ( FILTER ( ALL ( econ_year[year] ), econ_year[year] > _y - 6 && econ_year[year] <= _y ), "@k", econ_year[year], "@v", VAR _yy = econ_year[year] RETURN CALCULATE ( [GDP_per_person_usd], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _yy ) )
+			VAR _pi = ADDCOLUMNS ( _pts, "@i", RANKX ( _pts, [@k], , ASC ) - 1 )
+			VAR _n = COUNTROWS ( _pts )
+			VAR _lo = MINX ( _pts, [@v] )
+			VAR _hi = MAXX ( _pts, [@v] )
+			VAR _xy = ADDCOLUMNS ( _pi, "@x", 3 + [@i] * 74 / MAX ( _n - 1, 1 ), "@y", 27 - DIVIDE ( [@v] - _lo, _hi - _lo, 0.5 ) * 22 )
+			VAR _poly = CONCATENATEX ( _xy, FORMAT ( [@x], "0.0" ) & "," & FORMAT ( [@y], "0.0" ), " ", [@i], ASC )
+			VAR _end = TOPN ( 1, _xy, [@i], DESC )
+			VAR _spark =
+			    "<svg viewBox='0 0 80 30' style='width:80rem;height:30rem'><polyline points='" & _poly & "' fill='none' stroke='#0B3D2E' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/>"
+			        & "<circle cx='" & FORMAT ( MAXX ( _end, [@x] ), "0.0" ) & "' cy='" & FORMAT ( MAXX ( _end, [@y] ), "0.0" ) & "' r='3' fill='#0B3D2E'/></svg>"
+			VAR _back = "Output per Nigerian was $" & FORMAT ( _v, "#,0" ) & " in " & _y & IF ( MAXX ( _pk, econ_year[year] ) = _y, ", the highest in the selected years.", ", " & FORMAT ( 1 - DIVIDE ( _v, MAXX ( _pk, [@p] ) ), "0%" ) & " below its " & MAXX ( _pk, econ_year[year] ) & " peak of $" & FORMAT ( MAXX ( _pk, [@p] ), "#,0" ) & ", mostly because the naira fell." )
+			RETURN
+			    [Flip_css]
+			        & "<div class='fc'><div class='fi'><div class='face front'><div class='lbl'>GDP PER PERSON</div>"
+			        & "<div class='val'>" & "$" & FORMAT ( _v, "#,0" ) & "<small>" & FORMAT ( [GDP_per_person_naira_latest] / 1e6, "₦0.00" ) & "m</small>" & "</div>"
+			        & "<div class='chg'><span class='bd' style='color:" & _col & ";background:" & SWITCH ( _col, "#0E8A5F", "#E3F4EC", "#C93C3C", "#FBE7E7", "#FBF1DC" ) & "'>" & IF ( ISBLANK ( _p ), "No earlier year", IF ( _c >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _c ), "0.0%" ) & " vs " & ( _y - 1 ) ) & "</span></div>"
+			        & "<div class='sp'>" & _spark & "</div><div class='asof'>" & [GDP_as_of_text] & ", in US dollars" & "</div><div class='hint'>HOVER &#8635;</div></div>"
+			        & "<div class='face back'><div class='bt'>WHAT IT MEANS</div><p>" & _back & "</p></div></div></div>"
+		displayFolder: 05 Visual Helpers\Flip Cards
+
+	measure Economy_insight_html =
+			-- Key takeaway banner for Economy Overview: inflation now vs its peak in the selected years, and the naira vs the start
+			VAR _up = "<span class='up'>"
+			VAR _dn = "<span class='dn'>"
+			VAR _hl = "<span class='hl'>"
+			VAR _e = "</span>"
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( econ_month[month_date] ), "@i", CALCULATE ( [Inflation_yoy] ), "@r", CALCULATE ( [Naira_per_usd] ) ), NOT ISBLANK ( [@i] ) || NOT ISBLANK ( [@r] ) )
+			VAR _li = [Inflation_latest_month]
+			VAR _i = [Inflation_latest]
+			VAR _pk = TOPN ( 1, FILTER ( _t, NOT ISBLANK ( [@i] ) ), [@i], DESC )
+			VAR _pkm = MAXX ( _pk, econ_month[month_date] )
+			VAR _first = MINX ( FILTER ( _t, NOT ISBLANK ( [@r] ) ), econ_month[month_date] )
+			VAR _r0 = MAXX ( FILTER ( _t, econ_month[month_date] = _first ), [@r] )
+			VAR _r = [Naira_latest]
+			VAR _x = DIVIDE ( _r, _r0 )
+			VAR _msg =
+			    "Inflation was " & _hl & FORMAT ( _i, "0.0%" ) & _e & " in " & FORMAT ( _li, "mmmm yyyy" )
+			        & IF ( _pkm = _li, ", the highest in the selected years. ",
+			            ", down from its " & _dn & FORMAT ( MAXX ( _pk, [@i] ), "0.0%" ) & _e & " peak in " & FORMAT ( _pkm, "mmm yyyy" ) & ". " )
+			        & "A dollar cost " & _hl & "₦" & FORMAT ( _r, "#,0" ) & _e & ", "
+			        & IF ( _x > 1.01, _dn & FORMAT ( _x, "0.0" ) & "×" & _e & " its level in " & FORMAT ( _first, "mmm yyyy" ) & ".",
+			            "about the same as in " & FORMAT ( _first, "mmm yyyy" ) & "." )
+			RETURN
+			    [Banner_css]
+			        & "<div class='b'><div class='ic'><svg viewBox='0 0 16 16' style='width:16rem;height:16rem'><path d='M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z' fill='#E2B53E'/></svg></div>"
+			        & "<div class='k'>KEY TAKEAWAY<br>" & UPPER ( FORMAT ( _li, "mmm yyyy" ) ) & "</div><div class='t'>" & _msg & "</div></div>"
+		displayFolder: 06 Titles & Labels\Insights
+
+	measure Inflation_explain_html =
+			-- "What it means" side of the inflation chart (shown by a bookmark): definition, what the chart says,
+			-- and how each president found and left inflation within the selected years
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( econ_month[month_date] ), "@i", CALCULATE ( [Inflation_yoy] ) ), NOT ISBLANK ( [@i] ) )
+			VAR _first = MINX ( _t, econ_month[month_date] )
+			VAR _last = MAXX ( _t, econ_month[month_date] )
+			VAR _pk = TOPN ( 1, _t, [@i], DESC )
+			VAR _now = MAXX ( FILTER ( _t, econ_month[month_date] = _last ), [@i] )
+			VAR _avg = AVERAGEX ( _t, [@i] )
+			-- Each president: first and last month with data in the selection, and inflation then
+			VAR _ad0 = ADDCOLUMNS ( FILTER ( VALUES ( econ_month[president] ), NOT ISBLANK ( econ_month[president] ) ),
+			    "@f", CALCULATE ( MIN ( econ_month[month_date] ), NOT ISBLANK ( econ_month[inflation_yoy] ) ),
+			    "@l", CALCULATE ( MAX ( econ_month[month_date] ), NOT ISBLANK ( econ_month[inflation_yoy] ) ) )
+			VAR _ad = ADDCOLUMNS ( FILTER ( _ad0, NOT ISBLANK ( [@f] ) ),
+			    "@a", VAR _f = [@f] RETURN CALCULATE ( [Inflation_yoy], econ_month[month_date] = _f ),
+			    "@b", VAR _l = [@l] RETURN CALCULATE ( [Inflation_yoy], econ_month[month_date] = _l ) )
+			VAR _rows = CONCATENATEX ( _ad,
+			    "<div class='ar'><span class='nm'>" & econ_month[president] & "<small>" & FORMAT ( [@f], "mmm yyyy" ) & " – " & FORMAT ( [@l], "mmm yyyy" ) & IF ( [@l] = _last, " (latest)", "" ) & "</small></span>"
+			        & "<span class='vv'>" & FORMAT ( [@a], "0.0%" ) & " → " & FORMAT ( [@b], "0.0%" ) & "</span>"
+			        & "<span class='ch' style='color:" & SWITCH ( TRUE (), ROUND ( [@b] - [@a], 3 ) = 0, "#F0C75E", [@b] < [@a], "#7FD6A8", "#FF8A80" ) & "'>"
+			            & SWITCH ( TRUE (), ROUND ( [@b] - [@a], 3 ) = 0, UNICHAR ( 9632 ), [@b] < [@a], UNICHAR ( 9660 ), UNICHAR ( 9650 ) ) & " " & FORMAT ( ABS ( [@b] - [@a] ) * 100, "0.0" ) & " pts</span></div>",
+			    "", [@f], ASC )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 408)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".x{position:fixed;top:0;left:0;right:0;bottom:0;border-radius:12rem;background:#0B3D2E;color:#fff;padding:44rem 26rem 18rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;animation:fi .45s ease-out}"
+			        & "@keyframes fi{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}"
+			        & ".h{font-size:9.5rem;letter-spacing:1.8rem;color:#E2B53E;font-weight:700;margin-top:14rem}.h:first-child{margin-top:0}"
+			        & ".x p{margin:5rem 0 0;font-size:13rem;line-height:1.45}.x b{color:#E2B53E}"
+			        & ".ar{display:flex;align-items:center;gap:10rem;padding:5rem 0;border-top:1px solid #1E5E49;font-size:12.5rem}"
+			        & ".ar.hd{border-top:0;padding:8rem 0 2rem;font-size:8.5rem;letter-spacing:1.2rem;color:#B9D9C9}"
+			        & ".nm{flex:1;font-weight:600}.nm small{display:block;font-weight:400;font-size:9.5rem;color:#B9D9C9}"
+			        & ".vv{min-width:150rem;text-align:right;font-weight:700;color:#E2B53E}.ch{min-width:78rem;text-align:right;font-weight:700}</style>"
+			        & "<div class='x'><div class='h'>WHAT IS INFLATION?</div>"
+			        & "<p>How much more everyday goods and services cost than a year earlier. At <b>15%</b>, something that cost ₦1,000 a year ago now costs about ₦1,150. Falling inflation means prices still rise, just more slowly.</p>"
+			        & "<div class='h'>WHAT THE CHART SAYS · " & UPPER ( FORMAT ( _first, "mmm yyyy" ) & " TO " & FORMAT ( _last, "mmm yyyy" ) ) & "</div>"
+			        & "<p>Inflation averaged <b>" & FORMAT ( _avg, "0.0%" ) & "</b>, peaked at <b>" & FORMAT ( MAXX ( _pk, [@i] ), "0.0%" ) & "</b> in " & FORMAT ( MAXX ( _pk, econ_month[month_date] ), "mmm yyyy" )
+			        & " and was <b>" & FORMAT ( _now, "0.0%" ) & "</b> in " & FORMAT ( _last, "mmm yyyy" ) & ".</p>"
+			        & "<div class='ar hd'><span class='nm'>EACH PRESIDENT</span><span class='vv'>FOUND → LEFT</span><span class='ch'>CHANGE</span></div>"
+			        & _rows & "</div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure Naira_explain_html =
+			-- "What it means" side of the naira chart (shown by a bookmark): definition, what the chart says,
+			-- and the rate each president found and left within the selected years
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( econ_month[month_date] ), "@r", CALCULATE ( [Naira_per_usd] ) ), NOT ISBLANK ( [@r] ) )
+			VAR _first = MINX ( _t, econ_month[month_date] )
+			VAR _last = MAXX ( _t, econ_month[month_date] )
+			VAR _r0 = MAXX ( FILTER ( _t, econ_month[month_date] = _first ), [@r] )
+			VAR _r1 = MAXX ( FILTER ( _t, econ_month[month_date] = _last ), [@r] )
+			VAR _lost = 1 - DIVIDE ( _r0, _r1 )
+			VAR _ad0 = ADDCOLUMNS ( FILTER ( VALUES ( econ_month[president] ), NOT ISBLANK ( econ_month[president] ) ),
+			    "@f", CALCULATE ( MIN ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) ),
+			    "@l", CALCULATE ( MAX ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) ) )
+			VAR _ad = ADDCOLUMNS ( FILTER ( _ad0, NOT ISBLANK ( [@f] ) ),
+			    "@a", VAR _f = [@f] RETURN CALCULATE ( [Naira_per_usd], econ_month[month_date] = _f ),
+			    "@b", VAR _l = [@l] RETURN CALCULATE ( [Naira_per_usd], econ_month[month_date] = _l ) )
+			-- Change in naira per dollar: up = weaker naira = red
+			VAR _rows = CONCATENATEX ( _ad,
+			    VAR _c = DIVIDE ( [@b] - [@a], [@a] )
+			    RETURN
+			        "<div class='ar'><span class='nm'>" & econ_month[president] & "<small>" & FORMAT ( [@f], "mmm yyyy" ) & " – " & FORMAT ( [@l], "mmm yyyy" ) & IF ( [@l] = _last, " (latest)", "" ) & "</small></span>"
+			            & "<span class='vv'>₦" & FORMAT ( [@a], "#,0" ) & " → ₦" & FORMAT ( [@b], "#,0" ) & "</span>"
+			            & "<span class='ch' style='color:" & SWITCH ( TRUE (), ROUND ( _c, 2 ) = 0, "#F0C75E", _c < 0, "#7FD6A8", "#FF8A80" ) & "'>"
+			                & SWITCH ( TRUE (), ROUND ( _c, 2 ) = 0, UNICHAR ( 9632 ), _c < 0, UNICHAR ( 9660 ), UNICHAR ( 9650 ) ) & " " & FORMAT ( ABS ( _c ), "0%" ) & "</span></div>",
+			    "", [@f], ASC )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 408)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".x{position:fixed;top:0;left:0;right:0;bottom:0;border-radius:12rem;background:#0B3D2E;color:#fff;padding:44rem 26rem 18rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;animation:fi .45s ease-out}"
+			        & "@keyframes fi{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}"
+			        & ".h{font-size:9.5rem;letter-spacing:1.8rem;color:#E2B53E;font-weight:700;margin-top:14rem}.h:first-child{margin-top:0}"
+			        & ".x p{margin:5rem 0 0;font-size:13rem;line-height:1.45}.x b{color:#E2B53E}"
+			        & ".ar{display:flex;align-items:center;gap:10rem;padding:5rem 0;border-top:1px solid #1E5E49;font-size:12.5rem}"
+			        & ".ar.hd{border-top:0;padding:8rem 0 2rem;font-size:8.5rem;letter-spacing:1.2rem;color:#B9D9C9}"
+			        & ".nm{flex:1;font-weight:600}.nm small{display:block;font-weight:400;font-size:9.5rem;color:#B9D9C9}"
+			        & ".vv{min-width:150rem;text-align:right;font-weight:700;color:#E2B53E}.ch{min-width:78rem;text-align:right;font-weight:700}</style>"
+			        & "<div class='x'><div class='h'>WHAT DOES NAIRA PER US DOLLAR MEAN?</div>"
+			        & "<p>How many naira you need to buy one US dollar. A higher number means a <b>weaker naira</b>.</p>"
+			        & "<div class='h'>WHAT THE CHART SAYS · " & UPPER ( FORMAT ( _first, "mmm yyyy" ) & " TO " & FORMAT ( _last, "mmm yyyy" ) ) & "</div>"
+			        & "<p>A dollar went from <b>₦" & FORMAT ( _r0, "#,0" ) & "</b> to <b>₦" & FORMAT ( _r1, "#,0" ) & "</b>"
+			        & IF ( _lost > 0.005, ": the naira lost <b>" & FORMAT ( _lost, "0%" ) & "</b> of its value against the dollar.", "." ) & "</p>"
+			        & "<div class='ar hd'><span class='nm'>EACH PRESIDENT</span><span class='vv'>FOUND → LEFT</span><span class='ch'>NAIRA PER $</span></div>"
+			        & _rows & "</div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure Inflation_month_tt_html =
+			-- Tooltip card for the inflation chart: the hovered month and its change on the month before and a year earlier
+			VAR _m = MAX ( econ_month[month_date] )
+			VAR _pres = SELECTEDVALUE ( econ_month[president], CALCULATE ( MAX ( econ_month[president] ), econ_month[month_date] = _m ) )
+			VAR _na = "<span class='c' style='color:#5E6E67;background:#EDF2EF'>n/a</span>"
+			VAR _v = CALCULATE ( [Inflation_yoy], REMOVEFILTERS ( calendar_table ), econ_month[month_date] = _m )
+			VAR _v1 = CALCULATE ( [Inflation_yoy], REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_month[month_date] = EDATE ( _m, -1 ) )
+			VAR _v12 = CALCULATE ( [Inflation_yoy], REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_month[month_date] = EDATE ( _m, -12 ) )
+			VAR _d1 = _v - _v1
+			VAR _d12 = _v - _v12
+			RETURN
+			    "<style>html{font-size:calc(100vh / 140)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{color:#5E6E67;font-size:9.5rem;margin:2rem 0 6rem}"
+			        & ".r{display:flex;justify-content:space-between;align-items:center;gap:10rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span:first-child{color:#5E6E67}.r b{font-weight:700;font-size:12rem}"
+			        & ".c{font-weight:700;font-size:9.5rem;padding:1rem 6rem;border-radius:4rem}</style>"
+			        & "<div class='w'><div class='m'>" & UPPER ( FORMAT ( _m, "mmmm yyyy" ) ) & "</div><div class='sub'>" & COALESCE ( _pres, "No president" ) & " · down = green</div>"
+			        & "<div class='r'><span>Inflation</span><b>" & FORMAT ( _v, "0.0%" ) & "</b></div>"
+			        & "<div class='r'><span>vs " & FORMAT ( EDATE ( _m, -1 ), "mmm yyyy" ) & "</span>" & IF ( ISBLANK ( _v1 ), _na, "<span class='c' style='color:" & IF ( _d1 <= 0, "#0E8A5F", "#C93C3C" ) & ";background:" & IF ( _d1 <= 0, "#E3F4EC", "#FBE7E7" ) & "'>" & IF ( _d1 <= 0, UNICHAR ( 9660 ), UNICHAR ( 9650 ) ) & " " & FORMAT ( ABS ( _d1 ) * 100, "0.0" ) & " pts" & "</span>" ) & "</div>"
+			        & "<div class='r'><span>vs " & FORMAT ( EDATE ( _m, -12 ), "mmm yyyy" ) & "</span>" & IF ( ISBLANK ( _v12 ), _na, "<span class='c' style='color:" & IF ( _d12 <= 0, "#0E8A5F", "#C93C3C" ) & ";background:" & IF ( _d12 <= 0, "#E3F4EC", "#FBE7E7" ) & "'>" & IF ( _d12 <= 0, UNICHAR ( 9660 ), UNICHAR ( 9650 ) ) & " " & FORMAT ( ABS ( _d12 ) * 100, "0.0" ) & " pts" & "</span>" ) & "</div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Naira_month_tt_html =
+			-- Tooltip card for the naira per US dollar chart: the hovered month and its change on the month before and a year earlier
+			VAR _m = MAX ( econ_month[month_date] )
+			VAR _pres = SELECTEDVALUE ( econ_month[president], CALCULATE ( MAX ( econ_month[president] ), econ_month[month_date] = _m ) )
+			VAR _na = "<span class='c' style='color:#5E6E67;background:#EDF2EF'>n/a</span>"
+			VAR _v = CALCULATE ( [Naira_per_usd], REMOVEFILTERS ( calendar_table ), econ_month[month_date] = _m )
+			VAR _v1 = CALCULATE ( [Naira_per_usd], REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_month[month_date] = EDATE ( _m, -1 ) )
+			VAR _v12 = CALCULATE ( [Naira_per_usd], REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_month[month_date] = EDATE ( _m, -12 ) )
+			VAR _d1 = DIVIDE ( _v - _v1, _v1 )
+			VAR _d12 = DIVIDE ( _v - _v12, _v12 )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 140)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{color:#5E6E67;font-size:9.5rem;margin:2rem 0 6rem}"
+			        & ".r{display:flex;justify-content:space-between;align-items:center;gap:10rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span:first-child{color:#5E6E67}.r b{font-weight:700;font-size:12rem}"
+			        & ".c{font-weight:700;font-size:9.5rem;padding:1rem 6rem;border-radius:4rem}</style>"
+			        & "<div class='w'><div class='m'>" & UPPER ( FORMAT ( _m, "mmmm yyyy" ) ) & "</div><div class='sub'>" & COALESCE ( _pres, "No president" ) & " · weaker naira = red</div>"
+			        & "<div class='r'><span>Naira per US dollar</span><b>" & "₦" & FORMAT ( _v, "#,0" ) & "</b></div>"
+			        & "<div class='r'><span>vs " & FORMAT ( EDATE ( _m, -1 ), "mmm yyyy" ) & "</span>" & IF ( ISBLANK ( _v1 ), _na, "<span class='c' style='color:" & IF ( _d1 <= 0, "#0E8A5F", "#C93C3C" ) & ";background:" & IF ( _d1 <= 0, "#E3F4EC", "#FBE7E7" ) & "'>" & IF ( _d1 <= 0, UNICHAR ( 9660 ), UNICHAR ( 9650 ) ) & " " & FORMAT ( ABS ( _d1 ), "0.0%" ) & "</span>" ) & "</div>"
+			        & "<div class='r'><span>vs " & FORMAT ( EDATE ( _m, -12 ), "mmm yyyy" ) & "</span>" & IF ( ISBLANK ( _v12 ), _na, "<span class='c' style='color:" & IF ( _d12 <= 0, "#0E8A5F", "#C93C3C" ) & ";background:" & IF ( _d12 <= 0, "#E3F4EC", "#FBE7E7" ) & "'>" & IF ( _d12 <= 0, UNICHAR ( 9660 ), UNICHAR ( 9650 ) ) & " " & FORMAT ( ABS ( _d12 ), "0.0%" ) & "</span>" ) & "</div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
 
 	column Value
 		dataType: int64

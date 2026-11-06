@@ -78,10 +78,10 @@ at these y positions:
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicers: Compare by, A, B, Basis, Currency, Dates (all dropdowns) | 300 | 78 | 944 | 28 |
+| Slicers: Compare by, A, B, Basis, Currency, Dates | 300 | 78 | 944 | 28 |
 | HTML: freshness strip | 716 | 8 | 540 | 60 |
-| Text: side A name and meta, basis label, side B name and meta | 226 | 130 | 1020 | 26 |
-| Table: A value, A bar, metric, change, B bar, B value (TT - Compare Metric) | 226 | 164 | 1020 | 450 |
+| Text: side names and meta, basis label | 226 | 130 | 1020 | 26 |
+| Table: A value and bar, metric, change, B bar and value | 226 | 164 | 1020 | 450 |
 | HTML: insight banner with legend | 216 | 636 | 1040 | 68 |
 
 ## Overview (`bg_economy_overview.png`)
@@ -90,14 +90,15 @@ at these y positions:
 |---|---|---|---|---|
 | Slicer: Years (between) | 282 | 78 | 278 | 28 |
 | Slicer: President (dropdown) | 660 | 78 | 200 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| KPI group: Inflation (value, change line, as-of text) | 226 | 146 | 228 | 64 |
-| KPI group: Naira per US dollar | 490 | 146 | 228 | 64 |
-| KPI group: Real GDP growth | 754 | 146 | 228 | 64 |
-| KPI group: GDP per person ($ and ₦) | 1018 | 146 | 228 | 64 |
-| Line chart: inflation by month, coloured by president | 226 | 242 | 492 | 332 |
-| Line chart: naira per US dollar by month, coloured by president | 754 | 242 | 492 | 332 |
-| Text: Inflation_narrative + Naira_narrative | 296 | 608 | 950 | 82 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| HTML: flip cards Inflation, Naira, Growth, GDP per person | 216 | 124 | 1040 | 96 |
+| Line chart: inflation by month, by president (TT - Inflation Month) | 226 | 242 | 492 | 388 |
+| HTML: Inflation_explain_html, hidden until the bookmark | 216 | 232 | 512 | 408 |
+| Buttons: What it means / Back to chart (inflation) | 580 | 238 | 136 | 28 |
+| Line chart: naira per US dollar by month, by president (TT - Inflation Month) | 754 | 242 | 492 | 388 |
+| HTML: Naira_explain_html, hidden until the bookmark | 744 | 232 | 512 | 408 |
+| Buttons: What it means / Back to chart (naira) | 1108 | 238 | 136 | 28 |
+| HTML: Economy_insight_html key takeaway | 216 | 654 | 1040 | 50 |
 
 ## Economy size (`bg_economy_size.png`)
 
