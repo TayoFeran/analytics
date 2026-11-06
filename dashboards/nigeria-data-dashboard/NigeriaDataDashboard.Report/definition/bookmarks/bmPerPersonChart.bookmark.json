@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/1.4.0/schema.json",
+  "displayName": "GDP per person: chart",
+  "name": "bmPerPersonChart",
+  "options": {
+    "targetVisualNames": [
+      "perPersonChart",
+      "perPersonExplain",
+      "perPersonInfo",
+      "perPersonBack"
+    ],
+    "applyOnlyToTargetVisuals": true,
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "econSize",
+    "sections": {
+      "econSize": {
+        "visualContainers": {
+          "perPersonChart": {
+            "singleVisual": {
+              "visualType": "lineChart",
+              "objects": {}
+            }
+          },
+          "perPersonExplain": {
+            "singleVisual": {
+              "visualType": "htmlContent443BE3AD55E043BF878BED274D3A6865",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "perPersonInfo": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {}
+            }
+          },
+          "perPersonBack": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

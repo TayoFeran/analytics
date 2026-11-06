@@ -12,6 +12,30 @@
     },
     {
       "name": "bmNairaChart"
+    },
+    {
+      "name": "bmGdpNairaExplain"
+    },
+    {
+      "name": "bmGdpNairaChart"
+    },
+    {
+      "name": "bmGdpUsdExplain"
+    },
+    {
+      "name": "bmGdpUsdChart"
+    },
+    {
+      "name": "bmGrowthExplain"
+    },
+    {
+      "name": "bmGrowthChart"
+    },
+    {
+      "name": "bmPerPersonExplain"
+    },
+    {
+      "name": "bmPerPersonChart"
     }
   ]
 }

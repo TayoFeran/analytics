@@ -2937,7 +2937,16 @@ table Dax
 			-- Flip card: real GDP growth. Front = value, change, sparkline; back = what it means
 			VAR _y = [GDP_latest_year]
 			VAR _v = [Growth_latest]
-			VAR _col = [Growth_colour]
+			VAR _p = [Growth_prev]
+			VAR _d = _v - _p
+			-- Growth vs last year's growth is a change of pace, not a decline: amber when slower, red only below 0
+			VAR _col = SWITCH ( TRUE (), _v < 0, "#C93C3C", ISBLANK ( _p ) || ROUND ( _d, 3 ) = 0 || _d < 0, "#C98A00", "#0E8A5F" )
+			VAR _chg = SWITCH ( TRUE (),
+			    _v < 0, "Economy shrank",
+			    ISBLANK ( _p ), "No earlier year",
+			    ROUND ( _d, 3 ) = 0, "Same pace as " & ( _y - 1 ),
+			    FORMAT ( ABS ( _d ) * 100, "0.0" ) & " pts " & IF ( _d < 0, "slower", "faster" ) & " than " & ( _y - 1 ) )
+			VAR _pop = CALCULATE ( [Population_growth], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _y )
 			VAR _pts = ADDCOLUMNS ( FILTER ( ALL ( econ_year[year] ), econ_year[year] > _y - 6 && econ_year[year] <= _y ), "@k", econ_year[year], "@v", VAR _yy = econ_year[year] RETURN CALCULATE ( [Real_GDP_growth], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _yy ) )
 			VAR _pi = ADDCOLUMNS ( _pts, "@i", RANKX ( _pts, [@k], , ASC ) - 1 )
 			VAR _n = COUNTROWS ( _pts )
@@ -2949,12 +2958,12 @@ table Dax
 			VAR _spark =
 			    "<svg viewBox='0 0 80 30' style='width:80rem;height:30rem'><polyline points='" & _poly & "' fill='none' stroke='#0B3D2E' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/>"
 			        & "<circle cx='" & FORMAT ( MAXX ( _end, [@x] ), "0.0" ) & "' cy='" & FORMAT ( MAXX ( _end, [@y] ), "0.0" ) & "' r='3' fill='#0B3D2E'/></svg>"
-			VAR _back = "The economy grew " & FORMAT ( _v, "0.0%" ) & " in " & _y & " after removing price rises. With the population growing about 2.5% a year, the average Nigerian's share " & IF ( _v >= 0.025, "grew.", "shrank." )
+			VAR _back = "The economy grew " & FORMAT ( _v, "0.0%" ) & " in " & _y & " after removing price rises. The population grew " & FORMAT ( _pop, "0.0%" ) & ", so the average Nigerian's share " & IF ( _v >= _pop, "grew.", "shrank." )
 			RETURN
 			    [Flip_css]
 			        & "<div class='fc'><div class='fi'><div class='face front'><div class='lbl'>REAL GDP GROWTH</div>"
 			        & "<div class='val'>" & FORMAT ( _v, "0.0%" ) & "</div>"
-			        & "<div class='chg'><span class='bd' style='color:" & _col & ";background:" & SWITCH ( _col, "#0E8A5F", "#E3F4EC", "#C93C3C", "#FBE7E7", "#FBF1DC" ) & "'>" & [Growth_change_text] & "</span></div>"
+			        & "<div class='chg'><span class='bd' style='color:" & _col & ";background:" & SWITCH ( _col, "#0E8A5F", "#E3F4EC", "#C93C3C", "#FBE7E7", "#FBF1DC" ) & "'>" & _chg & "</span></div>"
 			        & "<div class='sp'>" & _spark & "</div><div class='asof'>" & [GDP_as_of_text] & ", World Bank" & "</div><div class='hint'>HOVER &#8635;</div></div>"
 			        & "<div class='face back'><div class='bt'>WHAT IT MEANS</div><p>" & _back & "</p></div></div></div>"
 		displayFolder: 05 Visual Helpers\Flip Cards
@@ -3031,7 +3040,8 @@ table Dax
 			    "@f", CALCULATE ( MIN ( econ_month[month_date] ), NOT ISBLANK ( econ_month[inflation_yoy] ) ),
 			    "@l", CALCULATE ( MAX ( econ_month[month_date] ), NOT ISBLANK ( econ_month[inflation_yoy] ) ) )
 			VAR _ad = ADDCOLUMNS ( FILTER ( _ad0, NOT ISBLANK ( [@f] ) ),
-			    "@a", VAR _f = [@f] RETURN CALCULATE ( [Inflation_yoy], econ_month[month_date] = _f ),
+			    -- Found = the month before their first one (what they inherited); the first month in the data has no earlier month
+			    "@a", VAR _f = [@f] RETURN COALESCE ( CALCULATE ( [Inflation_yoy], REMOVEFILTERS ( econ_month ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_month[month_date] = EDATE ( _f, -1 ) ), CALCULATE ( [Inflation_yoy], econ_month[month_date] = _f ) ),
 			    "@b", VAR _l = [@l] RETURN CALCULATE ( [Inflation_yoy], econ_month[month_date] = _l ) )
 			VAR _rows = CONCATENATEX ( _ad,
 			    "<div class='ar'><span class='nm'>" & econ_month[president] & "<small>" & FORMAT ( [@f], "mmm yyyy" ) & " – " & FORMAT ( [@l], "mmm yyyy" ) & IF ( [@l] = _last, " (latest)", "" ) & "</small></span>"
@@ -3071,7 +3081,8 @@ table Dax
 			    "@f", CALCULATE ( MIN ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) ),
 			    "@l", CALCULATE ( MAX ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) ) )
 			VAR _ad = ADDCOLUMNS ( FILTER ( _ad0, NOT ISBLANK ( [@f] ) ),
-			    "@a", VAR _f = [@f] RETURN CALCULATE ( [Naira_per_usd], econ_month[month_date] = _f ),
+			    -- Found = the month before their first one (what they inherited); the first month in the data has no earlier month
+			    "@a", VAR _f = [@f] RETURN COALESCE ( CALCULATE ( [Naira_per_usd], REMOVEFILTERS ( econ_month ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_month[month_date] = EDATE ( _f, -1 ) ), CALCULATE ( [Naira_per_usd], econ_month[month_date] = _f ) ),
 			    "@b", VAR _l = [@l] RETURN CALCULATE ( [Naira_per_usd], econ_month[month_date] = _l ) )
 			-- Change in naira per dollar: up = weaker naira = red
 			VAR _rows = CONCATENATEX ( _ad,
@@ -3144,6 +3155,342 @@ table Dax
 			        & "<div class='r'><span>vs " & FORMAT ( EDATE ( _m, -1 ), "mmm yyyy" ) & "</span>" & IF ( ISBLANK ( _v1 ), _na, "<span class='c' style='color:" & IF ( _d1 <= 0, "#0E8A5F", "#C93C3C" ) & ";background:" & IF ( _d1 <= 0, "#E3F4EC", "#FBE7E7" ) & "'>" & IF ( _d1 <= 0, UNICHAR ( 9660 ), UNICHAR ( 9650 ) ) & " " & FORMAT ( ABS ( _d1 ), "0.0%" ) & "</span>" ) & "</div>"
 			        & "<div class='r'><span>vs " & FORMAT ( EDATE ( _m, -12 ), "mmm yyyy" ) & "</span>" & IF ( ISBLANK ( _v12 ), _na, "<span class='c' style='color:" & IF ( _d12 <= 0, "#0E8A5F", "#C93C3C" ) & ";background:" & IF ( _d12 <= 0, "#E3F4EC", "#FBE7E7" ) & "'>" & IF ( _d12 <= 0, UNICHAR ( 9660 ), UNICHAR ( 9650 ) ) & " " & FORMAT ( ABS ( _d12 ), "0.0%" ) & "</span>" ) & "</div></div>"
 		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure President_colour =
+			-- Column colour per year: the president in office (same colours as the monthly lines); before 1999 light grey
+			SWITCH ( CALCULATE ( MAX ( econ_year[president] ) ),
+			    "Obasanjo", "#7F8C86", "Yar'Adua", "#B9D9C9", "Jonathan", "#8FC9AE", "Buhari", "#4E9C78", "Tinubu", "#0E6B45",
+			    "#D5DDD9" )
+		displayFolder: 04 Comparison\Colours
+
+	measure President_legend_html =
+			-- Legend for the president-coloured columns: only the presidents in the selected years
+			VAR _p = ADDCOLUMNS ( VALUES ( econ_year[president] ), "@f", CALCULATE ( MIN ( econ_year[year] ) ) )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 20)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".l{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;gap:12rem;font-family:Segoe UI,sans-serif;font-size:9.5rem;color:#5E6E67;white-space:nowrap}"
+			        & ".l i{display:inline-block;width:9rem;height:9rem;border-radius:2rem;margin-right:4rem;vertical-align:-1rem}</style><div class='l'>"
+			        & CONCATENATEX ( _p,
+			            VAR _n = COALESCE ( econ_year[president], "Before 1999" )
+			            RETURN "<span><i style='background:" & SWITCH ( _n, "Obasanjo", "#7F8C86", "Yar'Adua", "#B9D9C9", "Jonathan", "#8FC9AE", "Buhari", "#4E9C78", "Tinubu", "#0E6B45", "#D5DDD9" ) & "'></i>" & _n & "</span>",
+			            "", [@f], ASC )
+			        & "</div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure Population_growth =
+			-- Population change vs the year before. Over several years: the average yearly rate
+			AVERAGEX ( VALUES ( econ_year[year] ),
+			    VAR _y = econ_year[year]
+			    VAR _p = CALCULATE ( SUM ( econ_year[population] ) )
+			    VAR _p0 = CALCULATE ( SUM ( econ_year[population] ), REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _y - 1 )
+			    RETURN DIVIDE ( _p - _p0, _p0 ) )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 02 Rates & Averages\Economy
+
+	measure GdpNaira_explain_html =
+			-- "What it means" side of the GDP in naira chart (shown by a bookmark): definition, what the chart says,
+			-- and each president's first and last year within the selected years
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( econ_year[year] ), "@v", CALCULATE ( [GDP_naira] ) ), NOT ISBLANK ( [@v] ) )
+			VAR _first = MINX ( _t, econ_year[year] )
+			VAR _last = MAXX ( _t, econ_year[year] )
+			VAR _v0 = MAXX ( FILTER ( _t, econ_year[year] = _first ), [@v] )
+			VAR _v1 = MAXX ( FILTER ( _t, econ_year[year] = _last ), [@v] )
+			VAR _pk = TOPN ( 1, _t, [@v], DESC )
+			VAR _pky = MAXX ( _pk, econ_year[year] )
+			VAR _pkv = MAXX ( _pk, [@v] )
+			VAR _ad0 = ADDCOLUMNS ( VALUES ( econ_year[president] ),
+			    "@f", CALCULATE ( MIN ( econ_year[year] ), NOT ISBLANK ( econ_year[gdp_naira] ) ),
+			    "@l", CALCULATE ( MAX ( econ_year[year] ), NOT ISBLANK ( econ_year[gdp_naira] ) ) )
+			VAR _ad = ADDCOLUMNS ( FILTER ( _ad0, NOT ISBLANK ( [@f] ) ),
+			    -- Found = the year before their first one (what they inherited); the first year in the data has no earlier year
+			    "@a", VAR _f = [@f] RETURN COALESCE ( CALCULATE ( [GDP_naira], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _f - 1 ), CALCULATE ( [GDP_naira], econ_year[year] = _f ) ),
+			    "@b", VAR _l = [@l] RETURN CALCULATE ( [GDP_naira], econ_year[year] = _l ) )
+			VAR _rows = CONCATENATEX ( _ad,
+			    VAR _c = DIVIDE ( [@b] - [@a], [@a] )
+			    RETURN
+			        "<div class='ar'><span class='nm'>" & COALESCE ( econ_year[president], "Before 1999" ) & "<small>" & IF ( [@f] = [@l], FORMAT ( [@f], "0" ), [@f] & "–" & [@l] ) & IF ( [@l] = _last, " (latest)", "" ) & "</small></span>"
+			            & "<span class='vv'>" & ( "₦" & IF ( [@a] >= 1e13, FORMAT ( [@a] / 1e12, "#,0" ), FORMAT ( [@a] / 1e12, "#,0.0" ) ) & "tn" ) & " → " & ( "₦" & IF ( [@b] >= 1e13, FORMAT ( [@b] / 1e12, "#,0" ), FORMAT ( [@b] / 1e12, "#,0.0" ) ) & "tn" ) & "</span>"
+			            & "<span class='ch' style='color:" & SWITCH ( TRUE (), ROUND ( _c, 2 ) = 0, "#F0C75E", _c > 0, "#7FD6A8", "#FF8A80" ) & "'>"
+			            & SWITCH ( TRUE (), ROUND ( _c, 2 ) = 0, UNICHAR ( 9632 ), _c > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _c ), "0%" ) & "</span></div>",
+			    "", [@f], ASC )
+			VAR _say = IF ( _first = _last, "GDP was <b>" & ( "₦" & IF ( _v1 >= 1e13, FORMAT ( _v1 / 1e12, "#,0" ), FORMAT ( _v1 / 1e12, "#,0.0" ) ) & "tn" ) & "</b> in " & _last & ".",
+			    "GDP grew from <b>" & ( "₦" & IF ( _v0 >= 1e13, FORMAT ( _v0 / 1e12, "#,0" ), FORMAT ( _v0 / 1e12, "#,0.0" ) ) & "tn" ) & "</b> in " & _first & " to <b>" & ( "₦" & IF ( _v1 >= 1e13, FORMAT ( _v1 / 1e12, "#,0" ), FORMAT ( _v1 / 1e12, "#,0.0" ) ) & "tn" ) & "</b> in " & _last & ", " & FORMAT ( DIVIDE ( _v1, _v0 ), IF ( DIVIDE ( _v1, _v0 ) >= 10, "#,0", "#,0.0" ) ) & "× bigger. "
+			        & "Most of that is rising prices. With them removed, the yearly growth in the growth chart (" & _first & " to " & _last & ") adds up to about <b>" & FORMAT ( PRODUCTX ( FILTER ( ADDCOLUMNS ( VALUES ( econ_year[year] ), "@g", CALCULATE ( [Real_GDP_growth] ) ), NOT ISBLANK ( [@g] ) ), 1 + [@g] ) - 1, "0%" ) & " more output</b>." )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 252)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".x{position:fixed;top:0;left:0;right:0;bottom:0;border-radius:12rem;background:#0B3D2E;color:#fff;padding:40rem 18rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;display:flex;gap:18rem;animation:fi .45s ease-out}"
+			        & "@keyframes fi{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}"
+			        & ".c1{flex:1.1}.c2{flex:1}"
+			        & ".h{font-size:8rem;letter-spacing:1.5rem;color:#E2B53E;font-weight:700;margin-top:9rem}.h:first-child{margin-top:0}"
+			        & ".x p{margin:3rem 0 0;font-size:10.5rem;line-height:1.4}.x b{color:#E2B53E}"
+			        & ".ar{display:flex;align-items:center;gap:6rem;padding:3rem 0;border-top:1px solid #1E5E49;font-size:10rem}"
+			        & ".ar.hd{border-top:0;padding:0 0 2rem;font-size:7.5rem;letter-spacing:1.1rem;color:#B9D9C9}"
+			        & ".nm{flex:1;font-weight:600}.nm small{display:block;font-weight:400;font-size:8rem;color:#B9D9C9}"
+			        & ".vv{text-align:right;font-weight:700;color:#E2B53E;white-space:nowrap}.ch{min-width:44rem;text-align:right;font-weight:700}</style>"
+			        & "<div class='x'><div class='c1'><div class='h'>WHAT IS GDP?</div><p>Gross domestic product: the total value of everything Nigeria produces in a year. In naira it rises partly because prices rise, so a bigger number doesn't always mean more was produced.</p>"
+			        & "<div class='h'>WHAT THE CHART SAYS · " & IF ( _first = _last, _last, _first & " TO " & _last ) & "</div><p>" & _say & "</p></div>"
+			        & "<div class='c2'><div class='ar hd'><span class='nm'>EACH PRESIDENT</span><span class='vv'>FOUND → LEFT</span><span class='ch'>CHANGE</span></div>" & _rows & "</div></div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure GdpUsd_explain_html =
+			-- "What it means" side of the GDP in US dollars chart (shown by a bookmark): definition, what the chart says,
+			-- and each president's first and last year within the selected years
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( econ_year[year] ), "@v", CALCULATE ( [GDP_usd] ) ), NOT ISBLANK ( [@v] ) )
+			VAR _first = MINX ( _t, econ_year[year] )
+			VAR _last = MAXX ( _t, econ_year[year] )
+			VAR _v0 = MAXX ( FILTER ( _t, econ_year[year] = _first ), [@v] )
+			VAR _v1 = MAXX ( FILTER ( _t, econ_year[year] = _last ), [@v] )
+			VAR _pk = TOPN ( 1, _t, [@v], DESC )
+			VAR _pky = MAXX ( _pk, econ_year[year] )
+			VAR _pkv = MAXX ( _pk, [@v] )
+			VAR _ad0 = ADDCOLUMNS ( VALUES ( econ_year[president] ),
+			    "@f", CALCULATE ( MIN ( econ_year[year] ), NOT ISBLANK ( econ_year[gdp_usd] ) ),
+			    "@l", CALCULATE ( MAX ( econ_year[year] ), NOT ISBLANK ( econ_year[gdp_usd] ) ) )
+			VAR _ad = ADDCOLUMNS ( FILTER ( _ad0, NOT ISBLANK ( [@f] ) ),
+			    -- Found = the year before their first one (what they inherited); the first year in the data has no earlier year
+			    "@a", VAR _f = [@f] RETURN COALESCE ( CALCULATE ( [GDP_usd], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _f - 1 ), CALCULATE ( [GDP_usd], econ_year[year] = _f ) ),
+			    "@b", VAR _l = [@l] RETURN CALCULATE ( [GDP_usd], econ_year[year] = _l ) )
+			VAR _rows = CONCATENATEX ( _ad,
+			    VAR _c = DIVIDE ( [@b] - [@a], [@a] )
+			    RETURN
+			        "<div class='ar'><span class='nm'>" & COALESCE ( econ_year[president], "Before 1999" ) & "<small>" & IF ( [@f] = [@l], FORMAT ( [@f], "0" ), [@f] & "–" & [@l] ) & IF ( [@l] = _last, " (latest)", "" ) & "</small></span>"
+			            & "<span class='vv'>" & ( "$" & FORMAT ( [@a] / 1e9, "#,0" ) & "bn" ) & " → " & ( "$" & FORMAT ( [@b] / 1e9, "#,0" ) & "bn" ) & "</span>"
+			            & "<span class='ch' style='color:" & SWITCH ( TRUE (), ROUND ( _c, 2 ) = 0, "#F0C75E", _c > 0, "#7FD6A8", "#FF8A80" ) & "'>"
+			            & SWITCH ( TRUE (), ROUND ( _c, 2 ) = 0, UNICHAR ( 9632 ), _c > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _c ), "0%" ) & "</span></div>",
+			    "", [@f], ASC )
+			VAR _say = VAR _r1 = CALCULATE ( AVERAGE ( econ_year[avg_naira_per_usd] ), econ_year[year] = _last )
+			    VAR _r0 = CALCULATE ( AVERAGE ( econ_year[avg_naira_per_usd] ), econ_year[year] = _pky )
+			    RETURN
+			        IF ( _pky = _last, "GDP in dollars was at its highest in " & _last & ": <b>" & ( "$" & FORMAT ( _v1 / 1e9, "#,0" ) & "bn" ) & "</b>.",
+			            "GDP in dollars peaked at <b>" & ( "$" & FORMAT ( _pkv / 1e9, "#,0" ) & "bn" ) & "</b> in " & _pky & ". In " & _last & " it was <b>" & ( "$" & FORMAT ( _v1 / 1e9, "#,0" ) & "bn" ) & "</b>, "
+			                & FORMAT ( 1 - DIVIDE ( _v1, _pkv ), "0%" ) & " lower" & IF ( _r1 > _r0 * 1.2, ", mainly because a dollar cost ₦" & FORMAT ( _r1, "#,0" ) & " instead of ₦" & FORMAT ( _r0, "#,0" ), "" ) & "." )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 252)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".x{position:fixed;top:0;left:0;right:0;bottom:0;border-radius:12rem;background:#0B3D2E;color:#fff;padding:40rem 18rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;display:flex;gap:18rem;animation:fi .45s ease-out}"
+			        & "@keyframes fi{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}"
+			        & ".c1{flex:1.1}.c2{flex:1}"
+			        & ".h{font-size:8rem;letter-spacing:1.5rem;color:#E2B53E;font-weight:700;margin-top:9rem}.h:first-child{margin-top:0}"
+			        & ".x p{margin:3rem 0 0;font-size:10.5rem;line-height:1.4}.x b{color:#E2B53E}"
+			        & ".ar{display:flex;align-items:center;gap:6rem;padding:3rem 0;border-top:1px solid #1E5E49;font-size:10rem}"
+			        & ".ar.hd{border-top:0;padding:0 0 2rem;font-size:7.5rem;letter-spacing:1.1rem;color:#B9D9C9}"
+			        & ".nm{flex:1;font-weight:600}.nm small{display:block;font-weight:400;font-size:8rem;color:#B9D9C9}"
+			        & ".vv{text-align:right;font-weight:700;color:#E2B53E;white-space:nowrap}.ch{min-width:44rem;text-align:right;font-weight:700}</style>"
+			        & "<div class='x'><div class='c1'><div class='h'>WHY SHOW IT IN US DOLLARS?</div><p>Converting GDP to US dollars lets you compare Nigeria with other countries. It falls when the naira loses value, even if Nigerians produce more.</p>"
+			        & "<div class='h'>WHAT THE CHART SAYS · " & IF ( _first = _last, _last, _first & " TO " & _last ) & "</div><p>" & _say & "</p></div>"
+			        & "<div class='c2'><div class='ar hd'><span class='nm'>EACH PRESIDENT</span><span class='vv'>FOUND → LEFT</span><span class='ch'>CHANGE</span></div>" & _rows & "</div></div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure Growth_explain_html =
+			-- "What it means" side of the real GDP growth chart (shown by a bookmark): definition, what the chart says,
+			-- and each president's first and last year within the selected years
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( econ_year[year] ), "@v", CALCULATE ( [Real_GDP_growth] ) ), NOT ISBLANK ( [@v] ) )
+			VAR _first = MINX ( _t, econ_year[year] )
+			VAR _last = MAXX ( _t, econ_year[year] )
+			VAR _v0 = MAXX ( FILTER ( _t, econ_year[year] = _first ), [@v] )
+			VAR _v1 = MAXX ( FILTER ( _t, econ_year[year] = _last ), [@v] )
+			VAR _pk = TOPN ( 1, _t, [@v], DESC )
+			VAR _pky = MAXX ( _pk, econ_year[year] )
+			VAR _pkv = MAXX ( _pk, [@v] )
+			VAR _ad0 = ADDCOLUMNS ( VALUES ( econ_year[president] ),
+			    "@f", CALCULATE ( MIN ( econ_year[year] ), NOT ISBLANK ( econ_year[real_gdp_growth] ) ),
+			    "@l", CALCULATE ( MAX ( econ_year[year] ), NOT ISBLANK ( econ_year[real_gdp_growth] ) ) )
+			VAR _ad = ADDCOLUMNS ( FILTER ( _ad0, NOT ISBLANK ( [@f] ) ),
+			    -- Found = the year before their first one (what they inherited); the first year in the data has no earlier year
+			    "@a", VAR _f = [@f] RETURN COALESCE ( CALCULATE ( [Real_GDP_growth], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _f - 1 ), CALCULATE ( [Real_GDP_growth], econ_year[year] = _f ) ),
+			    "@b", VAR _l = [@l] RETURN CALCULATE ( [Real_GDP_growth], econ_year[year] = _l ) )
+			VAR _rows = CONCATENATEX ( _ad,
+			    -- A term's years are consecutive, so its years in the selection are first..last
+			    VAR _yrs = FILTER ( _t, econ_year[year] >= [@f] && econ_year[year] <= [@l] )
+			    VAR _avg = AVERAGEX ( _yrs, [@v] )
+			    VAR _sh = COUNTROWS ( FILTER ( _yrs, [@v] < 0 ) )
+			    RETURN
+			        "<div class='ar'><span class='nm'>" & COALESCE ( econ_year[president], "Before 1999" ) & "<small>" & IF ( [@f] = [@l], FORMAT ( [@f], "0" ), [@f] & "–" & [@l] ) & IF ( [@l] = _last, " (latest)", "" ) & "</small></span>"
+			            & "<span class='vv'>" & FORMAT ( _avg, "0.0%" ) & " a year</span>"
+			            & "<span class='ch' style='color:" & IF ( _sh > 0, "#FF8A80", "#7FD6A8" ) & "'>" & IF ( _sh > 0, _sh & " shrank", "none" ) & "</span></div>",
+			    "", [@f], ASC )
+			VAR _say = VAR _sh = FILTER ( _t, [@v] < 0 )
+			    VAR _below = COUNTROWS ( FILTER ( _t, [@v] < CALCULATE ( [Population_growth] ) ) )
+			    RETURN
+			        "Average growth was <b>" & FORMAT ( AVERAGEX ( _t, [@v] ), "0.0%" ) & "</b> a year. The economy shrank in <b>" & COUNTROWS ( _sh ) + 0 & " of " & COUNTROWS ( _t ) & "</b> years"
+			            & IF ( COUNTROWS ( _sh ) > 0, " (" & CONCATENATEX ( _sh, econ_year[year], ", ", econ_year[year], ASC ) & ")", "" )
+			            & " and grew slower than the population in <b>" & _below + 0 & "</b>."
+			RETURN
+			    "<style>html{font-size:calc(100vh / 252)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".x{position:fixed;top:0;left:0;right:0;bottom:0;border-radius:12rem;background:#0B3D2E;color:#fff;padding:40rem 18rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;display:flex;gap:18rem;animation:fi .45s ease-out}"
+			        & "@keyframes fi{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}"
+			        & ".c1{flex:1.1}.c2{flex:1}"
+			        & ".h{font-size:8rem;letter-spacing:1.5rem;color:#E2B53E;font-weight:700;margin-top:9rem}.h:first-child{margin-top:0}"
+			        & ".x p{margin:3rem 0 0;font-size:10.5rem;line-height:1.4}.x b{color:#E2B53E}"
+			        & ".ar{display:flex;align-items:center;gap:6rem;padding:3rem 0;border-top:1px solid #1E5E49;font-size:10rem}"
+			        & ".ar.hd{border-top:0;padding:0 0 2rem;font-size:7.5rem;letter-spacing:1.1rem;color:#B9D9C9}"
+			        & ".nm{flex:1;font-weight:600}.nm small{display:block;font-weight:400;font-size:8rem;color:#B9D9C9}"
+			        & ".vv{text-align:right;font-weight:700;color:#E2B53E;white-space:nowrap}.ch{min-width:44rem;text-align:right;font-weight:700}</style>"
+			        & "<div class='x'><div class='c1'><div class='h'>WHAT IS REAL GDP GROWTH?</div><p>How much more the economy produced than the year before, with price rises taken out. Below 0 the economy shrank (a recession). The dashed line is population growth: below it, the average Nigerian's share shrank.</p>"
+			        & "<div class='h'>WHAT THE CHART SAYS · " & IF ( _first = _last, _last, _first & " TO " & _last ) & "</div><p>" & _say & "</p></div>"
+			        & "<div class='c2'><div class='ar hd'><span class='nm'>EACH PRESIDENT</span><span class='vv'>AVERAGE</span><span class='ch'>SHRANK</span></div>" & _rows & "</div></div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure PerPerson_explain_html =
+			-- "What it means" side of the GDP per person chart (shown by a bookmark): definition, what the chart says,
+			-- and each president's first and last year within the selected years
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( econ_year[year] ), "@v", CALCULATE ( [GDP_per_person_usd] ) ), NOT ISBLANK ( [@v] ) )
+			VAR _first = MINX ( _t, econ_year[year] )
+			VAR _last = MAXX ( _t, econ_year[year] )
+			VAR _v0 = MAXX ( FILTER ( _t, econ_year[year] = _first ), [@v] )
+			VAR _v1 = MAXX ( FILTER ( _t, econ_year[year] = _last ), [@v] )
+			VAR _pk = TOPN ( 1, _t, [@v], DESC )
+			VAR _pky = MAXX ( _pk, econ_year[year] )
+			VAR _pkv = MAXX ( _pk, [@v] )
+			VAR _ad0 = ADDCOLUMNS ( VALUES ( econ_year[president] ),
+			    "@f", CALCULATE ( MIN ( econ_year[year] ), NOT ISBLANK ( econ_year[gdp_usd] ) ),
+			    "@l", CALCULATE ( MAX ( econ_year[year] ), NOT ISBLANK ( econ_year[gdp_usd] ) ) )
+			VAR _ad = ADDCOLUMNS ( FILTER ( _ad0, NOT ISBLANK ( [@f] ) ),
+			    -- Found = the year before their first one (what they inherited); the first year in the data has no earlier year
+			    "@a", VAR _f = [@f] RETURN COALESCE ( CALCULATE ( [GDP_per_person_usd], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _f - 1 ), CALCULATE ( [GDP_per_person_usd], econ_year[year] = _f ) ),
+			    "@b", VAR _l = [@l] RETURN CALCULATE ( [GDP_per_person_usd], econ_year[year] = _l ) )
+			VAR _rows = CONCATENATEX ( _ad,
+			    VAR _c = DIVIDE ( [@b] - [@a], [@a] )
+			    RETURN
+			        "<div class='ar'><span class='nm'>" & COALESCE ( econ_year[president], "Before 1999" ) & "<small>" & IF ( [@f] = [@l], FORMAT ( [@f], "0" ), [@f] & "–" & [@l] ) & IF ( [@l] = _last, " (latest)", "" ) & "</small></span>"
+			            & "<span class='vv'>" & ( "$" & FORMAT ( [@a], "#,0" ) ) & " → " & ( "$" & FORMAT ( [@b], "#,0" ) ) & "</span>"
+			            & "<span class='ch' style='color:" & SWITCH ( TRUE (), ROUND ( _c, 2 ) = 0, "#F0C75E", _c > 0, "#7FD6A8", "#FF8A80" ) & "'>"
+			            & SWITCH ( TRUE (), ROUND ( _c, 2 ) = 0, UNICHAR ( 9632 ), _c > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _c ), "0%" ) & "</span></div>",
+			    "", [@f], ASC )
+			VAR _say = VAR _n1 = CALCULATE ( [GDP_per_person_naira], econ_year[year] = _last )
+			    RETURN
+			        IF ( _pky = _last, "At <b>" & ( "$" & FORMAT ( _v1, "#,0" ) ) & "</b> (₦" & FORMAT ( _n1 / 1e6, "0.00" ) & "m), " & _last & " was the highest in the selected years.",
+			            "It was <b>" & ( "$" & FORMAT ( _v1, "#,0" ) ) & "</b> in " & _last & " (₦" & FORMAT ( _n1 / 1e6, "0.00" ) & "m), <b>" & FORMAT ( 1 - DIVIDE ( _v1, _pkv ), "0%" ) & " below</b> its " & _pky & " peak of " & ( "$" & FORMAT ( _pkv, "#,0" ) ) & "." )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 252)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".x{position:fixed;top:0;left:0;right:0;bottom:0;border-radius:12rem;background:#0B3D2E;color:#fff;padding:40rem 18rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;display:flex;gap:18rem;animation:fi .45s ease-out}"
+			        & "@keyframes fi{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}"
+			        & ".c1{flex:1.1}.c2{flex:1}"
+			        & ".h{font-size:8rem;letter-spacing:1.5rem;color:#E2B53E;font-weight:700;margin-top:9rem}.h:first-child{margin-top:0}"
+			        & ".x p{margin:3rem 0 0;font-size:10.5rem;line-height:1.4}.x b{color:#E2B53E}"
+			        & ".ar{display:flex;align-items:center;gap:6rem;padding:3rem 0;border-top:1px solid #1E5E49;font-size:10rem}"
+			        & ".ar.hd{border-top:0;padding:0 0 2rem;font-size:7.5rem;letter-spacing:1.1rem;color:#B9D9C9}"
+			        & ".nm{flex:1;font-weight:600}.nm small{display:block;font-weight:400;font-size:8rem;color:#B9D9C9}"
+			        & ".vv{text-align:right;font-weight:700;color:#E2B53E;white-space:nowrap}.ch{min-width:44rem;text-align:right;font-weight:700}</style>"
+			        & "<div class='x'><div class='c1'><div class='h'>WHAT IS GDP PER PERSON?</div><p>GDP divided by the number of people: a rough measure of the average Nigerian's share of what the country produces, not what any one person earns.</p>"
+			        & "<div class='h'>WHAT THE CHART SAYS · " & IF ( _first = _last, _last, _first & " TO " & _last ) & "</div><p>" & _say & "</p></div>"
+			        & "<div class='c2'><div class='ar hd'><span class='nm'>EACH PRESIDENT</span><span class='vv'>FOUND → LEFT</span><span class='ch'>CHANGE</span></div>" & _rows & "</div></div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure GdpNaira_year_tt_html =
+			-- Tooltip card for the GDP in naira chart: the hovered year, its president, the value and the change on the year before
+			VAR _y = MAX ( econ_year[year] )
+			VAR _pres = CALCULATE ( MAX ( econ_year[president] ) )
+			VAR _v = [GDP_naira]
+			VAR _p = CALCULATE ( [GDP_naira], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _y - 1 )
+			VAR _d = DIVIDE ( _v - _p, _p )
+			VAR _flat = ROUND ( _d, 3 ) = 0
+			VAR _chip = IF ( ISBLANK ( _p ), "<span class='c' style='color:#5E6E67;background:#EDF2EF'>n/a</span>",
+			    "<span class='c' style='color:" & SWITCH ( TRUE (), _flat, "#C98A00", _d > 0, "#0E8A5F", "#C93C3C" ) & ";background:" & SWITCH ( TRUE (), _flat, "#FBF1DC", _d > 0, "#E3F4EC", "#FBE7E7" ) & "'>"
+			        & SWITCH ( TRUE (), _flat, UNICHAR ( 9632 ), _d > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _d ), "0.0%" ) & "</span>" )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 140)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{color:#5E6E67;font-size:9.5rem;margin:2rem 0 6rem}.sub i{display:inline-block;width:8rem;height:8rem;border-radius:2rem;margin-right:4rem}"
+			        & ".r{display:flex;justify-content:space-between;align-items:center;gap:10rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span:first-child{color:#5E6E67}.r b{font-weight:700;font-size:12rem}"
+			        & ".c{font-weight:700;font-size:9.5rem;padding:1rem 6rem;border-radius:4rem}</style>"
+			        & "<div class='w'><div class='m'>" & _y & "</div><div class='sub'><i style='background:" & [President_colour] & "'></i>" & COALESCE ( _pres, "Before 1999 (no elected president)" ) & "</div>"
+			        & "<div class='r'><span>GDP in naira</span><b>" & ( "₦" & IF ( _v >= 1e13, FORMAT ( _v / 1e12, "#,0" ), FORMAT ( _v / 1e12, "#,0.0" ) ) & "tn" ) & "</b></div>"
+			        & "<div class='r'><span>In US dollars</span><b>" & ( "$" & FORMAT ( [GDP_usd] / 1e9, "#,0" ) & "bn" ) & "</b></div>"
+			        & "<div class='r'><span>vs " & ( _y - 1 ) & "</span>" & _chip & "</div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure GdpUsd_year_tt_html =
+			-- Tooltip card for the GDP in US dollars chart: the hovered year, its president, the value and the change on the year before
+			VAR _y = MAX ( econ_year[year] )
+			VAR _pres = CALCULATE ( MAX ( econ_year[president] ) )
+			VAR _v = [GDP_usd]
+			VAR _p = CALCULATE ( [GDP_usd], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _y - 1 )
+			VAR _d = DIVIDE ( _v - _p, _p )
+			VAR _flat = ROUND ( _d, 3 ) = 0
+			VAR _chip = IF ( ISBLANK ( _p ), "<span class='c' style='color:#5E6E67;background:#EDF2EF'>n/a</span>",
+			    "<span class='c' style='color:" & SWITCH ( TRUE (), _flat, "#C98A00", _d > 0, "#0E8A5F", "#C93C3C" ) & ";background:" & SWITCH ( TRUE (), _flat, "#FBF1DC", _d > 0, "#E3F4EC", "#FBE7E7" ) & "'>"
+			        & SWITCH ( TRUE (), _flat, UNICHAR ( 9632 ), _d > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _d ), "0.0%" ) & "</span>" )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 140)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{color:#5E6E67;font-size:9.5rem;margin:2rem 0 6rem}.sub i{display:inline-block;width:8rem;height:8rem;border-radius:2rem;margin-right:4rem}"
+			        & ".r{display:flex;justify-content:space-between;align-items:center;gap:10rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span:first-child{color:#5E6E67}.r b{font-weight:700;font-size:12rem}"
+			        & ".c{font-weight:700;font-size:9.5rem;padding:1rem 6rem;border-radius:4rem}</style>"
+			        & "<div class='w'><div class='m'>" & _y & "</div><div class='sub'><i style='background:" & [President_colour] & "'></i>" & COALESCE ( _pres, "Before 1999 (no elected president)" ) & "</div>"
+			        & "<div class='r'><span>GDP in US dollars</span><b>" & ( "$" & FORMAT ( _v / 1e9, "#,0" ) & "bn" ) & "</b></div>"
+			        & "<div class='r'><span>Naira per US dollar</span><b>" & "₦" & FORMAT ( AVERAGE ( econ_year[avg_naira_per_usd] ), "#,0" ) & "</b></div>"
+			        & "<div class='r'><span>vs " & ( _y - 1 ) & "</span>" & _chip & "</div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Growth_year_tt_html =
+			-- Tooltip card for the real GDP growth chart: the hovered year, its president, growth (red only below 0)
+			-- and its pace against the year before
+			VAR _y = MAX ( econ_year[year] )
+			VAR _pres = CALCULATE ( MAX ( econ_year[president] ) )
+			VAR _v = [Real_GDP_growth]
+			VAR _p = CALCULATE ( [Real_GDP_growth], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _y - 1 )
+			VAR _d = _v - _p
+			VAR _flat = ROUND ( _d, 3 ) = 0
+			VAR _chip = IF ( ISBLANK ( _p ), "<span class='c' style='color:#5E6E67;background:#EDF2EF'>n/a</span>",
+			    "<span class='c' style='color:" & SWITCH ( TRUE (), _flat || _d < 0, "#C98A00", "#0E8A5F" ) & ";background:" & SWITCH ( TRUE (), _flat || _d < 0, "#FBF1DC", "#E3F4EC" ) & "'>"
+			        & IF ( _flat, "same pace", FORMAT ( ABS ( _d ) * 100, "0.0" ) & " pts " & IF ( _d < 0, "slower", "faster" ) ) & "</span>" )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 140)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{color:#5E6E67;font-size:9.5rem;margin:2rem 0 6rem}.sub i{display:inline-block;width:8rem;height:8rem;border-radius:2rem;margin-right:4rem}"
+			        & ".r{display:flex;justify-content:space-between;align-items:center;gap:10rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span:first-child{color:#5E6E67}.r b{font-weight:700;font-size:12rem}"
+			        & ".c{font-weight:700;font-size:9.5rem;padding:1rem 6rem;border-radius:4rem}</style>"
+			        & "<div class='w'><div class='m'>" & _y & "</div><div class='sub'><i style='background:" & [President_colour] & "'></i>" & COALESCE ( _pres, "Before 1999 (no elected president)" ) & "</div>"
+			        & "<div class='r'><span>Real GDP growth</span><b style='color:" & IF ( _v < 0, "#C93C3C", "#14231D" ) & "'>" & FORMAT ( _v, "0.0%" ) & "</b></div>"
+			        & "<div class='r'><span>Population growth</span><b>" & FORMAT ( [Population_growth], "0.0%" ) & "</b></div>"
+			        & "<div class='r'><span>vs " & ( _y - 1 ) & "'s " & FORMAT ( _p, "0.0%" ) & "</span>" & _chip & "</div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure PerPerson_year_tt_html =
+			-- Tooltip card for the GDP per person chart: the hovered year, its president, the value and the change on the year before
+			VAR _y = MAX ( econ_year[year] )
+			VAR _pres = CALCULATE ( MAX ( econ_year[president] ) )
+			VAR _v = [GDP_per_person_usd]
+			VAR _p = CALCULATE ( [GDP_per_person_usd], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _y - 1 )
+			VAR _d = DIVIDE ( _v - _p, _p )
+			VAR _flat = ROUND ( _d, 3 ) = 0
+			VAR _chip = IF ( ISBLANK ( _p ), "<span class='c' style='color:#5E6E67;background:#EDF2EF'>n/a</span>",
+			    "<span class='c' style='color:" & SWITCH ( TRUE (), _flat, "#C98A00", _d > 0, "#0E8A5F", "#C93C3C" ) & ";background:" & SWITCH ( TRUE (), _flat, "#FBF1DC", _d > 0, "#E3F4EC", "#FBE7E7" ) & "'>"
+			        & SWITCH ( TRUE (), _flat, UNICHAR ( 9632 ), _d > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _d ), "0.0%" ) & "</span>" )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 140)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{color:#5E6E67;font-size:9.5rem;margin:2rem 0 6rem}.sub i{display:inline-block;width:8rem;height:8rem;border-radius:2rem;margin-right:4rem}"
+			        & ".r{display:flex;justify-content:space-between;align-items:center;gap:10rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span:first-child{color:#5E6E67}.r b{font-weight:700;font-size:12rem}"
+			        & ".c{font-weight:700;font-size:9.5rem;padding:1rem 6rem;border-radius:4rem}</style>"
+			        & "<div class='w'><div class='m'>" & _y & "</div><div class='sub'><i style='background:" & [President_colour] & "'></i>" & COALESCE ( _pres, "Before 1999 (no elected president)" ) & "</div>"
+			        & "<div class='r'><span>GDP per person</span><b>" & ( "$" & FORMAT ( _v, "#,0" ) ) & "</b></div>"
+			        & "<div class='r'><span>In naira</span><b>" & "₦" & FORMAT ( [GDP_per_person_naira] / 1e6, "0.00" ) & "m" & "</b></div>"
+			        & "<div class='r'><span>vs " & ( _y - 1 ) & "</span>" & _chip & "</div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure GDP_insight_html =
+			-- Key takeaway banner for Economy size: size in naira and dollars in the latest year, the dollar peak, real growth
+			VAR _hl = "<span class='hl'>"
+			VAR _e = "</span>"
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( econ_year[year] ), "@u", CALCULATE ( [GDP_usd] ) ), NOT ISBLANK ( [@u] ) )
+			VAR _y = MAXX ( _t, econ_year[year] )
+			VAR _n = CALCULATE ( [GDP_naira], econ_year[year] = _y )
+			VAR _u = MAXX ( FILTER ( _t, econ_year[year] = _y ), [@u] )
+			VAR _pk = TOPN ( 1, _t, [@u], DESC )
+			VAR _pky = MAXX ( _pk, econ_year[year] )
+			VAR _pkv = MAXX ( _pk, [@u] )
+			VAR _g = CALCULATE ( [Real_GDP_growth], econ_year[year] = _y )
+			VAR _msg =
+			    "Nigeria's economy was " & _hl & ( "₦" & IF ( _n >= 1e13, FORMAT ( _n / 1e12, "#,0" ), FORMAT ( _n / 1e12, "#,0.0" ) ) & "tn" ) & _e & " in " & _y & ", or " & _hl & ( "$" & FORMAT ( _u / 1e9, "#,0" ) & "bn" ) & _e & " in dollars"
+			        & IF ( _pky = _y, ", the biggest in the selected years. ",
+			            ", <span class='dn'>" & FORMAT ( 1 - DIVIDE ( _u, _pkv ), "0%" ) & " below</span> its " & _pky & " peak of " & ( "$" & FORMAT ( _pkv / 1e9, "#,0" ) & "bn" ) & " as the naira fell. " )
+			        & "Real growth was <span class='" & IF ( _g >= 0, "up", "dn" ) & "'>" & FORMAT ( _g, "0.0%" ) & "</span>."
+			RETURN
+			    [Banner_css]
+			        & "<div class='b'><div class='ic'><svg viewBox='0 0 16 16' style='width:16rem;height:16rem'><path d='M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z' fill='#E2B53E'/></svg></div>"
+			        & "<div class='k'>KEY TAKEAWAY<br>" & _y & "</div><div class='t'>" & _msg & "</div></div>"
+		displayFolder: 06 Titles & Labels\Insights
 
 	column Value
 		dataType: int64

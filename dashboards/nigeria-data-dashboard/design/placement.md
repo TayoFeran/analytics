@@ -104,13 +104,18 @@ at these y positions:
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicers: Years, President | 282 | 78 | 578 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Column chart: GDP in naira by year | 226 | 138 | 492 | 252 |
-| Column chart: GDP in US dollars by year | 754 | 138 | 492 | 252 |
-| Column chart: real GDP growth by year (green above 0, red below) | 226 | 426 | 492 | 164 |
-| Line chart: GDP per person by year ($) | 754 | 426 | 492 | 164 |
-| Text: GDP_narrative | 296 | 624 | 950 | 66 |
+| Slicer: Years (between) | 282 | 78 | 278 | 28 |
+| Slicer: President (dropdown) | 660 | 78 | 200 | 28 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| Columns: GDP in naira by president (TT - GDP Naira Year) | 226 | 132 | 492 | 212 |
+| HTML: President_legend_html (naira chart) | 232 | 348 | 480 | 20 |
+| Columns: GDP in dollars by president (TT - GDP Dollar Year) | 754 | 132 | 492 | 212 |
+| HTML: President_legend_html (dollar chart) | 760 | 348 | 480 | 20 |
+| Columns: real GDP growth + population line (TT - Growth Year) | 226 | 396 | 492 | 236 |
+| Line: GDP per person, US dollars (TT - Per Person Year) | 754 | 396 | 492 | 236 |
+| HTML: <chart>_explain_html per card, hidden until bookmark | 216 | 124 | 1040 | 516 |
+| Buttons: What it means / Back to chart, top right of cards | 580 | 132 | 136 | 28 |
+| HTML: GDP_insight_html key takeaway | 216 | 654 | 1040 | 50 |
 
 ## FAAC in real terms (`bg_economy_real_terms.png`)
 

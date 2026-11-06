@@ -21,7 +21,10 @@
     "ttCompareMetric",
     "ttInflationMonth",
     "ttNairaMonth",
-    "ttEconYear",
+    "ttGdpNairaYear",
+    "ttGdpUsdYear",
+    "ttGrowthYear",
+    "ttPerPersonYear",
     "ttRealTerms",
     "ttPresident"
   ],
