@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "sideBLabel",
   "position": {
-    "x": 812,
-    "y": 136,
-    "z": 1900,
+    "x": 830,
+    "y": 130,
+    "z": 2100,
     "height": 24,
-    "width": 200,
-    "tabOrder": 1900
+    "width": 170,
+    "tabOrder": 2100
   },
   "visual": {
     "visualType": "actionButton",

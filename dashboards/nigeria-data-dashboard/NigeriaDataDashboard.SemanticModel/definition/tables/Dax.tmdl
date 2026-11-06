@@ -2750,6 +2750,132 @@ table Dax
 			RETURN SWITCH ( TRUE (), ISBLANK ( _v ) || _v = 0, "–", ABS ( _v ) >= 1e12, _sym & FORMAT ( _v / 1e12, "0.00" ) & "tn", ABS ( _v ) >= 1e9, _sym & FORMAT ( _v / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _v / 1e6, "0.0" ) & "m" )
 		displayFolder: 06 Titles & Labels\Text
 
+	measure Side_A_bar_svg =
+			-- Butterfly bar for side A: grows left from the centre, coloured by the rule like side B (user, 2026-11-06)
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _a = DIVIDE ( CALCULATE ( [Side_A_total] ), SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 ) )
+			VAR _b = DIVIDE ( CALCULATE ( [Side_B_total] ), SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 ) )
+			VAR _w = DIVIDE ( _a, MAX ( _a, _b ) ) * 246
+			RETURN
+			    IF ( ISBLANK ( _a ), BLANK (),
+			        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='16'>"
+			            & "<rect x='" & FORMAT ( 250 - _w, "0.0" ) & "' y='2' width='" & FORMAT ( _w, "0.0" ) & "' height='12' rx='2' fill='" & SWITCH ( [Metric_A_colour], "#0E8A5F", "rgb(14,138,95)", "#C93C3C", "rgb(201,60,60)", "#C98A00", "rgb(201,138,0)", "rgb(107,124,115)" ) & "'/></svg>" )
+		displayFolder: 05 Visual Helpers\SVG
+		dataCategory: ImageUrl
+
+	measure Side_B_bar_svg =
+			-- Butterfly bar for side B: grows right, coloured by the rule (better green, worse red, equal amber)
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _a = DIVIDE ( CALCULATE ( [Side_A_total] ), SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 ) )
+			VAR _b = DIVIDE ( CALCULATE ( [Side_B_total] ), SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 ) )
+			VAR _w = DIVIDE ( _b, MAX ( _a, _b ) ) * 246
+			VAR _fill = SWITCH ( [Metric_B_colour], "#0E8A5F", "rgb(14,138,95)", "#C93C3C", "rgb(201,60,60)", "#C98A00", "rgb(201,138,0)", "rgb(107,124,115)" )
+			RETURN
+			    IF ( ISBLANK ( _b ), BLANK (),
+			        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='16'>"
+			            & "<rect x='0' y='2' width='" & FORMAT ( _w, "0.0" ) & "' height='12' rx='2' fill='" & _fill & "'/></svg>" )
+		displayFolder: 05 Visual Helpers\SVG
+		dataCategory: ImageUrl
+
+	measure Side_A_value_text =
+			-- Short money text for side A on the selected basis
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _a = DIVIDE ( CALCULATE ( [Side_A_total] ), SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 ) )
+			VAR _b = DIVIDE ( CALCULATE ( [Side_B_total] ), SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 ) )
+			RETURN SWITCH ( TRUE (), ISBLANK ( _a ), "–", ABS ( _a ) >= 1e12, _sym & FORMAT ( _a / 1e12, "0.00" ) & "tn", ABS ( _a ) >= 1e9, _sym & FORMAT ( _a / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _a / 1e6, "0.0" ) & "m" )
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Side_B_value_text =
+			-- Short money text for side B on the selected basis
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _a = DIVIDE ( CALCULATE ( [Side_A_total] ), SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 ) )
+			VAR _b = DIVIDE ( CALCULATE ( [Side_B_total] ), SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 ) )
+			RETURN SWITCH ( TRUE (), ISBLANK ( _b ), "–", ABS ( _b ) >= 1e12, _sym & FORMAT ( _b / 1e12, "0.00" ) & "tn", ABS ( _b ) >= 1e9, _sym & FORMAT ( _b / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _b / 1e6, "0.0" ) & "m" )
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Compare_change_short =
+			-- B vs A change chip text, e.g. "▲ 124.6%"; coloured with Metric_B_colour
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _a = DIVIDE ( CALCULATE ( [Side_A_total] ), SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 ) )
+			VAR _b = DIVIDE ( CALCULATE ( [Side_B_total] ), SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 ) )
+			VAR _d = DIVIDE ( _b - _a, _a )
+			RETURN
+			    IF ( ISBLANK ( _a ) || ISBLANK ( _b ), "–",
+			        SWITCH ( TRUE (), ROUND ( _d, 4 ) = 0, UNICHAR ( 9632 ), _d > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _d ), "0.0%" ) )
+		displayFolder: 06 Titles & Labels\Text
+
+	measure Compare_tt_html =
+			-- Compare Metric tooltip card: metric, basis and currency, definition, both sides, and the coloured verdict
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _a = DIVIDE ( CALCULATE ( [Side_A_total] ), SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 ) )
+			VAR _b = DIVIDE ( CALCULATE ( [Side_B_total] ), SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 ) )
+			VAR _col = [Metric_B_colour]
+			RETURN
+			    "<style>html{font-size:calc(100vh / 190)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{color:#5E6E67;font-size:9.5rem;margin:2rem 0 5rem}"
+			        & ".def{color:#5E6E67;font-size:9.5rem;line-height:1.4;margin:0 0 7rem}"
+			        & ".r{display:flex;justify-content:space-between;gap:12rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span{color:#5E6E67}.r b{font-weight:700}"
+			        & ".v{font-weight:700;font-size:10.5rem;margin-top:6rem}</style>"
+			        & "<div class='w'><div class='m'>" & UPPER ( SELECTEDVALUE ( Metric_param[Metric_label] ) ) & "</div>"
+			        & "<div class='sub'>" & LOWER ( SELECTEDVALUE ( Basis[Basis], "Total" ) ) & " · " & IF ( _sym = "$", "US dollars", "naira" ) & "</div>"
+			        & "<div class='def'>" & [Metric_definition] & "</div>"
+			        & "<div class='r'><span>" & [Side_A_label] & "</span><b>" & SWITCH ( TRUE (), ISBLANK ( _a ), "–", ABS ( _a ) >= 1e12, _sym & FORMAT ( _a / 1e12, "0.00" ) & "tn", ABS ( _a ) >= 1e9, _sym & FORMAT ( _a / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _a / 1e6, "0.0" ) & "m" ) & "</b></div>"
+			        & "<div class='r'><span>" & [Side_B_label] & "</span><b>" & SWITCH ( TRUE (), ISBLANK ( _b ), "–", ABS ( _b ) >= 1e12, _sym & FORMAT ( _b / 1e12, "0.00" ) & "tn", ABS ( _b ) >= 1e9, _sym & FORMAT ( _b / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _b / 1e6, "0.0" ) & "m" ) & "</b></div>"
+			        & "<div class='v' style='color:" & _col & "'>" & [Compare_tooltip_text] & "</div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Comparison_insight_html =
+			-- "In short" banner for Compare: B's net and change vs A, deductions and their share of gross on each side
+			VAR _sym = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
+			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
+			VAR _by = SELECTEDVALUE ( Compare_By[compare_by], "Administration" )
+			VAR _na = [Side_A_label]
+			VAR _nb = [Side_B_label]
+			VAR _netA = DIVIDE ( CALCULATE ( [Side_A_total], Metric_param[Metric_key] = "Net" ), SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 ) )
+			VAR _netB = DIVIDE ( CALCULATE ( [Side_B_total], Metric_param[Metric_key] = "Net" ), SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 ) )
+			VAR _dedA = DIVIDE ( CALCULATE ( [Side_A_total], Metric_param[Metric_key] = "Deductions" ), SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 ) )
+			VAR _dedB = DIVIDE ( CALCULATE ( [Side_B_total], Metric_param[Metric_key] = "Deductions" ), SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 ) )
+			VAR _shA = DIVIDE ( CALCULATE ( [Side_A_total], Metric_param[Metric_key] = "Deductions" ), CALCULATE ( [Side_A_total], Metric_param[Metric_key] = "Gross" ) )
+			VAR _shB = DIVIDE ( CALCULATE ( [Side_B_total], Metric_param[Metric_key] = "Deductions" ), CALCULATE ( [Side_B_total], Metric_param[Metric_key] = "Gross" ) )
+			VAR _cn = DIVIDE ( _netB - _netA, _netA )
+			VAR _cd = DIVIDE ( _dedB - _dedA, _dedA )
+			VAR _phrase = SWITCH ( _basis, "Monthly average", "a month on average", "Per state per month", "per state per month", "in total" )
+			VAR _up = "<span class='up'>"
+			VAR _dn = "<span class='dn'>"
+			VAR _hl = "<span class='hl'>"
+			VAR _e = "</span>"
+			VAR _netSpan = IF ( _cn >= 0, _up & UNICHAR ( 9650 ), _dn & UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _cn ), "0.0%" ) & _e
+			VAR _dedSpan = IF ( _cd <= 0, _up & UNICHAR ( 9660 ), _dn & UNICHAR ( 9650 ) ) & " " & FORMAT ( ABS ( _cd ), "0.0%" ) & _e
+			-- "but" when deductions rose while their share of gross fell, otherwise "and"
+			VAR _join = IF ( ( _cd > 0 ) = ( _shB < _shA ), "but", "and" )
+			VAR _subject = IF ( _by = "Administration", "Under " & _nb & ", states received", _nb & " received" )
+			VAR _msg =
+			    IF ( ISBLANK ( _netA ) || ISBLANK ( _netB ) || _na = _nb,
+			        IF ( _na = _nb, "Pick two different " & LOWER ( _by ) & "s to compare.", "No data for one side in the selected dates." ),
+			        _subject & " " & _hl & SWITCH ( TRUE (), ISBLANK ( _netB ), "–", ABS ( _netB ) >= 1e12, _sym & FORMAT ( _netB / 1e12, "0.00" ) & "tn", ABS ( _netB ) >= 1e9, _sym & FORMAT ( _netB / 1e9, "0.0" ) & "bn", _sym & FORMAT ( _netB / 1e6, "0.0" ) & "m" ) & _e & " net " & _phrase & ", " & _netSpan & " vs " & _na & ". "
+			            & "Deductions were " & _dedSpan & ", " & _join & " took " & IF ( _shB < _shA, "a smaller", "a bigger" ) & " share of gross ("
+			            & IF ( _shB < _shA, _up, _dn ) & FORMAT ( _shB, "0.0%" ) & _e & " vs " & FORMAT ( _shA, "0.0%" ) & ")."
+			            & "<span class='nom'>" & IF ( _sym = "$", "US dollars at each month's rate.", "Nominal naira, not adjusted for inflation." )
+			            & " See FAAC in real terms for price-adjusted figures.</span>" )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 68)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".b{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14rem;padding:0 18rem;border-radius:12rem;box-sizing:border-box;"
+			        & "background:linear-gradient(90deg,#0B3D2E 0%,#145A43 70%,#1D6B51 100%);color:#fff;font-family:Segoe UI,sans-serif}"
+			        & ".ic{width:28rem;height:28rem;border-radius:8rem;background:rgba(226,181,62,.18);display:flex;align-items:center;justify-content:center;flex:none}"
+			        & ".k{font-size:8.5rem;letter-spacing:2rem;color:#E2B53E;font-weight:600;white-space:nowrap}"
+			        & ".t{font-size:12rem;line-height:1.35;flex:1}.up{color:#6EE0AE;font-weight:700}.dn{color:#FF9A9A;font-weight:700}.hl{color:#E2B53E;font-weight:700}"
+			        & ".nom{display:block;font-size:9.5rem;opacity:.75;margin-top:3rem}"
+			        & ".lg{flex:none;font-size:9.5rem;line-height:1.6;opacity:.9;padding-left:14rem;border-left:1px solid rgba(255,255,255,.2)}"
+			        & ".lg i{display:inline-block;width:8rem;height:8rem;border-radius:50%;margin:0 4rem 0 8rem}.lg i:first-child{margin-left:0}</style>"
+			        & "<div class='b'><div class='ic'><svg viewBox='0 0 16 16' style='width:16rem;height:16rem'><path d='M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z' fill='#E2B53E'/></svg></div>"
+			        & "<div class='k'>IN SHORT</div><div class='t'>" & _msg & "</div>"
+			        & "<div class='lg'><i style='background:#3FD08F'></i>Better <i style='background:#FF8A8A'></i>Worse <i style='background:#F2C14E'></i>Equal<br>Each side vs the other · deductions: higher is worse</div></div>"
+		displayFolder: 06 Titles & Labels\Insights
+
 	column Value
 		dataType: int64
 		isHidden

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "sideBMeta",
   "position": {
-    "x": 1012,
-    "y": 136,
-    "z": 2000,
-    "height": 24,
-    "width": 234,
-    "tabOrder": 2000
+    "x": 1000,
+    "y": 134,
+    "z": 2200,
+    "height": 20,
+    "width": 236,
+    "tabOrder": 2200
   },
   "visual": {
     "visualType": "actionButton",

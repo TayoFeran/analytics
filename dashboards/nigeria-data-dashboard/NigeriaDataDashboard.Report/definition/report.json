@@ -113,11 +113,6 @@
           "type": "Image"
         },
         {
-          "name": "tt_faac_compare_metric.png",
-          "path": "tt_faac_compare_metric.png",
-          "type": "Image"
-        },
-        {
           "name": "nigeria_states.json",
           "path": "nigeria_states.json",
           "type": "ShapeMap"

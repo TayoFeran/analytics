@@ -3,34 +3,18 @@
   "name": "ttCompareMetric",
   "displayName": "TT - Compare Metric",
   "displayOption": "FitToPage",
-  "height": 200,
-  "width": 360,
+  "height": 190,
+  "width": 300,
   "objects": {
     "background": [
       {
         "properties": {
-          "image": {
-            "image": {
-              "name": {
+          "color": {
+            "solid": {
+              "color": {
                 "expr": {
                   "Literal": {
-                    "Value": "'tt_faac_compare_metric.png'"
-                  }
-                }
-              },
-              "url": {
-                "expr": {
-                  "ResourcePackageItem": {
-                    "PackageName": "RegisteredResources",
-                    "PackageType": 1,
-                    "ItemName": "tt_faac_compare_metric.png"
-                  }
-                }
-              },
-              "scaling": {
-                "expr": {
-                  "Literal": {
-                    "Value": "'Fit'"
+                    "Value": "'#FFFFFF'"
                   }
                 }
               }
@@ -39,7 +23,31 @@
           "transparency": {
             "expr": {
               "Literal": {
-                "Value": "0D"
+                "Value": "100D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#FFFFFF'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "100D"
               }
             }
           }

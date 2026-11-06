@@ -3,11 +3,11 @@
   "name": "compareTable",
   "position": {
     "x": 226,
-    "y": 168,
-    "z": 2100,
-    "height": 438,
+    "y": 164,
+    "z": 2300,
+    "height": 450,
     "width": 1020,
-    "tabOrder": 2100
+    "tabOrder": 2300
   },
   "visual": {
     "visualType": "tableEx",
@@ -23,12 +23,27 @@
                       "Entity": "Dax"
                     }
                   },
-                  "Property": "Side_A_value"
+                  "Property": "Side_A_value_text"
                 }
               },
-              "queryRef": "Dax.Side_A_value",
-              "nativeQueryRef": "Side_A_value",
+              "queryRef": "Dax.Side_A_value_text",
+              "nativeQueryRef": "Side_A_value_text",
               "displayName": "Side A"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dax"
+                    }
+                  },
+                  "Property": "Side_A_bar_svg"
+                }
+              },
+              "queryRef": "Dax.Side_A_bar_svg",
+              "nativeQueryRef": "Side_A_bar_svg",
+              "displayName": " "
             },
             {
               "field": {
@@ -53,11 +68,41 @@
                       "Entity": "Dax"
                     }
                   },
-                  "Property": "Side_B_value"
+                  "Property": "Compare_change_short"
                 }
               },
-              "queryRef": "Dax.Side_B_value",
-              "nativeQueryRef": "Side_B_value",
+              "queryRef": "Dax.Compare_change_short",
+              "nativeQueryRef": "Compare_change_short",
+              "displayName": "B vs A"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dax"
+                    }
+                  },
+                  "Property": "Side_B_bar_svg"
+                }
+              },
+              "queryRef": "Dax.Side_B_bar_svg",
+              "nativeQueryRef": "Side_B_bar_svg",
+              "displayName": "  "
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dax"
+                    }
+                  },
+                  "Property": "Side_B_value_text"
+                }
+              },
+              "queryRef": "Dax.Side_B_value_text",
+              "nativeQueryRef": "Side_B_value_text",
               "displayName": "Side B"
             }
           ]
@@ -114,7 +159,7 @@
             "rowPadding": {
               "expr": {
                 "Literal": {
-                  "Value": "4D"
+                  "Value": "3D"
                 }
               }
             },
@@ -122,6 +167,20 @@
               "expr": {
                 "Literal": {
                   "Value": "9D"
+                }
+              }
+            },
+            "imageHeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "15D"
+                }
+              }
+            },
+            "imageWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "250D"
                 }
               }
             }
@@ -242,7 +301,7 @@
                 }
               }
             ],
-            "metadata": "Dax.Side_A_value"
+            "metadata": "Dax.Side_A_value_text"
           }
         },
         {
@@ -272,7 +331,37 @@
                 }
               }
             ],
-            "metadata": "Dax.Side_B_value"
+            "metadata": "Dax.Side_B_value_text"
+          }
+        },
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Dax"
+                        }
+                      },
+                      "Property": "Metric_B_colour"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ],
+            "metadata": "Dax.Compare_change_short"
           }
         }
       ],
@@ -295,13 +384,13 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "420D"
+                  "Value": "84D"
                 }
               }
             }
           },
           "selector": {
-            "metadata": "Dax.Side_A_value"
+            "metadata": "Dax.Side_A_value_text"
           }
         },
         {
@@ -309,7 +398,21 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "160D"
+                  "Value": "254D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dax.Side_A_bar_svg"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "196D"
                 }
               }
             }
@@ -323,13 +426,41 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "420D"
+                  "Value": "76D"
                 }
               }
             }
           },
           "selector": {
-            "metadata": "Dax.Side_B_value"
+            "metadata": "Dax.Compare_change_short"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "254D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dax.Side_B_bar_svg"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "84D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dax.Side_B_value_text"
           }
         }
       ],
@@ -345,7 +476,7 @@
             }
           },
           "selector": {
-            "metadata": "Dax.Side_A_value"
+            "metadata": "Dax.Side_A_value_text"
           }
         },
         {
@@ -367,13 +498,27 @@
             "alignment": {
               "expr": {
                 "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dax.Compare_change_short"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
                   "Value": "'Left'"
                 }
               }
             }
           },
           "selector": {
-            "metadata": "Dax.Side_B_value"
+            "metadata": "Dax.Side_B_value_text"
           }
         }
       ]

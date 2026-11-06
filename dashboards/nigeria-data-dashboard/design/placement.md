@@ -71,26 +71,18 @@ at these y positions:
 | Line chart: deduction lines over time (TT - Deductions Month) | 226 | 134 | 604 | 242 |
 | Bar chart: external debt by state, coloured by zone | 866 | 134 | 380 | 216 |
 | HTML: zone legend | 872 | 356 | 368 | 20 |
-| Matrix: state x deduction line, green heat (TT - Metric Detail) | 226 | 408 | 1020 | 222 |
+| Matrix: state x line, green heat (TT - Metric Detail) | 226 | 408 | 1020 | 222 |
 | HTML: insight banner | 216 | 654 | 1040 | 50 |
 
 ## Compare (`bg_faac_compare.png`)
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicer: Compare by (tiles) | 312 | 78 | 308 | 28 |
-| Slicer: Side A member (dropdown, Compare_A) | 668 | 78 | 132 | 28 |
-| Slicer: Side B member (dropdown, Compare_B) | 834 | 78 | 132 | 28 |
-| Slicer: Basis (calculation group, dropdown) | 1040 | 78 | 132 | 28 |
-| Slicer: Currency ₦/$ (tiles) | 1186 | 78 | 62 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Text: Side A name and meta (right-aligned) | 226 | 136 | 434 | 24 |
-| Text: basis label, centre | 660 | 136 | 152 | 24 |
-| Text: Side B name and meta | 812 | 136 | 434 | 24 |
-| Matrix or table: Side A values + bars (Compare Side = A), right-aligned | 226 | 168 | 434 | 438 |
-| Table: metric names, centre column | 660 | 168 | 152 | 438 |
-| Matrix or table: Side B values + bars (Compare Side = B) | 812 | 168 | 434 | 438 |
-| Text: Comparison_narrative | 296 | 638 | 694 | 52 |
+| Slicers: Compare by, A, B, Basis, Currency, Dates (all dropdowns) | 300 | 78 | 944 | 28 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| Text: side A name and meta, basis label, side B name and meta | 226 | 130 | 1020 | 26 |
+| Table: A value, A bar, metric, change, B bar, B value (TT - Compare Metric) | 226 | 164 | 1020 | 450 |
+| HTML: insight banner with legend | 216 | 636 | 1040 | 68 |
 
 ## Overview (`bg_economy_overview.png`)
 
