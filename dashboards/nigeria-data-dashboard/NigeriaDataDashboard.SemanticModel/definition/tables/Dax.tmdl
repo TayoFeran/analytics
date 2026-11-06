@@ -3492,6 +3492,236 @@ table Dax
 			        & "<div class='k'>KEY TAKEAWAY<br>" & _y & "</div><div class='t'>" & _msg & "</div></div>"
 		displayFolder: 06 Titles & Labels\Insights
 
+	measure Net_other_prices =
+			-- The basis NOT picked on the Prices switch: drawn as the dashed line so the gap between the two shows
+			IF ( SELECTEDVALUE ( Prices[Prices], "As paid" ) = "Today's prices", [Net_paid], [Net_today_prices] )
+		formatString: ₦#,0
+		displayFolder: 01 Base\Real terms
+
+	measure Month_president_colour =
+			-- Column colour per month: the president in office that month (same colours as the other economy charts)
+			SWITCH ( CALCULATE ( MAX ( econ_month[president] ) ), "Obasanjo", "#7F8C86", "Yar'Adua", "#B9D9C9", "Jonathan", "#8FC9AE", "Buhari", "#4E9C78", "Tinubu", "#0E6B45", "#D5DDD9" )
+		displayFolder: 04 Comparison\Colours
+
+	measure Real_legend_html =
+			-- Legend for the real-terms chart: presidents with FAAC months in the selection, plus the dashed other-basis line
+			VAR _p = FILTER ( ADDCOLUMNS ( VALUES ( dim_administration[president] ), "@f", CALCULATE ( MIN ( faac[disbursement_date] ) ) ), NOT ISBLANK ( [@f] ) && NOT ISBLANK ( dim_administration[president] ) )
+			VAR _other = IF ( SELECTEDVALUE ( Prices[Prices], "As paid" ) = "Today's prices", "As paid", "In " & FORMAT ( [Price_base_month], "mmm yyyy" ) & " prices" )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 20)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".l{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14rem;font-family:Segoe UI,sans-serif;font-size:9.5rem;color:#5E6E67;white-space:nowrap}"
+			        & ".l i{display:inline-block;width:9rem;height:9rem;border-radius:2rem;margin-right:4rem;vertical-align:-1rem}"
+			        & ".l u{display:inline-block;width:18rem;border-top:2rem dashed #E2B53E;margin-right:4rem;vertical-align:3rem}</style><div class='l'>"
+			        & CONCATENATEX ( _p, "<span><i style='background:" & SWITCH ( dim_administration[president], "Obasanjo", "#7F8C86", "Yar'Adua", "#B9D9C9", "Jonathan", "#8FC9AE", "Buhari", "#4E9C78", "Tinubu", "#0E6B45", "#D5DDD9" ) & "'></i>" & dim_administration[president] & "</span>", "", [@f], ASC )
+			        & "<span><u></u>" & _other & " (dashed)</span></div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure RealFirst_flipcard =
+			-- Flip card: first month in the selection. Front = value and context; back = what it means
+			VAR _f = [Real_first_month]
+			VAR _l = [Real_latest_month]
+			VAR _base = [Price_base_month]
+			VAR _bl = FORMAT ( _base, "mmm yyyy" )
+			VAR _pf = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _f, 0 ) )
+			VAR _pl = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _l, 0 ) )
+			VAR _tf = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _f, 0 ) )
+			VAR _tl = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _l, 0 ) )
+
+			RETURN
+			    [Flip_css]
+			        & "<div class='fc'><div class='fi'><div class='face front'><div class='lbl'>" & "FIRST MONTH · " & UPPER ( FORMAT ( _f, "mmm yyyy" ) ) & "</div>"
+			        & "<div class='val'>" & ( "₦" & IF ( ABS ( _pf ) >= 1e12, FORMAT ( _pf / 1e12, "#,0.00" ) & "tn", FORMAT ( _pf / 1e9, "#,0.0" ) & "bn" ) ) & "<small>" & "as paid" & "</small></div>"
+			        & "<div class='chg'>" & "<span class='bd' style='color:" & "#0B3D2E" & ";background:" & SWITCH ( "#0B3D2E", "#0E8A5F", "#E3F4EC", "#C93C3C", "#FBE7E7", "#0B3D2E", "#EDF2EF", "#FBF1DC" ) & "'>" & ( "₦" & IF ( ABS ( _tf ) >= 1e12, FORMAT ( _tf / 1e12, "#,0.00" ) & "tn", FORMAT ( _tf / 1e9, "#,0.0" ) & "bn" ) ) & "</span>" & " in " & _bl & " prices" & "</div>"
+			        & "<div class='asof'>" & "Net received, all 36 states" & "</div><div class='hint'>HOVER &#8635;</div></div>"
+			        & "<div class='face back'><div class='bt'>WHAT IT MEANS</div><p>" & "In " & FORMAT ( _f, "mmm yyyy" ) & " states received " & ( "₦" & IF ( ABS ( _pf ) >= 1e12, FORMAT ( _pf / 1e12, "#,0.00" ) & "tn", FORMAT ( _pf / 1e9, "#,0.0" ) & "bn" ) ) & ". Prices have risen " & FORMAT ( DIVIDE ( _tf, _pf ), "0.00" ) & "× since, so that money is worth " & ( "₦" & IF ( ABS ( _tf ) >= 1e12, FORMAT ( _tf / 1e12, "#,0.00" ) & "tn", FORMAT ( _tf / 1e9, "#,0.0" ) & "bn" ) ) & " in " & _bl & " prices." & "</p></div></div></div>"
+		displayFolder: 05 Visual Helpers\Flip Cards
+
+	measure RealLatest_flipcard =
+			-- Flip card: latest month in the selection. Front = value and context; back = what it means
+			VAR _f = [Real_first_month]
+			VAR _l = [Real_latest_month]
+			VAR _base = [Price_base_month]
+			VAR _bl = FORMAT ( _base, "mmm yyyy" )
+			VAR _pf = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _f, 0 ) )
+			VAR _pl = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _l, 0 ) )
+			VAR _tf = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _f, 0 ) )
+			VAR _tl = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _l, 0 ) )
+			VAR _pp = CALCULATE ( [Net_paid], REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), calendar_table[month_date] = EOMONTH ( _l, -1 ) )
+			VAR _c = DIVIDE ( _pl - _pp, _pp )
+			VAR _col = SWITCH ( TRUE (), ISBLANK ( _pp ) || ROUND ( _c, 3 ) = 0, "#C98A00", _c > 0, "#0E8A5F", "#C93C3C" )
+			VAR _isbase = EOMONTH ( _l, 0 ) = EOMONTH ( _base, 0 )
+			RETURN
+			    [Flip_css]
+			        & "<div class='fc'><div class='fi'><div class='face front'><div class='lbl'>" & "LATEST MONTH · " & UPPER ( FORMAT ( _l, "mmm yyyy" ) ) & "</div>"
+			        & "<div class='val'>" & ( "₦" & IF ( ABS ( _pl ) >= 1e12, FORMAT ( _pl / 1e12, "#,0.00" ) & "tn", FORMAT ( _pl / 1e9, "#,0.0" ) & "bn" ) ) & "<small>" & "as paid" & "</small></div>"
+			        & "<div class='chg'>" & IF ( ISBLANK ( _pp ), "", "<span class='bd' style='color:" & _col & ";background:" & SWITCH ( _col, "#0E8A5F", "#E3F4EC", "#C93C3C", "#FBE7E7", "#0B3D2E", "#EDF2EF", "#FBF1DC" ) & "'>" & IF ( _c >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _c ), "0.0%" ) & "</span>" & "vs " & FORMAT ( EDATE ( _l, -1 ), "mmm yyyy" ) ) & "</div>"
+			        & "<div class='asof'>" & IF ( _isbase, "This is the price base month", ( "₦" & IF ( ABS ( _tl ) >= 1e12, FORMAT ( _tl / 1e12, "#,0.00" ) & "tn", FORMAT ( _tl / 1e9, "#,0.0" ) & "bn" ) ) & " in " & _bl & " prices" ) & "</div><div class='hint'>HOVER &#8635;</div></div>"
+			        & "<div class='face back'><div class='bt'>WHAT IT MEANS</div><p>" & IF ( _isbase, "This is the latest month, so today's prices and the amount paid are the same.", ( "₦" & IF ( ABS ( _pl ) >= 1e12, FORMAT ( _pl / 1e12, "#,0.00" ) & "tn", FORMAT ( _pl / 1e9, "#,0.0" ) & "bn" ) ) & " paid in " & FORMAT ( _l, "mmm yyyy" ) & " is worth " & ( "₦" & IF ( ABS ( _tl ) >= 1e12, FORMAT ( _tl / 1e12, "#,0.00" ) & "tn", FORMAT ( _tl / 1e9, "#,0.0" ) & "bn" ) ) & " in " & _bl & " prices." ) & "</p></div></div></div>"
+		displayFolder: 05 Visual Helpers\Flip Cards
+
+	measure ChangePaid_flipcard =
+			-- Flip card: change as paid. Front = value and context; back = what it means
+			VAR _f = [Real_first_month]
+			VAR _l = [Real_latest_month]
+			VAR _base = [Price_base_month]
+			VAR _bl = FORMAT ( _base, "mmm yyyy" )
+			VAR _pf = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _f, 0 ) )
+			VAR _pl = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _l, 0 ) )
+			VAR _tf = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _f, 0 ) )
+			VAR _tl = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _l, 0 ) )
+			VAR _c = DIVIDE ( _pl, _pf ) - 1
+			VAR _col = SWITCH ( TRUE (), ROUND ( _c, 3 ) = 0, "#C98A00", _c > 0, "#0E8A5F", "#C93C3C" )
+			RETURN
+			    [Flip_css]
+			        & "<div class='fc'><div class='fi'><div class='face front'><div class='lbl'>" & "CHANGE AS PAID" & "</div>"
+			        & "<div class='val'>" & IF ( _c > 0, "+", "" ) & FORMAT ( _c, "0%" ) & "<small>" & FORMAT ( DIVIDE ( _pl, _pf ), "0.0" ) & "×" & "</small></div>"
+			        & "<div class='chg'>" & "<span class='bd' style='color:" & _col & ";background:" & SWITCH ( _col, "#0E8A5F", "#E3F4EC", "#C93C3C", "#FBE7E7", "#0B3D2E", "#EDF2EF", "#FBF1DC" ) & "'>" & IF ( _c >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " in naira" & "</span>" & FORMAT ( _f, "mmm yyyy" ) & " to " & FORMAT ( _l, "mmm yyyy" ) & "</div>"
+			        & "<div class='asof'>" & "Not adjusted for prices" & "</div><div class='hint'>HOVER &#8635;</div></div>"
+			        & "<div class='face back'><div class='bt'>WHAT IT MEANS</div><p>" & "Counting naira as paid, monthly FAAC money is " & FORMAT ( DIVIDE ( _pl, _pf ), "0.0" ) & "× what it was in " & FORMAT ( _f, "mmm yyyy" ) & ". But prices rose too, so this overstates what states can buy." & "</p></div></div></div>"
+		displayFolder: 05 Visual Helpers\Flip Cards
+
+	measure ChangeReal_flipcard =
+			-- Flip card: change in real terms. Front = value and context; back = what it means
+			VAR _f = [Real_first_month]
+			VAR _l = [Real_latest_month]
+			VAR _base = [Price_base_month]
+			VAR _bl = FORMAT ( _base, "mmm yyyy" )
+			VAR _pf = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _f, 0 ) )
+			VAR _pl = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _l, 0 ) )
+			VAR _tf = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _f, 0 ) )
+			VAR _tl = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _l, 0 ) )
+			VAR _c = DIVIDE ( _tl, _tf ) - 1
+			VAR _col = SWITCH ( TRUE (), ISBLANK ( _tl ) || ROUND ( _c, 3 ) = 0, "#C98A00", _c > 0, "#0E8A5F", "#C93C3C" )
+			RETURN
+			    [Flip_css]
+			        & "<div class='fc'><div class='fi'><div class='face front'><div class='lbl'>" & "CHANGE IN REAL TERMS" & "</div>"
+			        & "<div class='val'>" & IF ( ISBLANK ( _tl ), "n/a", IF ( _c > 0, "+", "" ) & FORMAT ( _c, "0%" ) ) & "<small>" & "after prices" & "</small></div>"
+			        & "<div class='chg'>" & "<span class='bd' style='color:" & _col & ";background:" & SWITCH ( _col, "#0E8A5F", "#E3F4EC", "#C93C3C", "#FBE7E7", "#0B3D2E", "#EDF2EF", "#FBF1DC" ) & "'>" & IF ( _c >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " buying power" & "</span>" & FORMAT ( _f, "mmm yyyy" ) & " to " & FORMAT ( _l, "mmm yyyy" ) & "</div>"
+			        & "<div class='asof'>" & "In " & _bl & " prices" & "</div><div class='hint'>HOVER &#8635;</div></div>"
+			        & "<div class='face back'><div class='bt'>WHAT IT MEANS</div><p>" & IF ( ISBLANK ( _tl ), "Price data for " & FORMAT ( _l, "mmm yyyy" ) & " isn't out yet.", "After allowing for price rises, states can buy " & IF ( ROUND ( _c, 2 ) = 0, "about the same", FORMAT ( ABS ( _c ), "0%" ) & IF ( _c > 0, " more", " less" ) ) & " with their monthly FAAC money than in " & FORMAT ( _f, "mmm yyyy" ) & "." ) & "</p></div></div></div>"
+		displayFolder: 05 Visual Helpers\Flip Cards
+
+	measure Real_explain_html =
+			-- "What it means" side of the real-terms chart (shown by a bookmark): what "real terms" means, a worked
+			-- example from the data, what the chart says, and each president's monthly net found and left in today's prices
+			VAR _f = [Real_first_month]
+			VAR _l = [Real_latest_month]
+			VAR _base = [Price_base_month]
+			VAR _bl = FORMAT ( _base, "mmm yyyy" )
+			VAR _pf = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _f, 0 ) )
+			VAR _pl = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _l, 0 ) )
+			VAR _tf = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _f, 0 ) )
+			VAR _tl = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _l, 0 ) )
+			VAR _mult = DIVIDE ( _tf, _pf )
+			VAR _c = DIVIDE ( _tl, _tf ) - 1
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( calendar_table[month_date] ), "@r", [Net_today_prices] ), NOT ISBLANK ( [@r] ) )
+			VAR _pk = TOPN ( 1, _t, [@r], DESC )
+			VAR _lastm = MAXX ( _t, calendar_table[month_date] )
+			-- Each president: first and last FAAC month in the selection; found = the month before their first (what they inherited)
+			VAR _ad0 = FILTER ( ADDCOLUMNS ( VALUES ( dim_administration[president] ),
+			    "@f", CALCULATE ( MIN ( faac[disbursement_date] ) ),
+			    "@l", CALCULATE ( MAX ( faac[disbursement_date] ) ) ), NOT ISBLANK ( [@f] ) && NOT ISBLANK ( dim_administration[president] ) )
+			VAR _ad = ADDCOLUMNS ( _ad0,
+			    "@a", VAR _f0 = [@f] RETURN COALESCE (
+			        CALCULATE ( [Net_today_prices], REMOVEFILTERS ( econ_month ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), calendar_table[month_date] = EOMONTH ( _f0, -1 ) ),
+			        CALCULATE ( [Net_today_prices], REMOVEFILTERS ( econ_month ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), calendar_table[month_date] = EOMONTH ( _f0, 0 ) ) ),
+			    "@b", VAR _l0 = [@l] RETURN CALCULATE ( [Net_today_prices], REMOVEFILTERS ( econ_month ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), calendar_table[month_date] = EOMONTH ( _l0, 0 ) ) )
+			VAR _rows = CONCATENATEX ( _ad,
+			    VAR _d = DIVIDE ( [@b] - [@a], [@a] )
+			    RETURN
+			        "<div class='ar'><span class='nm'>" & dim_administration[president] & "<small>" & FORMAT ( [@f], "mmm yyyy" ) & " – " & FORMAT ( [@l], "mmm yyyy" ) & IF ( [@l] = _l, " (latest)", "" ) & "</small></span>"
+			            & "<span class='vv'>" & ( "₦" & IF ( ABS ( [@a] ) >= 1e12, FORMAT ( [@a] / 1e12, "#,0.00" ) & "tn", FORMAT ( [@a] / 1e9, "#,0.0" ) & "bn" ) ) & " → " & ( "₦" & IF ( ABS ( [@b] ) >= 1e12, FORMAT ( [@b] / 1e12, "#,0.00" ) & "tn", FORMAT ( [@b] / 1e9, "#,0.0" ) & "bn" ) ) & "</span>"
+			            & "<span class='ch' style='color:" & SWITCH ( TRUE (), ROUND ( _d, 2 ) = 0, "#F0C75E", _d > 0, "#7FD6A8", "#FF8A80" ) & "'>"
+			            & SWITCH ( TRUE (), ROUND ( _d, 2 ) = 0, UNICHAR ( 9632 ), _d > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _d ), "0%" ) & "</span></div>",
+			    "", [@f], ASC )
+			VAR _say =
+			    IF ( _c < 0,
+			        "In naira, states got <b>" & FORMAT ( DIVIDE ( _pl, _pf ), "0.0" ) & "× more</b> in " & FORMAT ( _l, "mmm yyyy" ) & " than in " & FORMAT ( _f, "mmm yyyy" ) & ". In real terms it was <b>" & FORMAT ( ABS ( _c ), "0%" ) & " less</b>: prices rose faster than FAAC money.",
+			        "States got <b>" & FORMAT ( _c, "0%" ) & " more</b> in real terms in " & FORMAT ( _l, "mmm yyyy" ) & " than in " & FORMAT ( _f, "mmm yyyy" ) & "." )
+			        & " The real peak was <b>" & ( "₦" & IF ( ABS ( MAXX ( _pk, [@r] ) ) >= 1e12, FORMAT ( MAXX ( _pk, [@r] ) / 1e12, "#,0.00" ) & "tn", FORMAT ( MAXX ( _pk, [@r] ) / 1e9, "#,0.0" ) & "bn" ) ) & "</b> in " & FORMAT ( MAXX ( _pk, calendar_table[month_date] ), "mmm yyyy" ) & "."
+			RETURN
+			    "<style>html{font-size:calc(100vh / 408)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".x{position:fixed;top:0;left:0;right:0;bottom:0;border-radius:12rem;background:#0B3D2E;color:#fff;padding:44rem 26rem 18rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;display:flex;gap:30rem;animation:fi .45s ease-out}"
+			        & "@keyframes fi{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}"
+			        & ".c1,.c2{flex:1}"
+			        & ".h{font-size:9.5rem;letter-spacing:1.8rem;color:#E2B53E;font-weight:700;margin-top:16rem}.h:first-child{margin-top:0}"
+			        & ".x p{margin:5rem 0 0;font-size:13rem;line-height:1.45}.x b{color:#E2B53E}"
+			        & ".k{display:grid;grid-template-columns:1fr 1fr;gap:8rem;margin-top:8rem}.t{background:#14523F;border-radius:10rem;padding:9rem 12rem;font-size:9.5rem;color:#B9D9C9}"
+			        & ".t b{display:block;font-size:19rem;color:#E2B53E;margin-top:2rem}"
+			        & ".ar{display:flex;align-items:center;gap:10rem;padding:5rem 0;border-top:1px solid #1E5E49;font-size:12.5rem}"
+			        & ".ar.hd{border-top:0;padding:8rem 0 2rem;font-size:8.5rem;letter-spacing:1.2rem;color:#B9D9C9}"
+			        & ".nm{flex:1;font-weight:600}.nm small{display:block;font-weight:400;font-size:9.5rem;color:#B9D9C9}"
+			        & ".vv{text-align:right;font-weight:700;color:#E2B53E;white-space:nowrap}.ch{min-width:64rem;text-align:right;font-weight:700}</style>"
+			        & "<div class='x'><div class='c1'><div class='h'>WHAT DOES &quot;IN REAL TERMS&quot; MEAN?</div>"
+			        & "<p>Prices in Nigeria rise every year, so ₦100 buys less today than it did a few years ago. To compare FAAC money fairly, each month's amount is restated in <b>" & _bl & " prices</b> using the consumer price index. That's &quot;today's prices&quot;. &quot;As paid&quot; is the naira actually received.</p>"
+			        & "<div class='h'>A WORKED EXAMPLE FROM THIS DATA</div><div class='k'>"
+			        & "<div class='t'>" & FORMAT ( _f, "mmm yyyy" ) & ", as paid<b>" & ( "₦" & IF ( ABS ( _pf ) >= 1e12, FORMAT ( _pf / 1e12, "#,0.00" ) & "tn", FORMAT ( _pf / 1e9, "#,0.0" ) & "bn" ) ) & "</b></div>"
+			        & "<div class='t'>Prices since then<b>× " & FORMAT ( _mult, "0.00" ) & "</b></div>"
+			        & "<div class='t'>In " & _bl & " prices<b>" & ( "₦" & IF ( ABS ( _tf ) >= 1e12, FORMAT ( _tf / 1e12, "#,0.00" ) & "tn", FORMAT ( _tf / 1e9, "#,0.0" ) & "bn" ) ) & "</b></div>"
+			        & "<div class='t'>" & FORMAT ( _l, "mmm yyyy" ) & ", as paid<b>" & ( "₦" & IF ( ABS ( _pl ) >= 1e12, FORMAT ( _pl / 1e12, "#,0.00" ) & "tn", FORMAT ( _pl / 1e9, "#,0.0" ) & "bn" ) ) & "</b></div></div></div>"
+			        & "<div class='c2'><div class='h'>WHAT THE CHART SAYS · " & UPPER ( FORMAT ( _f, "mmm yyyy" ) & " TO " & FORMAT ( _l, "mmm yyyy" ) ) & "</div><p>" & _say & "</p>"
+			        & "<div class='ar hd'><span class='nm'>EACH PRESIDENT · MONTHLY NET</span><span class='vv'>FOUND → LEFT, " & UPPER ( _bl ) & " PRICES</span><span class='ch'>CHANGE</span></div>"
+			        & _rows & "</div></div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure Real_month_tt_html =
+			-- Tooltip card for the real-terms chart: the hovered month as paid and in today's prices, the price rise
+			-- since then, and the change on the month before in the basis picked on the Prices switch
+			VAR _m = MAX ( calendar_table[month_date] )
+			VAR _pres = CALCULATE ( MAX ( econ_month[president] ) )
+			VAR _base = [Price_base_month]
+			VAR _bl = FORMAT ( _base, "mmm yyyy" )
+			VAR _paid = [Net_paid]
+			VAR _today = [Net_today_prices]
+			VAR _v = [Net_prices]
+			VAR _p = CALCULATE ( [Net_prices], REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), calendar_table[month_date] = EOMONTH ( _m, -1 ) )
+			VAR _d = DIVIDE ( _v - _p, _p )
+			VAR _flat = ROUND ( _d, 3 ) = 0
+			VAR _real = SELECTEDVALUE ( Prices[Prices], "As paid" ) = "Today's prices"
+			VAR _chip = IF ( ISBLANK ( _p ), "<span class='c' style='color:#5E6E67;background:#EDF2EF'>n/a</span>",
+			    "<span class='c' style='color:" & SWITCH ( TRUE (), _flat, "#C98A00", _d > 0, "#0E8A5F", "#C93C3C" ) & ";background:" & SWITCH ( TRUE (), _flat, "#FBF1DC", _d > 0, "#E3F4EC", "#FBE7E7" ) & "'>"
+			        & SWITCH ( TRUE (), _flat, UNICHAR ( 9632 ), _d > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & FORMAT ( ABS ( _d ), "0.0%" ) & "</span>" )
+			VAR _note = IF ( EOMONTH ( _m, 0 ) = EOMONTH ( _base, 0 ), "This is the price base month, so today's prices equal what was paid.",
+			    IF ( ISBLANK ( _today ), "No price data for this month yet.",
+			        "Prices rose " & FORMAT ( DIVIDE ( _today, _paid ), "0.00" ) & "× from " & FORMAT ( _m, "mmm yyyy" ) & " to " & _bl & ", so " & ( "₦" & IF ( ABS ( _paid ) >= 1e12, FORMAT ( _paid / 1e12, "#,0.00" ) & "tn", FORMAT ( _paid / 1e9, "#,0.0" ) & "bn" ) ) & " then is worth " & ( "₦" & IF ( ABS ( _today ) >= 1e12, FORMAT ( _today / 1e12, "#,0.00" ) & "tn", FORMAT ( _today / 1e9, "#,0.0" ) & "bn" ) ) & " now." ) )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 176)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{color:#5E6E67;font-size:9.5rem;margin:2rem 0 6rem}.sub i{display:inline-block;width:8rem;height:8rem;border-radius:2rem;margin-right:4rem}"
+			        & ".r{display:flex;justify-content:space-between;align-items:center;gap:10rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span:first-child{color:#5E6E67}.r b{font-weight:700;font-size:12rem}"
+			        & ".c{font-weight:700;font-size:9.5rem;padding:1rem 6rem;border-radius:4rem}.n{margin-top:6rem;font-size:9.5rem;line-height:1.35;color:#5E6E67}</style>"
+			        & "<div class='w'><div class='m'>" & UPPER ( FORMAT ( _m, "mmmm yyyy" ) ) & "</div><div class='sub'><i style='background:" & [Month_president_colour] & "'></i>" & COALESCE ( _pres, "No president" ) & "</div>"
+			        & "<div class='r'><span>As paid</span><b>" & ( "₦" & IF ( ABS ( _paid ) >= 1e12, FORMAT ( _paid / 1e12, "#,0.00" ) & "tn", FORMAT ( _paid / 1e9, "#,0.0" ) & "bn" ) ) & "</b></div>"
+			        & "<div class='r'><span>In " & _bl & " prices</span><b>" & IF ( ISBLANK ( _today ), "n/a", ( "₦" & IF ( ABS ( _today ) >= 1e12, FORMAT ( _today / 1e12, "#,0.00" ) & "tn", FORMAT ( _today / 1e9, "#,0.0" ) & "bn" ) ) ) & "</b></div>"
+			        & "<div class='r'><span>vs " & FORMAT ( EDATE ( _m, -1 ), "mmm yyyy" ) & IF ( _real, " (real)", " (as paid)" ) & "</span>" & _chip & "</div>"
+			        & "<div class='n'>" & _note & "</div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure Real_insight_html =
+			-- Key takeaway banner for FAAC in real terms: as paid vs real change over the selection, and the real peak
+			VAR _f = [Real_first_month]
+			VAR _l = [Real_latest_month]
+			VAR _base = [Price_base_month]
+			VAR _bl = FORMAT ( _base, "mmm yyyy" )
+			VAR _pf = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _f, 0 ) )
+			VAR _pl = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _l, 0 ) )
+			VAR _tf = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _f, 0 ) )
+			VAR _tl = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _l, 0 ) )
+			VAR _c = DIVIDE ( _tl, _tf ) - 1
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( calendar_table[month_date] ), "@r", [Net_today_prices] ), NOT ISBLANK ( [@r] ) )
+			VAR _pk = TOPN ( 1, _t, [@r], DESC )
+			VAR _msg =
+			    "In naira, states received <span class='hl'>" & FORMAT ( DIVIDE ( _pl, _pf ), "0.0" ) & "×</span> as much in " & FORMAT ( _l, "mmmm yyyy" ) & " as in " & FORMAT ( _f, "mmm yyyy" ) & ". "
+			        & IF ( ISBLANK ( _tl ), "Price data for " & FORMAT ( _l, "mmm yyyy" ) & " isn't out yet. ",
+			            "After price rises, that is " & IF ( ROUND ( _c, 2 ) = 0, "about the same",
+			                "<span class='" & IF ( _c < 0, "dn", "up" ) & "'>" & FORMAT ( ABS ( _c ), "0%" ) & IF ( _c < 0, " less", " more" ) & "</span>" ) & " in real terms. " )
+			        & "The real peak was " & ( "₦" & IF ( ABS ( MAXX ( _pk, [@r] ) ) >= 1e12, FORMAT ( MAXX ( _pk, [@r] ) / 1e12, "#,0.00" ) & "tn", FORMAT ( MAXX ( _pk, [@r] ) / 1e9, "#,0.0" ) & "bn" ) ) & " in " & FORMAT ( MAXX ( _pk, calendar_table[month_date] ), "mmm yyyy" ) & "."
+			RETURN
+			    [Banner_css]
+			        & "<div class='b'><div class='ic'><svg viewBox='0 0 16 16' style='width:16rem;height:16rem'><path d='M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z' fill='#E2B53E'/></svg></div>"
+			        & "<div class='k'>KEY TAKEAWAY<br>" & UPPER ( FORMAT ( _l, "mmm yyyy" ) ) & "</div><div class='t'>" & _msg & "</div></div>"
+		displayFolder: 06 Titles & Labels\Insights
+
 	column Value
 		dataType: int64
 		isHidden

@@ -124,13 +124,13 @@ at these y positions:
 | Slicer: Years (between) | 282 | 78 | 278 | 28 |
 | Slicer: President (dropdown) | 660 | 78 | 200 | 28 |
 | Slicer: Prices, As paid / Today's prices (tiles) | 940 | 78 | 304 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| KPI group: first month net (as paid and real) | 226 | 146 | 228 | 64 |
-| KPI group: latest month net | 490 | 146 | 228 | 64 |
-| KPI group: change as paid | 754 | 146 | 228 | 64 |
-| KPI group: change in real terms | 1018 | 146 | 228 | 64 |
-| Column chart: Net_prices by month (title Real_terms_title) | 226 | 242 | 1020 | 348 |
-| Text: Real_terms_narrative | 296 | 624 | 950 | 66 |
+| HTML: freshness strip (FAAC + CPI) | 716 | 8 | 540 | 60 |
+| HTML: flip cards first, latest, change as paid, change real | 216 | 124 | 1040 | 96 |
+| Combo: Net_prices columns + dashed other basis (TT - Real Terms Month) | 226 | 240 | 1020 | 370 |
+| HTML: Real_legend_html | 232 | 612 | 900 | 20 |
+| HTML: Real_explain_html, hidden until the bookmark | 216 | 232 | 1040 | 408 |
+| Buttons: What it means / Back to chart | 1110 | 240 | 136 | 28 |
+| HTML: Real_insight_html key takeaway | 216 | 654 | 1040 | 50 |
 
 ## Presidents (`bg_economy_presidents.png`)
 

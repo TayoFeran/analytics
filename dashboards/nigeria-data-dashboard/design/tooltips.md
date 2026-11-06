@@ -253,7 +253,7 @@ Design agreed on 2026-11-02. Positions are in [`placement.md`](placement.md), an
 | Economy size: GDP in US dollars | TT - GDP Dollar Year: HTML card (`GdpUsd_year_tt_html`), value, the year's naira rate, change vs the year before |
 | Economy size: real GDP growth | TT - Growth Year: HTML card (`Growth_year_tt_html`), growth, population growth, change in points vs the year before |
 | Economy size: GDP per person | TT - Per Person Year: HTML card (`PerPerson_year_tt_html`), dollars, naira, change vs the year before |
-| FAAC in real terms: monthly column chart | TT - Real Terms Month |
+| FAAC in real terms: monthly column chart | TT - Real Terms Month: HTML card (`Real_month_tt_html`), as paid, in today's prices, change vs the month before in the selected basis, and the price rise in words |
 | Presidents: all three bar charts | TT - President Detail |
 | Overview KPI cards | Default: the card's value, its as-of text and its definition |
 | FAAC in real terms KPI cards | Default: the value and `Today_prices_definition` |

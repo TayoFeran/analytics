@@ -1,18 +1,36 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "realTermsChart",
+  "name": "realChart",
   "position": {
     "x": 226,
-    "y": 242,
-    "z": 2200,
-    "height": 348,
+    "y": 240,
+    "z": 1800,
+    "height": 370,
     "width": 1020,
-    "tabOrder": 2200
+    "tabOrder": 1800
   },
   "visual": {
-    "visualType": "columnChart",
+    "visualType": "lineClusteredColumnComboChart",
     "query": {
       "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "calendar_table"
+                    }
+                  },
+                  "Property": "month_date"
+                }
+              },
+              "queryRef": "calendar_table.month_date",
+              "nativeQueryRef": "month_date"
+            }
+          ]
+        },
         "Y": {
           "projections": [
             {
@@ -32,21 +50,22 @@
             }
           ]
         },
-        "Category": {
+        "Y2": {
           "projections": [
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "calendar_table"
+                      "Entity": "Dax"
                     }
                   },
-                  "Property": "month_date"
+                  "Property": "Net_other_prices"
                 }
               },
-              "queryRef": "calendar_table.month_date",
-              "nativeQueryRef": "month_date"
+              "queryRef": "Dax.Net_other_prices",
+              "nativeQueryRef": "Net_other_prices",
+              "displayName": "Other basis"
             }
           ]
         }
@@ -146,6 +165,27 @@
                   "Value": "8D"
                 }
               }
+            },
+            "secShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1000000000D"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
             }
           }
         }
@@ -218,17 +258,31 @@
       "dataPoint": [
         {
           "properties": {
-            "defaultColor": {
+            "fill": {
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#0E6B45'"
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Dax"
+                        }
+                      },
+                      "Property": "Month_president_colour"
                     }
                   }
                 }
               }
             }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ]
           }
         },
         {
@@ -238,7 +292,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#0E6B45'"
+                      "Value": "'#E2B53E'"
                     }
                   }
                 }
@@ -246,7 +300,37 @@
             }
           },
           "selector": {
-            "metadata": "Dax.Net_prices"
+            "metadata": "Dax.Net_other_prices"
+          }
+        }
+      ],
+      "lineStyles": [
+        {
+          "properties": {
+            "strokeWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
+                }
+              }
+            },
+            "lineStyle": {
+              "expr": {
+                "Literal": {
+                  "Value": "'dashed'"
+                }
+              }
+            },
+            "showMarker": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dax.Net_other_prices"
           }
         }
       ]
@@ -297,7 +381,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             }
@@ -310,7 +394,32 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Monthly net FAAC to all 36 states · columns = the Prices choice, dashed line = the other one'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5B6B63'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
                 }
               }
             }

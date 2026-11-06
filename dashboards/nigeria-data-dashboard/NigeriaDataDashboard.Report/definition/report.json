@@ -98,11 +98,6 @@
           "type": "Image"
         },
         {
-          "name": "tt_economy_real_terms.png",
-          "path": "tt_economy_real_terms.png",
-          "type": "Image"
-        },
-        {
           "name": "nigeria_states.json",
           "path": "nigeria_states.json",
           "type": "ShapeMap"
