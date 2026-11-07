@@ -3,34 +3,18 @@
   "name": "ttRealTerms",
   "displayName": "TT - Real Terms Month",
   "displayOption": "FitToPage",
-  "height": 220,
-  "width": 340,
+  "height": 176,
+  "width": 280,
   "objects": {
     "background": [
       {
         "properties": {
-          "image": {
-            "image": {
-              "name": {
+          "color": {
+            "solid": {
+              "color": {
                 "expr": {
                   "Literal": {
-                    "Value": "'tt_economy_real_terms.png'"
-                  }
-                }
-              },
-              "url": {
-                "expr": {
-                  "ResourcePackageItem": {
-                    "PackageName": "RegisteredResources",
-                    "PackageType": 1,
-                    "ItemName": "tt_economy_real_terms.png"
-                  }
-                }
-              },
-              "scaling": {
-                "expr": {
-                  "Literal": {
-                    "Value": "'Fit'"
+                    "Value": "'#FFFFFF'"
                   }
                 }
               }
@@ -39,7 +23,31 @@
           "transparency": {
             "expr": {
               "Literal": {
-                "Value": "0D"
+                "Value": "100D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#FFFFFF'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "100D"
               }
             }
           }
@@ -47,6 +55,7 @@
       }
     ]
   },
+  "type": "Tooltip",
   "pageBinding": {
     "name": "ttRealTermsBinding",
     "type": "Tooltip",

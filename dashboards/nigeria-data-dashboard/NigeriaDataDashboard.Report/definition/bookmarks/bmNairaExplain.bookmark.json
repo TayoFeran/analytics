@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/1.4.0/schema.json",
+  "displayName": "Naira per US dollar, official rate: what it means",
+  "name": "bmNairaExplain",
+  "options": {
+    "targetVisualNames": [
+      "nairaTrend",
+      "nairaExplain",
+      "nairaInfo",
+      "nairaBack"
+    ],
+    "applyOnlyToTargetVisuals": true,
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "econOverview",
+    "sections": {
+      "econOverview": {
+        "visualContainers": {
+          "nairaTrend": {
+            "singleVisual": {
+              "visualType": "lineChart",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "nairaExplain": {
+            "singleVisual": {
+              "visualType": "htmlContent443BE3AD55E043BF878BED274D3A6865",
+              "objects": {}
+            }
+          },
+          "nairaInfo": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "nairaBack": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}

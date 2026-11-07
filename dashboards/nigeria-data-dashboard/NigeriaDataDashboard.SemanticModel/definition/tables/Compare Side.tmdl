@@ -6,26 +6,36 @@ table 'Compare Side'
 		calculationItem A =
 				VAR _by = SELECTEDVALUE ( Compare_By[compare_by], "Administration" )
 				VAR _m = SELECTEDVALUE ( Compare_A[member] )
+				-- Date range (From / To months), worked out first: a filter argument can't contain CALCULATE
+				VAR _f0 = COALESCE ( SELECTEDVALUE ( Date_from[month] ), EOMONTH ( CALCULATE ( MIN ( faac[disbursement_date] ), REMOVEFILTERS () ), 0 ) )
+				VAR _t0 = COALESCE ( SELECTEDVALUE ( Date_to[month] ), EOMONTH ( CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () ), 0 ) )
+				VAR _from = EOMONTH ( MIN ( _f0, _t0 ), -1 ) + 1
+				VAR _to = MAX ( _f0, _t0 )
 				RETURN
 				    SWITCH (
 				        _by,
-				        "Administration", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_administration[president] ) ),
-				        "State", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[state] ) ),
-				        "Zone", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[zone] ) ),
-				        "Region", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[region] ) )
+				        "Administration", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_administration[president] ), DATESBETWEEN ( calendar_table[date], _from, _to ) ),
+				        "State", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[state] ), DATESBETWEEN ( calendar_table[date], _from, _to ) ),
+				        "Zone", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[zone] ), DATESBETWEEN ( calendar_table[date], _from, _to ) ),
+				        "Region", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[region] ), DATESBETWEEN ( calendar_table[date], _from, _to ) )
 				    )
 			ordinal: 0
 
 		calculationItem B =
 				VAR _by = SELECTEDVALUE ( Compare_By[compare_by], "Administration" )
 				VAR _m = SELECTEDVALUE ( Compare_B[member] )
+				-- Date range (From / To months), worked out first: a filter argument can't contain CALCULATE
+				VAR _f0 = COALESCE ( SELECTEDVALUE ( Date_from[month] ), EOMONTH ( CALCULATE ( MIN ( faac[disbursement_date] ), REMOVEFILTERS () ), 0 ) )
+				VAR _t0 = COALESCE ( SELECTEDVALUE ( Date_to[month] ), EOMONTH ( CALCULATE ( MAX ( faac[disbursement_date] ), REMOVEFILTERS () ), 0 ) )
+				VAR _from = EOMONTH ( MIN ( _f0, _t0 ), -1 ) + 1
+				VAR _to = MAX ( _f0, _t0 )
 				RETURN
 				    SWITCH (
 				        _by,
-				        "Administration", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_administration[president] ) ),
-				        "State", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[state] ) ),
-				        "Zone", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[zone] ) ),
-				        "Region", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[region] ) )
+				        "Administration", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_administration[president] ), DATESBETWEEN ( calendar_table[date], _from, _to ) ),
+				        "State", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[state] ), DATESBETWEEN ( calendar_table[date], _from, _to ) ),
+				        "Zone", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[zone] ), DATESBETWEEN ( calendar_table[date], _from, _to ) ),
+				        "Region", CALCULATE ( SELECTEDMEASURE (), TREATAS ( { _m }, dim_state[region] ), DATESBETWEEN ( calendar_table[date], _from, _to ) )
 				    )
 			ordinal: 1
 

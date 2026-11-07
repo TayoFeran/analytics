@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/1.4.0/schema.json",
+  "displayName": "Real GDP growth: what it means",
+  "name": "bmGrowthExplain",
+  "options": {
+    "targetVisualNames": [
+      "growthChart",
+      "growthExplain",
+      "growthInfo",
+      "growthBack"
+    ],
+    "applyOnlyToTargetVisuals": true,
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "econSize",
+    "sections": {
+      "econSize": {
+        "visualContainers": {
+          "growthChart": {
+            "singleVisual": {
+              "visualType": "columnChart",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "growthExplain": {
+            "singleVisual": {
+              "visualType": "htmlContent443BE3AD55E043BF878BED274D3A6865",
+              "objects": {}
+            }
+          },
+          "growthInfo": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "growthBack": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}

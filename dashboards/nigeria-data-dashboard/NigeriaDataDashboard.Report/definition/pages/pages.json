@@ -10,14 +10,24 @@
     "econSize",
     "realTerms",
     "presidents",
-    "about",
+    "ttOverviewMonth",
+    "ttRevenueMonth",
+    "ttDeductionsMonth",
+    "ttExternalDebtState",
     "ttMetricDetail",
+    "ttOilState",
     "ttStateDetail",
     "ttCompareMetric",
-    "ttEconMonth",
-    "ttEconYear",
+    "ttInflationMonth",
+    "ttNairaMonth",
+    "ttGdpNairaYear",
+    "ttGdpUsdYear",
+    "ttGrowthYear",
+    "ttPerPersonYear",
     "ttRealTerms",
-    "ttPresident"
+    "ttPresInflation",
+    "ttPresNaira",
+    "ttPresGrowth"
   ],
   "activePageName": "667bbbfbb392d0e3b3b2"
 }

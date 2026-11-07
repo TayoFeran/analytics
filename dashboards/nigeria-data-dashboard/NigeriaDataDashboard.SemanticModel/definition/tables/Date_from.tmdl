@@ -1,0 +1,25 @@
+table Date_from
+	column month
+		dataType: dateTime
+		isHidden
+		formatString: mmm yy
+		summarizeBy: none
+		sourceColumn: [month]
+
+	column label
+		dataType: string
+		summarizeBy: none
+		sourceColumn: [label]
+		sortByColumn: month
+
+	partition Date_from = calculated
+		mode: import
+		source =
+				-- Months that have FAAC data, for the From dropdown of the date range
+				SELECTCOLUMNS (
+				    DISTINCT ( faac[disbursement_date] ),
+				    "month", EOMONTH ( faac[disbursement_date], 0 ),
+				    "label", FORMAT ( faac[disbursement_date], "mmm yy" )
+				)
+
+	annotation PBI_ResultType = Table

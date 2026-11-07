@@ -10,7 +10,7 @@ Design agreed on 2026-11-02 (step 5 of the build). Positions are in [`placement.
 | Revenue mix matrix; Deductions matrix (state × type) | TT - Metric Detail |
 | States map; 36-state ranking bar | TT - State Detail |
 | Compare page, Side A and Side B tables | TT - Compare Metric |
-| Overview line chart (gross vs net) | Default: month, `Gross`, `Net`, `Net_rate` |
+| Overview line chart (gross vs net) | TT - Overview Month: HTML card (`Overview_month_tt_html`), gross and net for the hovered month with change vs the month before |
 | Revenue mix stacked area | Default: month, revenue line, value, `VAT_share` / `Oil_Derivation_share` |
 | Deductions stacked column | Default: month, deduction line, value, `Deductions_share` |
 | Top 5 states bar; oil derivation by state | Default: state, value, `Net_share_national` |
@@ -247,10 +247,16 @@ Design agreed on 2026-11-02. Positions are in [`placement.md`](placement.md), an
 
 | Visual | Tooltip |
 |---|---|
-| Overview: inflation and naira line charts | TT - Economy Month |
-| Economy size: all four charts | TT - Economy Year |
-| FAAC in real terms: monthly column chart | TT - Real Terms Month |
-| Presidents: all three bar charts | TT - President Detail |
+| Overview: inflation line chart | TT - Inflation Month: HTML card (`Inflation_month_tt_html`), inflation for the hovered month with the change vs the month before and a year earlier (down = green) |
+| Overview: naira line chart | TT - Naira Month: HTML card (`Naira_month_tt_html`), naira per US dollar for the hovered month with the change vs the month before and a year earlier (weaker naira = red) |
+| Economy size: GDP in naira | TT - GDP Naira Year: HTML card (`GdpNaira_year_tt_html`), value, the same year in US dollars, change vs the year before |
+| Economy size: GDP in US dollars | TT - GDP Dollar Year: HTML card (`GdpUsd_year_tt_html`), value, the year's naira rate, change vs the year before |
+| Economy size: real GDP growth | TT - Growth Year: HTML card (`Growth_year_tt_html`), growth, population growth, change in points vs the year before |
+| Economy size: GDP per person | TT - Per Person Year: HTML card (`PerPerson_year_tt_html`), dollars, naira, change vs the year before |
+| FAAC in real terms: monthly column chart | TT - Real Terms Month: HTML card (`Real_month_tt_html`), as paid, in today's prices, change vs the month before in the selected basis, and the price rise in words |
+| Presidents: average inflation | TT - President Inflation: HTML card (`PresInflation_tt_html`), term, value, rank among presidents with data, coverage |
+| Presidents: naira value over the term | TT - President Naira: HTML card (`PresNaira_tt_html`), same layout |
+| Presidents: average real GDP growth | TT - President Growth: HTML card (`PresGrowth_tt_html`), same layout, coverage in years |
 | Overview KPI cards | Default: the card's value, its as-of text and its definition |
 | FAAC in real terms KPI cards | Default: the value and `Today_prices_definition` |
 
@@ -278,6 +284,8 @@ President_definitions =
 
 ## Measures behind TT - Economy Month
 
+Replaced on 2026-11-06 by two HTML cards, one per chart: TT - Inflation Month (`Inflation_month_tt_html`) and TT - Naira Month (`Naira_month_tt_html`). The original design is kept below for reference.
+
 ```dax
 Econ_month_tooltip_title =
 -- e.g. "Jul 2026 · Tinubu"
@@ -287,6 +295,8 @@ FORMAT ( MAX ( econ_month[month_date] ), "mmm yyyy" ) & " · " & SELECTEDVALUE (
 The three cards are `Inflation_yoy`, `Naira_per_usd` and `Naira_value_change_yoy`. Naira value is green when positive and red when negative.
 
 ## Measures behind TT - Economy Year
+
+Replaced on 2026-11-06 by four HTML cards, one per Economy size chart (see the table above). The original design is kept below for reference.
 
 ```dax
 Econ_year_tooltip_title =

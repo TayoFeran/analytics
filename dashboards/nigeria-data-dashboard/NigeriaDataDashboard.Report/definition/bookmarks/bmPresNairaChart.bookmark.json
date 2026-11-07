@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/1.4.0/schema.json",
+  "displayName": "Naira value over the term: chart",
+  "name": "bmPresNairaChart",
+  "options": {
+    "targetVisualNames": [
+      "presNairaChart",
+      "presNairaExplain",
+      "presNairaInfo",
+      "presNairaBack"
+    ],
+    "applyOnlyToTargetVisuals": true,
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "presidents",
+    "sections": {
+      "presidents": {
+        "visualContainers": {
+          "presNairaChart": {
+            "singleVisual": {
+              "visualType": "clusteredBarChart",
+              "objects": {}
+            }
+          },
+          "presNairaExplain": {
+            "singleVisual": {
+              "visualType": "htmlContent443BE3AD55E043BF878BED274D3A6865",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "presNairaInfo": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {}
+            }
+          },
+          "presNairaBack": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

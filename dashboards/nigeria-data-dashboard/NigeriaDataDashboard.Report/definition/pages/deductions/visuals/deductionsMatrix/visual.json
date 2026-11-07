@@ -3,11 +3,11 @@
   "name": "deductionsMatrix",
   "position": {
     "x": 226,
-    "y": 466,
-    "z": 1700,
-    "height": 220,
+    "y": 408,
+    "z": 1900,
+    "height": 222,
     "width": 1020,
-    "tabOrder": 1700
+    "tabOrder": 1900
   },
   "visual": {
     "visualType": "pivotTable",
@@ -60,11 +60,11 @@
                       "Entity": "Dax"
                     }
                   },
-                  "Property": "Metric_value"
+                  "Property": "Metric_value_short"
                 }
               },
-              "queryRef": "Dax.Metric_value",
-              "nativeQueryRef": "Metric_value",
+              "queryRef": "Dax.Metric_value_short",
+              "nativeQueryRef": "Metric_value_short",
               "displayName": "Value"
             }
           ]
@@ -203,6 +203,36 @@
               }
             }
           }
+        },
+        {
+          "properties": {
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Dax"
+                        }
+                      },
+                      "Property": "Metric_heat_colour"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ],
+            "metadata": "Dax.Metric_value_short"
+          }
         }
       ],
       "rowHeaders": [
@@ -333,7 +363,39 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Deductions by state and line'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#0F2019'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
@@ -353,7 +415,7 @@
             "type": {
               "expr": {
                 "Literal": {
-                  "Value": "'ReportPage'"
+                  "Value": "'Canvas'"
                 }
               }
             },

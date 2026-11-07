@@ -44,6 +44,10 @@ MAIN_X, MAIN_R = 216, 1256  # main content edges (24 px gutters)
 FILTER = (MAIN_X, 72, MAIN_R, 112)  # filter bar container
 
 # Sidebar navigation: (label, page or None if the section isn't built yet, y)
+# The About page and the sidebar source note are off for now (user, 2026-11-07)
+SHOW_ABOUT = False
+SHOW_SOURCE_NOTE = False
+
 NAV = [
     ("FAAC", "section", 118),
     ("Overview", "overview", 136),
@@ -58,19 +62,21 @@ NAV = [
     ("Presidents", "presidents", 424),
     ("ELECTIONS", "section", 470),
     ("Results", None, 488),
-    ("INFO", "section", 534),
-    ("About", "about", 552),
+    # INFO / About are off for now (2026-11-07); put back with SHOW_ABOUT
+    *([("INFO", "section", 534), ("About", "about", 552)] if SHOW_ABOUT else []),
 ]
 NAV_H = 28
 
 STANDARD_FILTERS = [
-    # (label, label x, slicer box)
-    ("PERIOD", 234, (284, 78, 524, 106)),
-    ("ZONE", 552, (590, 78, 754, 106)),
-    ("STATE", 770, (812, 78, 992, 106)),
-    ("CURRENCY", 1020, (1090, 78, 1244, 106)),
+    # (label, label x, slicer box). DATES (From / To months) added 2026-11-05:
+    # the To month is the latest month for every measure.
+    ("PERIOD", 234, (278, 78, 504, 106)),
+    ("DATES", 520, (562, 78, 742, 106)),
+    ("ZONE", 758, (792, 78, 946, 106)),
+    ("STATE", 962, (998, 78, 1110, 106)),
+    ("CURRENCY", 1126, (1192, 78, 1244, 106)),
 ]
-FILTER_SEPARATORS = [538, 1006]
+FILTER_SEPARATORS = [512, 750, 954, 1118]
 
 # Economy pages: a years range slicer and a president dropdown. No currency switch: each
 # chart's title says which currency it shows.
@@ -80,7 +86,8 @@ ECONOMY_FILTERS = [
 ]
 ECONOMY_SEPARATORS = [574]
 
-# Sidebar footer, per section (None = dashboard-wide pages like About)
+# Sidebar footer, per section (None = dashboard-wide pages like About). Hidden for now
+# (2026-11-07); put back with SHOW_SOURCE_NOTE
 FOOTER = {
     "FAAC": [
         "Source: FAAC monthly",
@@ -111,122 +118,114 @@ LAYOUT = {
         "title": "Overview",
         "filters": STANDARD_FILTERS,
         "seps": FILTER_SEPARATORS,
+        # Look-and-feel upgrade (2026-11-05): the KPI cards and the banner are HTML
+        # visuals that draw their own boxes, so the background only holds the chart cards
         "cards": [
-            (216, 128, 464, 216, "GROSS ALLOCATION", "kpi"),
-            (480, 128, 728, 216, "DEDUCTIONS", "kpi"),
-            (744, 128, 992, 216, "NET RECEIVED", "kpi"),
-            (1008, 128, 1256, 216, "EXCHANGE RATE", "kpi"),
-            (216, 232, 866, 696, None, "card"),
-            (882, 232, 1256, 456, None, "card"),
-            (882, 472, 1256, 696, None, "card"),
+            (216, 232, 776, 640, None, "card"),
+            (792, 232, 1256, 460, None, "card"),
+            (792, 472, 1256, 640, None, "card"),
         ],
         "visuals": [
-            ("Slicer: Period (field parameter, tiles)", (284, 78, 524, 106)),
-            ("Slicer: Zone (dropdown)", (590, 78, 754, 106)),
-            ("Slicer: State (dropdown)", (812, 78, 992, 106)),
-            ("Slicer: Currency ₦/$ (tiles)", (1090, 78, 1244, 106)),
-            ("Text: refresh stamp + latest data month", (1040, 22, 1256, 58)),
-            ("KPI group: Gross (value, sparkline, change line)", (226, 146, 454, 210)),
-            ("KPI group: Deductions", (490, 146, 718, 210)),
-            ("KPI group: Net received", (754, 146, 982, 210)),
-            ("KPI group: Exchange rate", (1018, 146, 1246, 210)),
-            ("Line chart: gross vs net, last 24 months (dynamic title)", (226, 242, 856, 686)),
-            ("100% stacked bar: revenue mix, latest period (dynamic title)", (892, 242, 1246, 446)),
-            ("Bar chart: top 5 states by net (dynamic title)", (892, 482, 1246, 686)),
+            ("Slicer: Period (field parameter, tiles)", (278, 78, 504, 106)),
+            ("Slicer: Date range From (dropdown)", (562, 78, 648, 106)),
+            ("Slicer: Date range To (dropdown)", (656, 78, 742, 106)),
+            ("Slicer: Zone (dropdown)", (792, 78, 946, 106)),
+            ("Slicer: State (dropdown)", (998, 78, 1110, 106)),
+            ("Slicer: Currency ₦/$ (dropdown)", (1192, 78, 1244, 106)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
+            ("HTML: flip cards Gross, Deductions, Net, Exchange rate", (216, 124, 1256, 220)),
+            (
+                "Line chart: gross vs net, last 24 months (TT - Overview Month)",
+                (226, 242, 766, 630),
+            ),
+            ("HTML: rotating shelf, top 5 states", (792, 232, 1256, 460)),
+            ("100% stacked bar: revenue mix, latest period (dynamic title)", (802, 482, 1246, 630)),
+            ("HTML: insight banner", (216, 654, 1256, 704)),
         ],
     },
     "states": {
         "title": "States",
         "filters": STANDARD_FILTERS,
         "seps": FILTER_SEPARATORS,
+        # Look-and-feel upgrade (2026-11-05): no card row; the map fills the left column and the
+        # insight banner (an HTML visual) sits below both cards
         "cards": [
-            (216, 128, 760, 504, None, "card"),
-            (776, 128, 1256, 696, None, "card"),
-            (216, 520, 760, 696, None, "card"),
+            (216, 124, 756, 640, None, "card"),
+            (772, 124, 1256, 640, None, "card"),
         ],
         "visuals": [
-            ("Slicers: Period, Zone, State, Currency", (284, 78, 1244, 106)),
-            ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("Shape map: net received by state (TT - State Detail tooltip)", (226, 138, 750, 494)),
-            ("Bar chart: all 36 states ranked by net (scrolls)", (786, 138, 1246, 686)),
+            ("Slicers: Period, Dates (From, To), Zone, State, Currency", (278, 78, 1244, 106)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
             (
-                "Card row: selected state gross, deductions, net, share of national",
-                (226, 530, 750, 686),
+                "Shape map: net received by state (TT - State Detail, HTML card)",
+                (226, 134, 746, 630),
             ),
+            ("Bar chart: Zone > State drill, coloured by zone, labels", (782, 134, 1246, 604)),
+            ("HTML: zone legend", (790, 610, 1240, 630)),
+            ("HTML: insight banner", (216, 654, 1256, 704)),
         ],
     },
     "revenue-mix": {
         "title": "Revenue mix",
         "filters": STANDARD_FILTERS,
         "seps": FILTER_SEPARATORS,
+        # Look-and-feel upgrade (2026-11-05): shorter cards leave room for the insight banner
         "cards": [
-            (216, 128, 1256, 440, None, "card"),
-            (216, 456, 728, 696, None, "card"),
-            (744, 456, 1256, 696, None, "card"),
+            (216, 124, 1256, 392, None, "card"),
+            (216, 404, 728, 640, None, "card"),
+            (744, 404, 1256, 640, None, "card"),
         ],
         "visuals": [
-            ("Slicers: Period, Zone, State, Currency", (284, 78, 1244, 106)),
-            ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("Stacked area: revenue lines over time", (226, 138, 1246, 430)),
-            ("Bar chart: oil derivation by state", (226, 466, 718, 686)),
-            (
-                "Matrix: revenue lines, current vs previous (metric field parameter)",
-                (754, 466, 1246, 686),
-            ),
+            ("Slicers: Period, Dates (From, To), Zone, State, Currency", (278, 78, 1244, 106)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
+            ("Stacked area: revenue lines over time (TT - Revenue Month)", (226, 134, 1246, 382)),
+            ("Bar chart: oil derivation by state, coloured by zone", (226, 414, 718, 594)),
+            ("HTML: zone legend", (234, 610, 710, 630)),
+            ("Table: revenue lines, this vs previous period, share bars", (754, 414, 1246, 630)),
+            ("HTML: insight banner", (216, 654, 1256, 704)),
         ],
     },
     "deductions": {
         "title": "Deductions",
         "filters": STANDARD_FILTERS,
         "seps": FILTER_SEPARATORS,
+        # Look-and-feel upgrade (2026-11-05): shorter cards leave room for the insight banner
         "cards": [
-            (216, 128, 866, 440, None, "card"),
-            (882, 128, 1256, 440, None, "card"),
-            (216, 456, 1256, 696, None, "card"),
+            (216, 124, 840, 386, None, "card"),
+            (856, 124, 1256, 386, None, "card"),
+            (216, 398, 1256, 640, None, "card"),
         ],
         "visuals": [
-            ("Slicers: Period, Zone, State, Currency", (284, 78, 1244, 106)),
-            ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("Stacked column: deductions by type over time", (226, 138, 856, 430)),
-            ("Bar chart: deductions as % of gross, by state", (892, 138, 1246, 430)),
-            (
-                "Matrix: state x deduction type (metric field parameter, tooltips)",
-                (226, 466, 1246, 686),
-            ),
+            ("Slicers: Period, Dates (From, To), Zone, State, Currency", (278, 78, 1244, 106)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
+            ("Line chart: deduction lines over time (TT - Deductions Month)", (226, 134, 830, 376)),
+            ("Bar chart: external debt by state, coloured by zone", (866, 134, 1246, 350)),
+            ("HTML: zone legend", (872, 356, 1240, 376)),
+            ("Matrix: state x line, green heat (TT - Metric Detail)", (226, 408, 1246, 630)),
+            ("HTML: insight banner", (216, 654, 1256, 704)),
         ],
     },
     "compare": {
         "title": "Compare",
+        # All filters as dropdowns in one row, with the date range (agreed 2026-11-05)
         "filters": [
-            ("COMPARE BY", 234, (312, 78, 620, 106)),
-            ("A", 652, (668, 78, 800, 106)),
-            ("B", 818, (834, 78, 966, 106)),
-            ("BASIS", 996, (1040, 78, 1172, 106)),
-            ("", 1186, (1186, 78, 1248, 106)),
+            ("COMPARE BY", 234, (300, 78, 410, 106)),
+            ("A", 424, (438, 78, 528, 106)),
+            ("B", 542, (556, 78, 646, 106)),
+            ("BASIS", 662, (702, 78, 842, 106)),
+            ("CURRENCY", 856, (922, 78, 982, 106)),
+            ("DATES", 996, (1040, 78, 1244, 106)),
         ],
-        "seps": [636, 982, 1180],
+        "seps": [418, 536, 654, 850, 990],
         "cards": [
-            (216, 128, 1256, 616, None, "card"),
-            (216, 632, 1256, 696, None, "narr"),
+            (216, 124, 1256, 624, None, "card"),
         ],
-        "legend": True,
         "visuals": [
-            ("Slicer: Compare by (tiles)", (312, 78, 620, 106)),
-            ("Slicer: Side A member (dropdown, Compare_A)", (668, 78, 800, 106)),
-            ("Slicer: Side B member (dropdown, Compare_B)", (834, 78, 966, 106)),
-            ("Slicer: Basis (calculation group, dropdown)", (1040, 78, 1172, 106)),
-            ("Slicer: Currency ₦/$ (tiles)", (1186, 78, 1248, 106)),
-            ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("Text: Side A name and meta (right-aligned)", (226, 136, 660, 160)),
-            ("Text: basis label, centre", (660, 136, 812, 160)),
-            ("Text: Side B name and meta", (812, 136, 1246, 160)),
-            (
-                "Matrix or table: Side A values + bars (Compare Side = A), right-aligned",
-                (226, 168, 660, 606),
-            ),
-            ("Table: metric names, centre column", (660, 168, 812, 606)),
-            ("Matrix or table: Side B values + bars (Compare Side = B)", (812, 168, 1246, 606)),
-            ("Text: Comparison_narrative", (296, 638, 990, 690)),
+            ("Slicers: Compare by, A, B, Basis, Currency, Dates", (300, 78, 1244, 106)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
+            ("Text: side names and meta, basis label", (226, 130, 1246, 156)),
+            ("Table: A value and bar, metric, change, B bar and value", (226, 164, 1246, 614)),
+            ("HTML: insight banner with legend", (216, 636, 1256, 704)),
         ],
     },
     "economy-overview": {
@@ -235,29 +234,29 @@ LAYOUT = {
         "slug": "overview",
         "filters": ECONOMY_FILTERS,
         "seps": ECONOMY_SEPARATORS,
+        # Look-and-feel upgrade (2026-11-06): flip cards and banner draw their own boxes
         "cards": [
-            (216, 128, 464, 216, "INFLATION", "kpi"),
-            (480, 128, 728, 216, "NAIRA PER US DOLLAR", "kpi"),
-            (744, 128, 992, 216, "REAL GDP GROWTH", "kpi"),
-            (1008, 128, 1256, 216, "GDP PER PERSON", "kpi"),
-            (216, 232, 728, 584, None, "card"),
-            (744, 232, 1256, 584, None, "card"),
-            (216, 600, 1256, 696, None, "narr"),
+            (216, 232, 728, 640, None, "card"),
+            (744, 232, 1256, 640, None, "card"),
         ],
         "visuals": [
             ("Slicer: Years (between)", (282, 78, 560, 106)),
             ("Slicer: President (dropdown)", (660, 78, 860, 106)),
-            ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("KPI group: Inflation (value, change line, as-of text)", (226, 146, 454, 210)),
-            ("KPI group: Naira per US dollar", (490, 146, 718, 210)),
-            ("KPI group: Real GDP growth", (754, 146, 982, 210)),
-            ("KPI group: GDP per person ($ and ₦)", (1018, 146, 1246, 210)),
-            ("Line chart: inflation by month, coloured by president", (226, 242, 718, 574)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
+            ("HTML: flip cards Inflation, Naira, Growth, GDP per person", (216, 124, 1256, 220)),
             (
-                "Line chart: naira per US dollar by month, coloured by president",
-                (754, 242, 1246, 574),
+                "Line chart: inflation by month, by president (TT - Inflation Month)",
+                (226, 242, 718, 630),
             ),
-            ("Text: Inflation_narrative + Naira_narrative", (296, 608, 1246, 690)),
+            ("HTML: Inflation_explain_html, hidden until the bookmark", (216, 232, 728, 640)),
+            ("Buttons: What it means / Back to chart (inflation)", (580, 238, 716, 266)),
+            (
+                "Line chart: naira per US dollar by month, by president (TT - Inflation Month)",
+                (754, 242, 1246, 630),
+            ),
+            ("HTML: Naira_explain_html, hidden until the bookmark", (744, 232, 1256, 640)),
+            ("Buttons: What it means / Back to chart (naira)", (1108, 238, 1244, 266)),
+            ("HTML: Economy_insight_html key takeaway", (216, 654, 1256, 704)),
         ],
     },
     "economy-size": {
@@ -266,24 +265,26 @@ LAYOUT = {
         "slug": "size",
         "filters": ECONOMY_FILTERS,
         "seps": ECONOMY_SEPARATORS,
+        # Look-and-feel upgrade (2026-11-06): four equal chart cards, banner draws its own box
         "cards": [
-            (216, 128, 728, 400, None, "card"),
-            (744, 128, 1256, 400, None, "card"),
-            (216, 416, 728, 600, None, "card"),
-            (744, 416, 1256, 600, None, "card"),
-            (216, 616, 1256, 696, None, "narr"),
+            (216, 124, 728, 376, None, "card"),
+            (744, 124, 1256, 376, None, "card"),
+            (216, 388, 728, 640, None, "card"),
+            (744, 388, 1256, 640, None, "card"),
         ],
         "visuals": [
-            ("Slicers: Years, President", (282, 78, 860, 106)),
-            ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("Column chart: GDP in naira by year", (226, 138, 718, 390)),
-            ("Column chart: GDP in US dollars by year", (754, 138, 1246, 390)),
-            (
-                "Column chart: real GDP growth by year (green above 0, red below)",
-                (226, 426, 718, 590),
-            ),
-            ("Line chart: GDP per person by year ($)", (754, 426, 1246, 590)),
-            ("Text: GDP_narrative", (296, 624, 1246, 690)),
+            ("Slicer: Years (between)", (282, 78, 560, 106)),
+            ("Slicer: President (dropdown)", (660, 78, 860, 106)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
+            ("Columns: GDP in naira by president (TT - GDP Naira Year)", (226, 132, 718, 344)),
+            ("HTML: President_legend_html (naira chart)", (232, 348, 712, 368)),
+            ("Columns: GDP in dollars by president (TT - GDP Dollar Year)", (754, 132, 1246, 344)),
+            ("HTML: President_legend_html (dollar chart)", (760, 348, 1240, 368)),
+            ("Columns: real GDP growth + population line (TT - Growth Year)", (226, 396, 718, 632)),
+            ("Line: GDP per person, US dollars (TT - Per Person Year)", (754, 396, 1246, 632)),
+            ("HTML: <chart>_explain_html per card, hidden until bookmark", (216, 124, 1256, 640)),
+            ("Buttons: What it means / Back to chart, top right of cards", (580, 132, 716, 160)),
+            ("HTML: GDP_insight_html key takeaway", (216, 654, 1256, 704)),
         ],
     },
     "real-terms": {
@@ -292,25 +293,24 @@ LAYOUT = {
         "slug": "real_terms",
         "filters": ECONOMY_FILTERS + [("PRICES", 890, (940, 78, 1244, 106))],
         "seps": ECONOMY_SEPARATORS + [876],
+        # Look-and-feel upgrade (2026-11-06): flip cards and banner draw their own boxes
         "cards": [
-            (216, 128, 464, 216, "FIRST MONTH", "kpi"),
-            (480, 128, 728, 216, "LATEST MONTH", "kpi"),
-            (744, 128, 992, 216, "CHANGE, AS PAID", "kpi"),
-            (1008, 128, 1256, 216, "CHANGE, IN REAL TERMS", "kpi"),
-            (216, 232, 1256, 600, None, "card"),
-            (216, 616, 1256, 696, None, "narr"),
+            (216, 232, 1256, 640, None, "card"),
         ],
         "visuals": [
             ("Slicer: Years (between)", (282, 78, 560, 106)),
             ("Slicer: President (dropdown)", (660, 78, 860, 106)),
             ("Slicer: Prices, As paid / Today's prices (tiles)", (940, 78, 1244, 106)),
-            ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("KPI group: first month net (as paid and real)", (226, 146, 454, 210)),
-            ("KPI group: latest month net", (490, 146, 718, 210)),
-            ("KPI group: change as paid", (754, 146, 982, 210)),
-            ("KPI group: change in real terms", (1018, 146, 1246, 210)),
-            ("Column chart: Net_prices by month (title Real_terms_title)", (226, 242, 1246, 590)),
-            ("Text: Real_terms_narrative", (296, 624, 1246, 690)),
+            ("HTML: freshness strip (FAAC + CPI)", (716, 8, 1256, 68)),
+            ("HTML: flip cards first, latest, change as paid, change real", (216, 124, 1256, 220)),
+            (
+                "Combo: Net_prices columns + dashed other basis (TT - Real Terms Month)",
+                (226, 240, 1246, 610),
+            ),
+            ("HTML: Real_legend_html", (232, 612, 1132, 632)),
+            ("HTML: Real_explain_html, hidden until the bookmark", (216, 232, 1256, 640)),
+            ("Buttons: What it means / Back to chart", (1110, 240, 1246, 268)),
+            ("HTML: Real_insight_html key takeaway", (216, 654, 1256, 704)),
         ],
     },
     "presidents": {
@@ -320,24 +320,23 @@ LAYOUT = {
         # No president filter: this page compares them
         "filters": [("YEARS", 234, (282, 78, 560, 106))],
         "seps": [],
+        # Look-and-feel upgrade (2026-11-07): chart titles are native; coverage strip and banner
+        # draw their own boxes
         "cards": [
-            (216, 128, 552, 520, "AVERAGE INFLATION", "card"),
-            (568, 128, 904, 520, "NAIRA VALUE OVER THE TERM", "card"),
-            (920, 128, 1256, 520, "AVERAGE REAL GDP GROWTH", "card"),
-            (216, 536, 1256, 600, None, "card"),
-            (216, 616, 1256, 696, None, "narr"),
+            (216, 124, 552, 564, None, "card"),
+            (568, 124, 904, 564, None, "card"),
+            (920, 124, 1256, 564, None, "card"),
         ],
         "visuals": [
             ("Slicer: Years (between)", (282, 78, 560, 106)),
-            ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("Bar chart: Inflation_yoy by president, in term order", (226, 152, 542, 510)),
-            ("Bar chart: Term_naira_change by president", (578, 152, 894, 510)),
-            (
-                "Bar chart: Real_GDP_growth by president (blank = Before 1999)",
-                (930, 152, 1246, 510),
-            ),
-            ("Table: Term_coverage_text by president (partial terms only)", (226, 544, 1246, 592)),
-            ("Text: Administration_narrative", (296, 624, 1246, 690)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
+            ("Bars: average inflation (TT - President Inflation)", (226, 132, 542, 516)),
+            ("Bars: naira value over the term (TT - President Naira)", (578, 132, 894, 516)),
+            ("Bars: average real GDP growth (TT - President Growth)", (930, 132, 1246, 516)),
+            ("HTML: <chart>_explain_html per card, hidden until bookmark", (216, 124, 1256, 564)),
+            ("Buttons: What it means / Back to chart, bottom right of cards", (406, 526, 542, 554)),
+            ("HTML: Term_coverage_html coverage strip", (216, 576, 1256, 628)),
+            ("HTML: Presidents_insight_html key takeaway", (216, 654, 1256, 704)),
         ],
     },
     "about": {
@@ -614,8 +613,9 @@ def draw_sidebar(img: Image.Image, page: str, section: str | None) -> None:
             chip = (134, y + 7, 170, y + NAV_H - 7)
             d.rounded_rectangle(box(chip), radius=s(7), outline="#5E8A77", width=s(1))
             tracked(d, (chip[0] + 6, chip[1] + 1.5), "SOON", font(SEMI, 7.5), "#5E8A77", 0.8)
-    for i, line in enumerate(FOOTER[section]):
-        d.text((s(22), s(640 + i * 13)), line, font=font(REG, 9), fill="#8FB0A2")
+    if SHOW_SOURCE_NOTE:
+        for i, line in enumerate(FOOTER[section]):
+            d.text((s(22), s(640 + i * 13)), line, font=font(REG, 9), fill="#8FB0A2")
 
 
 def draw_header(img: Image.Image, title: str, section: str | None) -> None:
@@ -761,6 +761,8 @@ def main() -> None:
     out = Path(sys.argv[1]) if len(sys.argv) > 1 else here / "backgrounds"
     out.mkdir(parents=True, exist_ok=True)
     for page, spec in LAYOUT.items():
+        if page == "about" and not SHOW_ABOUT:
+            continue
         print(f"Wrote {render(page, spec, out).name}")
     for page, spec in TOOLTIPS.items():
         print(f"Wrote {render_tooltip(page, spec, out).name}")

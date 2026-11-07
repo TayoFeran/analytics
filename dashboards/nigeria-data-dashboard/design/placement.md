@@ -20,72 +20,68 @@ at these y positions:
 | Economy size | 360 |
 | FAAC in real terms | 392 |
 | Presidents | 424 |
-| About | 552 |
 
 ## Overview (`bg_faac_overview.png`)
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicer: Period (field parameter, tiles) | 284 | 78 | 240 | 28 |
-| Slicer: Zone (dropdown) | 590 | 78 | 164 | 28 |
-| Slicer: State (dropdown) | 812 | 78 | 180 | 28 |
-| Slicer: Currency ₦/$ (tiles) | 1090 | 78 | 154 | 28 |
-| Text: refresh stamp + latest data month | 1040 | 22 | 216 | 36 |
-| KPI group: Gross (value, sparkline, change line) | 226 | 146 | 228 | 64 |
-| KPI group: Deductions | 490 | 146 | 228 | 64 |
-| KPI group: Net received | 754 | 146 | 228 | 64 |
-| KPI group: Exchange rate | 1018 | 146 | 228 | 64 |
-| Line chart: gross vs net, last 24 months (dynamic title) | 226 | 242 | 630 | 444 |
-| 100% stacked bar: revenue mix, latest period (dynamic title) | 892 | 242 | 354 | 204 |
-| Bar chart: top 5 states by net (dynamic title) | 892 | 482 | 354 | 204 |
+| Slicer: Period (field parameter, tiles) | 278 | 78 | 226 | 28 |
+| Slicer: Date range From (dropdown) | 562 | 78 | 86 | 28 |
+| Slicer: Date range To (dropdown) | 656 | 78 | 86 | 28 |
+| Slicer: Zone (dropdown) | 792 | 78 | 154 | 28 |
+| Slicer: State (dropdown) | 998 | 78 | 112 | 28 |
+| Slicer: Currency ₦/$ (dropdown) | 1192 | 78 | 52 | 28 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| HTML: flip cards Gross, Deductions, Net, Exchange rate | 216 | 124 | 1040 | 96 |
+| Line chart: gross vs net, last 24 months (TT - Overview Month) | 226 | 242 | 540 | 388 |
+| HTML: rotating shelf, top 5 states | 792 | 232 | 464 | 228 |
+| 100% stacked bar: revenue mix, latest period (dynamic title) | 802 | 482 | 444 | 148 |
+| HTML: insight banner | 216 | 654 | 1040 | 50 |
 
 ## States (`bg_faac_states.png`)
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicers: Period, Zone, State, Currency | 284 | 78 | 960 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Shape map: net received by state (TT - State Detail tooltip) | 226 | 138 | 524 | 356 |
-| Bar chart: all 36 states ranked by net (scrolls) | 786 | 138 | 460 | 548 |
-| Card row: selected state gross, deductions, net, share of national | 226 | 530 | 524 | 156 |
+| Slicers: Period, Dates (From, To), Zone, State, Currency | 278 | 78 | 966 | 28 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| Shape map: net received by state (TT - State Detail, HTML card) | 226 | 134 | 520 | 496 |
+| Bar chart: Zone > State drill, coloured by zone, labels | 782 | 134 | 464 | 470 |
+| HTML: zone legend | 790 | 610 | 450 | 20 |
+| HTML: insight banner | 216 | 654 | 1040 | 50 |
 
 ## Revenue mix (`bg_faac_revenue_mix.png`)
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicers: Period, Zone, State, Currency | 284 | 78 | 960 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Stacked area: revenue lines over time | 226 | 138 | 1020 | 292 |
-| Bar chart: oil derivation by state | 226 | 466 | 492 | 220 |
-| Matrix: revenue lines, current vs previous (metric field parameter) | 754 | 466 | 492 | 220 |
+| Slicers: Period, Dates (From, To), Zone, State, Currency | 278 | 78 | 966 | 28 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| Stacked area: revenue lines over time (TT - Revenue Month) | 226 | 134 | 1020 | 248 |
+| Bar chart: oil derivation by state, coloured by zone | 226 | 414 | 492 | 180 |
+| HTML: zone legend | 234 | 610 | 476 | 20 |
+| Table: revenue lines, this vs previous period, share bars | 754 | 414 | 492 | 216 |
+| HTML: insight banner | 216 | 654 | 1040 | 50 |
 
 ## Deductions (`bg_faac_deductions.png`)
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicers: Period, Zone, State, Currency | 284 | 78 | 960 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Stacked column: deductions by type over time | 226 | 138 | 630 | 292 |
-| Bar chart: deductions as % of gross, by state | 892 | 138 | 354 | 292 |
-| Matrix: state x deduction type (metric field parameter, tooltips) | 226 | 466 | 1020 | 220 |
+| Slicers: Period, Dates (From, To), Zone, State, Currency | 278 | 78 | 966 | 28 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| Line chart: deduction lines over time (TT - Deductions Month) | 226 | 134 | 604 | 242 |
+| Bar chart: external debt by state, coloured by zone | 866 | 134 | 380 | 216 |
+| HTML: zone legend | 872 | 356 | 368 | 20 |
+| Matrix: state x line, green heat (TT - Metric Detail) | 226 | 408 | 1020 | 222 |
+| HTML: insight banner | 216 | 654 | 1040 | 50 |
 
 ## Compare (`bg_faac_compare.png`)
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicer: Compare by (tiles) | 312 | 78 | 308 | 28 |
-| Slicer: Side A member (dropdown, Compare_A) | 668 | 78 | 132 | 28 |
-| Slicer: Side B member (dropdown, Compare_B) | 834 | 78 | 132 | 28 |
-| Slicer: Basis (calculation group, dropdown) | 1040 | 78 | 132 | 28 |
-| Slicer: Currency ₦/$ (tiles) | 1186 | 78 | 62 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Text: Side A name and meta (right-aligned) | 226 | 136 | 434 | 24 |
-| Text: basis label, centre | 660 | 136 | 152 | 24 |
-| Text: Side B name and meta | 812 | 136 | 434 | 24 |
-| Matrix or table: Side A values + bars (Compare Side = A), right-aligned | 226 | 168 | 434 | 438 |
-| Table: metric names, centre column | 660 | 168 | 152 | 438 |
-| Matrix or table: Side B values + bars (Compare Side = B) | 812 | 168 | 434 | 438 |
-| Text: Comparison_narrative | 296 | 638 | 694 | 52 |
+| Slicers: Compare by, A, B, Basis, Currency, Dates | 300 | 78 | 944 | 28 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| Text: side names and meta, basis label | 226 | 130 | 1020 | 26 |
+| Table: A value and bar, metric, change, B bar and value | 226 | 164 | 1020 | 450 |
+| HTML: insight banner with legend | 216 | 636 | 1040 | 68 |
 
 ## Overview (`bg_economy_overview.png`)
 
@@ -93,26 +89,32 @@ at these y positions:
 |---|---|---|---|---|
 | Slicer: Years (between) | 282 | 78 | 278 | 28 |
 | Slicer: President (dropdown) | 660 | 78 | 200 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| KPI group: Inflation (value, change line, as-of text) | 226 | 146 | 228 | 64 |
-| KPI group: Naira per US dollar | 490 | 146 | 228 | 64 |
-| KPI group: Real GDP growth | 754 | 146 | 228 | 64 |
-| KPI group: GDP per person ($ and ₦) | 1018 | 146 | 228 | 64 |
-| Line chart: inflation by month, coloured by president | 226 | 242 | 492 | 332 |
-| Line chart: naira per US dollar by month, coloured by president | 754 | 242 | 492 | 332 |
-| Text: Inflation_narrative + Naira_narrative | 296 | 608 | 950 | 82 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| HTML: flip cards Inflation, Naira, Growth, GDP per person | 216 | 124 | 1040 | 96 |
+| Line chart: inflation by month, by president (TT - Inflation Month) | 226 | 242 | 492 | 388 |
+| HTML: Inflation_explain_html, hidden until the bookmark | 216 | 232 | 512 | 408 |
+| Buttons: What it means / Back to chart (inflation) | 580 | 238 | 136 | 28 |
+| Line chart: naira per US dollar by month, by president (TT - Inflation Month) | 754 | 242 | 492 | 388 |
+| HTML: Naira_explain_html, hidden until the bookmark | 744 | 232 | 512 | 408 |
+| Buttons: What it means / Back to chart (naira) | 1108 | 238 | 136 | 28 |
+| HTML: Economy_insight_html key takeaway | 216 | 654 | 1040 | 50 |
 
 ## Economy size (`bg_economy_size.png`)
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
-| Slicers: Years, President | 282 | 78 | 578 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Column chart: GDP in naira by year | 226 | 138 | 492 | 252 |
-| Column chart: GDP in US dollars by year | 754 | 138 | 492 | 252 |
-| Column chart: real GDP growth by year (green above 0, red below) | 226 | 426 | 492 | 164 |
-| Line chart: GDP per person by year ($) | 754 | 426 | 492 | 164 |
-| Text: GDP_narrative | 296 | 624 | 950 | 66 |
+| Slicer: Years (between) | 282 | 78 | 278 | 28 |
+| Slicer: President (dropdown) | 660 | 78 | 200 | 28 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| Columns: GDP in naira by president (TT - GDP Naira Year) | 226 | 132 | 492 | 212 |
+| HTML: President_legend_html (naira chart) | 232 | 348 | 480 | 20 |
+| Columns: GDP in dollars by president (TT - GDP Dollar Year) | 754 | 132 | 492 | 212 |
+| HTML: President_legend_html (dollar chart) | 760 | 348 | 480 | 20 |
+| Columns: real GDP growth + population line (TT - Growth Year) | 226 | 396 | 492 | 236 |
+| Line: GDP per person, US dollars (TT - Per Person Year) | 754 | 396 | 492 | 236 |
+| HTML: <chart>_explain_html per card, hidden until bookmark | 216 | 124 | 1040 | 516 |
+| Buttons: What it means / Back to chart, top right of cards | 580 | 132 | 136 | 28 |
+| HTML: GDP_insight_html key takeaway | 216 | 654 | 1040 | 50 |
 
 ## FAAC in real terms (`bg_economy_real_terms.png`)
 
@@ -121,25 +123,27 @@ at these y positions:
 | Slicer: Years (between) | 282 | 78 | 278 | 28 |
 | Slicer: President (dropdown) | 660 | 78 | 200 | 28 |
 | Slicer: Prices, As paid / Today's prices (tiles) | 940 | 78 | 304 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| KPI group: first month net (as paid and real) | 226 | 146 | 228 | 64 |
-| KPI group: latest month net | 490 | 146 | 228 | 64 |
-| KPI group: change as paid | 754 | 146 | 228 | 64 |
-| KPI group: change in real terms | 1018 | 146 | 228 | 64 |
-| Column chart: Net_prices by month (title Real_terms_title) | 226 | 242 | 1020 | 348 |
-| Text: Real_terms_narrative | 296 | 624 | 950 | 66 |
+| HTML: freshness strip (FAAC + CPI) | 716 | 8 | 540 | 60 |
+| HTML: flip cards first, latest, change as paid, change real | 216 | 124 | 1040 | 96 |
+| Combo: Net_prices columns + dashed other basis (TT - Real Terms Month) | 226 | 240 | 1020 | 370 |
+| HTML: Real_legend_html | 232 | 612 | 900 | 20 |
+| HTML: Real_explain_html, hidden until the bookmark | 216 | 232 | 1040 | 408 |
+| Buttons: What it means / Back to chart | 1110 | 240 | 136 | 28 |
+| HTML: Real_insight_html key takeaway | 216 | 654 | 1040 | 50 |
 
 ## Presidents (`bg_economy_presidents.png`)
 
 | Visual | x | y | w | h |
 |---|---|---|---|---|
 | Slicer: Years (between) | 282 | 78 | 278 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Bar chart: Inflation_yoy by president, in term order | 226 | 152 | 316 | 358 |
-| Bar chart: Term_naira_change by president | 578 | 152 | 316 | 358 |
-| Bar chart: Real_GDP_growth by president (blank = Before 1999) | 930 | 152 | 316 | 358 |
-| Table: Term_coverage_text by president (partial terms only) | 226 | 544 | 1020 | 48 |
-| Text: Administration_narrative | 296 | 624 | 950 | 66 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| Bars: average inflation (TT - President Inflation) | 226 | 132 | 316 | 384 |
+| Bars: naira value over the term (TT - President Naira) | 578 | 132 | 316 | 384 |
+| Bars: average real GDP growth (TT - President Growth) | 930 | 132 | 316 | 384 |
+| HTML: <chart>_explain_html per card, hidden until bookmark | 216 | 124 | 1040 | 440 |
+| Buttons: What it means / Back to chart, bottom right of cards | 406 | 526 | 136 | 28 |
+| HTML: Term_coverage_html coverage strip | 216 | 576 | 1040 | 52 |
+| HTML: Presidents_insight_html key takeaway | 216 | 654 | 1040 | 50 |
 
 ## About (`bg_about.png`)
 

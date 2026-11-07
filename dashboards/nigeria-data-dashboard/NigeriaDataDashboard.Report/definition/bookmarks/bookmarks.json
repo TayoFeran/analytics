@@ -1,0 +1,65 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json",
+  "items": [
+    {
+      "name": "bmInflationExplain"
+    },
+    {
+      "name": "bmInflationChart"
+    },
+    {
+      "name": "bmNairaExplain"
+    },
+    {
+      "name": "bmNairaChart"
+    },
+    {
+      "name": "bmGdpNairaExplain"
+    },
+    {
+      "name": "bmGdpNairaChart"
+    },
+    {
+      "name": "bmGdpUsdExplain"
+    },
+    {
+      "name": "bmGdpUsdChart"
+    },
+    {
+      "name": "bmGrowthExplain"
+    },
+    {
+      "name": "bmGrowthChart"
+    },
+    {
+      "name": "bmPerPersonExplain"
+    },
+    {
+      "name": "bmPerPersonChart"
+    },
+    {
+      "name": "bmRealExplain"
+    },
+    {
+      "name": "bmRealChart"
+    },
+    {
+      "name": "bmPresInflationExplain"
+    },
+    {
+      "name": "bmPresInflationChart"
+    },
+    {
+      "name": "bmPresNairaExplain"
+    },
+    {
+      "name": "bmPresNairaChart"
+    },
+    {
+      "name": "bmPresGrowthExplain"
+    },
+    {
+      "name": "bmPresGrowthChart"
+    }
+  ]
+}
