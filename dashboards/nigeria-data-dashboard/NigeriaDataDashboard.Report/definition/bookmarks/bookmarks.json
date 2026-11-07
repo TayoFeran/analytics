@@ -42,6 +42,24 @@
     },
     {
       "name": "bmRealChart"
+    },
+    {
+      "name": "bmPresInflationExplain"
+    },
+    {
+      "name": "bmPresInflationChart"
+    },
+    {
+      "name": "bmPresNairaExplain"
+    },
+    {
+      "name": "bmPresNairaChart"
+    },
+    {
+      "name": "bmPresGrowthExplain"
+    },
+    {
+      "name": "bmPresGrowthChart"
     }
   ]
 }

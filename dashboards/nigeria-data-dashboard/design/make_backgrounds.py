@@ -315,24 +315,23 @@ LAYOUT = {
         # No president filter: this page compares them
         "filters": [("YEARS", 234, (282, 78, 560, 106))],
         "seps": [],
+        # Look-and-feel upgrade (2026-11-07): chart titles are native; coverage strip and banner
+        # draw their own boxes
         "cards": [
-            (216, 128, 552, 520, "AVERAGE INFLATION", "card"),
-            (568, 128, 904, 520, "NAIRA VALUE OVER THE TERM", "card"),
-            (920, 128, 1256, 520, "AVERAGE REAL GDP GROWTH", "card"),
-            (216, 536, 1256, 600, None, "card"),
-            (216, 616, 1256, 696, None, "narr"),
+            (216, 124, 552, 564, None, "card"),
+            (568, 124, 904, 564, None, "card"),
+            (920, 124, 1256, 564, None, "card"),
         ],
         "visuals": [
             ("Slicer: Years (between)", (282, 78, 560, 106)),
-            ("Text: refresh stamp", (1040, 22, 1256, 58)),
-            ("Bar chart: Inflation_yoy by president, in term order", (226, 152, 542, 510)),
-            ("Bar chart: Term_naira_change by president", (578, 152, 894, 510)),
-            (
-                "Bar chart: Real_GDP_growth by president (blank = Before 1999)",
-                (930, 152, 1246, 510),
-            ),
-            ("Table: Term_coverage_text by president (partial terms only)", (226, 544, 1246, 592)),
-            ("Text: Administration_narrative", (296, 624, 1246, 690)),
+            ("HTML: freshness strip", (716, 8, 1256, 68)),
+            ("Bars: average inflation (TT - President Inflation)", (226, 132, 542, 516)),
+            ("Bars: naira value over the term (TT - President Naira)", (578, 132, 894, 516)),
+            ("Bars: average real GDP growth (TT - President Growth)", (930, 132, 1246, 516)),
+            ("HTML: <chart>_explain_html per card, hidden until bookmark", (216, 124, 1256, 564)),
+            ("Buttons: What it means / Back to chart, bottom right of cards", (406, 526, 542, 554)),
+            ("HTML: Term_coverage_html coverage strip", (216, 576, 1256, 628)),
+            ("HTML: Presidents_insight_html key takeaway", (216, 654, 1256, 704)),
         ],
     },
     "about": {

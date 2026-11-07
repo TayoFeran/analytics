@@ -26,7 +26,9 @@
     "ttGrowthYear",
     "ttPerPersonYear",
     "ttRealTerms",
-    "ttPresident"
+    "ttPresInflation",
+    "ttPresNaira",
+    "ttPresGrowth"
   ],
   "activePageName": "667bbbfbb392d0e3b3b2"
 }

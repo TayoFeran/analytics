@@ -1264,13 +1264,16 @@ table Dax
 
 	measure Term_naira_change =
 			-- What a naira buys in dollars at the end of the selection vs its start, e.g. -0.56 = lost 56%.
-			-- For a president: first month in office to last (or latest) month.
+			-- For a president: the rate they inherited (the month before their first) to their last (or latest) month;
+			-- the first month in the data has no earlier month, so it starts there
 			VAR _first = CALCULATE ( MIN ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) )
 			VAR _last = CALCULATE ( MAX ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) )
-			VAR _r1 = CALCULATE ( [Naira_per_usd], econ_month[month_date] = _first )
+			VAR _r1 = COALESCE (
+			    CALCULATE ( [Naira_per_usd], REMOVEFILTERS ( econ_month ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_month[month_date] = EDATE ( _first, -1 ) ),
+			    CALCULATE ( [Naira_per_usd], econ_month[month_date] = _first ) )
 			VAR _r2 = CALCULATE ( [Naira_per_usd], econ_month[month_date] = _last )
 			RETURN
-			    IF ( _first < _last, DIVIDE ( _r1, _r2 ) - 1 )
+			    IF ( NOT ISBLANK ( _first ), DIVIDE ( _r1, _r2 ) - 1 )
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 03 Period Comparison\Administration
 
@@ -3720,6 +3723,227 @@ table Dax
 			    [Banner_css]
 			        & "<div class='b'><div class='ic'><svg viewBox='0 0 16 16' style='width:16rem;height:16rem'><path d='M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z' fill='#E2B53E'/></svg></div>"
 			        & "<div class='k'>KEY TAKEAWAY<br>" & UPPER ( FORMAT ( _l, "mmm yyyy" ) ) & "</div><div class='t'>" & _msg & "</div></div>"
+		displayFolder: 06 Titles & Labels\Insights
+
+	measure President_bar_colour =
+			-- Bar colour on the Presidents page: each president's colour, as on every economy chart
+			SWITCH ( SELECTEDVALUE ( dim_administration[president] ), "Obasanjo", "#7F8C86", "Yar'Adua", "#B9D9C9", "Jonathan", "#8FC9AE", "Buhari", "#4E9C78", "Tinubu", "#0E6B45", "#D5DDD9" )
+		displayFolder: 04 Comparison\Colours
+
+	measure PresInflation_tt_html =
+			-- Tooltip card for the average inflation chart: the president's term, value, rank among presidents with data, coverage
+			VAR _pr = SELECTEDVALUE ( dim_administration[president] )
+			VAR _start = SELECTEDVALUE ( dim_administration[term_start] )
+			VAR _end = SELECTEDVALUE ( dim_administration[term_end] )
+			VAR _v = [Inflation_yoy]
+			-- Rank among presidents with data in the selected years (lowest first)
+			VAR _all = FILTER ( ADDCOLUMNS ( ALL ( dim_administration[president] ), "@v", CALCULATE ( [Inflation_yoy] ) ), NOT ISBLANK ( [@v] ) && NOT ISBLANK ( dim_administration[president] ) )
+			VAR _n = COUNTROWS ( _all )
+			VAR _rk = COUNTROWS ( FILTER ( _all, [@v] < _v ) ) + 1
+			VAR _rank = SWITCH ( TRUE (), ISBLANK ( _v ), "No data", _n = 1, "Only president with data", _rk = 1, "Lowest" & " of " & _n, _rk = _n, "Highest" & " of " & _n, _rk & " of " & _n )
+			VAR _cov = VAR _start = SELECTEDVALUE ( dim_administration[term_start] )
+			    VAR _end = SELECTEDVALUE ( dim_administration[term_end] )
+			    -- Months from the month in office to the handover month (May to May = 96 for an 8-year term)
+			    VAR _term = DATEDIFF ( _start, COALESCE ( _end, TODAY () ), MONTH )
+			    VAR _have = CALCULATE ( COUNTROWS ( econ_month ), NOT ISBLANK ( econ_month[inflation_yoy] ) )
+			    RETURN
+			        IF ( ISBLANK ( _have ), "No monthly data before 2010", FORMAT ( _have, "0" ) & " of " & FORMAT ( _term, "0" ) & " months" & IF ( ISBLANK ( _end ), " (in progress)", "" ) )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 140)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{color:#5E6E67;font-size:9.5rem;margin:2rem 0 6rem}.sub i{display:inline-block;width:8rem;height:8rem;border-radius:2rem;margin-right:4rem}"
+			        & ".r{display:flex;justify-content:space-between;align-items:center;gap:10rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span:first-child{color:#5E6E67}.r b{font-weight:700;font-size:11.5rem;text-align:right}</style>"
+			        & "<div class='w'><div class='m'>" & UPPER ( _pr ) & "</div><div class='sub'><i style='background:" & [President_bar_colour] & "'></i>"
+			        & SELECTEDVALUE ( dim_administration[party] ) & " · " & FORMAT ( _start, "mmm yyyy" ) & " to " & IF ( ISBLANK ( _end ), "now", FORMAT ( _end, "mmm yyyy" ) ) & "</div>"
+			        & "<div class='r'><span>Average inflation</span><b>" & IF ( ISBLANK ( _v ), "–", FORMAT ( _v, "0.0%" ) & " a year" ) & "</b></div>"
+			        & "<div class='r'><span>Rank</span><b>" & _rank & "</b></div>"
+			        & "<div class='r'><span>Coverage</span><b>" & _cov & "</b></div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure PresNaira_tt_html =
+			-- Tooltip card for the naira value over the term chart: the president's term, value, rank among presidents with data, coverage
+			VAR _pr = SELECTEDVALUE ( dim_administration[president] )
+			VAR _start = SELECTEDVALUE ( dim_administration[term_start] )
+			VAR _end = SELECTEDVALUE ( dim_administration[term_end] )
+			VAR _v = [Term_naira_change]
+			-- Rank among presidents with data in the selected years (highest first)
+			VAR _all = FILTER ( ADDCOLUMNS ( ALL ( dim_administration[president] ), "@v", CALCULATE ( [Term_naira_change] ) ), NOT ISBLANK ( [@v] ) && NOT ISBLANK ( dim_administration[president] ) )
+			VAR _n = COUNTROWS ( _all )
+			VAR _rk = COUNTROWS ( FILTER ( _all, [@v] > _v ) ) + 1
+			VAR _rank = SWITCH ( TRUE (), ISBLANK ( _v ), "No data", _n = 1, "Only president with data", _rk = 1, "Highest" & " of " & _n, _rk = _n, "Lowest" & " of " & _n, _rk & " of " & _n )
+			VAR _cov = VAR _start = SELECTEDVALUE ( dim_administration[term_start] )
+			    VAR _end = SELECTEDVALUE ( dim_administration[term_end] )
+			    -- Months from the month in office to the handover month (May to May = 96 for an 8-year term)
+			    VAR _term = DATEDIFF ( _start, COALESCE ( _end, TODAY () ), MONTH )
+			    VAR _have = CALCULATE ( COUNTROWS ( econ_month ), NOT ISBLANK ( econ_month[naira_per_usd] ) )
+			    RETURN
+			        IF ( ISBLANK ( _have ), "No monthly data before 2010", FORMAT ( _have, "0" ) & " of " & FORMAT ( _term, "0" ) & " months" & IF ( ISBLANK ( _end ), " (in progress)", "" ) )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 140)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{color:#5E6E67;font-size:9.5rem;margin:2rem 0 6rem}.sub i{display:inline-block;width:8rem;height:8rem;border-radius:2rem;margin-right:4rem}"
+			        & ".r{display:flex;justify-content:space-between;align-items:center;gap:10rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span:first-child{color:#5E6E67}.r b{font-weight:700;font-size:11.5rem;text-align:right}</style>"
+			        & "<div class='w'><div class='m'>" & UPPER ( _pr ) & "</div><div class='sub'><i style='background:" & [President_bar_colour] & "'></i>"
+			        & SELECTEDVALUE ( dim_administration[party] ) & " · " & FORMAT ( _start, "mmm yyyy" ) & " to " & IF ( ISBLANK ( _end ), "now", FORMAT ( _end, "mmm yyyy" ) ) & "</div>"
+			        & "<div class='r'><span>Naira value over the term</span><b>" & IF ( ISBLANK ( _v ), "–", SWITCH ( TRUE (), ROUND ( _v, 2 ) = 0, UNICHAR ( 9632 ) & " about the same", _v < 0, UNICHAR ( 9660 ) & " " & FORMAT ( -_v, "0%" ) & " lost", UNICHAR ( 9650 ) & " " & FORMAT ( _v, "0%" ) & " gained" ) ) & "</b></div>"
+			        & "<div class='r'><span>Rank</span><b>" & _rank & "</b></div>"
+			        & "<div class='r'><span>Coverage</span><b>" & _cov & "</b></div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure PresGrowth_tt_html =
+			-- Tooltip card for the average real growth chart: the president's term, value, rank among presidents with data, coverage
+			VAR _pr = SELECTEDVALUE ( dim_administration[president] )
+			VAR _start = SELECTEDVALUE ( dim_administration[term_start] )
+			VAR _end = SELECTEDVALUE ( dim_administration[term_end] )
+			VAR _v = [Real_GDP_growth]
+			-- Rank among presidents with data in the selected years (highest first)
+			VAR _all = FILTER ( ADDCOLUMNS ( ALL ( dim_administration[president] ), "@v", CALCULATE ( [Real_GDP_growth] ) ), NOT ISBLANK ( [@v] ) && NOT ISBLANK ( dim_administration[president] ) )
+			VAR _n = COUNTROWS ( _all )
+			VAR _rk = COUNTROWS ( FILTER ( _all, [@v] > _v ) ) + 1
+			VAR _rank = SWITCH ( TRUE (), ISBLANK ( _v ), "No data", _n = 1, "Only president with data", _rk = 1, "Highest" & " of " & _n, _rk = _n, "Lowest" & " of " & _n, _rk & " of " & _n )
+			VAR _cov = VAR _have = CALCULATE ( COUNTROWS ( econ_year ), NOT ISBLANK ( econ_year[real_gdp_growth] ) )
+			    RETURN
+			        IF ( ISBLANK ( _have ), "No years in range", _have & IF ( _have = 1, " year", " years" ) & " in range" )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 140)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".w{position:fixed;top:0;left:0;right:0;bottom:0;padding:10rem 12rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;font-size:10.5rem;color:#14231D;background:#fff;border-radius:12rem;overflow:hidden}"
+			        & ".m{font-weight:700;font-size:12rem;letter-spacing:.5rem}.sub{color:#5E6E67;font-size:9.5rem;margin:2rem 0 6rem}.sub i{display:inline-block;width:8rem;height:8rem;border-radius:2rem;margin-right:4rem}"
+			        & ".r{display:flex;justify-content:space-between;align-items:center;gap:10rem;padding:4rem 0;border-top:1px solid #E3E9E6}.r span:first-child{color:#5E6E67}.r b{font-weight:700;font-size:11.5rem;text-align:right}</style>"
+			        & "<div class='w'><div class='m'>" & UPPER ( _pr ) & "</div><div class='sub'><i style='background:" & [President_bar_colour] & "'></i>"
+			        & SELECTEDVALUE ( dim_administration[party] ) & " · " & FORMAT ( _start, "mmm yyyy" ) & " to " & IF ( ISBLANK ( _end ), "now", FORMAT ( _end, "mmm yyyy" ) ) & "</div>"
+			        & "<div class='r'><span>Average real growth</span><b>" & IF ( ISBLANK ( _v ), "–", FORMAT ( _v, "0.0%" ) & " a year" ) & "</b></div>"
+			        & "<div class='r'><span>Rank</span><b>" & _rank & "</b></div>"
+			        & "<div class='r'><span>Coverage</span><b>" & _cov & "</b></div></div>"
+		displayFolder: 06 Titles & Labels\Tooltips
+
+	measure PresInflation_explain_html =
+			-- "What it means" side of the average inflation chart (shown by a bookmark): definition and what the chart says
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( dim_administration[president] ), "@v", [Inflation_yoy] ), NOT ISBLANK ( [@v] ) && NOT ISBLANK ( dim_administration[president] ) )
+			VAR _lo = TOPN ( 1, _t, [@v], ASC )
+			VAR _hi = TOPN ( 1, _t, [@v], DESC )
+			VAR _y0 = MIN ( calendar_table[year] )
+			VAR _y1 = MAX ( calendar_table[year] )
+			VAR _rows = ""
+			VAR _say = IF ( ISEMPTY ( _t ), "No data in the selected years.", "Prices rose slowest under <b>" & MAXX ( _lo, dim_administration[president] ) & "</b> (" & FORMAT ( MAXX ( _lo, [@v] ), "0.0%" ) & " a year on average) and fastest under <b>" & MAXX ( _hi, dim_administration[president] ) & "</b> (" & FORMAT ( MAXX ( _hi, [@v] ), "0.0%" ) & ")." )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 440)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".x{position:fixed;top:0;left:0;right:0;bottom:0;border-radius:12rem;background:#0B3D2E;color:#fff;padding:20rem 20rem 48rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;animation:fi .45s ease-out}"
+			        & "@keyframes fi{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}"
+			        & ".h{font-size:10rem;letter-spacing:1.6rem;color:#E2B53E;font-weight:700;margin-top:18rem}.h:first-child{margin-top:0}"
+			        & ".x p{margin:5rem 0 0;font-size:13.5rem;line-height:1.45}.x b{color:#E2B53E}"
+			        & ".ar{display:flex;align-items:center;gap:8rem;padding:4rem 0;border-top:1px solid #1E5E49;font-size:12.5rem}"
+			        & ".nm{flex:1;font-weight:600}.vv{text-align:right;font-weight:700;color:#E2B53E;white-space:nowrap}</style>"
+			        & "<div class='x'><div class='h'>WHAT IS AVERAGE INFLATION?</div><p>Inflation is how much prices rose compared with a year earlier. Here it is averaged over the months each president was in office. Lower means prices rose more slowly for households.</p>"
+			        & "<div class='h'>WHAT THE CHART SAYS · " & _y0 & " TO " & _y1 & "</div><p>" & _say & "</p>" & _rows & "</div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure PresNaira_explain_html =
+			-- "What it means" side of the naira value chart (shown by a bookmark): definition and what the chart says
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( dim_administration[president] ), "@v", [Term_naira_change] ), NOT ISBLANK ( [@v] ) && NOT ISBLANK ( dim_administration[president] ) )
+			VAR _lo = TOPN ( 1, _t, [@v], ASC )
+			VAR _hi = TOPN ( 1, _t, [@v], DESC )
+			VAR _y0 = MIN ( calendar_table[year] )
+			VAR _y1 = MAX ( calendar_table[year] )
+			-- Naira per dollar each president inherited (the month before their first) and left
+			VAR _rows = CONCATENATEX ( ADDCOLUMNS ( _t, "@f", CALCULATE ( MIN ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) ),
+			        "@l", CALCULATE ( MAX ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) ) ),
+			    VAR _f = [@f]
+			    VAR _l = [@l]
+			    VAR _a = COALESCE ( CALCULATE ( [Naira_per_usd], REMOVEFILTERS ( econ_month ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_month[month_date] = EDATE ( _f, -1 ) ), CALCULATE ( [Naira_per_usd], econ_month[month_date] = _f ) )
+			    VAR _b = CALCULATE ( [Naira_per_usd], econ_month[month_date] = _l )
+			    RETURN "<div class='ar'><span class='nm'>" & dim_administration[president] & "</span><span class='vv'>₦" & FORMAT ( _a, "#,0" ) & " → ₦" & FORMAT ( _b, "#,0" ) & "</span></div>",
+			    "", [@f], ASC )
+			VAR _head = IF ( ISEMPTY ( _t ), "", "<div class='ar hd'><span class='nm'>PRESIDENT</span><span class='vv'>NAIRA PER $, INHERITED → LEFT</span></div>" )
+			VAR _say = IF ( ISEMPTY ( _t ), "No data in the selected years.", "The naira lost most under <b>" & MAXX ( _lo, dim_administration[president] ) & "</b> (" & UNICHAR ( 9660 ) & " " & FORMAT ( -MAXX ( _lo, [@v] ), "0%" ) & ") and least under <b>" & MAXX ( _hi, dim_administration[president] ) & "</b> (" & SWITCH ( TRUE (), ROUND ( MAXX ( _hi, [@v] ), 2 ) = 0, UNICHAR ( 9632 ) & " 0%", MAXX ( _hi, [@v] ) < 0, UNICHAR ( 9660 ) & " " & FORMAT ( -MAXX ( _hi, [@v] ), "0%" ), UNICHAR ( 9650 ) & " " & FORMAT ( MAXX ( _hi, [@v] ), "0%" ) ) & ")." )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 440)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".x{position:fixed;top:0;left:0;right:0;bottom:0;border-radius:12rem;background:#0B3D2E;color:#fff;padding:20rem 20rem 48rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;animation:fi .45s ease-out}"
+			        & "@keyframes fi{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}"
+			        & ".h{font-size:10rem;letter-spacing:1.6rem;color:#E2B53E;font-weight:700;margin-top:18rem}.h:first-child{margin-top:0}"
+			        & ".x p{margin:5rem 0 0;font-size:13.5rem;line-height:1.45}.x b{color:#E2B53E}"
+			        & ".ar{display:flex;align-items:center;gap:8rem;padding:4rem 0;border-top:1px solid #1E5E49;font-size:12.5rem}"
+			        & ".ar.hd{border-top:0;padding:12rem 0 2rem;font-size:8.5rem;letter-spacing:1.2rem;color:#B9D9C9}.ar.hd .vv{color:#B9D9C9;font-weight:600}"
+			        & ".nm{flex:1;font-weight:600}.vv{text-align:right;font-weight:700;color:#E2B53E;white-space:nowrap}</style>"
+			        & "<div class='x'><div class='h'>WHAT DOES NAIRA VALUE MEAN?</div><p>How many more or fewer US dollars a naira buys at the end of a term than when the president took over. ▼ 50% means a naira bought half as many dollars at the end. A weaker naira makes imports, travel and foreign debt dearer.</p>"
+			        & "<div class='h'>WHAT THE CHART SAYS · " & _y0 & " TO " & _y1 & "</div><p>" & _say & "</p>" & _head & _rows & "</div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure PresGrowth_explain_html =
+			-- "What it means" side of the average real growth chart (shown by a bookmark): definition and what the chart says
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( dim_administration[president] ), "@v", [Real_GDP_growth] ), NOT ISBLANK ( [@v] ) && NOT ISBLANK ( dim_administration[president] ) )
+			VAR _lo = TOPN ( 1, _t, [@v], ASC )
+			VAR _hi = TOPN ( 1, _t, [@v], DESC )
+			VAR _y0 = MIN ( calendar_table[year] )
+			VAR _y1 = MAX ( calendar_table[year] )
+			VAR _pop = CALCULATE ( [Population_growth], REMOVEFILTERS ( dim_administration ) )
+			VAR _below = FILTER ( _t, [@v] < _pop )
+			VAR _rows = ""
+			VAR _say = IF ( ISEMPTY ( _t ), "No data in the selected years.", "The economy grew fastest under <b>" & MAXX ( _hi, dim_administration[president] ) & "</b> (" & FORMAT ( MAXX ( _hi, [@v] ), "0.0%" ) & " a year) and slowest under <b>" & MAXX ( _lo, dim_administration[president] ) & "</b> (" & FORMAT ( MAXX ( _lo, [@v] ), "0.0%" ) & "). " & IF ( ISEMPTY ( _below ), "Every president averaged above population growth.", CONCATENATEX ( _below, dim_administration[president], " and " ) & " averaged below population growth (" & FORMAT ( _pop, "0.0%" ) & " a year)." ) )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 440)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".x{position:fixed;top:0;left:0;right:0;bottom:0;border-radius:12rem;background:#0B3D2E;color:#fff;padding:20rem 20rem 48rem;box-sizing:border-box;font-family:Segoe UI,sans-serif;animation:fi .45s ease-out}"
+			        & "@keyframes fi{from{transform:perspective(1200px) rotateY(-90deg);opacity:.2}to{transform:none;opacity:1}}"
+			        & ".h{font-size:10rem;letter-spacing:1.6rem;color:#E2B53E;font-weight:700;margin-top:18rem}.h:first-child{margin-top:0}"
+			        & ".x p{margin:5rem 0 0;font-size:13.5rem;line-height:1.45}.x b{color:#E2B53E}"
+			        & ".ar{display:flex;align-items:center;gap:8rem;padding:4rem 0;border-top:1px solid #1E5E49;font-size:12.5rem}"
+			        & ".nm{flex:1;font-weight:600}.vv{text-align:right;font-weight:700;color:#E2B53E;white-space:nowrap}</style>"
+			        & "<div class='x'><div class='h'>WHAT IS REAL GDP GROWTH?</div><p>How much more the economy produced each year than the year before, with price rises removed, averaged over each president's years. A year counts for the president in office on 1 July. Growth below population growth means the average Nigerian's share shrank.</p>"
+			        & "<div class='h'>WHAT THE CHART SAYS · " & _y0 & " TO " & _y1 & "</div><p>" & _say & "</p>" & _rows & "</div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure Term_coverage_html =
+			-- Coverage strip for the Presidents page: one chip per partial term (data gap or the Years filter cuts the term);
+			-- shrinks as older data is backfilled and says so when every term is fully covered
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( dim_administration[president] ),
+			        "@note", [Term_coverage_text], "@start", CALCULATE ( MIN ( dim_administration[term_start] ) ) ),
+			    NOT ISBLANK ( [@note] ) && NOT ISBLANK ( dim_administration[president] ) )
+			RETURN
+			    "<style>html{font-size:calc(100vh / 52)}html,body{margin:0;padding:0;overflow:hidden}"
+			        & ".c{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;gap:10rem;padding:0 16rem;box-sizing:border-box;background:#fff;border-radius:12rem;border-left:4rem solid #E2B53E;font-family:Segoe UI,sans-serif}"
+			        & ".ch{font-size:8.5rem;letter-spacing:1.8rem;color:#5E6E67;font-weight:700;white-space:nowrap}.cs{display:flex;flex-wrap:wrap;gap:6rem}"
+			        & ".p{font-size:9.5rem;color:#14231D;background:#EDF2EF;border-radius:999rem;padding:4rem 10rem;white-space:nowrap}"
+			        & ".p i{display:inline-block;width:8rem;height:8rem;border-radius:2rem;margin-right:5rem}.p b{font-weight:700;margin-right:5rem}</style>"
+			        & "<div class='c'>"
+			        & IF ( ISEMPTY ( _t ),
+			            "<span class='ch'>FULL COVERAGE</span><span style='font-size:10rem;color:#5E6E67'>Every term in the selected years is fully covered.</span>",
+			            "<span class='ch'>PARTIAL TERMS</span><div class='cs'>"
+			                & CONCATENATEX ( _t, "<span class='p'><i style='background:" & SWITCH ( dim_administration[president], "Obasanjo", "#7F8C86", "Yar'Adua", "#B9D9C9", "Jonathan", "#8FC9AE", "Buhari", "#4E9C78", "Tinubu", "#0E6B45", "#D5DDD9" ) & "'></i><b>" & dim_administration[president] & "</b>" & [@note] & "</span>", "", [@start], ASC )
+			                & "</div>" )
+			        & "</div>"
+		displayFolder: 05 Visual Helpers\HTML
+
+	measure Presidents_insight_html =
+			-- Key takeaway banner for Presidents: highest and lowest inflation, biggest naira fall, fastest growth
+			VAR _t = FILTER ( ADDCOLUMNS ( VALUES ( dim_administration[president] ),
+			        "@i", [Inflation_yoy], "@n", [Term_naira_change], "@g", [Real_GDP_growth], "@open", IF ( ISBLANK ( CALCULATE ( MAX ( dim_administration[term_end] ) ) ), 1, 0 ) ),
+			    NOT ISBLANK ( dim_administration[president] ) && ( NOT ISBLANK ( [@i] ) || NOT ISBLANK ( [@g] ) ) )
+			VAR _ti = FILTER ( _t, NOT ISBLANK ( [@i] ) )
+			VAR _tn = FILTER ( _t, NOT ISBLANK ( [@n] ) )
+			VAR _tg = FILTER ( _t, NOT ISBLANK ( [@g] ) )
+			VAR _hi = TOPN ( 1, _ti, [@i], DESC )
+			VAR _lo = TOPN ( 1, _ti, [@i], ASC )
+			VAR _fx = TOPN ( 1, _tn, [@n], ASC )
+			VAR _gr = TOPN ( 1, _tg, [@g], DESC )
+			VAR _so = " so far"
+			VAR _msg =
+			    SWITCH ( TRUE (),
+			        ISEMPTY ( _t ), "No data in the selected years.",
+			        COUNTROWS ( _t ) = 1,
+			            "Only " & MAXX ( _t, dim_administration[president] ) & "'s term falls in the selected years. "
+			                & IF ( NOT ISEMPTY ( _ti ), "Inflation averaged <span class='dn'>" & FORMAT ( MAXX ( _t, [@i] ), "0.0%" ) & "</span>, ", "" )
+			                & IF ( NOT ISEMPTY ( _tn ), "the naira lost <span class='dn'>" & FORMAT ( -MAXX ( _t, [@n] ), "0%" ) & "</span> of its value, ", "" )
+			                & IF ( NOT ISEMPTY ( _tg ), "and real growth averaged <span class='" & IF ( MAXX ( _t, [@g] ) >= 0, "up", "dn" ) & "'>" & FORMAT ( MAXX ( _t, [@g] ), "0.0%" ) & "</span> a year.", "" ),
+			        ISEMPTY ( _ti ),
+			            "The economy grew fastest under " & MAXX ( _gr, dim_administration[president] ) & " (<span class='up'>" & FORMAT ( MAXX ( _gr, [@g] ), "0.0%" ) & "</span> a year). Monthly inflation and naira data start in 2010.",
+			        "Inflation averaged <span class='dn'>" & FORMAT ( MAXX ( _hi, [@i] ), "0.0%" ) & "</span> under " & MAXX ( _hi, dim_administration[president] ) & IF ( MAXX ( _hi, [@open] ) = 1, _so, "" )
+			            & ", the highest of the " & COUNTROWS ( _ti ) & " presidents with data, and the naira lost <span class='dn'>" & FORMAT ( -MAXX ( _fx, [@n] ), "0%" ) & "</span> of its value under "
+			            & MAXX ( _fx, dim_administration[president] ) & IF ( MAXX ( _fx, [@open] ) = 1, _so, "" ) & ". "
+			            & MAXX ( _lo, dim_administration[president] ) & " had the lowest inflation (<span class='up'>" & FORMAT ( MAXX ( _lo, [@i] ), "0.0%" ) & "</span>)"
+			            & IF ( NOT ISEMPTY ( _tg ), " and " & MAXX ( _gr, dim_administration[president] ) & " the fastest growth (<span class='up'>" & FORMAT ( MAXX ( _gr, [@g] ), "0.0%" ) & "</span>).", "." ) )
+			RETURN
+			    [Banner_css]
+			        & "<div class='b'><div class='ic'><svg viewBox='0 0 16 16' style='width:16rem;height:16rem'><path d='M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 13.2h4V14.5H6z' fill='#E2B53E'/></svg></div>"
+			        & "<div class='k'>KEY TAKEAWAY<br>" & MIN ( calendar_table[year] ) & "–" & MAX ( calendar_table[year] ) & "</div><div class='t'>" & _msg & "</div></div>"
 		displayFolder: 06 Titles & Labels\Insights
 
 	column Value

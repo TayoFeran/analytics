@@ -137,12 +137,14 @@ at these y positions:
 | Visual | x | y | w | h |
 |---|---|---|---|---|
 | Slicer: Years (between) | 282 | 78 | 278 | 28 |
-| Text: refresh stamp | 1040 | 22 | 216 | 36 |
-| Bar chart: Inflation_yoy by president, in term order | 226 | 152 | 316 | 358 |
-| Bar chart: Term_naira_change by president | 578 | 152 | 316 | 358 |
-| Bar chart: Real_GDP_growth by president (blank = Before 1999) | 930 | 152 | 316 | 358 |
-| Table: Term_coverage_text by president (partial terms only) | 226 | 544 | 1020 | 48 |
-| Text: Administration_narrative | 296 | 624 | 950 | 66 |
+| HTML: freshness strip | 716 | 8 | 540 | 60 |
+| Bars: average inflation (TT - President Inflation) | 226 | 132 | 316 | 384 |
+| Bars: naira value over the term (TT - President Naira) | 578 | 132 | 316 | 384 |
+| Bars: average real GDP growth (TT - President Growth) | 930 | 132 | 316 | 384 |
+| HTML: <chart>_explain_html per card, hidden until bookmark | 216 | 124 | 1040 | 440 |
+| Buttons: What it means / Back to chart, bottom right of cards | 406 | 526 | 136 | 28 |
+| HTML: Term_coverage_html coverage strip | 216 | 576 | 1040 | 52 |
+| HTML: Presidents_insight_html key takeaway | 216 | 654 | 1040 | 50 |
 
 ## About (`bg_about.png`)
 

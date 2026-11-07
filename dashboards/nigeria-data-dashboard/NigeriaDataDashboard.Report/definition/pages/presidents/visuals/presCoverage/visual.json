@@ -2,18 +2,18 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "presCoverage",
   "position": {
-    "x": 240,
-    "y": 542,
-    "z": 1500,
-    "height": 54,
-    "width": 1000,
-    "tabOrder": 1500
+    "x": 216,
+    "y": 576,
+    "z": 2400,
+    "height": 52,
+    "width": 1040,
+    "tabOrder": 2400
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "htmlContent443BE3AD55E043BF878BED274D3A6865",
     "query": {
       "queryState": {
-        "Values": {
+        "content": {
           "projections": [
             {
               "field": {
@@ -23,52 +23,21 @@
                       "Entity": "Dax"
                     }
                   },
-                  "Property": "Coverage_summary"
+                  "Property": "Term_coverage_html"
                 }
               },
-              "queryRef": "Dax.Coverage_summary",
-              "nativeQueryRef": "Coverage_summary"
+              "queryRef": "Dax.Term_coverage_html",
+              "nativeQueryRef": "Term_coverage_html"
             }
           ]
         }
       }
     },
     "objects": {
-      "labels": [
+      "compatibility": [
         {
           "properties": {
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#8A6500'"
-                    }
-                  }
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "8D"
-                }
-              }
-            },
-            "fontFamily": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Segoe UI'"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryLabels": [
-        {
-          "properties": {
-            "show": {
+            "legacyRendering": {
               "expr": {
                 "Literal": {
                   "Value": "false"
@@ -77,22 +46,56 @@
             }
           }
         }
-      ],
-      "wordWrap": [
+      ]
+    },
+    "visualContainerObjects": {
+      "general": [
         {
           "properties": {
-            "show": {
+            "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "'Coverage: terms the data covers only in part, one chip each.'"
                 }
               }
             }
           }
         }
-      ]
-    },
-    "visualContainerObjects": {
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
       "background": [
         {
           "properties": {

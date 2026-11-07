@@ -93,11 +93,6 @@
           "type": "Image"
         },
         {
-          "name": "tt_economy_president.png",
-          "path": "tt_economy_president.png",
-          "type": "Image"
-        },
-        {
           "name": "nigeria_states.json",
           "path": "nigeria_states.json",
           "type": "ShapeMap"

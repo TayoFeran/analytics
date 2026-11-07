@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/1.4.0/schema.json",
+  "displayName": "Average real GDP growth: chart",
+  "name": "bmPresGrowthChart",
+  "options": {
+    "targetVisualNames": [
+      "presGrowthChart",
+      "presGrowthExplain",
+      "presGrowthInfo",
+      "presGrowthBack"
+    ],
+    "applyOnlyToTargetVisuals": true,
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "presidents",
+    "sections": {
+      "presidents": {
+        "visualContainers": {
+          "presGrowthChart": {
+            "singleVisual": {
+              "visualType": "clusteredBarChart",
+              "objects": {}
+            }
+          },
+          "presGrowthExplain": {
+            "singleVisual": {
+              "visualType": "htmlContent443BE3AD55E043BF878BED274D3A6865",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "presGrowthInfo": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {}
+            }
+          },
+          "presGrowthBack": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
