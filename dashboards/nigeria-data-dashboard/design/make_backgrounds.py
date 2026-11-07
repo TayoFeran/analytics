@@ -44,6 +44,10 @@ MAIN_X, MAIN_R = 216, 1256  # main content edges (24 px gutters)
 FILTER = (MAIN_X, 72, MAIN_R, 112)  # filter bar container
 
 # Sidebar navigation: (label, page or None if the section isn't built yet, y)
+# The About page and the sidebar source note are off for now (user, 2026-11-07)
+SHOW_ABOUT = False
+SHOW_SOURCE_NOTE = False
+
 NAV = [
     ("FAAC", "section", 118),
     ("Overview", "overview", 136),
@@ -58,8 +62,8 @@ NAV = [
     ("Presidents", "presidents", 424),
     ("ELECTIONS", "section", 470),
     ("Results", None, 488),
-    ("INFO", "section", 534),
-    ("About", "about", 552),
+    # INFO / About are off for now (2026-11-07); put back with SHOW_ABOUT
+    *([("INFO", "section", 534), ("About", "about", 552)] if SHOW_ABOUT else []),
 ]
 NAV_H = 28
 
@@ -82,7 +86,8 @@ ECONOMY_FILTERS = [
 ]
 ECONOMY_SEPARATORS = [574]
 
-# Sidebar footer, per section (None = dashboard-wide pages like About)
+# Sidebar footer, per section (None = dashboard-wide pages like About). Hidden for now
+# (2026-11-07); put back with SHOW_SOURCE_NOTE
 FOOTER = {
     "FAAC": [
         "Source: FAAC monthly",
@@ -608,8 +613,9 @@ def draw_sidebar(img: Image.Image, page: str, section: str | None) -> None:
             chip = (134, y + 7, 170, y + NAV_H - 7)
             d.rounded_rectangle(box(chip), radius=s(7), outline="#5E8A77", width=s(1))
             tracked(d, (chip[0] + 6, chip[1] + 1.5), "SOON", font(SEMI, 7.5), "#5E8A77", 0.8)
-    for i, line in enumerate(FOOTER[section]):
-        d.text((s(22), s(640 + i * 13)), line, font=font(REG, 9), fill="#8FB0A2")
+    if SHOW_SOURCE_NOTE:
+        for i, line in enumerate(FOOTER[section]):
+            d.text((s(22), s(640 + i * 13)), line, font=font(REG, 9), fill="#8FB0A2")
 
 
 def draw_header(img: Image.Image, title: str, section: str | None) -> None:
@@ -755,6 +761,8 @@ def main() -> None:
     out = Path(sys.argv[1]) if len(sys.argv) > 1 else here / "backgrounds"
     out.mkdir(parents=True, exist_ok=True)
     for page, spec in LAYOUT.items():
+        if page == "about" and not SHOW_ABOUT:
+            continue
         print(f"Wrote {render(page, spec, out).name}")
     for page, spec in TOOLTIPS.items():
         print(f"Wrote {render_tooltip(page, spec, out).name}")

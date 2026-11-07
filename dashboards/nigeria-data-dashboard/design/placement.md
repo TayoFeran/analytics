@@ -20,7 +20,6 @@ at these y positions:
 | Economy size | 360 |
 | FAAC in real terms | 392 |
 | Presidents | 424 |
-| About | 552 |
 
 ## Overview (`bg_faac_overview.png`)
 

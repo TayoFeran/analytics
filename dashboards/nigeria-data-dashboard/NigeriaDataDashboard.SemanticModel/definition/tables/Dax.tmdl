@@ -210,12 +210,6 @@ table Dax
 				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
 				RETURN """" & _s & """#,0"
 
-	measure Net_rate =
-			-- Share of the gross allocation the state actually received
-			DIVIDE ( [Net], [Gross], 0 )
-		formatString: 0.0%;-0.0%;0.0%
-		displayFolder: 01 Base\Net
-
 	measure Months =
 			DISTINCTCOUNT ( faac[disbursement_date] )
 		formatString: #,0
@@ -284,21 +278,6 @@ table Dax
 				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
 				RETURN """" & _s & """#,0"
 
-	measure Oil_Derivation_share =
-			DIVIDE ( [Oil_Derivation], [Gross], 0 )
-		formatString: 0.0%;-0.0%;0.0%
-		displayFolder: 02 Rates & Averages\Shares
-
-	measure VAT_share =
-			DIVIDE ( [VAT], [Gross], 0 )
-		formatString: 0.0%;-0.0%;0.0%
-		displayFolder: 02 Rates & Averages\Shares
-
-	measure Deductions_share =
-			DIVIDE ( [Deductions], [Gross], 0 )
-		formatString: 0.0%;-0.0%;0.0%
-		displayFolder: 02 Rates & Averages\Shares
-
 	measure Net_share_national =
 			-- The state's share of the net received by all states, for the current period
 			DIVIDE ( [Net_curr], CALCULATE ( [Net_curr], REMOVEFILTERS ( dim_state ) ), 0 )
@@ -314,22 +293,9 @@ table Dax
 				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
 				RETURN """" & _s & """#,0"
 
-	measure Gross_prev =
-			CALCULATE ( [Gross], 'Period Calc'[Name] = "Previous" )
-		displayFolder: 03 Period Comparison\Gross
-
-		formatStringDefinition =
-				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
-				RETURN """" & _s & """#,0"
-
 	measure Gross_PnP =
 			CALCULATE ( [Gross], 'Period Calc'[Name] = "Change %" )
 		formatString: 0.0%;-0.0%;0.0%
-		displayFolder: 03 Period Comparison\Gross
-
-	measure 'Gross_G&D' =
-			CALCULATE ( [Gross], 'Period Calc'[Name] = "Trend" )
 		displayFolder: 03 Period Comparison\Gross
 
 	measure Gross_colour =
@@ -344,30 +310,8 @@ table Dax
 			    )
 		displayFolder: 03 Period Comparison\Gross
 
-	measure Gross_change_text =
-			-- e.g. "▲ 8.9% Growth · vs Mar 2026"
-			VAR _chg = [Gross_PnP]
-			VAR _mark =
-			    SWITCH ( TRUE (), ROUND ( _chg, 4 ) = 0, UNICHAR ( 9632 ), _chg > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) )
-			RETURN
-			    IF (
-			        ISBLANK ( _chg ),
-			        "No data for this period",
-			        _mark & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [Gross_G&D] & " · " & [Periodic_text]
-			    )
-		displayFolder: 03 Period Comparison\Gross
-
 	measure Deductions_curr =
 			CALCULATE ( [Deductions], 'Period Calc'[Name] = "Current" )
-		displayFolder: 03 Period Comparison\Deductions
-
-		formatStringDefinition =
-				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
-				RETURN """" & _s & """#,0"
-
-	measure Deductions_prev =
-			CALCULATE ( [Deductions], 'Period Calc'[Name] = "Previous" )
 		displayFolder: 03 Period Comparison\Deductions
 
 		formatStringDefinition =
@@ -378,10 +322,6 @@ table Dax
 	measure Deductions_PnP =
 			CALCULATE ( [Deductions], 'Period Calc'[Name] = "Change %" )
 		formatString: 0.0%;-0.0%;0.0%
-		displayFolder: 03 Period Comparison\Deductions
-
-	measure 'Deductions_G&D' =
-			CALCULATE ( [Deductions], 'Period Calc'[Name] = "Trend" )
 		displayFolder: 03 Period Comparison\Deductions
 
 	measure Deductions_colour =
@@ -396,30 +336,8 @@ table Dax
 			    )
 		displayFolder: 03 Period Comparison\Deductions
 
-	measure Deductions_change_text =
-			-- e.g. "▲ 8.9% Growth · vs Mar 2026"
-			VAR _chg = [Deductions_PnP]
-			VAR _mark =
-			    SWITCH ( TRUE (), ROUND ( _chg, 4 ) = 0, UNICHAR ( 9632 ), _chg > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) )
-			RETURN
-			    IF (
-			        ISBLANK ( _chg ),
-			        "No data for this period",
-			        _mark & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [Deductions_G&D] & " · " & [Periodic_text]
-			    )
-		displayFolder: 03 Period Comparison\Deductions
-
 	measure Net_curr =
 			CALCULATE ( [Net], 'Period Calc'[Name] = "Current" )
-		displayFolder: 03 Period Comparison\Net
-
-		formatStringDefinition =
-				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
-				RETURN """" & _s & """#,0"
-
-	measure Net_prev =
-			CALCULATE ( [Net], 'Period Calc'[Name] = "Previous" )
 		displayFolder: 03 Period Comparison\Net
 
 		formatStringDefinition =
@@ -430,10 +348,6 @@ table Dax
 	measure Net_PnP =
 			CALCULATE ( [Net], 'Period Calc'[Name] = "Change %" )
 		formatString: 0.0%;-0.0%;0.0%
-		displayFolder: 03 Period Comparison\Net
-
-	measure 'Net_G&D' =
-			CALCULATE ( [Net], 'Period Calc'[Name] = "Trend" )
 		displayFolder: 03 Period Comparison\Net
 
 	measure Net_colour =
@@ -448,36 +362,14 @@ table Dax
 			    )
 		displayFolder: 03 Period Comparison\Net
 
-	measure Net_change_text =
-			-- e.g. "▲ 8.9% Growth · vs Mar 2026"
-			VAR _chg = [Net_PnP]
-			VAR _mark =
-			    SWITCH ( TRUE (), ROUND ( _chg, 4 ) = 0, UNICHAR ( 9632 ), _chg > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) )
-			RETURN
-			    IF (
-			        ISBLANK ( _chg ),
-			        "No data for this period",
-			        _mark & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [Net_G&D] & " · " & [Periodic_text]
-			    )
-		displayFolder: 03 Period Comparison\Net
-
 	measure FX_rate_curr =
 			CALCULATE ( [FX_rate_avg], 'Period Calc'[Name] = "Current" )
-		formatString: ₦#,0.00
-		displayFolder: 03 Period Comparison\FX_rate
-
-	measure FX_rate_prev =
-			CALCULATE ( [FX_rate_avg], 'Period Calc'[Name] = "Previous" )
 		formatString: ₦#,0.00
 		displayFolder: 03 Period Comparison\FX_rate
 
 	measure FX_rate_PnP =
 			CALCULATE ( [FX_rate_avg], 'Period Calc'[Name] = "Change %" )
 		formatString: 0.0%;-0.0%;0.0%
-		displayFolder: 03 Period Comparison\FX_rate
-
-	measure 'FX_rate_G&D' =
-			CALCULATE ( [FX_rate_avg], 'Period Calc'[Name] = "Trend" )
 		displayFolder: 03 Period Comparison\FX_rate
 
 	measure FX_rate_colour =
@@ -489,19 +381,6 @@ table Dax
 			        ISBLANK ( _chg ) || ROUND ( _chg, 4 ) = 0, "#C98A00",
 			        _chg < 0, "#0E8A5F",
 			        "#C93C3C"
-			    )
-		displayFolder: 03 Period Comparison\FX_rate
-
-	measure FX_rate_change_text =
-			-- e.g. "▲ 8.9% Growth · vs Mar 2026"
-			VAR _chg = [FX_rate_PnP]
-			VAR _mark =
-			    SWITCH ( TRUE (), ROUND ( _chg, 4 ) = 0, UNICHAR ( 9632 ), _chg > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) )
-			RETURN
-			    IF (
-			        ISBLANK ( _chg ),
-			        "No data for this period",
-			        _mark & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [FX_rate_G&D] & " · " & [Periodic_text]
 			    )
 		displayFolder: 03 Period Comparison\FX_rate
 
@@ -528,10 +407,6 @@ table Dax
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 03 Period Comparison\Metric (tooltip)
 
-	measure 'Metric_value_G&D' =
-			CALCULATE ( [Metric_value], 'Period Calc'[Name] = "Trend" )
-		displayFolder: 03 Period Comparison\Metric (tooltip)
-
 	measure Metric_value_colour =
 			-- Income and net: up is good. Deductions: up is bad. No change: amber.
 			VAR _chg = [Metric_value_PnP]
@@ -541,19 +416,6 @@ table Dax
 			        ISBLANK ( _chg ) || ROUND ( _chg, 4 ) = 0, "#C98A00",
 			        ( _chg > 0 ) = ( SELECTEDVALUE ( Metric_param[Metric_family] ) <> "Deduction" ), "#0E8A5F",
 			        "#C93C3C"
-			    )
-		displayFolder: 03 Period Comparison\Metric (tooltip)
-
-	measure Metric_change_text =
-			-- e.g. "▲ 8.9% Growth · vs Mar 2026"
-			VAR _chg = [Metric_value_PnP]
-			VAR _mark =
-			    SWITCH ( TRUE (), ROUND ( _chg, 4 ) = 0, UNICHAR ( 9632 ), _chg > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) )
-			RETURN
-			    IF (
-			        ISBLANK ( _chg ),
-			        "No data for this period",
-			        _mark & " " & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [Metric_value_G&D] & " · " & [Periodic_text]
 			    )
 		displayFolder: 03 Period Comparison\Metric (tooltip)
 
@@ -645,63 +507,6 @@ table Dax
 		formatString: #,0
 		displayFolder: 04 Comparison\Sides
 
-	measure Side_A_value =
-			-- Side A's value of the metric picked in Metric_param, on the selected Basis.
-			-- Put it directly in a visual; inside another measure it can't see the Basis slicer.
-			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
-			VAR _a =
-			    DIVIDE (
-			        CALCULATE ( [Side_A_total] ),
-			        SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 )
-			    )
-			VAR _b =
-			    DIVIDE (
-			        CALCULATE ( [Side_B_total] ),
-			        SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 )
-			    )
-			RETURN
-			    _a
-		displayFolder: 04 Comparison\Sides
-
-		formatStringDefinition =
-				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
-				RETURN """" & _s & """#,0"
-
-	measure Side_B_value =
-			-- Side B's value of the metric picked in Metric_param, on the selected Basis.
-			-- Put it directly in a visual; inside another measure it can't see the Basis slicer.
-			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
-			VAR _a =
-			    DIVIDE (
-			        CALCULATE ( [Side_A_total] ),
-			        SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 )
-			    )
-			VAR _b =
-			    DIVIDE (
-			        CALCULATE ( [Side_B_total] ),
-			        SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 )
-			    )
-			RETURN
-			    _b
-		displayFolder: 04 Comparison\Sides
-
-		formatStringDefinition =
-				VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-				-- Only the symbol: visuals ignore comma scaling, so display units do the scaling
-				RETURN """" & _s & """#,0"
-
-	measure Compare_valid =
-			-- Warning text when both sides are the same; blank otherwise
-			VAR _by = SELECTEDVALUE ( Compare_By[compare_by], "Administration" )
-			RETURN
-			    IF (
-			        NOT ISBLANK ( SELECTEDVALUE ( Compare_A[member] ) )
-			            && SELECTEDVALUE ( Compare_A[member] ) = SELECTEDVALUE ( Compare_B[member] ),
-			        "Pick two different " & LOWER ( _by ) & "s to compare."
-			    )
-		displayFolder: 04 Comparison\Sides
-
 	measure Metric_A_colour =
 			-- Green if Side A is better, red if worse, amber if equal. For deductions, higher is worse.
 			VAR _fam = SELECTEDVALUE ( Metric_param[Metric_family] )
@@ -750,15 +555,6 @@ table Dax
 			    )
 		displayFolder: 04 Comparison\Colours
 
-	measure Last_6_Period_flag =
-			-- 1 for the 6 months up to the latest month with data (sparklines, tooltip trends)
-			VAR _last = [Latest_month]
-			VAR _m = MAX ( calendar_table[month_date] )
-			RETURN
-			    IF ( _m <= EOMONTH ( _last, 0 ) && _m > EOMONTH ( _last, -6 ), 1, 0 )
-		formatString: 0
-		displayFolder: 05 Visual Helpers\Sparklines
-
 	measure Last_24_month_flag =
 			-- 1 for the 24 months up to the latest month with data (Overview trend)
 			VAR _last = [Latest_month]
@@ -774,10 +570,6 @@ table Dax
 
 	measure Mix_title =
 			"Revenue mix · " & [Period_label]
-		displayFolder: 06 Titles & Labels\Titles
-
-	measure Top5_title =
-			"Top 5 states by net received · " & [Period_label]
 		displayFolder: 06 Titles & Labels\Titles
 
 	measure Map_title =
@@ -841,89 +633,6 @@ table Dax
 			SELECTEDVALUE ( Basis[Basis], "Total" ) & ", " & [Currency_label]
 		displayFolder: 06 Titles & Labels\Text
 
-	measure Comparison_narrative =
-			-- e.g. "Under Tinubu, states were allocated ₦607.0bn a month on average, 2.3× as much as
-			-- under Buhari (₦265.3bn). Deductions took 9.8% of gross under Tinubu and 12.3% under Buhari."
-			VAR _by = SELECTEDVALUE ( Compare_By[compare_by], "Administration" )
-			VAR _na = [Side_A_label]
-			VAR _nb = [Side_B_label]
-			VAR _basis = SELECTEDVALUE ( Basis[Basis], "Total" )
-			VAR _a =
-			    DIVIDE (
-			        CALCULATE ( [Side_A_total], Metric_param[Metric_key] = "Gross" ),
-			        SWITCH ( _basis, "Monthly average", [Side_A_months], "Per state per month", [Side_A_state_months], 1 )
-			    )
-			VAR _b =
-			    DIVIDE (
-			        CALCULATE ( [Side_B_total], Metric_param[Metric_key] = "Gross" ),
-			        SWITCH ( _basis, "Monthly average", [Side_B_months], "Per state per month", [Side_B_state_months], 1 )
-			    )
-			-- A share within one side: the basis divisor cancels, so totals are enough
-			VAR _da =
-			    DIVIDE (
-			        CALCULATE ( [Side_A_total], Metric_param[Metric_key] = "Deductions" ),
-			        CALCULATE ( [Side_A_total], Metric_param[Metric_key] = "Gross" )
-			    )
-			VAR _db =
-			    DIVIDE (
-			        CALCULATE ( [Side_B_total], Metric_param[Metric_key] = "Deductions" ),
-			        CALCULATE ( [Side_B_total], Metric_param[Metric_key] = "Gross" )
-			    )
-			VAR _per =
-			    SWITCH (
-			        _basis,
-			        "Monthly average", " a month on average",
-			        "Per state per month", " per state per month",
-			        " in total"
-			    )
-			VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-			VAR _fa =
-			    _s
-			        & SWITCH (
-			            TRUE (),
-			            ABS ( _a ) >= 1e12, FORMAT ( _a / 1e12, "#,0.0" ) & "tn",
-			            ABS ( _a ) >= 1e9, FORMAT ( _a / 1e9, "#,0.0" ) & "bn",
-			            ABS ( _a ) >= 1e6, FORMAT ( _a / 1e6, "#,0.0" ) & "m",
-			            FORMAT ( _a, "#,0" )
-			        )
-			VAR _fb =
-			    _s
-			        & SWITCH (
-			            TRUE (),
-			            ABS ( _b ) >= 1e12, FORMAT ( _b / 1e12, "#,0.0" ) & "tn",
-			            ABS ( _b ) >= 1e9, FORMAT ( _b / 1e9, "#,0.0" ) & "bn",
-			            ABS ( _b ) >= 1e6, FORMAT ( _b / 1e6, "#,0.0" ) & "m",
-			            FORMAT ( _b, "#,0" )
-			        )
-			VAR _subject =
-			    SWITCH (
-			        _by,
-			        "Administration", "Under " & _nb & ", states were allocated ",
-			        "State", _nb & " was allocated ",
-			        "States in the " & _nb & " were allocated "
-			    )
-			VAR _ref = SWITCH ( _by, "Administration", "under " & _na, "State", _na, "states in the " & _na )
-			VAR _in = IF ( _by = "Administration", "under ", "in " )
-			VAR _r = DIVIDE ( _b, _a )
-			VAR _cmp =
-			    SWITCH (
-			        TRUE (),
-			        ROUND ( _r, 3 ) = 1, "the same as " & _ref,
-			        _r >= 1.5, FORMAT ( _r, "0.0" ) & "× as much as " & _ref,
-			        _r > 1, FORMAT ( _r - 1, "0%" ) & " more than " & _ref,
-			        FORMAT ( 1 - _r, "0%" ) & " less than " & _ref
-			    )
-			RETURN
-			    SWITCH (
-			        TRUE (),
-			        NOT ISBLANK ( [Compare_valid] ), [Compare_valid],
-			        ISBLANK ( _a ) || ISBLANK ( _b ), "Pick " & IF ( _by = "Administration", "an ", "a " ) & LOWER ( _by ) & " for each side.",
-			        _subject & _fb & _per & ", " & _cmp & " (" & _fa & "). "
-			            & "Deductions took " & FORMAT ( _db, "0.0%" ) & " of gross " & _in & _nb
-			            & " and " & FORMAT ( _da, "0.0%" ) & " " & _in & _na & "."
-			    )
-		displayFolder: 06 Titles & Labels\Text
-
 	measure Metric_definition =
 			-- Plain-language explanation of the hovered metric, keyed on Metric_key
 			VAR _k = SELECTEDVALUE ( Metric_param[Metric_key] )
@@ -947,82 +656,6 @@ table Dax
 			        "Net", "What the state actually received: gross allocation minus deductions.",
 			        "Hover a metric to see what it means."
 			    )
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure FX_rate_definition =
-			"The month's average official naira-per-dollar rate (World Bank). Each month's naira amounts are converted at that month's own rate."
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Deductions_share_definition =
-			"The share of the gross allocation taken as deductions."
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Net_share_definition =
-			"The state's share of the net received by all 36 states."
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Metric_tooltip_title =
-			UPPER ( SELECTEDVALUE ( Metric_param[Metric_label], "Metric" ) & " · " & [Area_label] )
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Metric_tooltip_subtitle =
-			[Period_label] & " · " & [Currency_label]
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Metric_tooltip_summary =
-			-- e.g. "Oil derivation was ₦18.4bn in Apr 2026, up 8.9% vs Mar 2026."
-			VAR _name = SELECTEDVALUE ( Metric_param[Metric_label], "This metric" )
-			VAR _v = [Metric_value_curr]
-			VAR _chg = [Metric_value_PnP]
-			VAR _s = IF ( SELECTEDVALUE ( Currency[Currency], "₦" ) = "$", "$", "₦" )
-			VAR _amount =
-			    _s
-			        & SWITCH (
-			            TRUE (),
-			            ABS ( _v ) >= 1e12, FORMAT ( _v / 1e12, "#,0.0" ) & "tn",
-			            ABS ( _v ) >= 1e9, FORMAT ( _v / 1e9, "#,0.0" ) & "bn",
-			            ABS ( _v ) >= 1e6, FORMAT ( _v / 1e6, "#,0.0" ) & "m",
-			            FORMAT ( _v, "#,0" )
-			        )
-			VAR _move =
-			    SWITCH (
-			        TRUE (),
-			        ISBLANK ( _chg ), "",
-			        ROUND ( _chg, 4 ) = 0, ", unchanged " & [Periodic_text],
-			        ", " & IF ( _chg > 0, "up ", "down " ) & FORMAT ( ABS ( _chg ), "0.0%" ) & " " & [Periodic_text]
-			    )
-			RETURN
-			    IF (
-			        ISBLANK ( _v ),
-			        "No data for this period.",
-			        _name & " was " & _amount & " in " & [Period_label] & _move & "."
-			    )
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure State_tooltip_title =
-			UPPER ( SELECTEDVALUE ( dim_state[state] ) )
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure State_tooltip_subtitle =
-			-- "South South · South · Rank 2 of 36 by net". Ranked against every state, even with a Zone filter.
-			VAR _net = [Net_curr]
-			VAR _rank =
-			    CALCULATE (
-			        RANKX ( VALUES ( dim_state[state] ), [Net_curr], _net, DESC ),
-			        REMOVEFILTERS ( dim_state )
-			    )
-			VAR _n =
-			    CALCULATE (
-			        COUNTROWS ( FILTER ( VALUES ( dim_state[state] ), NOT ISBLANK ( [Net_curr] ) ) ),
-			        REMOVEFILTERS ( dim_state )
-			    )
-			RETURN
-			    SELECTEDVALUE ( dim_state[zone] ) & " · " & SELECTEDVALUE ( dim_state[region] )
-			        & " · Rank " & _rank & " of " & _n & " by net"
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Compare_tooltip_title =
-			UPPER ( SELECTEDVALUE ( Metric_param[Metric_label], "Metric" ) ) & " · " & [Basis_label]
 		displayFolder: 06 Titles & Labels\Tooltips
 
 	measure Compare_tooltip_text =
@@ -1051,21 +684,10 @@ table Dax
 			    )
 		displayFolder: 06 Titles & Labels\Tooltips
 
-	measure State_share_text =
-			-- e.g. "Share of national net: 7.6%"
-			"Share of national net: " & FORMAT ( [Net_share_national], "0.0%" )
-		displayFolder: 06 Titles & Labels\Tooltips
-
 	measure Naira_per_usd =
 			-- Official naira per US dollar, averaged over the months in the selection
 			AVERAGE ( econ_month[naira_per_usd] )
 		formatString: ₦#,0.00
-		displayFolder: 01 Base\Economy
-
-	measure CPI_index =
-			-- World Bank consumer price index (only ratios between months mean anything)
-			AVERAGE ( econ_month[cpi_index] )
-		formatString: #,0.0
 		displayFolder: 01 Base\Economy
 
 	measure GDP_naira =
@@ -1077,12 +699,6 @@ table Dax
 			-- Moves with the exchange rate, so it can fall while the economy grows
 			SUM ( econ_year[gdp_usd] )
 		formatString: $#,0
-		displayFolder: 01 Base\Economy
-
-	measure Population =
-			-- Averaged, not summed: a population isn't added up across years
-			AVERAGE ( econ_year[population] )
-		formatString: #,0
 		displayFolder: 01 Base\Economy
 
 	measure Inflation_yoy =
@@ -1207,20 +823,6 @@ table Dax
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 03 Period Comparison\GDP
 
-	measure GDP_naira_latest =
-			VAR _y = [GDP_latest_year]
-			RETURN
-			    CALCULATE ( [GDP_naira], econ_year[year] = _y )
-		formatString: ₦#,0
-		displayFolder: 03 Period Comparison\GDP
-
-	measure GDP_usd_latest =
-			VAR _y = [GDP_latest_year]
-			RETURN
-			    CALCULATE ( [GDP_usd], econ_year[year] = _y )
-		formatString: $#,0
-		displayFolder: 03 Period Comparison\GDP
-
 	measure GDP_per_person_usd_latest =
 			VAR _y = [GDP_latest_year]
 			RETURN
@@ -1243,25 +845,6 @@ table Dax
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 03 Period Comparison\GDP
 
-	measure Growth_change_text =
-			-- e.g. "▼ 0.1 pp vs 2024"
-			VAR _d = [Growth_latest] - [Growth_prev]
-			VAR _mark = SWITCH ( TRUE (), ROUND ( _d, 4 ) = 0, UNICHAR ( 9632 ), _d > 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) )
-			RETURN
-			    IF (
-			        ISBLANK ( [Growth_prev] ),
-			        "No earlier year",
-			        _mark & " " & FORMAT ( ABS ( _d ) * 100, "0.0" ) & " pp vs " & ( [GDP_latest_year] - 1 )
-			    )
-		displayFolder: 03 Period Comparison\GDP
-
-	measure Growth_colour =
-			-- Faster growth is good
-			VAR _d = [Growth_latest] - [Growth_prev]
-			RETURN
-			    SWITCH ( TRUE (), ISBLANK ( [Growth_prev] ) || ROUND ( _d, 4 ) = 0, "#C98A00", _d > 0, "#0E8A5F", "#C93C3C" )
-		displayFolder: 03 Period Comparison\GDP
-
 	measure Term_naira_change =
 			-- What a naira buys in dollars at the end of the selection vs its start, e.g. -0.56 = lost 56%.
 			-- For a president: the rate they inherited (the month before their first) to their last (or latest) month;
@@ -1275,12 +858,6 @@ table Dax
 			RETURN
 			    IF ( NOT ISBLANK ( _first ), DIVIDE ( _r1, _r2 ) - 1 )
 		formatString: 0.0%;-0.0%;0.0%
-		displayFolder: 03 Period Comparison\Administration
-
-	measure Term_months =
-			-- Months with exchange rate data in the selection
-			CALCULATE ( COUNTROWS ( econ_month ), NOT ISBLANK ( econ_month[naira_per_usd] ) )
-		formatString: #,0
 		displayFolder: 03 Period Comparison\Administration
 
 	measure Term_coverage_text =
@@ -1370,297 +947,6 @@ table Dax
 			FORMAT ( [GDP_latest_year], "0" )
 		displayFolder: 06 Titles & Labels\Text
 
-	measure Inflation_narrative =
-			-- e.g. "Prices rose 15.4% in the year to Jul 2026, down from a peak of 34.2% in Jun 2024.
-			-- A year earlier the rate was 22.2%."
-			VAR _m = [Inflation_latest_month]
-			VAR _v = [Inflation_latest]
-			VAR _t =
-			    FILTER (
-			        ADDCOLUMNS ( VALUES ( econ_month[month_date] ), "@i", CALCULATE ( [Inflation_yoy] ) ),
-			        NOT ISBLANK ( [@i] )
-			    )
-			VAR _pk = TOPN ( 1, _t, [@i], DESC, econ_month[month_date], DESC )
-			VAR _pk_m = MAXX ( _pk, econ_month[month_date] )
-			VAR _pk_v = MAXX ( _pk, [@i] )
-			VAR _ya = CALCULATE ( [Inflation_yoy], REMOVEFILTERS ( econ_month ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_month[month_date] = EDATE ( _m, -12 ) )
-			RETURN
-			    IF (
-			        ISBLANK ( _v ),
-			        "No inflation data for this selection.",
-			        "Prices " & IF ( _v >= 0, "rose ", "fell " ) & FORMAT ( ABS ( _v ), "0.0%" ) & " in the year to "
-			            & FORMAT ( _m, "mmm yyyy" )
-			            & IF (
-			                _pk_m = _m,
-			                ", the highest rate in this period.",
-			                ", down from a peak of " & FORMAT ( _pk_v, "0.0%" ) & " in " & FORMAT ( _pk_m, "mmm yyyy" ) & "."
-			            )
-			            & IF ( NOT ISBLANK ( _ya ), " A year earlier the rate was " & FORMAT ( _ya, "0.0%" ) & "." )
-			    )
-		displayFolder: 06 Titles & Labels\Text
-
-	measure Naira_narrative =
-			-- e.g. "₦1,354.97 bought one US dollar in Aug 2026. A naira buys 13.2% more dollars than a year
-			-- earlier, but 88.9% fewer than in Jan 2010 (₦150.35)."
-			VAR _m = [Naira_latest_month]
-			VAR _r = [Naira_latest]
-			VAR _c = [Naira_change_latest]
-			VAR _first = CALCULATE ( MIN ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) )
-			VAR _r1 = CALCULATE ( [Naira_per_usd], econ_month[month_date] = _first )
-			VAR _since = DIVIDE ( _r1, _r ) - 1
-			VAR _yr =
-			    IF (
-			        NOT ISBLANK ( _c ),
-			        " A naira buys " & FORMAT ( ABS ( _c ), "0.0%" ) & IF ( _c >= 0, " more", " fewer" )
-			            & " dollars than a year earlier"
-			    )
-			VAR _long =
-			    IF (
-			        _first < EDATE ( _m, -12 ),
-			        IF ( ISBLANK ( _yr ), " A naira buys ", IF ( ( _c >= 0 ) = ( _since >= 0 ), ", and ", ", but " ) )
-			            & FORMAT ( ABS ( _since ), "0.0%" ) & IF ( _since >= 0, " more", " fewer" )
-			            & IF ( ISBLANK ( _yr ), " dollars", "" ) & " than in " & FORMAT ( _first, "mmm yyyy" )
-			            & " (" & FORMAT ( _r1, "₦#,0.00" ) & ")"
-			    )
-			RETURN
-			    IF (
-			        ISBLANK ( _r ),
-			        "No exchange rate data for this selection.",
-			        FORMAT ( _r, "₦#,0.00" ) & " bought one US dollar in " & FORMAT ( _m, "mmm yyyy" ) & "." & _yr & _long
-			            & IF ( NOT ISBLANK ( _yr ) || NOT ISBLANK ( _long ), "." )
-			    )
-		displayFolder: 06 Titles & Labels\Text
-
-	measure GDP_narrative =
-			-- e.g. "The economy grew 4.0% after inflation in 2025, to ₦441.5tn. In dollars it was $291.0bn,
-			-- 51% below its 2020 peak of $599.0bn: the naira lost value, the economy didn't shrink."
-			VAR _y = [GDP_latest_year]
-			VAR _g = [Growth_latest]
-			VAR _n = [GDP_naira_latest]
-			VAR _u = [GDP_usd_latest]
-			VAR _t = ADDCOLUMNS ( VALUES ( econ_year[year] ), "@u", CALCULATE ( [GDP_usd] ) )
-			VAR _pk = TOPN ( 1, _t, [@u], DESC, econ_year[year], DESC )
-			VAR _pk_y = MAXX ( _pk, econ_year[year] )
-			VAR _pk_u = MAXX ( _pk, [@u] )
-			VAR _pk_n = CALCULATE ( [GDP_naira], econ_year[year] = _pk_y )
-			RETURN
-			    IF (
-			        ISBLANK ( _n ),
-			        "No GDP data for this selection.",
-			        "The economy " & IF ( _g >= 0, "grew ", "shrank " ) & FORMAT ( ABS ( _g ), "0.0%" )
-			            & " after inflation in " & _y & ", to " & "₦" & SWITCH ( TRUE (), ABS ( _n ) >= 1e12, FORMAT ( _n / 1e12, "#,0.0" ) & "tn", FORMAT ( _n / 1e9, "#,0.0" ) & "bn" ) & ". "
-			            & IF (
-			                _pk_y = _y,
-			                "In dollars it was " & "$" & SWITCH ( TRUE (), ABS ( _u ) >= 1e12, FORMAT ( _u / 1e12, "#,0.0" ) & "tn", FORMAT ( _u / 1e9, "#,0.0" ) & "bn" ) & ", the highest in this period.",
-			                "In dollars it was " & "$" & SWITCH ( TRUE (), ABS ( _u ) >= 1e12, FORMAT ( _u / 1e12, "#,0.0" ) & "tn", FORMAT ( _u / 1e9, "#,0.0" ) & "bn" ) & ", " & FORMAT ( 1 - DIVIDE ( _u, _pk_u ), "0%" )
-			                    & " below its " & _pk_y & " peak of " & "$" & SWITCH ( TRUE (), ABS ( _pk_u ) >= 1e12, FORMAT ( _pk_u / 1e12, "#,0.0" ) & "tn", FORMAT ( _pk_u / 1e9, "#,0.0" ) & "bn" )
-			                    & IF ( _n > _pk_n, ": the naira lost value, the economy didn't shrink.", "." )
-			            )
-			    )
-		displayFolder: 06 Titles & Labels\Text
-
-	measure Real_terms_narrative =
-			-- e.g. "States received ₦708.2bn in Apr 2026, 3.4× the ₦206.8bn of Jan 2020. In Apr 2026 prices,
-			-- Jan 2020 was worth ₦702.3bn, so in real terms states received 0.8% more."
-			VAR _first = CALCULATE ( MIN ( faac[disbursement_date] ) )
-			VAR _last = CALCULATE ( MAX ( faac[disbursement_date] ) )
-			VAR _base = [Price_base_month]
-			VAR _p1 = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _first, 0 ) )
-			VAR _p2 = CALCULATE ( [Net_paid], calendar_table[month_date] = EOMONTH ( _last, 0 ) )
-			VAR _t1 = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _first, 0 ) )
-			VAR _t2 = CALCULATE ( [Net_today_prices], calendar_table[month_date] = EOMONTH ( _last, 0 ) )
-			VAR _chg = DIVIDE ( _t2, _t1 ) - 1
-			RETURN
-			    SWITCH (
-			        TRUE (),
-			        ISBLANK ( _p2 ) || _first = _last, "Select more than one month to compare.",
-			        ISBLANK ( _t2 ),
-			            "Price data for " & FORMAT ( _last, "mmm yyyy" ) & " isn't out yet, so it can't be compared in real terms.",
-			        "States received " & "₦" & SWITCH ( TRUE (), ABS ( _p2 ) >= 1e12, FORMAT ( _p2 / 1e12, "#,0.0" ) & "tn", FORMAT ( _p2 / 1e9, "#,0.0" ) & "bn" ) & " in " & FORMAT ( _last, "mmm yyyy" ) & ", "
-			            & FORMAT ( DIVIDE ( _p2, _p1 ), "0.0" ) & "× the " & "₦" & SWITCH ( TRUE (), ABS ( _p1 ) >= 1e12, FORMAT ( _p1 / 1e12, "#,0.0" ) & "tn", FORMAT ( _p1 / 1e9, "#,0.0" ) & "bn" ) & " of "
-			            & FORMAT ( _first, "mmm yyyy" ) & ". In " & FORMAT ( _base, "mmm yyyy" ) & " prices, "
-			            & FORMAT ( _first, "mmm yyyy" ) & " was worth " & "₦" & SWITCH ( TRUE (), ABS ( _t1 ) >= 1e12, FORMAT ( _t1 / 1e12, "#,0.0" ) & "tn", FORMAT ( _t1 / 1e9, "#,0.0" ) & "bn" )
-			            & ", so in real terms states received "
-			            & IF ( ROUND ( _chg, 3 ) = 0, "about the same.", FORMAT ( ABS ( _chg ), "0.0%" ) & IF ( _chg > 0, " more.", " less." ) )
-			    )
-		displayFolder: 06 Titles & Labels\Text
-
-	measure Administration_narrative =
-			-- e.g. "Inflation averaged 10.6% under Jonathan (from Jan 2011), 13.4% under Buhari and 24.0% under
-			-- Tinubu (so far). The naira lost the most value under Tinubu: 55.9%."
-			VAR _now = CALCULATE ( MAX ( dim_administration[first_disbursement_month] ), REMOVEFILTERS ( dim_administration ) )
-			VAR _t =
-			    FILTER (
-			        ADDCOLUMNS (
-			            VALUES ( dim_administration[president] ),
-			            "@start", CALCULATE ( MIN ( dim_administration[first_disbursement_month] ) ),
-			            "@inf", [Inflation_yoy],
-			            "@inf_from", CALCULATE ( MIN ( econ_month[month_date] ), NOT ISBLANK ( econ_month[inflation_yoy] ) ),
-			            "@naira", [Term_naira_change]
-			        ),
-			        NOT ISBLANK ( [@inf] )
-			    )
-			VAR _n = COUNTROWS ( _t )
-			VAR _items =
-			    ADDCOLUMNS (
-			        _t,
-			        "@rank", RANKX ( _t, [@start], , ASC ),
-			        "@text",
-			            FORMAT ( [@inf], "0.0%" ) & " under " & dim_administration[president]
-			                & IF ( [@inf_from] > [@start], " (from " & FORMAT ( [@inf_from], "mmm yyyy" ) & ")" )
-			                & IF ( [@start] = _now, " (so far)" )
-			    )
-			VAR _list =
-			    CONCATENATEX ( FILTER ( _items, [@rank] < _n ), [@text], ", ", [@start], ASC )
-			        & IF ( _n > 1, " and " ) & MAXX ( FILTER ( _items, [@rank] = _n ), [@text] )
-			VAR _worst = TOPN ( 1, FILTER ( _t, NOT ISBLANK ( [@naira] ) ), [@naira], ASC )
-			RETURN
-			    IF (
-			        _n = 0,
-			        "No inflation data for this selection.",
-			        "Inflation averaged " & _list & "."
-			            & IF (
-			                NOT ISEMPTY ( _worst ) && MAXX ( _worst, [@naira] ) < 0,
-			                " The naira lost the most value under " & MAXX ( _worst, dim_administration[president] ) & ": "
-			                    & FORMAT ( - MAXX ( _worst, [@naira] ), "0.0%" ) & "."
-			            )
-			    )
-		displayFolder: 06 Titles & Labels\Text
-
-	measure Inflation_definition =
-			"How much prices rose compared with the same month a year earlier (World Bank consumer price index)."
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Naira_value_definition =
-			"How many more or fewer US dollars a naira buys than before. Negative means the naira lost value."
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Real_growth_definition =
-			"How much the economy grew in the year after removing price rises."
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure GDP_per_person_definition =
-			"The economy's total output divided by the population. It is an average, not what a typical person earns."
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Today_prices_definition =
-			"Today's prices: each month's amount restated in " & FORMAT ( [Price_base_month], "mmm yyyy" )
-			    & " prices, using the World Bank consumer price index."
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Econ_month_definitions =
-			"Inflation: " & [Inflation_definition] & "  Naira value: " & [Naira_value_definition]
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Econ_year_definitions =
-			"Real growth: " & [Real_growth_definition] & "  Per person: " & [GDP_per_person_definition]
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure President_definitions =
-			"Averages are over the months or years each president was in office. Naira value compares the rate at the start "
-			    & "and end of the term. A year goes to the president in office for most of it."
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Econ_month_tooltip_title =
-			-- e.g. "Jul 2026 · Tinubu"
-			FORMAT ( MAX ( econ_month[month_date] ), "mmm yyyy" ) & " · " & SELECTEDVALUE ( econ_month[president] )
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Econ_year_tooltip_title =
-			-- e.g. "2024 · Tinubu"; years before 1999 have no president
-			MAX ( econ_year[year] ) & " · "
-			    & COALESCE ( SELECTEDVALUE ( econ_year[president] ), "Before 1999 (military rule)" )
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure GDP_year_tooltip_text =
-			-- e.g. "From 2023, GDP rose 18.7% in naira but fell 48.2% in dollars: the naira lost value,
-			-- the economy didn't shrink."
-			VAR _y = MAX ( econ_year[year] )
-			VAR _n = [GDP_naira]
-			VAR _u = [GDP_usd]
-			VAR _n0 = CALCULATE ( [GDP_naira], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _y - 1 )
-			VAR _u0 = CALCULATE ( [GDP_usd], REMOVEFILTERS ( econ_year ), REMOVEFILTERS ( calendar_table ), REMOVEFILTERS ( dim_administration ), econ_year[year] = _y - 1 )
-			VAR _cn = DIVIDE ( _n, _n0 ) - 1
-			VAR _cu = DIVIDE ( _u, _u0 ) - 1
-			RETURN
-			    IF (
-			        NOT ISBLANK ( _n0 ),
-			        "From " & ( _y - 1 ) & ", GDP " & IF ( _cn >= 0, "rose ", "fell " ) & FORMAT ( ABS ( _cn ), "0.0%" )
-			            & " in naira" & IF ( ( _cn >= 0 ) = ( _cu >= 0 ), " and ", " but " )
-			            & IF ( _cu >= 0, "rose ", "fell " ) & FORMAT ( ABS ( _cu ), "0.0%" ) & " in dollars"
-			            & IF ( _cn > 0 && _cu < 0, ": the naira lost value, the economy didn't shrink.", "." )
-			    )
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Real_terms_tooltip_title =
-			-- e.g. "Jan 2020 · Buhari"
-			FORMAT ( MAX ( faac[disbursement_date] ), "mmm yyyy" ) & " · " & SELECTEDVALUE ( faac[president] )
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Real_terms_tooltip_text =
-			-- e.g. "Prices rose 3.40× from Jan 2020 to Apr 2026 (CPI 300.7 → 1,021.2), so ₦206.8bn then
-			-- bought what ₦702.2bn buys in Apr 2026."
-			VAR _m = MAX ( faac[disbursement_date] )
-			VAR _base = [Price_base_month]
-			VAR _cpi = MAX ( econ_month[cpi_index] )
-			VAR _base_cpi = CALCULATE ( MAX ( econ_month[cpi_index] ), REMOVEFILTERS (), econ_month[month_date] = _base )
-			VAR _p = [Net_paid]
-			VAR _t = [Net_today_prices]
-			RETURN
-			    SWITCH (
-			        TRUE (),
-			        ISBLANK ( _p ), BLANK (),
-			        ISBLANK ( _cpi ), "Price data for " & FORMAT ( _m, "mmm yyyy" ) & " isn't out yet.",
-			        _m = _base, "This is the base month, so today's prices equal what was paid.",
-			        "Prices rose " & FORMAT ( [Price_multiplier], "0.00" ) & "× from " & FORMAT ( _m, "mmm yyyy" ) & " to "
-			            & FORMAT ( _base, "mmm yyyy" ) & " (CPI " & FORMAT ( _cpi, "#,0.0" ) & " → "
-			            & FORMAT ( _base_cpi, "#,0.0" ) & "), so ₦" & FORMAT ( _p / 1e9, "#,0.0" ) & "bn then bought what ₦"
-			            & FORMAT ( _t / 1e9, "#,0.0" ) & "bn buys in " & FORMAT ( _base, "mmm yyyy" ) & "."
-			    )
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure President_tooltip_title =
-			COALESCE ( SELECTEDVALUE ( dim_administration[full_name] ), "Before 1999 (military rule)" )
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure President_tooltip_subtitle =
-			-- e.g. "APC · 29 May 2015 to 29 May 2023 · 96 months of data"
-			VAR _end = SELECTEDVALUE ( dim_administration[term_end] )
-			RETURN
-			    IF (
-			        HASONEVALUE ( dim_administration[president] ),
-			        SELECTEDVALUE ( dim_administration[party] ) & " · "
-			            & FORMAT ( SELECTEDVALUE ( dim_administration[term_start] ), "d mmm yyyy" ) & " to "
-			            & IF ( ISBLANK ( _end ), "present", FORMAT ( _end, "d mmm yyyy" ) )
-			            & " · " & FORMAT ( [Term_months] + 0, "#,0" ) & " months of data",
-			        "Years " & MIN ( econ_year[year] ) & " to " & MAX ( econ_year[year] )
-			    )
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Term_rate_text =
-			-- e.g. "₦198.86 in May 2015 → ₦461.42 in Apr 2023"
-			VAR _first = CALCULATE ( MIN ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) )
-			VAR _last = CALCULATE ( MAX ( econ_month[month_date] ), NOT ISBLANK ( econ_month[naira_per_usd] ) )
-			RETURN
-			    IF (
-			        NOT ISBLANK ( _first ),
-			        FORMAT ( CALCULATE ( [Naira_per_usd], econ_month[month_date] = _first ), "₦#,0.00" ) & " in "
-			            & FORMAT ( _first, "mmm yyyy" ) & " → "
-			            & FORMAT ( CALCULATE ( [Naira_per_usd], econ_month[month_date] = _last ), "₦#,0.00" ) & " in "
-			            & FORMAT ( _last, "mmm yyyy" ),
-			        "No monthly exchange rate data for this term yet"
-			    )
-		displayFolder: 06 Titles & Labels\Tooltips
-
-	measure Price_multiplier =
-			-- How many times prices rose between the hovered month and the base month, e.g. 3.40
-			VAR _base = [Price_base_month]
-			VAR _base_cpi = CALCULATE ( MAX ( econ_month[cpi_index] ), REMOVEFILTERS (), econ_month[month_date] = _base )
-			RETURN
-			    DIVIDE ( _base_cpi, MAX ( econ_month[cpi_index] ) )
-		formatString: ×0.00
-		displayFolder: 01 Base\Real terms
-
 	measure Real_first_month =
 			-- First FAAC month in the selection
 			CALCULATE ( MIN ( faac[disbursement_date] ) )
@@ -1671,54 +957,6 @@ table Dax
 			CALCULATE ( MAX ( faac[disbursement_date] ) )
 		formatString: mmm yyyy
 		displayFolder: 01 Base\Real terms
-
-	measure Net_first_month =
-			-- Net in that month, in the prices picked on the Prices switch
-			-- (calendar_table[month_date] is the last day of the month, hence EOMONTH)
-			VAR _m = EOMONTH ( [Real_first_month], 0 )
-			RETURN
-			    CALCULATE ( [Net_prices], calendar_table[month_date] = _m )
-		formatString: ₦#,0
-		displayFolder: 01 Base\Real terms
-
-	measure Net_latest_month =
-			-- Net in that month, in the prices picked on the Prices switch
-			-- (calendar_table[month_date] is the last day of the month, hence EOMONTH)
-			VAR _m = EOMONTH ( [Real_latest_month], 0 )
-			RETURN
-			    CALCULATE ( [Net_prices], calendar_table[month_date] = _m )
-		formatString: ₦#,0
-		displayFolder: 01 Base\Real terms
-
-	measure Change_as_paid =
-			-- Latest month vs first month in the selection
-			VAR _m1 = EOMONTH ( [Real_first_month], 0 )
-			VAR _m2 = EOMONTH ( [Real_latest_month], 0 )
-			RETURN
-			    DIVIDE (
-			        CALCULATE ( [Net_paid], calendar_table[month_date] = _m2 ),
-			        CALCULATE ( [Net_paid], calendar_table[month_date] = _m1 )
-			    ) - 1
-		formatString: 0.0%;-0.0%;0.0%
-		displayFolder: 01 Base\Real terms
-
-	measure Change_real =
-			-- Latest month vs first month in the selection
-			VAR _m1 = EOMONTH ( [Real_first_month], 0 )
-			VAR _m2 = EOMONTH ( [Real_latest_month], 0 )
-			RETURN
-			    DIVIDE (
-			        CALCULATE ( [Net_today_prices], calendar_table[month_date] = _m2 ),
-			        CALCULATE ( [Net_today_prices], calendar_table[month_date] = _m1 )
-			    ) - 1
-		formatString: 0.0%;-0.0%;0.0%
-		displayFolder: 01 Base\Real terms
-
-	measure Naira_value_colour =
-			VAR _v = [Naira_value_change_yoy]
-			RETURN
-			    SWITCH ( TRUE (), ISBLANK ( _v ) || ROUND ( _v, 4 ) = 0, "#C98A00", _v > 0, "#0E8A5F", "#C93C3C" )
-		displayFolder: 04 Comparison\Colours
 
 	measure Term_naira_colour =
 			VAR _v = [Term_naira_change]
@@ -1731,74 +969,6 @@ table Dax
 			RETURN
 			    SWITCH ( TRUE (), ISBLANK ( _v ) || ROUND ( _v, 4 ) = 0, "#C98A00", _v > 0, "#0E8A5F", "#C93C3C" )
 		displayFolder: 04 Comparison\Colours
-
-	measure Change_as_paid_colour =
-			VAR _v = [Change_as_paid]
-			RETURN
-			    SWITCH ( TRUE (), ISBLANK ( _v ) || ROUND ( _v, 4 ) = 0, "#C98A00", _v > 0, "#0E8A5F", "#C93C3C" )
-		displayFolder: 04 Comparison\Colours
-
-	measure Change_real_colour =
-			VAR _v = [Change_real]
-			RETURN
-			    SWITCH ( TRUE (), ISBLANK ( _v ) || ROUND ( _v, 4 ) = 0, "#C98A00", _v > 0, "#0E8A5F", "#C93C3C" )
-		displayFolder: 04 Comparison\Colours
-
-	measure Prices_label =
-			-- "as paid" or "in Apr 2026 prices", following the Prices switch
-			IF (
-			    SELECTEDVALUE ( Prices[Prices], "As paid" ) = "Today's prices",
-			    "in " & FORMAT ( [Price_base_month], "mmm yyyy" ) & " prices",
-			    "as paid"
-			)
-		displayFolder: 06 Titles & Labels\Text
-
-	measure Real_first_month_text =
-			FORMAT ( [Real_first_month], "mmm yyyy" ) & " · " & [Prices_label]
-		displayFolder: 06 Titles & Labels\Text
-
-	measure Real_latest_month_text =
-			FORMAT ( [Real_latest_month], "mmm yyyy" ) & " · " & [Prices_label]
-		displayFolder: 06 Titles & Labels\Text
-
-	measure Change_period_text =
-			-- e.g. "Jan 2020 to Apr 2026"
-			FORMAT ( [Real_first_month], "mmm yyyy" ) & " to " & FORMAT ( [Real_latest_month], "mmm yyyy" )
-		displayFolder: 06 Titles & Labels\Text
-
-	measure GDP_per_person_naira_text =
-			-- Second line of the GDP per person card, e.g. "₦1,858,879 per person"
-			FORMAT ( [GDP_per_person_naira_latest], "₦#,0" ) & " per person"
-		displayFolder: 06 Titles & Labels\Text
-
-	measure Coverage_summary =
-			-- One line for the Presidents page, e.g. "Data coverage: Obasanjo: No monthly data for this term yet · ..."
-			-- Only partial terms are listed, so the line shrinks as older data is backfilled.
-			VAR _t =
-			    FILTER (
-			        ADDCOLUMNS (
-			            VALUES ( dim_administration[president] ),
-			            "@note", [Term_coverage_text],
-			            "@start", CALCULATE ( MIN ( dim_administration[term_start] ) )
-			        ),
-			        NOT ISBLANK ( [@note] ) && NOT ISBLANK ( dim_administration[president] )
-			    )
-			RETURN
-			    IF (
-			        NOT ISEMPTY ( _t ),
-			        "Data coverage: " & CONCATENATEX ( _t, dim_administration[president] & ": " & [@note], "   ·   ", [@start], ASC )
-			    )
-		displayFolder: 06 Titles & Labels\Text
-
-	measure Naira_latest_text =
-			-- Card text, so Power BI's auto units don't shorten ₦1,354.97 to ₦1.35K
-			FORMAT ( [Naira_latest], "₦#,0.00" )
-		displayFolder: 06 Titles & Labels\Text
-
-	measure GDP_per_person_usd_text =
-			-- Card text, so Power BI's auto units don't shorten $1,224 to $1K
-			FORMAT ( [GDP_per_person_usd_latest], "$#,0" )
-		displayFolder: 06 Titles & Labels\Text
 
 	measure Fresh_FAAC_grace_days =
 			-- Days after a month ends before its FAAC data counts as due

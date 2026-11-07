@@ -43,11 +43,6 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "bg_about.png",
-          "path": "bg_about.png",
-          "type": "Image"
-        },
-        {
           "name": "bg_economy_overview.png",
           "path": "bg_economy_overview.png",
           "type": "Image"
