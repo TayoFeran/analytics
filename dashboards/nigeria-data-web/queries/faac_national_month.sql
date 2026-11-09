@@ -4,6 +4,8 @@
 -- month's rate the datamart uses, so dollar columns don't double the file size.
 select
     disbursement_date,
+    -- President in office for the month (FAAC months follow first_disbursement_month)
+    any_value(president) as president,
     round(sum(total_gross_amount))::bigint as gross,
     round(sum(total_deductions))::bigint as deductions,
     round(sum(net_amount_after_deductions))::bigint as net,

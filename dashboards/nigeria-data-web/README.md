@@ -30,10 +30,15 @@ It reads `dev_dwh` unless `MOTHERDUCK_DATABASE=prod_dwh`, which only `daily-pipe
 | Query | One row per | Used by |
 |---|---|---|
 | `faac_national_month.sql` | FAAC month, all states together: gross, deductions, net, the 6 revenue lines, the 6 deduction lines, naira per dollar | FAAC Overview |
-| `faac_state_month.sql` | state per FAAC month: gross, deductions, net | FAAC Overview top 5, later the state pages |
+| `faac_state_month.sql` | state per FAAC month: gross, deductions, net and every revenue and deduction line | FAAC Overview top 5, States, Revenue mix, Deductions, Compare |
 | `faac_states.sql` | state: zone and region | colouring and grouping states by zone |
+| `economy_month.sql` | month: president, naira per dollar, CPI, inflation | Economy Overview, FAAC in real terms, Presidents |
+| `economy_year.sql` | year: president, GDP in naira and dollars, real growth, population, GDP per person | Economy size, Economy Overview, Presidents |
+| `administrations.sql` | administration: president, party, term dates | Presidents |
 
-Amounts are whole naira. Dollars are worked out on the site as naira ÷ that month's `naira_per_usd`, the same way the datamart does it.
+Amounts are whole naira. Dollars are worked out on the site as naira ÷ that month's `naira_per_usd`, the same way the datamart does it. Pages don't download the whole state file: each page's build packs only the columns it needs, in units of ₦100,000 (see `makeCube` in `src/lib/faac.ts`).
+
+The state map comes from `../nigeria-data-dashboard/design/maps/nigeria_states.json` (geoBoundaries, CC BY 4.0) and is drawn as SVG at build time.
 
 ## Folder layout
 
@@ -49,10 +54,12 @@ nigeria-data-web/
 ├── .nvmrc              the Node.js major version (CI reads it too)
 ├── public/             files served as they are: favicon, images
 └── src/
+    ├── components/     pieces shared by pages: section tabs, filters, page header, chart cards
     ├── data/           exported JSON (generated, not in git)
     ├── layouts/        the frame around every page (header, menu, footer)
-    ├── pages/          one file per page; src/pages/index.astro is the home page
-    └── styles/         the palette and shared styles
+    ├── lib/            calculations and HTML for each page (lib/pages/), charts, map, formatting
+    ├── pages/          one file per page: faac/, economy/, index.astro (home), methodology.md
+    └── styles/         the palette (global.css) and the data pages' styles (data-pages.css)
 ```
 
 `node_modules/` (installed packages), `dist/` (the built site) and `.astro/` (generated types) are rebuilt on demand and kept out of git.
