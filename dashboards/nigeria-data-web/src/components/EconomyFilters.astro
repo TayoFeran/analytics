@@ -1,0 +1,36 @@
+---
+// Year range and president, shared by the Economy pages. Wired by bindEconomyFilters().
+interface Props {
+	years: number[];
+	from: number;
+	to: number;
+	presidents?: string[];
+}
+
+const { years, from, to, presidents } = Astro.props;
+---
+
+<form class="filters card" aria-label="Filters">
+	<label>
+		<span>From</span>
+		<select id="yfrom">{years.map((y) => <option value={y} selected={y === from}>{y}</option>)}</select>
+	</label>
+	<label>
+		<span>To</span>
+		<select id="yto">{[...years].reverse().map((y) => <option value={y} selected={y === to}>{y}</option>)}</select>
+	</label>
+	{
+		presidents && (
+			<label>
+				<span>President</span>
+				<select id="president">
+					<option value="All">All</option>
+					{presidents.map((p) => (
+						<option value={p}>{p}</option>
+					))}
+				</select>
+			</label>
+		)
+	}
+	<slot />
+</form>

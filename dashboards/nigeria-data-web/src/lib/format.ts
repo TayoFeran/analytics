@@ -73,3 +73,25 @@ export const naira = (value: number, decimals = 0): string => `₦${number(value
 export function esc(text: string): string {
 	return text.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 }
+
+/** Large amounts with the right unit: ₦441.5tn, $290.8bn, $1,224. */
+export function bigMoney(value: number | null | undefined, symbol: "₦" | "$", decimals = 1): string {
+	if (value == null || !Number.isFinite(value)) return "–";
+	const abs = Math.abs(value);
+	const sign = value < 0 ? "-" : "";
+	if (abs >= 1e12) return `${sign}${symbol}${number(abs / 1e12, decimals)}tn`;
+	if (abs >= 1e9) return `${sign}${symbol}${number(abs / 1e9, decimals)}bn`;
+	if (abs >= 1e6) return `${sign}${symbol}${number(abs / 1e6, decimals)}m`;
+	return `${sign}${symbol}${number(abs, 0)}`;
+}
+
+/** A rate such as inflation or growth (stored as a fraction): 0.2271 -> "22.7%". */
+export const rate = (value: number | null | undefined, decimals = 1): string =>
+	value == null || !Number.isFinite(value) ? "–" : `${number(value * 100, decimals)}%`;
+
+/** Month key one month earlier or later: shiftMonth("2026-01", -1) -> "2025-12". */
+export function shiftMonth(key: string, by: number): string {
+	const [y, m] = [Number(key.slice(0, 4)), Number(key.slice(5, 7))];
+	const total = y * 12 + (m - 1) + by;
+	return `${Math.floor(total / 12)}-${String((total % 12) + 1).padStart(2, "0")}`;
+}

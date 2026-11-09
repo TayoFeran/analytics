@@ -1,0 +1,21 @@
+---
+// Title block shared by the data pages, with the freshness strip on the right.
+// The script on each page refreshes the strip with today's date.
+interface Props {
+	eyebrow: string;
+	title: string;
+	lede: string;
+	freshness: string;
+}
+
+const { eyebrow, title, lede, freshness } = Astro.props;
+---
+
+<header class="ov-head">
+	<div>
+		<p class="eyebrow">{eyebrow}</p>
+		<h1>{title}</h1>
+		<p class="lede muted">{lede}</p>
+	</div>
+	<p class="fresh" id="fresh" set:html={freshness} />
+</header>

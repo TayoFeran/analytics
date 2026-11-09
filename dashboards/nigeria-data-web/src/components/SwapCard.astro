@@ -1,0 +1,30 @@
+---
+// A chart card with a "What it means" button that swaps the chart for an explanation.
+// The script on each page fills #<id> (chart) and #<id>-explain; bindFlips() handles the button.
+interface Props {
+	id: string;
+	title: string;
+	sub: string;
+	chart: string;
+	explain: string;
+	legend?: string;
+}
+
+const { id, title, sub, chart, explain, legend } = Astro.props;
+---
+
+<section class="card swap">
+	<div class="card-head">
+		<div>
+			<h2 class="ptitle">{title}</h2>
+			<p class="psub" id={`${id}-sub`}>{sub}</p>
+		</div>
+		<button type="button" class="explain-btn chart-side" data-explain aria-expanded="false">ⓘ What it means</button>
+		<button type="button" class="explain-btn explain-side" data-explain aria-expanded="true">← Back to chart</button>
+	</div>
+	<div class="chart-side">
+		<div class="chart-wrap" id={id} set:html={chart} />
+		{legend && <div id={`${id}-legend`} set:html={legend} />}
+	</div>
+	<div class="explain-side" id={`${id}-explain`} set:html={explain} />
+</section>

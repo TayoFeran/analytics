@@ -2,41 +2,11 @@
 // The page runs this once at build time (so numbers show before any JavaScript loads) and the
 // browser runs the same code when a filter changes, so the two can never disagree.
 
-import {
-	type Currency,
-	esc,
-	formatDate,
-	money,
-	moneyParts,
-	monthEnd,
-	monthKey,
-	monthLabel,
-	naira,
-	percent,
-} from "./format";
+import { type NationalMonth, STATE_CODES, ZONE_COLOURS } from "./faac";
+import { type Currency, esc, money, moneyParts, monthKey, monthLabel, naira, percent } from "./format";
+import { FAAC_CLOCK, renderFreshness as sharedFreshness } from "./ui";
 
-export type { Currency };
-
-export interface NationalMonth {
-	disbursement_date: string;
-	gross: number;
-	deductions: number;
-	net: number;
-	statutory_allocation: number;
-	vat: number;
-	oil_derivation: number;
-	exchange_gain: number;
-	ecology_fund: number;
-	other_income: number;
-	external_debt: number;
-	contractual_obligation_ispo: number;
-	transfer_nddc_hyppadec: number;
-	other_deductions_note: number;
-	deduction_misc: number;
-	other_deduction: number;
-	naira_per_usd: number | null;
-	states: number;
-}
+export type { Currency, NationalMonth };
 
 export interface TopState {
 	state: string;
@@ -82,54 +52,13 @@ const DEDUCTION_LINES: { key: LineKey; name: string; short: string }[] = [
 	{ key: "other_deduction", name: "Other deductions", short: "Other" },
 ];
 
-// Uniform across the whole dashboard wherever states appear.
-export const ZONE_COLOURS: Record<string, string> = {
-	"North Central": "#2E9B72",
-	"North East": "#D9A21B",
-	"North West": "#3A6EA5",
-	"South East": "#8E5BB5",
-	"South South": "#C8693A",
-	"South West": "#0B3D2E",
-};
-
-const STATE_CODES: Record<string, string> = {
-	Abia: "AB", Adamawa: "AD", "Akwa Ibom": "AK", Anambra: "AN", Bauchi: "BA", Bayelsa: "BY",
-	Benue: "BE", Borno: "BO", "Cross River": "CR", Delta: "DE", Ebonyi: "EB", Edo: "ED",
-	Ekiti: "EK", Enugu: "EN", Gombe: "GO", Imo: "IM", Jigawa: "JI", Kaduna: "KD", Kano: "KN",
-	Katsina: "KT", Kebbi: "KE", Kogi: "KO", Kwara: "KW", Lagos: "LA", Nasarawa: "NA", Niger: "NI",
-	Ogun: "OG", Ondo: "ON", Osun: "OS", Oyo: "OY", Plateau: "PL", Rivers: "RI", Sokoto: "SO",
-	Taraba: "TA", Yobe: "YO", Zamfara: "ZA",
-};
-
 const COLOURS = { better: "#0E8A5F", worse: "#C93C3C", equal: "#C98A00", ink: "#0B3D2E", net: "#E2B53E" };
 
 // --- Freshness ---------------------------------------------------------------------------
 
-// A FAAC month is due 45 days after it ends; up to 15 days past that is Late, later is Overdue.
-const DUE_DAYS = 45;
-const WARN_DAYS = 15;
-// The export runs daily; older than this means the pipeline stopped publishing.
-const REFRESH_MISSED_DAYS = 3;
-const DAY = 86_400_000;
-
 export function renderFreshness(data: OverviewData, today: Date): string {
 	const latest = monthKey(data.months[data.months.length - 1].disbursement_date);
-	const due = new Date(monthEnd(latest).getTime() + DUE_DAYS * DAY);
-	const exported = new Date(data.exportedAt);
-	const daysLate = Math.floor((today.getTime() - due.getTime()) / DAY);
-	const sinceExport = (today.getTime() - exported.getTime()) / DAY;
-
-	let status = { label: "On time", colour: COLOURS.better };
-	if (sinceExport > REFRESH_MISSED_DAYS) status = { label: "Refresh missed", colour: COLOURS.worse };
-	else if (daysLate > WARN_DAYS) status = { label: "Overdue", colour: COLOURS.worse };
-	else if (daysLate > 0) status = { label: "Late", colour: COLOURS.equal };
-
-	const why =
-		"FAAC data for a month is expected within 45 days after the month ends. " +
-		`Next month expected by ${formatDate(due)}.`;
-	return `<span class="pill" style="background:${status.colour}">${status.label}</span>
-		<span class="msg">Latest data: ${monthLabel(latest, "medium")}</span>
-		<span class="facts" title="${esc(why)}">Monthly · updated ${formatDate(exported)}</span>`;
+	return sharedFreshness([FAAC_CLOCK(latest)], data.exportedAt, today);
 }
 
 // --- Calculations ------------------------------------------------------------------------

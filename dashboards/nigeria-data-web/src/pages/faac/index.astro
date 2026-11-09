@@ -19,7 +19,8 @@ import {
 	renderTop5,
 	type TopState,
 } from "../../lib/faac-overview";
-import "../../styles/faac-overview.css";
+import SectionTabs from "../../components/SectionTabs.astro";
+import "../../styles/data-pages.css";
 
 // The browser only needs each month's top 5 states, not all 2,700 state-months.
 const zoneOf = new Map(states.map((s) => [s.state, s.zone]));
@@ -45,6 +46,7 @@ const view = buildView(data, filters);
 	description="Monthly FAAC allocations to Nigeria's 36 states: what was allocated, what was deducted, and what the states received, in naira or dollars."
 >
 	<div class="ov">
+		<SectionTabs section="faac" />
 		<header class="ov-head">
 			<div>
 				<p class="eyebrow">FAAC</p>

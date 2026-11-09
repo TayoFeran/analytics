@@ -14,6 +14,7 @@ const path = Astro.url.pathname;
 // Only pages that exist. Sections join the list as their pages are built, so there are no dead links.
 const nav = [
 	{ href: "/faac/", label: "FAAC" },
+	{ href: "/economy/", label: "Economy" },
 	{ href: "/methodology/", label: "Methodology" },
 ];
 const isActive = (href: string) => path === href || path.startsWith(href);

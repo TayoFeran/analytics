@@ -1,5 +1,6 @@
-/* FAAC Overview. Global (not scoped) because the sections are HTML strings built by
-   src/lib/faac-overview.ts, which Astro's scoped styles can't reach. Every rule starts with .ov. */
+/* Styles for every data page (FAAC and Economy). Global, not scoped, because the sections are
+   HTML strings built by src/lib/, which Astro's scoped styles can't reach. Every rule starts
+   with .ov, the class on each data page's wrapper. */
 
 .ov {
 	display: grid;
@@ -8,7 +9,8 @@
 /* Grid items default to their content's width; let them shrink so a wide chart can't
    push the page past the phone screen. */
 .ov > *,
-.ov .grid > * {
+.ov .grid > *,
+.ov .cols-2 > * {
 	min-width: 0;
 }
 
@@ -713,4 +715,545 @@
 .ov .banner .hl {
 	color: var(--gold);
 	font-weight: 700;
+}
+
+/* ---- Shared by the other data pages ------------------------------------------------- */
+
+.ov .card {
+	position: relative;
+}
+.ov .cols-2 {
+	display: grid;
+	gap: 16px;
+}
+@media (min-width: 900px) {
+	.ov .cols-2 {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	}
+	.ov .cols-2.wide-left {
+		grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+	}
+}
+.ov .filters .seg {
+	margin-left: 0;
+}
+.ov .filters .push {
+	margin-left: auto;
+}
+
+/* Generic charts */
+.ov .chart-svg {
+	display: block;
+	width: 100%;
+	height: auto;
+	overflow: visible;
+}
+.ov .chart-svg .grid {
+	stroke: var(--line);
+	stroke-width: 1;
+}
+.ov .chart-svg .grid.zero {
+	stroke: #9aaba3;
+}
+.ov .chart-svg .axis {
+	font-size: 10px;
+	fill: var(--muted);
+}
+.ov .chart-svg .tick {
+	font-size: 10.5px;
+	font-weight: 600;
+	fill: var(--ink);
+}
+.ov .chart-svg .vl {
+	font-size: 10.5px;
+	font-weight: 700;
+}
+.ov .chart-svg .guide {
+	stroke: #9aaba3;
+	stroke-dasharray: 3 3;
+}
+.ov .chart-wrap {
+	margin-top: 10px;
+	touch-action: pan-y;
+}
+.ov .card .legend {
+	margin-top: 8px;
+}
+.ov .ltt .r.tot {
+	font-weight: 700;
+}
+.ov .ltt.wide {
+	width: 280px;
+}
+.ov .ltt .r4 {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto auto auto;
+	gap: 6px;
+	align-items: center;
+	padding: 3px 0;
+	border-top: 1px solid var(--line);
+	font-size: 0.75rem;
+}
+.ov .ltt .r4 span:first-child {
+	color: var(--muted);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.ov .ltt .r4 .sh {
+	color: var(--muted);
+}
+.ov .ltt .sw {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	border-radius: 2px;
+	margin-right: 5px;
+}
+
+/* Ranked bars */
+.ov .rank {
+	list-style: none;
+	margin: 10px 0 0;
+	padding: 0;
+	display: grid;
+	gap: 3px;
+}
+.ov .rk-row {
+	all: unset;
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: minmax(84px, 30%) minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	padding: 3px 4px;
+	border-radius: 6px;
+	font-size: 0.82rem;
+}
+.ov button.rk-row {
+	cursor: pointer;
+}
+.ov .rk-row:hover,
+.ov .rk-row.hover {
+	background: var(--track);
+}
+.ov .rk-row:focus-visible {
+	outline: 3px solid var(--gold);
+}
+.ov .rk-name {
+	display: flex;
+	flex-direction: column;
+	line-height: 1.15;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	font-weight: 600;
+}
+.ov .rk-name small {
+	font-size: 0.68rem;
+	font-weight: 600;
+}
+.ov .rk-track {
+	position: relative;
+	height: 14px;
+	background: var(--track);
+	border-radius: 4px;
+	overflow: hidden;
+}
+.ov .rk-track.diverging::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 0;
+	bottom: 0;
+	width: 1px;
+	background: #9aaba3;
+}
+.ov .rk-bar {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	border-radius: 4px;
+}
+.ov .rk-val {
+	font-weight: 700;
+	font-size: 0.8rem;
+	text-align: right;
+	min-width: 62px;
+}
+.ov .rank li.faded {
+	opacity: 0.35;
+}
+.ov .rank-tools {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+	margin-top: 8px;
+	font-size: 0.8rem;
+	color: var(--muted);
+}
+.ov .linkish {
+	all: unset;
+	cursor: pointer;
+	color: var(--better);
+	font-weight: 600;
+	text-decoration: underline;
+}
+
+/* Map */
+.ov .map-svg {
+	display: block;
+	width: 100%;
+	height: auto;
+	margin-top: 8px;
+}
+.ov .map-svg .st {
+	stroke: #fff;
+	stroke-width: 0.8;
+	cursor: pointer;
+}
+.ov .map-svg .st.nodata {
+	cursor: default;
+}
+.ov .map-svg .st.hover {
+	stroke: var(--gold);
+	stroke-width: 2;
+}
+.ov .map-svg .st.sel {
+	stroke: var(--gold);
+	stroke-width: 2.6;
+}
+.ov .scale-key {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 0.75rem;
+	color: var(--muted);
+	margin-top: 6px;
+}
+.ov .scale-key .ramp {
+	flex: 0 0 120px;
+	height: 8px;
+	border-radius: 4px;
+	background: linear-gradient(90deg, rgb(227, 244, 236), rgb(11, 61, 46));
+}
+
+/* Tables */
+.ov .table-scroll {
+	overflow-x: auto;
+	margin-top: 10px;
+	-webkit-overflow-scrolling: touch;
+}
+.ov table.data {
+	border-collapse: collapse;
+	width: 100%;
+	font-size: 0.8rem;
+	font-variant-numeric: tabular-nums;
+}
+.ov table.data th,
+.ov table.data td {
+	padding: 6px 8px;
+	border-bottom: 1px solid var(--line);
+	text-align: right;
+	white-space: nowrap;
+}
+.ov table.data th:first-child,
+.ov table.data td:first-child {
+	text-align: left;
+	position: sticky;
+	left: 0;
+	background: var(--card);
+	z-index: 1;
+}
+.ov table.data thead th {
+	font-size: 0.7rem;
+	letter-spacing: 0.04em;
+	color: var(--muted);
+	font-weight: 600;
+	vertical-align: bottom;
+	white-space: normal;
+	min-width: 64px;
+}
+.ov table.data tfoot td {
+	font-weight: 700;
+	border-top: 2px solid var(--line);
+}
+.ov .share-bar {
+	display: inline-block;
+	width: 70px;
+	height: 8px;
+	background: var(--track);
+	border-radius: 4px;
+	overflow: hidden;
+	vertical-align: middle;
+	margin-right: 6px;
+}
+.ov .share-bar span {
+	display: block;
+	height: 100%;
+	background: var(--better);
+}
+
+/* "What it means": a chart card whose content turns into an explanation */
+.ov .swap .explain-side {
+	display: none;
+}
+.ov .swap.explaining .chart-side {
+	display: none;
+}
+.ov .swap.explaining .explain-side {
+	display: block;
+	animation: ov-fade 0.35s ease;
+}
+.ov .swap.explaining {
+	background: var(--side);
+	color: #fff;
+}
+.ov .swap.explaining .ptitle,
+.ov .swap.explaining .psub {
+	color: #fff;
+}
+@keyframes ov-fade {
+	from {
+		opacity: 0;
+		transform: rotateY(-8deg);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.ov .swap.explaining .explain-side {
+		animation: none;
+	}
+}
+.ov .card-head {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 8px;
+}
+.ov .explain-btn {
+	font: inherit;
+	font-size: 0.8rem;
+	font-weight: 600;
+	border: 0;
+	border-radius: 8px;
+	padding: 6px 10px;
+	cursor: pointer;
+	background: #e3f4ec;
+	color: var(--side);
+}
+.ov .explain-btn:hover {
+	color: var(--equal);
+}
+.ov .swap.explaining .explain-btn {
+	background: #fff;
+}
+.ov .explain-cols {
+	display: grid;
+	gap: 14px;
+	margin-top: 10px;
+	font-size: 0.88rem;
+	line-height: 1.5;
+}
+@media (min-width: 700px) {
+	.ov .explain-cols {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+.ov .explain-cols p {
+	margin: 0 0 8px;
+}
+.ov .explain-cols .ex-h {
+	font-size: 0.68rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--gold);
+	font-weight: 600;
+}
+.ov .pres-rows {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 6px;
+}
+.ov .pres-rows li {
+	display: grid;
+	grid-template-columns: 10px auto 1fr;
+	column-gap: 8px;
+	align-items: center;
+}
+.ov .pres-rows .dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.ov .pres-rows .ft {
+	justify-self: end;
+	font-weight: 600;
+}
+.ov .pres-rows .nt {
+	grid-column: 2 / -1;
+	opacity: 0.8;
+	font-size: 0.78rem;
+}
+
+/* Small things */
+.ov .asof {
+	letter-spacing: 0.04em;
+	text-transform: none;
+	font-weight: 500;
+}
+.ov .chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.ov .chips li {
+	font-size: 0.78rem;
+	background: var(--card);
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	padding: 4px 10px;
+}
+.ov .note-line {
+	font-size: 0.8rem;
+	color: var(--muted);
+	margin: 8px 0 0;
+}
+.ov .p {
+	display: block;
+}
+.ov .back .p + .p {
+	margin-top: 4px;
+}
+
+/* Compare: butterfly */
+.ov .bfly {
+	display: grid;
+	gap: 2px;
+	margin-top: 6px;
+	font-size: 0.8rem;
+}
+.ov .bfly .grp {
+	font-size: 0.68rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--muted);
+	font-weight: 600;
+	margin: 10px 0 2px;
+	text-align: center;
+}
+.ov .bfly .row,
+.ov .bfly-head {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(104px, 150px) minmax(0, 1fr);
+	align-items: center;
+	gap: 8px;
+}
+.ov .bfly .row {
+	padding: 3px 0;
+	border-radius: 6px;
+}
+.ov .bfly .row.total {
+	font-weight: 700;
+	background: var(--track);
+}
+.ov .bfly .side {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+}
+.ov .bfly .side.a {
+	flex-direction: row-reverse;
+}
+.ov .bfly .track {
+	flex: 1;
+	height: 14px;
+	display: flex;
+	min-width: 0;
+}
+.ov .bfly .side.a .track {
+	justify-content: flex-end;
+}
+.ov .bfly .track span {
+	display: block;
+	height: 100%;
+	border-radius: 3px;
+	min-width: 1px;
+}
+.ov .bfly .num {
+	min-width: 54px;
+	font-variant-numeric: tabular-nums;
+	font-size: 0.76rem;
+}
+.ov .bfly .side.a .num {
+	text-align: right;
+}
+.ov .bfly .mid {
+	text-align: center;
+	line-height: 1.2;
+}
+.ov .bfly .mid b {
+	display: block;
+	font-weight: 600;
+	font-size: 0.76rem;
+}
+.ov .bfly-head {
+	font-weight: 700;
+	margin-top: 10px;
+}
+.ov .bfly-head .a {
+	text-align: right;
+}
+.ov .bfly-head .mid {
+	text-align: center;
+	color: var(--muted);
+	font-weight: 500;
+	font-size: 0.75rem;
+}
+.ov .banner .key-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 12px;
+	font-size: 0.75rem;
+	opacity: 0.85;
+	width: 100%;
+}
+
+/* Tooltips with one row per line need more room */
+.ov .ltt:has(.r4) {
+	width: 290px;
+}
+
+/* Compare on a phone: number above its bar, so the bars keep their width */
+@media (max-width: 599px) {
+	.ov .bfly .side,
+	.ov .bfly .side.a {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 2px;
+	}
+	.ov .bfly .track {
+		flex: none;
+		width: 100%;
+	}
+	.ov .bfly .side.b .num {
+		order: -1;
+	}
+	.ov .bfly .row,
+	.ov .bfly-head {
+		grid-template-columns: minmax(0, 1fr) minmax(96px, 120px) minmax(0, 1fr);
+	}
 }
