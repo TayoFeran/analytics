@@ -1,0 +1,112 @@
+---
+import EconomyFilters from "../../components/EconomyFilters.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import SectionTabs from "../../components/SectionTabs.astro";
+import SwapCard from "../../components/SwapCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import econMonths from "../../data/economy_month.json";
+import info from "../../data/export_info.json";
+import national from "../../data/faac_national_month.json";
+import type { EconomyMonth } from "../../lib/economy";
+import type { NationalMonth } from "../../lib/faac";
+import { monthKey } from "../../lib/format";
+import { presidentLegend } from "../../lib/pages/economy-overview";
+import { buildRealView, type RealData, type RealFilters, type RealRow, renderRealCards, renderRealChart, renderRealExplain, renderRealInsight } from "../../lib/pages/economy-real";
+import { CPI_CLOCK, FAAC_CLOCK, legend, renderFreshness } from "../../lib/ui";
+import "../../styles/data-pages.css";
+
+const cpi = new Map((econMonths as EconomyMonth[]).map((m) => [monthKey(m.month_date), m.cpi_index]));
+const rows: RealRow[] = (national as NationalMonth[]).map((m) => ({
+	month: monthKey(m.disbursement_date),
+	president: m.president,
+	net: m.net,
+	cpi: cpi.get(monthKey(m.disbursement_date)) ?? null,
+}));
+const base = [...rows].reverse().find((r) => r.cpi != null)!;
+const data: RealData = { rows, exportedAt: info.exported_at, base: base.month, baseCpi: base.cpi! };
+const yearList = [...new Set(rows.map((r) => Number(r.month.slice(0, 4))))];
+const defaults: RealFilters = { from: yearList[0], to: yearList[yearList.length - 1], president: "All", prices: "today" };
+const view = buildRealView(data, defaults);
+const presidents = [...new Set(rows.map((r) => r.president))];
+const latestCpi = [...(econMonths as EconomyMonth[])].reverse().find((m) => m.cpi_index != null)!;
+const clocks = [FAAC_CLOCK(rows[rows.length - 1].month), CPI_CLOCK(monthKey(latestCpi.month_date))];
+---
+
+<BaseLayout
+	title="FAAC in real terms"
+	description="The states' monthly FAAC allocation as paid and adjusted for inflation, so months and presidents can be compared fairly."
+>
+	<div class="ov">
+		<SectionTabs section="economy" />
+		<PageHeader
+			eyebrow="Economy"
+			title="FAAC in real terms"
+			lede="The naira the states receive buys less as prices rise. Here is their monthly net FAAC as paid, and in today's prices."
+			freshness={renderFreshness(clocks, data.exportedAt, new Date())}
+		/>
+		<EconomyFilters years={yearList} from={defaults.from} to={defaults.to} presidents={presidents}>
+			<div class="seg push" role="group" aria-label="Prices">
+				<button type="button" data-prices="today" aria-pressed="true">Today's prices</button>
+				<button type="button" data-prices="paid" aria-pressed="false">As paid</button>
+			</div>
+		</EconomyFilters>
+
+		<section class="kpis" id="kpis" aria-label="Key figures" set:html={renderRealCards(view, data)} />
+
+		<SwapCard
+			id="real"
+			title="Net FAAC to the states, by month"
+			sub="Columns in the selected prices, coloured by president · the dashed line is the other way"
+			chart={renderRealChart(view, 900)}
+			explain={renderRealExplain(view, data)}
+			legend={presidentLegend(presidents) + legend([{ name: "Other basis (dashed)", colour: "#E2B53E" }])}
+		/>
+
+		<section class="banner" id="insight" aria-label="Key takeaway" set:html={renderRealInsight(view, data)} />
+		<p class="note-line">Prices: World Bank consumer price index. Amounts are the 36 states' total net FAAC.</p>
+	</div>
+
+	<script type="application/json" id="page-data" set:html={JSON.stringify({ ...data, clocks })} />
+</BaseLayout>
+
+<script>
+	import { bindEconomyFilters, bindFlips, bindTooltip, byId, onWidthChange, readData, showEconomyFilters, syncUrl, widthOf } from "../../lib/client";
+	import { readEconomyFilters, writeEconomyFilters } from "../../lib/economy";
+	import { buildRealView, type Prices, type RealData, type RealFilters, realTooltip, type RealView, renderRealCards, renderRealChart, renderRealExplain, renderRealInsight } from "../../lib/pages/economy-real";
+	import { type Clock, renderFreshness } from "../../lib/ui";
+
+	const data = readData<RealData & { clocks: Clock[] }>("page-data");
+	const years = [...new Set(data.rows.map((r) => Number(r.month.slice(0, 4))))];
+	const presidents = [...new Set(data.rows.map((r) => r.president))];
+	const defaults = { from: years[0], to: years[years.length - 1], president: "All" };
+	const params = new URLSearchParams(location.search);
+	const f: RealFilters = { ...readEconomyFilters(params, years, presidents, defaults), prices: params.get("prices") === "paid" ? "paid" : "today" };
+	let view: RealView;
+
+	const draw = () => (byId("real").innerHTML = renderRealChart(view, widthOf(byId("real"))));
+	function render() {
+		view = buildRealView(data, f);
+		showEconomyFilters(f);
+		document.querySelectorAll<HTMLButtonElement>("[data-prices]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.prices === f.prices)));
+		byId("kpis").innerHTML = renderRealCards(view, data);
+		draw();
+		byId("real-explain").innerHTML = renderRealExplain(view, data);
+		byId("insight").innerHTML = renderRealInsight(view, data);
+		const q = writeEconomyFilters(f, defaults);
+		if (f.prices === "paid") q.set("prices", "paid");
+		syncUrl(q);
+	}
+
+	bindEconomyFilters(f, render);
+	document.querySelectorAll<HTMLButtonElement>("[data-prices]").forEach((b) =>
+		b.addEventListener("click", () => {
+			f.prices = b.dataset.prices as Prices;
+			render();
+		}),
+	);
+	bindFlips();
+	bindTooltip(byId("real"), (k) => realTooltip(view, Number(k), data));
+	onWidthChange(byId("real"), draw);
+	byId("fresh").innerHTML = renderFreshness(data.clocks, data.exportedAt, new Date());
+	render();
+</script>
