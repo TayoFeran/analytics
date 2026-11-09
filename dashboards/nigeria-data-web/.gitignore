@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# data exported from MotherDuck by export_site_data.py, rebuilt on every run
+src/data/
