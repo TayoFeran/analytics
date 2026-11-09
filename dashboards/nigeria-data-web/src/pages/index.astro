@@ -1,17 +1,18 @@
 ---
-// Placeholder until the shared layout and the real home page are built (#35).
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Nigeria Data</title>
-	</head>
-	<body>
-		<h1>Nigeria Data</h1>
-		<p>Public data on the Nigerian economy. Coming soon.</p>
-	</body>
-</html>
+<BaseLayout
+	title="Nigeria Data"
+	description="Clear, sourced data on the Nigerian economy: federal allocations to states, inflation, the naira and GDP."
+>
+	<p class="eyebrow">Public data on Nigeria</p>
+	<h1>What the numbers say about Nigeria's economy</h1>
+	<p class="muted">The home page is coming soon. It will show the latest FAAC month at a glance.</p>
+
+	<div class="card">
+		<h2>FAAC allocations</h2>
+		<p>How much the federation shares with each state every month, what is deducted first, and what arrives.</p>
+		<a href="/faac/">See FAAC</a>
+	</div>
+</BaseLayout>

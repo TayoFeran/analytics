@@ -1,0 +1,210 @@
+---
+import "../styles/global.css";
+
+interface Props {
+	title: string;
+	description: string;
+}
+
+const { title, description } = Astro.props;
+const siteName = "Nigeria Data";
+const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
+const path = Astro.url.pathname;
+
+// Only pages that exist. Sections join the list as their pages are built, so there are no dead links.
+const nav = [
+	{ href: "/faac/", label: "FAAC" },
+	{ href: "/methodology/", label: "Methodology" },
+];
+const isActive = (href: string) => path === href || path.startsWith(href);
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en-NG">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{fullTitle}</title>
+		<meta name="description" content={description} />
+		<meta name="theme-color" content="#0b3d2e" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<!-- Link previews on WhatsApp, X and Facebook. The preview image comes with the real pages. -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={siteName} />
+		<meta property="og:title" content={fullTitle} />
+		<meta property="og:description" content={description} />
+		<meta name="twitter:card" content="summary" />
+	</head>
+	<body>
+		<a class="skip" href="#main">Skip to content</a>
+
+		<header class="site-header">
+			<div class="container bar">
+				<a class="brand" href="/">
+					<span>Nigeria</span><span>Data</span>
+				</a>
+
+				<nav class="nav-wide" aria-label="Main">
+					{
+						nav.map((item) => (
+							<a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+								{item.label}
+							</a>
+						))
+					}
+				</nav>
+
+				<!-- <details> opens and closes without JavaScript, so the phone menu works on any browser. -->
+				<details class="nav-phone">
+					<summary>Menu</summary>
+					<nav aria-label="Main">
+						{
+							nav.map((item) => (
+								<a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+									{item.label}
+								</a>
+							))
+						}
+					</nav>
+				</details>
+			</div>
+		</header>
+
+		<main id="main" class="container">
+			<slot />
+		</main>
+
+		<footer class="site-footer">
+			<div class="container">
+				<p>
+					<strong>Sources:</strong> FAAC monthly disbursement reports and the World Bank. Updated daily.{" "}
+					<a href="/methodology/">How the figures are calculated</a>.
+				</p>
+				<p class="muted">&copy; {year} {siteName}. Built from public data.</p>
+			</div>
+		</footer>
+	</body>
+</html>
+
+<style>
+	.skip {
+		position: absolute;
+		left: -9999px;
+		top: 8px;
+		background: var(--gold);
+		color: var(--ink);
+		padding: 8px 12px;
+		border-radius: 6px;
+		z-index: 10;
+	}
+	.skip:focus {
+		left: 8px;
+	}
+
+	.site-header {
+		background: var(--side);
+		color: #fff;
+	}
+	.bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		min-height: 60px;
+		gap: 16px;
+	}
+	.brand {
+		display: flex;
+		flex-direction: column;
+		color: #fff;
+		text-decoration: none;
+		font-weight: 700;
+		font-size: 1rem;
+		line-height: 1.05;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+	.brand span:last-child {
+		color: var(--gold);
+	}
+
+	.site-header nav a {
+		color: #fff;
+		text-decoration: none;
+		opacity: 0.85;
+		font-size: 0.95rem;
+		padding: 8px 12px;
+		border-radius: 8px;
+	}
+	.site-header nav a:hover {
+		opacity: 1;
+		background: var(--side2);
+	}
+	.site-header nav a[aria-current="page"] {
+		opacity: 1;
+		font-weight: 600;
+		background: var(--side2);
+		box-shadow: inset 0 -3px 0 var(--gold);
+	}
+
+	.nav-wide {
+		display: none;
+		gap: 4px;
+	}
+
+	.nav-phone summary {
+		list-style: none;
+		cursor: pointer;
+		border: 1px solid rgba(255, 255, 255, 0.4);
+		border-radius: 8px;
+		padding: 6px 14px;
+		font-size: 0.9rem;
+	}
+	.nav-phone summary::-webkit-details-marker {
+		display: none;
+	}
+	.nav-phone[open] summary {
+		background: var(--side2);
+	}
+	.nav-phone nav {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 60px;
+		background: var(--side);
+		display: flex;
+		flex-direction: column;
+		padding: 8px var(--gutter) 16px;
+		z-index: 5;
+		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+	}
+	.site-header {
+		position: relative;
+	}
+
+	@media (min-width: 720px) {
+		.nav-wide {
+			display: flex;
+		}
+		.nav-phone {
+			display: none;
+		}
+	}
+
+	main {
+		padding-top: 24px;
+		padding-bottom: 48px;
+		flex: 1;
+	}
+
+	.site-footer {
+		border-top: 1px solid var(--line);
+		background: var(--card);
+		font-size: 0.875rem;
+		padding: 20px 0;
+	}
+	.site-footer p {
+		margin: 0 0 6px;
+	}
+</style>
