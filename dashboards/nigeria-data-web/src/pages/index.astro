@@ -1,18 +1,243 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import info from "../data/export_info.json";
+import national from "../data/faac_national_month.json";
+import { moneyParts, monthKey, monthLabel, percent } from "../lib/format";
+import type { NationalMonth } from "../lib/faac-overview";
+
+// The latest FAAC month at a glance. Built once a day with the rest of the site, so no
+// JavaScript is needed on this page.
+const months = national as NationalMonth[];
+const latest = months[months.length - 1];
+const previous = months[months.length - 2];
+const month = monthLabel(monthKey(latest.disbursement_date), "long");
+const prevName = monthLabel(monthKey(previous.disbursement_date), "name");
+
+const stat = (label: string, key: "net" | "gross" | "deductions", higherIsBetter: boolean) => {
+	const now = latest[key];
+	const before = previous[key];
+	const pct = (now - before) / before;
+	const flat = Math.abs(pct) < 0.0005;
+	const good = pct > 0 === higherIsBetter;
+	return {
+		label,
+		value: moneyParts(now, "NGN"),
+		change: flat ? "■ 0.0%" : `${pct > 0 ? "▲" : "▼"} ${percent(Math.abs(pct))}`,
+		tone: flat ? "equal" : good ? "better" : "worse",
+	};
+};
+const stats = [stat("Net received", "net", true), stat("Gross allocation", "gross", true), stat("Deductions", "deductions", false)];
+const kept = Math.round((latest.net / latest.gross) * 100);
+const updated = new Date(info.exported_at).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 ---
 
 <BaseLayout
 	title="Nigeria Data"
-	description="Clear, sourced data on the Nigerian economy: federal allocations to states, inflation, the naira and GDP."
+	description="Clear, sourced data on the Nigerian economy, starting with monthly FAAC allocations to Nigeria's 36 states."
 >
-	<p class="eyebrow">Public data on Nigeria</p>
-	<h1>What the numbers say about Nigeria's economy</h1>
-	<p class="muted">The home page is coming soon. It will show the latest FAAC month at a glance.</p>
+	<section class="hero">
+		<p class="eyebrow">Public data on Nigeria</p>
+		<h1>What the numbers say about Nigeria's economy</h1>
+		<p class="lede">
+			Clear, sourced figures from public data, explained in plain language and updated every day: the money the
+			federation shares with the states each month, and the prices, exchange rate and growth behind it.
+		</p>
+	</section>
 
-	<div class="card">
-		<h2>FAAC allocations</h2>
-		<p>How much the federation shares with each state every month, what is deducted first, and what arrives.</p>
-		<a href="/faac/">See FAAC</a>
-	</div>
+	<section class="card latest" aria-labelledby="latest-title">
+		<div class="latest-head">
+			<div>
+				<p class="eyebrow">FAAC · latest month</p>
+				<h2 id="latest-title">{month}</h2>
+			</div>
+			<a class="cta" href="/faac/">Explore FAAC →</a>
+		</div>
+
+		<ul class="stats">
+			{
+				stats.map((s) => (
+					<li>
+						<span class="lbl">{s.label}</span>
+						<span class="val">
+							{s.value.value}
+							<small>{s.value.unit}</small>
+						</span>
+						<span class={`chg ${s.tone}`}>
+							{s.change} <span class="muted">vs {prevName}</span>
+						</span>
+					</li>
+				))
+			}
+		</ul>
+
+		<p class="takeaway">
+			Nigeria's 36 states kept <strong>₦{kept} of every ₦100</strong> allocated to them in {month}. The rest went to
+			deductions taken at source, mostly debt repayments.
+		</p>
+	</section>
+
+	<section class="next" aria-labelledby="next-title">
+		<h2 id="next-title">What's on the site</h2>
+		<div class="tiles">
+			<a class="card tile" href="/faac/">
+				<h3>FAAC allocations</h3>
+				<p>How much each state is allocated every month, what is deducted first, and what arrives. In naira or dollars.</p>
+			</a>
+			<a class="card tile" href="/methodology/">
+				<h3>How we calculate</h3>
+				<p>Sources, definitions, update schedule and known gaps, so you can check every figure.</p>
+			</a>
+			<a class="card tile" href="/economy/">
+				<h3>The economy</h3>
+				<p>Inflation, the naira, growth and GDP per person, by president, and FAAC adjusted for price rises.</p>
+			</a>
+		</div>
+	</section>
+
+	<p class="muted small">Data updated {updated}.</p>
 </BaseLayout>
+
+<style>
+	.hero {
+		padding: 8px 0 20px;
+		max-width: 46rem;
+	}
+	.hero h1 {
+		font-size: clamp(1.8rem, 6vw, 2.8rem);
+		letter-spacing: -0.02em;
+	}
+	.lede {
+		font-size: 1.1rem;
+		color: var(--muted);
+		margin: 0;
+	}
+
+	.latest {
+		border-top: 4px solid var(--side);
+	}
+	.latest-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 12px;
+	}
+	.latest h2 {
+		margin: 0;
+		font-size: 1.5rem;
+	}
+	.cta {
+		display: inline-block;
+		background: var(--side);
+		color: #fff;
+		text-decoration: none;
+		font-weight: 600;
+		padding: 10px 16px;
+		border-radius: 10px;
+	}
+	.cta:hover {
+		background: var(--side2);
+	}
+
+	.stats {
+		list-style: none;
+		margin: 18px 0 0;
+		padding: 0;
+		display: grid;
+		gap: 12px;
+		grid-template-columns: 1fr;
+	}
+	@media (min-width: 640px) {
+		.stats {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+	.stats li {
+		display: grid;
+		gap: 2px;
+		padding: 12px 14px;
+		background: var(--canvas);
+		border-radius: 10px;
+	}
+	.lbl {
+		font-size: 0.7rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--muted);
+		font-weight: 600;
+	}
+	.val {
+		font-size: 1.7rem;
+		font-weight: 700;
+		letter-spacing: -0.02em;
+	}
+	.val small {
+		font-size: 0.55em;
+		color: var(--muted);
+		margin-left: 2px;
+	}
+	.chg {
+		font-size: 0.85rem;
+		font-weight: 700;
+	}
+	.chg .muted {
+		font-weight: 400;
+	}
+	.better {
+		color: var(--better);
+	}
+	.worse {
+		color: var(--worse);
+	}
+	.equal {
+		color: var(--equal);
+	}
+	.takeaway {
+		margin: 16px 0 0;
+	}
+
+	.next {
+		margin-top: 32px;
+	}
+	.next h2 {
+		font-size: 1.3rem;
+	}
+	.tiles {
+		display: grid;
+		gap: 12px;
+		grid-template-columns: 1fr;
+	}
+	@media (min-width: 720px) {
+		.tiles {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+	.tile {
+		color: inherit;
+		text-decoration: none;
+		transition: transform 0.15s;
+	}
+	a.tile:hover {
+		transform: translateY(-2px);
+	}
+	.tile h3 {
+		font-size: 1.05rem;
+		color: var(--better);
+	}
+	.tile p {
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.95rem;
+	}
+	.soon {
+		background: var(--track);
+		box-shadow: none;
+	}
+	.soon h3 {
+		color: var(--muted);
+	}
+	.small {
+		font-size: 0.85rem;
+		margin-top: 24px;
+	}
+</style>
