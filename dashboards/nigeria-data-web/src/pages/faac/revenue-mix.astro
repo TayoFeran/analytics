@@ -1,0 +1,114 @@
+---
+import FaacFilters from "../../components/FaacFilters.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import SectionTabs from "../../components/SectionTabs.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import info from "../../data/export_info.json";
+import national from "../../data/faac_national_month.json";
+import stateMonth from "../../data/faac_state_month.json";
+import states from "../../data/faac_states.json";
+import { defaultFaacFilters, makeCube, type NationalMonth, type StateMonthRow } from "../../lib/faac";
+import {
+	buildLinesView,
+	type LinesData,
+	renderOilByState,
+	renderRevenueArea,
+	renderRevenueInsight,
+	renderRevenueTable,
+	revenueLegend,
+} from "../../lib/pages/faac-lines";
+import { FAAC_CLOCK, renderFreshness } from "../../lib/ui";
+import "../../styles/data-pages.css";
+
+const months = national as NationalMonth[];
+const cube = makeCube(months, stateMonth as StateMonthRow[], states, ["oil_derivation"]);
+const data: LinesData = { months, cube, exportedAt: info.exported_at };
+const f = defaultFaacFilters(cube.months);
+const view = buildLinesView(data, f);
+const latest = cube.months[cube.months.length - 1];
+---
+
+<BaseLayout
+	title="FAAC revenue mix"
+	description="Where the states' FAAC allocation comes from each month: statutory allocation, VAT, oil derivation and the smaller lines, and which states receive oil derivation."
+>
+	<div class="ov">
+		<SectionTabs section="faac" />
+		<PageHeader
+			eyebrow="FAAC"
+			title="Revenue mix"
+			lede="The six revenue lines that add up to the states' gross allocation, and which states receive oil derivation."
+			freshness={renderFreshness([FAAC_CLOCK(latest)], data.exportedAt, new Date())}
+		/>
+		<FaacFilters months={cube.months} from={f.from} to={f.to} />
+
+		<section class="card">
+			<h2 class="ptitle">Gross allocation by revenue line</h2>
+			<p class="psub">All 36 states · stacked, so the top edge is gross</p>
+			<div class="chart-wrap" id="area" set:html={renderRevenueArea(view, 900)} />
+			<div set:html={revenueLegend()} />
+		</section>
+
+		<div class="cols-2">
+			<section class="card">
+				<h2 class="ptitle">Revenue lines</h2>
+				<p class="psub" id="table-sub"></p>
+				<div id="table" set:html={renderRevenueTable(view)} />
+			</section>
+			<section class="card">
+				<h2 class="ptitle">Oil derivation by state</h2>
+				<p class="psub" id="oil-sub">Only oil- and gas-producing states receive it · coloured by zone</p>
+				<div id="oil" set:html={renderOilByState(data, view)} />
+			</section>
+		</div>
+
+		<section class="banner" id="insight" aria-label="Key takeaway" set:html={renderRevenueInsight(data, view)} />
+	</div>
+
+	<script type="application/json" id="page-data" set:html={JSON.stringify(data)} />
+</BaseLayout>
+
+<script>
+	import { bindFaacFilters, bindFlips, bindTooltip, byId, onWidthChange, readData, showFaacFilters, syncUrl, widthOf } from "../../lib/client";
+	import { readFaacFilters, writeFaacFilters } from "../../lib/faac";
+	import { monthLabel } from "../../lib/format";
+	import {
+		buildLinesView,
+		type LinesData,
+		type LinesView,
+		linesTooltip,
+		renderOilByState,
+		renderRevenueArea,
+		renderRevenueInsight,
+		renderRevenueTable,
+		stateLineTooltip,
+	} from "../../lib/pages/faac-lines";
+	import { FAAC_CLOCK, renderFreshness } from "../../lib/ui";
+
+	const data = readData<LinesData>("page-data");
+	const months = data.cube.months;
+	const f = readFaacFilters(new URLSearchParams(location.search), months);
+	let view: LinesView;
+
+	const drawArea = () => (byId("area").innerHTML = renderRevenueArea(view, widthOf(byId("area"))));
+	function render() {
+		view = buildLinesView(data, f);
+		showFaacFilters(f);
+		drawArea();
+		const month = monthLabel(months[view.index], "long");
+		byId("table-sub").textContent = `${month} · share of gross and change vs the previous month`;
+		byId("table").innerHTML = renderRevenueTable(view);
+		byId("oil-sub").textContent = `${month} · only oil- and gas-producing states receive it · coloured by zone`;
+		byId("oil").innerHTML = renderOilByState(data, view);
+		byId("insight").innerHTML = renderRevenueInsight(data, view);
+		syncUrl(writeFaacFilters(f, months));
+	}
+
+	bindFaacFilters(f, render);
+	bindFlips();
+	bindTooltip(byId("area"), (k) => linesTooltip(data, view, Number(k), "revenue"));
+	bindTooltip(byId("oil"), (k) => stateLineTooltip(data, view, "oil_derivation", k, "Oil derivation"));
+	onWidthChange(byId("area"), drawArea);
+	byId("fresh").innerHTML = renderFreshness([FAAC_CLOCK(months[months.length - 1])], data.exportedAt, new Date());
+	render();
+</script>

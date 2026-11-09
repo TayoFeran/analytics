@@ -1,0 +1,196 @@
+---
+import PageHeader from "../../components/PageHeader.astro";
+import SectionTabs from "../../components/SectionTabs.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import info from "../../data/export_info.json";
+import national from "../../data/faac_national_month.json";
+import stateMonth from "../../data/faac_state_month.json";
+import states from "../../data/faac_states.json";
+import topology from "../../../../nigeria-data-dashboard/design/maps/nigeria_states.json";
+import { makeCube, type NationalMonth, type StateMonthRow } from "../../lib/faac";
+import { monthLabel } from "../../lib/format";
+import { buildStateShapes, renderMap } from "../../lib/map";
+import {
+	buildStatesView,
+	mapFills,
+	renderRanking,
+	renderRankTools,
+	renderStatesInsight,
+	type StatesData,
+	type StatesFilters,
+} from "../../lib/pages/faac-states";
+import { FAAC_CLOCK, renderFreshness } from "../../lib/ui";
+import "../../styles/data-pages.css";
+
+const cube = makeCube(national as NationalMonth[], stateMonth as StateMonthRow[], states, ["gross", "deductions", "net"]);
+const data: StatesData = { cube, exportedAt: info.exported_at };
+const latest = cube.months[cube.months.length - 1];
+const filters: StatesFilters = { to: latest, currency: "NGN", state: "", zone: "", mode: "states" };
+const view = buildStatesView(data, filters);
+const fills = mapFills(view);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const { shapes, height } = buildStateShapes(topology as any);
+const map = renderMap(shapes, height, (name) => fills[name] ?? null, { aria: "Map of Nigeria's states shaded by net FAAC allocation" });
+---
+
+<BaseLayout
+	title="FAAC by state"
+	description="Which of Nigeria's 36 states received the most from FAAC each month: a map and ranking, with each state's gross, deductions and net."
+>
+	<div class="ov">
+		<SectionTabs section="faac" />
+		<PageHeader
+			eyebrow="FAAC"
+			title="States"
+			lede="How the month's allocation was shared between the 36 states. Tap a state for its own figures."
+			freshness={renderFreshness([FAAC_CLOCK(latest)], data.exportedAt, new Date())}
+		/>
+
+		<form class="filters card" aria-label="Filters">
+			<label>
+				<span>Month</span>
+				<select id="to">
+					{
+						[...cube.months].reverse().map((k) => (
+							<option value={k} selected={k === filters.to}>
+								{monthLabel(k, "tick")}
+							</option>
+						))
+					}
+				</select>
+			</label>
+			<label>
+				<span>State</span>
+				<select id="state">
+					<option value="">All states</option>
+					{cube.states.map((s) => <option value={s}>{s}</option>)}
+				</select>
+			</label>
+			<div class="seg push" role="group" aria-label="Currency">
+				<button type="button" data-cur="NGN" aria-pressed="true">₦ Naira</button>
+				<button type="button" data-cur="USD" aria-pressed="false">$ Dollar</button>
+			</div>
+		</form>
+
+		<div class="cols-2 wide-left">
+			<section class="card">
+				<h2 class="ptitle">Net received by state</h2>
+				<p class="psub" id="map-sub">{monthLabel(latest, "long")} · darker = higher rank · FCT isn't in the FAAC state data</p>
+				<div id="map" set:html={map} />
+				<div class="scale-key"><span>Less</span><span class="ramp"></span><span>More</span></div>
+			</section>
+			<section class="card">
+				<h2 class="ptitle">Ranking</h2>
+				<p class="psub" id="rank-sub">Net received, {monthLabel(latest, "long")}</p>
+				<div id="rank-tools" set:html={renderRankTools(view)} />
+				<div id="rank" set:html={renderRanking(view)} />
+			</section>
+		</div>
+
+		<section class="banner" id="insight" aria-label="Key takeaway" set:html={renderStatesInsight(view, cube)} />
+		<p class="note-line">State boundaries: geoBoundaries (GRID3, 2022), CC BY 4.0.</p>
+	</div>
+
+	<script type="application/json" id="page-data" set:html={JSON.stringify(data)} />
+</BaseLayout>
+
+<script>
+	import { bindTooltip, byId, readData, syncUrl } from "../../lib/client";
+	import { monthLabel } from "../../lib/format";
+	import {
+		buildStatesView,
+		mapFills,
+		renderRanking,
+		renderRankTools,
+		renderStatesInsight,
+		type StatesData,
+		type StatesFilters,
+		type StatesView,
+		stateTooltip,
+	} from "../../lib/pages/faac-states";
+	import { FAAC_CLOCK, renderFreshness } from "../../lib/ui";
+
+	const data = readData<StatesData>("page-data");
+	const c = data.cube;
+	const latest = c.months[c.months.length - 1];
+	const params = new URLSearchParams(location.search);
+	const f: StatesFilters = {
+		to: c.months.includes(params.get("to") ?? "") ? params.get("to")! : latest,
+		currency: params.get("cur") === "usd" ? "USD" : "NGN",
+		state: c.states.includes(params.get("state") ?? "") ? params.get("state")! : "",
+		zone: params.get("zone") ?? "",
+		mode: params.get("zone") || params.get("mode") === "zones" ? "zones" : "states",
+	};
+	let view: StatesView;
+
+	function render() {
+		view = buildStatesView(data, f);
+		byId<HTMLSelectElement>("to").value = f.to;
+		byId<HTMLSelectElement>("state").value = f.state;
+		document.querySelectorAll<HTMLButtonElement>("[data-cur]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.cur === f.currency)));
+		const fills = mapFills(view);
+		document.querySelectorAll<SVGPathElement>("#map path[data-i]").forEach((p) => {
+			const name = p.dataset.i!;
+			if (fills[name]) p.setAttribute("fill", fills[name]);
+			p.classList.toggle("sel", name === f.state);
+		});
+		const month = monthLabel(c.months[view.month], "long");
+		byId("map-sub").textContent = `${month} · darker = higher rank · FCT isn't in the FAAC state data`;
+		byId("rank-sub").textContent = `Net received, ${month}${f.zone ? ` · ${f.zone}` : ""}`;
+		byId("rank-tools").innerHTML = renderRankTools(view);
+		byId("rank").innerHTML = renderRanking(view);
+		byId("insight").innerHTML = renderStatesInsight(view, c);
+		const p = new URLSearchParams();
+		if (f.to !== latest) p.set("to", f.to);
+		if (f.currency === "USD") p.set("cur", "usd");
+		if (f.state) p.set("state", f.state);
+		if (f.zone) p.set("zone", f.zone);
+		else if (f.mode === "zones") p.set("mode", "zones");
+		syncUrl(p);
+	}
+
+	const selectState = (name: string) => {
+		f.state = f.state === name ? "" : name;
+		render();
+	};
+
+	byId<HTMLSelectElement>("to").addEventListener("change", (e) => {
+		f.to = (e.target as HTMLSelectElement).value;
+		render();
+	});
+	byId<HTMLSelectElement>("state").addEventListener("change", (e) => {
+		f.state = (e.target as HTMLSelectElement).value;
+		render();
+	});
+	document.querySelectorAll<HTMLButtonElement>("[data-cur]").forEach((b) =>
+		b.addEventListener("click", () => {
+			f.currency = b.dataset.cur === "USD" ? "USD" : "NGN";
+			render();
+		}),
+	);
+	byId("rank-tools").addEventListener("click", (e) => {
+		const b = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-mode]");
+		if (!b) return;
+		f.mode = b.dataset.mode === "zones" ? "zones" : "states";
+		f.zone = "";
+		render();
+	});
+	byId("rank").addEventListener("click", (e) => {
+		const row = (e.target as HTMLElement).closest<HTMLElement>("[data-i]");
+		if (!row) return;
+		const key = row.dataset.i!;
+		if (key.startsWith("zone:")) {
+			f.zone = key.slice(5);
+			render();
+		} else selectState(key);
+	});
+	byId("map").addEventListener("click", (e) => {
+		const path = (e.target as Element).closest<SVGPathElement>("path[data-i]");
+		if (path && c.states.includes(path.dataset.i!)) selectState(path.dataset.i!);
+	});
+
+	bindTooltip(byId("map"), (key) => stateTooltip(view, key, c));
+	bindTooltip(byId("rank"), (key) => stateTooltip(view, key, c));
+	byId("fresh").innerHTML = renderFreshness([FAAC_CLOCK(latest)], data.exportedAt, new Date());
+	render();
+</script>
