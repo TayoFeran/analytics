@@ -19,7 +19,7 @@ Each workbook has an `Income` and a `Deduction` sheet, with these headers in row
 | Income | Beneficiaries, LGs, Statutory Allocation, Oil Derivation, Exchange Gain Difference, Total Ecology Fund, Gross VAT Allocation, Others Income, Total Gross Amount |
 | Deduction | Beneficiaries, LGs, External Debt, Contractual Obligation (ISPO), Other Deductions (see Note), Transfer of 50% to NDDC/HYPPADEC, Deduction, Others Deduction (or "Others Income"), Total Gross Amount, then an unlabelled net-amount column |
 
-A file with any other layout stops the load with an error naming the file, and nothing is changed. Update the layouts in the loader if NBS changes the format.
+A file with any other layout stops the load with an error naming the file, and nothing is changed. Update the layouts in the loader if the OAGF changes the format.
 
 ## Known quirks (all handled)
 

@@ -12,7 +12,7 @@ Every number on this site comes from public sources and is calculated the same w
 
 | Data | Source | Coverage |
 |---|---|---|
-| FAAC allocations to states | Monthly FAAC disbursement workbooks, as published by the National Bureau of Statistics (NBS) | 36 states, January 2020 to the latest month added |
+| FAAC allocations to states | Monthly FAAC disbursement reports, published by the Office of the Accountant General of the Federation (OAGF) | 36 states, January 2020 to the latest month added |
 | Naira-per-dollar exchange rate | World Bank, official exchange rate (monthly average) | January 2010 to the latest month |
 | Consumer prices and inflation | World Bank, consumer price index (CPI) | Prices from January 2010; inflation from January 2011 (it compares with a year earlier) |
 | GDP, growth, population | World Bank | Yearly, 1990 to the latest year |
