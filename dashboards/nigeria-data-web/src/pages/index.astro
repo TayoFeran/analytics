@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import info from "../data/export_info.json";
 import national from "../data/faac_national_month.json";
+import { SITE } from "../site";
 import { moneyParts, monthKey, monthLabel, percent } from "../lib/format";
 import type { NationalMonth } from "../lib/faac-overview";
 
@@ -32,7 +33,7 @@ const updated = new Date(info.exported_at).toLocaleDateString("en-GB", { day: "n
 ---
 
 <BaseLayout
-	title="Nigeria Data"
+	title={SITE.name}
 	description="Clear, sourced data on the Nigerian economy, starting with monthly FAAC allocations to Nigeria's 36 states."
 >
 	<section class="hero">

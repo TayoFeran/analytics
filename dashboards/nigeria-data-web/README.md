@@ -1,6 +1,6 @@
-# Nigeria Data website
+# OpenPurse website
 
-The public website for the Nigeria Data Dashboard: interactive pages and plain-language explainers on public Nigerian data, readable on any phone. Built with [Astro](https://astro.build). Phase 1 is tracked in #35, and the reasons for choosing a website over Power BI are in [`docs/decisions/0003`](../../docs/decisions/0003-public-website-over-power-bi.md).
+OpenPurse is the public website for the Nigeria Data Dashboard: interactive pages and plain-language explainers on public Nigerian data, readable on any phone. The name and tagline live in `src/site.ts`. Built with [Astro](https://astro.build). Phase 1 is tracked in #35, and the reasons for choosing a website over Power BI are in [`docs/decisions/0003`](../../docs/decisions/0003-public-website-over-power-bi.md).
 
 The Power BI report in [`../nigeria-data-dashboard/`](../nigeria-data-dashboard/) stays live until this site covers everything it shows.
 
@@ -11,7 +11,7 @@ The site never connects to MotherDuck from the browser. Instead:
 1. `daily-pipeline.yml` builds `prod_dwh` with dbt.
 2. When it succeeds, `nigeria-data-web.yml` runs the `.sql` files in `queries/` against `prod_dwh` (read only) and writes small JSON files.
 3. Astro builds static pages from those files.
-4. The pages are deployed to Cloudflare Pages (project `nigeria-data`). A merged change to the site deploys the same way, without waiting for the next day.
+4. The pages are deployed to Cloudflare Pages (project `openpurse`). A merged change to the site deploys the same way, without waiting for the next day.
 
 If the data refresh fails, nothing is deployed and the site keeps the previous day's version; its freshness label turns to "Refresh missed" after 3 days. On every PR, the `site` job in `ci.yml` builds the site from `dev_dwh` so broken pages fail before they merge.
 

@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { SITE } from "../site";
 
 interface Props {
 	title: string;
@@ -7,7 +8,7 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
-const siteName = "Nigeria Data";
+const siteName = SITE.name;
 const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
 const path = Astro.url.pathname;
 
@@ -44,7 +45,7 @@ const year = new Date().getFullYear();
 		<header class="site-header">
 			<div class="container bar">
 				<a class="brand" href="/">
-					<span>Nigeria</span><span>Data</span>
+					<span>{SITE.nameParts[0]}</span><span>{SITE.nameParts[1]}</span>
 				</a>
 
 				<nav class="nav-wide" aria-label="Main">
@@ -80,10 +81,10 @@ const year = new Date().getFullYear();
 		<footer class="site-footer">
 			<div class="container">
 				<p>
-					<strong>Sources:</strong> FAAC monthly disbursement reports and the World Bank. Updated daily.{" "}
+					<strong>Sources:</strong> monthly FAAC reports from the OAGF, and the World Bank. Updated daily.{" "}
 					<a href="/methodology/">How the figures are calculated</a>.
 				</p>
-				<p class="muted">&copy; {year} {siteName}. Built from public data.</p>
+				<p class="muted">&copy; {year} {siteName}. {SITE.tagline}</p>
 			</div>
 		</footer>
 	</body>
@@ -117,14 +118,12 @@ const year = new Date().getFullYear();
 	}
 	.brand {
 		display: flex;
-		flex-direction: column;
 		color: #fff;
 		text-decoration: none;
-		font-weight: 700;
-		font-size: 1rem;
-		line-height: 1.05;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
+		font-weight: 800;
+		font-size: 1.3rem;
+		line-height: 1;
+		letter-spacing: -0.01em;
 	}
 	.brand span:last-child {
 		color: var(--gold);

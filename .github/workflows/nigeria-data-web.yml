@@ -1,4 +1,4 @@
-# Publishes the Nigeria Data website: prod_dwh -> JSON files -> static pages -> Cloudflare Pages.
+# Publishes the OpenPurse website: prod_dwh -> JSON files -> static pages -> Cloudflare Pages.
 # Reads prod_dwh only; daily-pipeline stays the only workflow that writes to it.
 name: nigeria-data-web
 
@@ -59,4 +59,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: dashboards/nigeria-data-web
-          command: pages deploy dist --project-name=nigeria-data --branch=main
+          command: pages deploy dist --project-name=openpurse --branch=main
