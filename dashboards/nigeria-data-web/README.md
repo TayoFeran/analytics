@@ -9,9 +9,11 @@ The Power BI report in [`../nigeria-data-dashboard/`](../nigeria-data-dashboard/
 The site never connects to MotherDuck from the browser. Instead:
 
 1. `daily-pipeline.yml` builds `prod_dwh` with dbt.
-2. An export step runs the `.sql` files in `queries/` and writes small JSON files.
+2. When it succeeds, `nigeria-data-web.yml` runs the `.sql` files in `queries/` against `prod_dwh` (read only) and writes small JSON files.
 3. Astro builds static pages from those files.
-4. The pages are deployed to Cloudflare Pages.
+4. The pages are deployed to Cloudflare Pages (project `nigeria-data`). A merged change to the site deploys the same way, without waiting for the next day.
+
+If the data refresh fails, nothing is deployed and the site keeps the previous day's version; its freshness label turns to "Refresh missed" after 3 days. On every PR, the `site` job in `ci.yml` builds the site from `dev_dwh` so broken pages fail before they merge.
 
 The MotherDuck token stays in GitHub Secrets, so visitors only ever download finished public numbers.
 
