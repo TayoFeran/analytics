@@ -1,0 +1,123 @@
+---
+import FaacFilters from "../../components/FaacFilters.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import SectionTabs from "../../components/SectionTabs.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import info from "../../data/export_info.json";
+import national from "../../data/faac_national_month.json";
+import stateMonth from "../../data/faac_state_month.json";
+import states from "../../data/faac_states.json";
+import { DEDUCTION_LINES, defaultFaacFilters, makeCube, type NationalMonth, type StateMonthRow } from "../../lib/faac";
+import {
+	buildLinesView,
+	deductionLegend,
+	type LinesData,
+	renderDeductionLines,
+	renderDeductionMatrix,
+	renderDeductionsInsight,
+	renderDeductionTotals,
+	renderExternalDebtByState,
+} from "../../lib/pages/faac-lines";
+import { FAAC_CLOCK, renderFreshness } from "../../lib/ui";
+import "../../styles/data-pages.css";
+
+const months = national as NationalMonth[];
+const cube = makeCube(months, stateMonth as StateMonthRow[], states, [...DEDUCTION_LINES.map((l) => l.key), "gross"]);
+const data: LinesData = { months, cube, exportedAt: info.exported_at };
+const f = defaultFaacFilters(cube.months);
+const view = buildLinesView(data, f);
+const latest = cube.months[cube.months.length - 1];
+---
+
+<BaseLayout
+	title="FAAC deductions"
+	description="What is deducted from Nigeria's states' FAAC allocations before they are paid: external debt, ISPOs, NDDC and HYPPADEC transfers and other lines, by state."
+>
+	<div class="ov">
+		<SectionTabs section="faac" />
+		<PageHeader
+			eyebrow="FAAC"
+			title="Deductions"
+			lede="Money taken from the states' allocations at source, before payment: mostly debt repayments and commitments the states signed up to."
+			freshness={renderFreshness([FAAC_CLOCK(latest)], data.exportedAt, new Date())}
+		/>
+		<FaacFilters months={cube.months} from={f.from} to={f.to} />
+
+		<section class="card">
+			<h2 class="ptitle">Deduction lines over time</h2>
+			<p class="psub">All 36 states · the two smallest lines are dashed</p>
+			<div class="chart-wrap" id="lines" set:html={renderDeductionLines(view, 900)} />
+			<div set:html={deductionLegend()} />
+		</section>
+
+		<div class="cols-2">
+			<section class="card">
+				<h2 class="ptitle">Deduction lines</h2>
+				<p class="psub" id="totals-sub"></p>
+				<div id="totals" set:html={renderDeductionTotals(view)} />
+			</section>
+			<section class="card">
+				<h2 class="ptitle">External debt by state</h2>
+				<p class="psub" id="debt-sub">Repayments on foreign loans, deducted at source · coloured by zone</p>
+				<div id="debt" set:html={renderExternalDebtByState(data, view)} />
+			</section>
+		</div>
+
+		<section class="card">
+			<h2 class="ptitle">Deductions by state and line</h2>
+			<p class="psub" id="matrix-sub">Darker green = a bigger share of that column · scroll sideways on a phone</p>
+			<div id="matrix" set:html={renderDeductionMatrix(data, view)} />
+		</section>
+
+		<section class="banner" id="insight" aria-label="Key takeaway" set:html={renderDeductionsInsight(data, view)} />
+	</div>
+
+	<script type="application/json" id="page-data" set:html={JSON.stringify(data)} />
+</BaseLayout>
+
+<script>
+	import { bindFaacFilters, bindTooltip, byId, onWidthChange, readData, showFaacFilters, syncUrl, widthOf } from "../../lib/client";
+	import { readFaacFilters, writeFaacFilters } from "../../lib/faac";
+	import { monthLabel } from "../../lib/format";
+	import {
+		buildLinesView,
+		type LinesData,
+		type LinesView,
+		linesTooltip,
+		renderDeductionLines,
+		renderDeductionMatrix,
+		renderDeductionsInsight,
+		renderDeductionTotals,
+		renderExternalDebtByState,
+		stateLineTooltip,
+	} from "../../lib/pages/faac-lines";
+	import { FAAC_CLOCK, renderFreshness } from "../../lib/ui";
+
+	const data = readData<LinesData>("page-data");
+	const months = data.cube.months;
+	const f = readFaacFilters(new URLSearchParams(location.search), months);
+	let view: LinesView;
+
+	const drawLines = () => (byId("lines").innerHTML = renderDeductionLines(view, widthOf(byId("lines"))));
+	function render() {
+		view = buildLinesView(data, f);
+		showFaacFilters(f);
+		drawLines();
+		const month = monthLabel(months[view.index], "long");
+		byId("totals-sub").textContent = `${month} · share of all deductions and change vs the previous month`;
+		byId("totals").innerHTML = renderDeductionTotals(view);
+		byId("debt-sub").textContent = `${month} · repayments on foreign loans, deducted at source · coloured by zone`;
+		byId("debt").innerHTML = renderExternalDebtByState(data, view);
+		byId("matrix-sub").textContent = `${month} · darker green = a bigger amount in that column · scroll sideways on a phone`;
+		byId("matrix").innerHTML = renderDeductionMatrix(data, view);
+		byId("insight").innerHTML = renderDeductionsInsight(data, view);
+		syncUrl(writeFaacFilters(f, months));
+	}
+
+	bindFaacFilters(f, render);
+	bindTooltip(byId("lines"), (k) => linesTooltip(data, view, Number(k), "deductions"));
+	bindTooltip(byId("debt"), (k) => stateLineTooltip(data, view, "external_debt", k, "External debt"));
+	onWidthChange(byId("lines"), drawLines);
+	byId("fresh").innerHTML = renderFreshness([FAAC_CLOCK(months[months.length - 1])], data.exportedAt, new Date());
+	render();
+</script>

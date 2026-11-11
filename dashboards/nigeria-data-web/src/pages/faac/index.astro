@@ -1,0 +1,261 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import info from "../../data/export_info.json";
+import national from "../../data/faac_national_month.json";
+import stateMonth from "../../data/faac_state_month.json";
+import states from "../../data/faac_states.json";
+import { monthKey, monthLabel } from "../../lib/format";
+import {
+	buildView,
+	type Filters,
+	type NationalMonth,
+	type OverviewData,
+	renderFreshness,
+	renderInsight,
+	renderKpis,
+	renderLineChart,
+	renderLineSub,
+	renderMix,
+	renderTop5,
+	type TopState,
+} from "../../lib/faac-overview";
+import SectionTabs from "../../components/SectionTabs.astro";
+import "../../styles/data-pages.css";
+
+// The browser only needs each month's top 5 states, not all 2,700 state-months.
+const zoneOf = new Map(states.map((s) => [s.state, s.zone]));
+const byMonth = new Map<string, TopState[]>();
+for (const row of stateMonth) {
+	const key = monthKey(row.disbursement_date);
+	if (!byMonth.has(key)) byMonth.set(key, []);
+	byMonth.get(key)!.push({ state: row.state, zone: zoneOf.get(row.state) ?? "", net: row.net });
+}
+const top5: Record<string, TopState[]> = {};
+for (const [key, rows] of byMonth) top5[key] = rows.sort((a, b) => b.net - a.net).slice(0, 5);
+
+const data: OverviewData = { months: national as NationalMonth[], top5, exportedAt: info.exported_at };
+const keys = data.months.map((m) => monthKey(m.disbursement_date));
+
+// Default view: the latest month, in naira, with the last 24 months in the chart
+const filters: Filters = { from: keys[Math.max(0, keys.length - 24)], to: keys[keys.length - 1], currency: "NGN" };
+const view = buildView(data, filters);
+---
+
+<BaseLayout
+	title="FAAC allocations"
+	description="Monthly FAAC allocations to Nigeria's 36 states: what was allocated, what was deducted, and what the states received, in naira or dollars."
+>
+	<div class="ov">
+		<SectionTabs section="faac" />
+		<header class="ov-head">
+			<div>
+				<p class="eyebrow">FAAC</p>
+				<h1>Overview</h1>
+				<p class="lede muted">
+					What the federation shared with Nigeria's 36 states each month, what was deducted first, and what the
+					states received.
+				</p>
+			</div>
+			<p class="fresh" id="fresh" set:html={renderFreshness(data, new Date())} />
+		</header>
+
+		<form class="filters card" id="filters" aria-label="Filters">
+			<label>
+				<span>From</span>
+				<select id="from">
+					{keys.map((k) => <option value={k} selected={k === filters.from}>{monthLabel(k, "tick")}</option>)}
+				</select>
+			</label>
+			<label>
+				<span>To</span>
+				<select id="to">
+					{
+						[...keys].reverse().map((k) => (
+							<option value={k} selected={k === filters.to}>
+								{monthLabel(k, "tick")}
+							</option>
+						))
+					}
+				</select>
+			</label>
+			<div class="seg" role="group" aria-label="Currency">
+				<button type="button" data-cur="NGN" aria-pressed="true">₦ Naira</button>
+				<button type="button" data-cur="USD" aria-pressed="false">$ Dollar</button>
+			</div>
+		</form>
+
+		<section class="kpis" id="kpis" aria-label="Key figures" set:html={renderKpis(view)} />
+
+		<div class="grid">
+			<section class="card chart-card">
+				<div class="chart-head">
+					<div>
+						<h2 class="ptitle">Gross vs net allocation</h2>
+						<p class="psub" id="line-sub">{renderLineSub(view)}</p>
+					</div>
+					<ul class="key" aria-hidden="true">
+						<li style="--c:#0B3D2E">Gross</li>
+						<li style="--c:#E2B53E">Net received</li>
+					</ul>
+				</div>
+				<div class="chart" id="chart" set:html={renderLineChart(view, 640)} />
+				<div class="ltt" id="ltt" aria-hidden="true"></div>
+			</section>
+
+			<section class="card top5-card">
+				<h2 class="ptitle">Top 5 states by net received</h2>
+				<div id="top5" set:html={renderTop5(view, "shelf")} />
+			</section>
+
+			<section class="card mix-card">
+				<h2 class="ptitle">Revenue mix</h2>
+				<div id="mix" set:html={renderMix(view)} />
+			</section>
+		</div>
+
+		<section class="banner" id="insight" aria-label="Key takeaway" set:html={renderInsight(view)} />
+	</div>
+
+	<script type="application/json" id="faac-data" set:html={JSON.stringify(data)} />
+</BaseLayout>
+
+<script>
+	import { monthKey } from "../../lib/format";
+	import {
+		buildView,
+		chartGeometry,
+		type Filters,
+		type OverviewData,
+		renderFreshness,
+		renderInsight,
+		renderKpis,
+		renderLineChart,
+		renderLineSub,
+		renderLineTooltip,
+		renderMix,
+		renderTop5,
+		type View,
+	} from "../../lib/faac-overview";
+
+	const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+	const data = JSON.parse($("faac-data").textContent ?? "{}") as OverviewData;
+	const keys = data.months.map((m) => monthKey(m.disbursement_date));
+	const defaults: Filters = { from: keys[Math.max(0, keys.length - 24)], to: keys[keys.length - 1], currency: "NGN" };
+
+	// Filters live in the URL, so a shared link opens the same view
+	const params = new URLSearchParams(location.search);
+	const pick = (value: string | null, fallback: string) => (value && keys.includes(value) ? value : fallback);
+	const filters: Filters = {
+		from: pick(params.get("from"), defaults.from),
+		to: pick(params.get("to"), defaults.to),
+		currency: params.get("cur") === "usd" ? "USD" : "NGN",
+	};
+	const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+	const fromEl = $<HTMLSelectElement>("from");
+	const toEl = $<HTMLSelectElement>("to");
+	const chartEl = $("chart");
+	const tooltip = $("ltt");
+	let view: View;
+
+	function syncUrl() {
+		const p = new URLSearchParams();
+		if (filters.from !== defaults.from) p.set("from", filters.from);
+		if (filters.to !== defaults.to) p.set("to", filters.to);
+		if (filters.currency === "USD") p.set("cur", "usd");
+		const query = p.toString();
+		history.replaceState(null, "", query ? `?${query}` : location.pathname);
+	}
+
+	function drawChart() {
+		chartEl.innerHTML = renderLineChart(view, Math.max(280, chartEl.clientWidth));
+		tooltip.style.display = "none";
+	}
+
+	function render() {
+		if (filters.from > filters.to) filters.from = filters.to;
+		view = buildView(data, filters);
+		fromEl.value = filters.from;
+		toEl.value = filters.to;
+		document.querySelectorAll<HTMLButtonElement>("[data-cur]").forEach((b) => {
+			b.setAttribute("aria-pressed", String(b.dataset.cur === filters.currency));
+		});
+		$("kpis").innerHTML = renderKpis(view);
+		$("line-sub").textContent = renderLineSub(view);
+		drawChart();
+		// Rotating shelf (chosen 2026-11-09); people who ask their device for less motion get a still list
+		$("top5").innerHTML = renderTop5(view, reducedMotion ? "list" : "shelf");
+		$("mix").innerHTML = renderMix(view);
+		$("insight").innerHTML = renderInsight(view);
+		syncUrl();
+	}
+
+	fromEl.addEventListener("change", () => {
+		filters.from = fromEl.value;
+		render();
+	});
+	toEl.addEventListener("change", () => {
+		filters.to = toEl.value;
+		render();
+	});
+	document.querySelectorAll<HTMLButtonElement>("[data-cur]").forEach((b) =>
+		b.addEventListener("click", () => {
+			filters.currency = b.dataset.cur === "USD" ? "USD" : "NGN";
+			render();
+		}),
+	);
+
+	// Flip cards: tap or click to turn over (phones have no hover)
+	$("kpis").addEventListener("click", (e) => {
+		const card = (e.target as HTMLElement).closest<HTMLButtonElement>(".fc");
+		if (!card) return;
+		const flipped = card.classList.toggle("flipped");
+		card.setAttribute("aria-pressed", String(flipped));
+	});
+
+	// Chart tooltip: follows the pointer on a laptop, appears on tap on a phone
+	function showTooltip(e: PointerEvent) {
+		const svg = chartEl.querySelector("svg");
+		if (!svg || !view.range.length) return;
+		const rect = svg.getBoundingClientRect();
+		const g = chartGeometry(rect.width, view.range.length);
+		const x = e.clientX - rect.left;
+		const i = g.step ? Math.max(0, Math.min(view.range.length - 1, Math.round((x - g.padL) / g.step))) : 0;
+		const px = g.step ? g.padL + i * g.step : rect.width / 2;
+		const guide = svg.querySelector(".guide");
+		guide?.setAttribute("x1", String(px));
+		guide?.setAttribute("x2", String(px));
+		guide?.setAttribute("visibility", "visible");
+		tooltip.innerHTML = renderLineTooltip(view, i);
+		tooltip.style.display = "block";
+		const offset = chartEl.offsetLeft;
+		const width = tooltip.offsetWidth;
+		const left = px + 14 + width > rect.width ? px - width - 14 : px + 14;
+		tooltip.style.left = `${offset + Math.max(0, left)}px`;
+		tooltip.style.top = `${chartEl.offsetTop + 36}px`;
+	}
+	function hideTooltip() {
+		tooltip.style.display = "none";
+		chartEl.querySelector(".guide")?.setAttribute("visibility", "hidden");
+	}
+	chartEl.addEventListener("pointermove", showTooltip);
+	chartEl.addEventListener("pointerdown", showTooltip);
+	chartEl.addEventListener("pointerleave", (e) => {
+		if (e.pointerType !== "touch") hideTooltip();
+	});
+	document.addEventListener("pointerdown", (e) => {
+		if (!chartEl.contains(e.target as Node)) hideTooltip();
+	});
+
+	// Redraw the chart at its real width, and again when the screen turns or resizes
+	let lastWidth = 0;
+	new ResizeObserver(() => {
+		if (!view || Math.abs(chartEl.clientWidth - lastWidth) < 4) return;
+		lastWidth = chartEl.clientWidth;
+		drawChart();
+	}).observe(chartEl);
+
+	// Freshness uses today's date, so a stalled pipeline shows up even on an old build
+	$("fresh").innerHTML = renderFreshness(data, new Date());
+	render();
+</script>

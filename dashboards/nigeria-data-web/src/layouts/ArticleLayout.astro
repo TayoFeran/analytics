@@ -1,0 +1,81 @@
+---
+// Frame for pages written in Markdown (src/pages/*.md): BaseLayout plus readable text.
+// A Markdown page sets title, description and eyebrow in its frontmatter.
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+	frontmatter: { title: string; description: string; eyebrow?: string; updated?: string };
+}
+
+const { title, description, eyebrow, updated } = Astro.props.frontmatter;
+---
+
+<BaseLayout title={title} description={description}>
+	<article class="prose">
+		{eyebrow && <p class="eyebrow">{eyebrow}</p>}
+		<h1>{title}</h1>
+		{updated && <p class="updated muted">Last reviewed {updated}</p>}
+		<slot />
+	</article>
+</BaseLayout>
+
+<style>
+	.prose {
+		max-width: 72ch;
+	}
+	.updated {
+		font-size: 0.85rem;
+		margin-top: -4px;
+	}
+	.prose :global(h2) {
+		font-size: 1.3rem;
+		margin-top: 2em;
+		padding-top: 0.6em;
+		border-top: 1px solid var(--line);
+	}
+	.prose :global(h3) {
+		font-size: 1.05rem;
+		margin-top: 1.5em;
+	}
+	.prose :global(p),
+	.prose :global(li) {
+		font-size: 1rem;
+	}
+	.prose :global(li + li) {
+		margin-top: 0.35em;
+	}
+	.prose :global(dl) {
+		margin: 0;
+	}
+	.prose :global(table) {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.92rem;
+		background: var(--card);
+	}
+	.prose :global(th),
+	.prose :global(td) {
+		text-align: left;
+		vertical-align: top;
+		padding: 8px 10px;
+		border-bottom: 1px solid var(--line);
+	}
+	.prose :global(th) {
+		background: var(--side);
+		color: #fff;
+		font-weight: 600;
+	}
+	.prose :global(blockquote) {
+		margin: 1em 0;
+		padding: 10px 14px;
+		border-left: 3px solid var(--gold);
+		background: #fdf8ea;
+		border-radius: 0 8px 8px 0;
+	}
+	.prose :global(code) {
+		background: var(--track);
+		padding: 1px 5px;
+		border-radius: 4px;
+		font-size: 0.9em;
+	}
+</style>

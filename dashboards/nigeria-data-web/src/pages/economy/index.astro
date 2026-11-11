@@ -1,0 +1,126 @@
+---
+import EconomyFilters from "../../components/EconomyFilters.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import SectionTabs from "../../components/SectionTabs.astro";
+import SwapCard from "../../components/SwapCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import admins from "../../data/administrations.json";
+import months from "../../data/economy_month.json";
+import info from "../../data/export_info.json";
+import years from "../../data/economy_year.json";
+import type { Administration, EconomyFilters as Filters, EconomyMonth, EconomyYear } from "../../lib/economy";
+import { yearOf } from "../../lib/economy";
+import {
+	buildEconomyView,
+	type EconomyData,
+	economyClocks,
+	presidentLegend,
+	presidentsIn,
+	renderEconomyCards,
+	renderEconomyInsight,
+	renderExplain,
+	renderMonthChart,
+} from "../../lib/pages/economy-overview";
+import { renderFreshness } from "../../lib/ui";
+import "../../styles/data-pages.css";
+
+const data: EconomyData = {
+	months: months as EconomyMonth[],
+	years: years as EconomyYear[],
+	admins: admins as Administration[],
+	exportedAt: info.exported_at,
+};
+const yearList = [...new Set(data.months.map((m) => yearOf(m.month_date)))];
+const defaults: Filters = { from: yearList[0], to: yearList[yearList.length - 1], president: "All" };
+const view = buildEconomyView(data, defaults);
+const presidents = presidentsIn(data.months);
+---
+
+<BaseLayout
+	title="Nigeria's economy"
+	description="Nigeria's inflation, the naira exchange rate, economic growth and GDP per person, month by month and by president, from World Bank data."
+>
+	<div class="ov">
+		<SectionTabs section="economy" />
+		<PageHeader
+			eyebrow="Economy"
+			title="Overview"
+			lede="Prices, the naira and growth: the numbers that shape everyday life, coloured by who was president."
+			freshness={renderFreshness(economyClocks(data), data.exportedAt, new Date())}
+		/>
+		<EconomyFilters years={yearList} from={defaults.from} to={defaults.to} presidents={presidents} />
+
+		<section class="kpis" id="kpis" aria-label="Key figures" set:html={renderEconomyCards(view)} />
+
+		<div class="cols-2">
+			<SwapCard
+				id="infl"
+				title="Inflation"
+				sub="How much prices rose over the past 12 months · lower is better"
+				chart={renderMonthChart(view, "inflation", 600)}
+				explain={renderExplain(view, "inflation")}
+				legend={presidentLegend(presidents)}
+			/>
+			<SwapCard
+				id="fx"
+				title="Naira per US dollar"
+				sub="What one dollar costs in naira · higher means a weaker naira"
+				chart={renderMonthChart(view, "naira", 600)}
+				explain={renderExplain(view, "naira")}
+				legend={presidentLegend(presidents)}
+			/>
+		</div>
+
+		<section class="banner" id="insight" aria-label="Key takeaway" set:html={renderEconomyInsight(view)} />
+		<p class="note-line">Source: World Bank. Inflation and GDP figures can differ from the NBS headline numbers.</p>
+	</div>
+
+	<script type="application/json" id="page-data" set:html={JSON.stringify(data)} />
+</BaseLayout>
+
+<script>
+	import { bindEconomyFilters, bindFlips, bindTooltip, byId, onWidthChange, readData, showEconomyFilters, syncUrl, widthOf } from "../../lib/client";
+	import { type EconomyFilters, readEconomyFilters, writeEconomyFilters, yearOf } from "../../lib/economy";
+	import {
+		buildEconomyView,
+		type EconomyData,
+		economyClocks,
+		monthTooltip,
+		type OverviewView,
+		presidentsIn,
+		renderEconomyCards,
+		renderEconomyInsight,
+		renderExplain,
+		renderMonthChart,
+	} from "../../lib/pages/economy-overview";
+	import { renderFreshness } from "../../lib/ui";
+
+	const data = readData<EconomyData>("page-data");
+	const years = [...new Set(data.months.map((m) => yearOf(m.month_date)))];
+	const defaults: EconomyFilters = { from: years[0], to: years[years.length - 1], president: "All" };
+	const f = readEconomyFilters(new URLSearchParams(location.search), years, presidentsIn(data.months), defaults);
+	let view: OverviewView;
+
+	const draw = () => {
+		byId("infl").innerHTML = renderMonthChart(view, "inflation", widthOf(byId("infl"), 560));
+		byId("fx").innerHTML = renderMonthChart(view, "naira", widthOf(byId("fx"), 560));
+	};
+	function render() {
+		view = buildEconomyView(data, f);
+		showEconomyFilters(f);
+		byId("kpis").innerHTML = renderEconomyCards(view);
+		draw();
+		byId("infl-explain").innerHTML = renderExplain(view, "inflation");
+		byId("fx-explain").innerHTML = renderExplain(view, "naira");
+		byId("insight").innerHTML = renderEconomyInsight(view);
+		syncUrl(writeEconomyFilters(f, defaults));
+	}
+
+	bindEconomyFilters(f, render);
+	bindFlips();
+	bindTooltip(byId("infl"), (k) => monthTooltip(view, Number(k), "inflation"));
+	bindTooltip(byId("fx"), (k) => monthTooltip(view, Number(k), "naira"));
+	onWidthChange(byId("infl"), draw);
+	byId("fresh").innerHTML = renderFreshness(economyClocks(data), data.exportedAt, new Date());
+	render();
+</script>

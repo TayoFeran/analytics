@@ -1,0 +1,39 @@
+---
+// The FAAC date range (From / To month) and currency, shared by the FAAC pages.
+// Each page's script wires them up with bindFaacFilters() from src/lib/client.ts.
+import { monthLabel } from "../lib/format";
+
+interface Props {
+	months: string[];
+	from: string;
+	to: string;
+}
+
+const { months, from, to } = Astro.props;
+---
+
+<form class="filters card" aria-label="Filters">
+	<label>
+		<span>From</span>
+		<select id="from">
+			{months.map((k) => <option value={k} selected={k === from}>{monthLabel(k, "tick")}</option>)}
+		</select>
+	</label>
+	<label>
+		<span>To</span>
+		<select id="to">
+			{
+				[...months].reverse().map((k) => (
+					<option value={k} selected={k === to}>
+						{monthLabel(k, "tick")}
+					</option>
+				))
+			}
+		</select>
+	</label>
+	<slot />
+	<div class="seg push" role="group" aria-label="Currency">
+		<button type="button" data-cur="NGN" aria-pressed="true">₦ Naira</button>
+		<button type="button" data-cur="USD" aria-pressed="false">$ Dollar</button>
+	</div>
+</form>

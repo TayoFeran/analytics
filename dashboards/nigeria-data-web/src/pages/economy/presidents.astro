@@ -1,0 +1,119 @@
+---
+import EconomyFilters from "../../components/EconomyFilters.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import SectionTabs from "../../components/SectionTabs.astro";
+import SwapCard from "../../components/SwapCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import admins from "../../data/administrations.json";
+import months from "../../data/economy_month.json";
+import info from "../../data/export_info.json";
+import years from "../../data/economy_year.json";
+import type { Administration, EconomyMonth, EconomyYear } from "../../lib/economy";
+import { economyClocks } from "../../lib/pages/economy-overview";
+import {
+	buildTerms,
+	type PresidentsData,
+	renderCoverage,
+	renderPresidentBars,
+	renderPresidentExplain,
+	renderPresidentsInsight,
+	yearsOfData,
+} from "../../lib/pages/economy-presidents";
+import { renderFreshness } from "../../lib/ui";
+import "../../styles/data-pages.css";
+
+const data: PresidentsData = {
+	months: months as EconomyMonth[],
+	years: years as EconomyYear[],
+	admins: admins as Administration[],
+	exportedAt: info.exported_at,
+};
+const clocks = economyClocks({ ...data });
+const yearList = yearsOfData(data);
+const range = { from: yearList[0], to: yearList[yearList.length - 1] };
+const terms = buildTerms(data, range);
+---
+
+<BaseLayout
+	title="Nigeria's economy by president"
+	description="Inflation, the naira and economic growth under each Nigerian president since 1999, compared fairly with the data available."
+>
+	<div class="ov">
+		<SectionTabs section="economy" />
+		<PageHeader
+			eyebrow="Economy"
+			title="Presidents"
+			lede="How prices, the naira and growth fared under each president since 1999, in term order."
+			freshness={renderFreshness(clocks, data.exportedAt, new Date())}
+		/>
+		<EconomyFilters years={yearList} from={range.from} to={range.to} />
+		<div id="coverage" set:html={renderCoverage(terms)} />
+
+		<div class="cols-2">
+			<SwapCard id="inflation" title="Average inflation" sub="Average of each month's inflation · lower is better" chart={renderPresidentBars(terms, "inflation")} explain={renderPresidentExplain(terms, "inflation")} />
+			<SwapCard id="naira" title="The naira's value" sub="Change against the dollar, from the rate inherited to the rate left" chart={renderPresidentBars(terms, "naira")} explain={renderPresidentExplain(terms, "naira")} />
+			<SwapCard id="growth" title="Average real growth" sub="Average of each year's growth after price rises" chart={renderPresidentBars(terms, "growth")} explain={renderPresidentExplain(terms, "growth")} />
+		</div>
+
+		<section class="banner" id="insight" aria-label="Key takeaway" set:html={renderPresidentsInsight(terms)} />
+		<p class="note-line">Source: World Bank. Monthly prices and exchange rates start in 2010 and inflation in 2011, so earlier terms are partial for now.</p>
+	</div>
+
+	<script type="application/json" id="page-data" set:html={JSON.stringify({ ...data, clocks })} />
+</BaseLayout>
+
+<script>
+	import { bindFlips, bindTooltip, byId, readData, syncUrl } from "../../lib/client";
+	import {
+		buildTerms,
+		type PresidentChart,
+		presidentTooltip,
+		type PresidentsData,
+		renderCoverage,
+		renderPresidentBars,
+		renderPresidentExplain,
+		renderPresidentsInsight,
+		type Term,
+		yearsOfData,
+	} from "../../lib/pages/economy-presidents";
+	import { type Clock, renderFreshness } from "../../lib/ui";
+
+	const data = readData<PresidentsData & { clocks: Clock[] }>("page-data");
+	const years = yearsOfData(data);
+	const p = new URLSearchParams(location.search);
+	const pick = (v: string | null, fallback: number) => (v && years.includes(Number(v)) ? Number(v) : fallback);
+	const r = { from: pick(p.get("from"), years[0]), to: pick(p.get("to"), years[years.length - 1]) };
+	const charts: PresidentChart[] = ["inflation", "naira", "growth"];
+	let terms: Term[];
+
+	function render() {
+		if (r.from > r.to) r.from = r.to;
+		(byId("yfrom") as HTMLSelectElement).value = String(r.from);
+		(byId("yto") as HTMLSelectElement).value = String(r.to);
+		terms = buildTerms(data, r);
+		byId("coverage").innerHTML = renderCoverage(terms);
+		charts.forEach((c) => {
+			byId(c).innerHTML = renderPresidentBars(terms, c);
+			byId(`${c}-explain`).innerHTML = renderPresidentExplain(terms, c);
+		});
+		byId("insight").innerHTML = renderPresidentsInsight(terms);
+		const q = new URLSearchParams();
+		if (r.from !== years[0]) q.set("from", String(r.from));
+		if (r.to !== years[years.length - 1]) q.set("to", String(r.to));
+		syncUrl(q);
+	}
+
+	byId("yfrom").addEventListener("change", (e) => {
+		r.from = Number((e.target as HTMLSelectElement).value);
+		render();
+	});
+	byId("yto").addEventListener("change", (e) => {
+		r.to = Number((e.target as HTMLSelectElement).value);
+		if (r.from > r.to) r.from = r.to;
+		render();
+	});
+	bindFlips();
+	charts.forEach((c) => bindTooltip(byId(c), (k) => presidentTooltip(terms, k, c)));
+	byId("fresh").innerHTML = renderFreshness(data.clocks, data.exportedAt, new Date());
+	render();
+</script>

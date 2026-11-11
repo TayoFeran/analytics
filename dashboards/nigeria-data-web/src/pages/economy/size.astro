@@ -1,0 +1,94 @@
+---
+import EconomyFilters from "../../components/EconomyFilters.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import SectionTabs from "../../components/SectionTabs.astro";
+import SwapCard from "../../components/SwapCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import admins from "../../data/administrations.json";
+import months from "../../data/economy_month.json";
+import info from "../../data/export_info.json";
+import years from "../../data/economy_year.json";
+import type { Administration, EconomyFilters as Filters, EconomyMonth, EconomyYear } from "../../lib/economy";
+import { NO_PRESIDENT } from "../../lib/economy";
+import { type EconomyData, economyClocks, presidentLegend, presidentsIn } from "../../lib/pages/economy-overview";
+import { buildSizeView, renderSizeChart, renderSizeExplain, renderSizeInsight } from "../../lib/pages/economy-size";
+import { legend, renderFreshness } from "../../lib/ui";
+import "../../styles/data-pages.css";
+
+const data: EconomyData = {
+	months: months as EconomyMonth[],
+	years: years as EconomyYear[],
+	admins: admins as Administration[],
+	exportedAt: info.exported_at,
+};
+const yearList = data.years.filter((y) => y.gdp_usd != null).map((y) => y.year);
+const defaults: Filters = { from: yearList[0], to: yearList[yearList.length - 1], president: "All" };
+const view = buildSizeView(data.years, defaults);
+const presidents = presidentsIn(data.years);
+const presLegend = presidentLegend(presidents) + legend([{ name: "Before 1999", colour: NO_PRESIDENT }]);
+const growthLegend = legend([
+	{ name: "Grew", colour: "#0E8A5F" },
+	{ name: "Shrank", colour: "#C93C3C" },
+	{ name: "Population growth (dashed)", colour: "#C98A00" },
+]);
+---
+
+<BaseLayout
+	title="Size of Nigeria's economy"
+	description="How big Nigeria's economy is in naira and dollars, how fast it grows after price rises, and GDP per person, every year since 1990."
+>
+	<div class="ov">
+		<SectionTabs section="economy" />
+		<PageHeader
+			eyebrow="Economy"
+			title="Economy size"
+			lede="How big the economy is, how fast it grows, and what that means per person. Tap ⓘ on a chart for a plain explanation."
+			freshness={renderFreshness(economyClocks(data), data.exportedAt, new Date())}
+		/>
+		<EconomyFilters years={yearList} from={defaults.from} to={defaults.to} presidents={presidents} />
+
+		<div class="cols-2">
+			<SwapCard id="naira" title="GDP in naira (nominal)" sub="The value of everything produced in a year, at that year's prices" chart={renderSizeChart(view, "naira", 600)} explain={renderSizeExplain(view, "naira")} legend={presLegend} />
+			<SwapCard id="usd" title="GDP in US dollars (nominal)" sub="The same, converted at each year's average exchange rate" chart={renderSizeChart(view, "usd", 600)} explain={renderSizeExplain(view, "usd")} legend={presLegend} />
+			<SwapCard id="growth" title="Real GDP growth" sub="How much more was produced than the year before, after price rises" chart={renderSizeChart(view, "growth", 600)} explain={renderSizeExplain(view, "growth")} legend={growthLegend} />
+			<SwapCard id="perperson" title="GDP per person" sub="Each Nigerian's share of the year's output, in US dollars" chart={renderSizeChart(view, "perperson", 600)} explain={renderSizeExplain(view, "perperson")} legend={presLegend} />
+		</div>
+
+		<section class="banner" id="insight" aria-label="Key takeaway" set:html={renderSizeInsight(view)} />
+		<p class="note-line">Source: World Bank. A year is shown under the president in office on 1 July.</p>
+	</div>
+
+	<script type="application/json" id="page-data" set:html={JSON.stringify({ years: data.years, months: [], admins: [], exportedAt: data.exportedAt, clocks: economyClocks(data) })} />
+</BaseLayout>
+
+<script>
+	import { bindEconomyFilters, bindFlips, bindTooltip, byId, onWidthChange, readData, showEconomyFilters, syncUrl, widthOf } from "../../lib/client";
+	import { type EconomyFilters, type EconomyYear, readEconomyFilters, writeEconomyFilters } from "../../lib/economy";
+	import { presidentsIn } from "../../lib/pages/economy-overview";
+	import { buildSizeView, renderSizeChart, renderSizeExplain, renderSizeInsight, type SizeChart, sizeTooltip, type SizeView } from "../../lib/pages/economy-size";
+	import { type Clock, renderFreshness } from "../../lib/ui";
+
+	const data = readData<{ years: EconomyYear[]; exportedAt: string; clocks: Clock[] }>("page-data");
+	const years = data.years.filter((y) => y.gdp_usd != null).map((y) => y.year);
+	const defaults: EconomyFilters = { from: years[0], to: years[years.length - 1], president: "All" };
+	const f = readEconomyFilters(new URLSearchParams(location.search), years, presidentsIn(data.years), defaults);
+	const charts: SizeChart[] = ["naira", "usd", "growth", "perperson"];
+	let view: SizeView;
+
+	const draw = () => charts.forEach((c) => (byId(c).innerHTML = renderSizeChart(view, c, widthOf(byId(c), 560))));
+	function render() {
+		view = buildSizeView(data.years, f);
+		showEconomyFilters(f);
+		draw();
+		charts.forEach((c) => (byId(`${c}-explain`).innerHTML = renderSizeExplain(view, c)));
+		byId("insight").innerHTML = renderSizeInsight(view);
+		syncUrl(writeEconomyFilters(f, defaults));
+	}
+
+	bindEconomyFilters(f, render);
+	bindFlips();
+	charts.forEach((c) => bindTooltip(byId(c), (k) => sizeTooltip(view, Number(k), c)));
+	onWidthChange(byId("naira"), draw);
+	byId("fresh").innerHTML = renderFreshness(data.clocks, data.exportedAt, new Date());
+	render();
+</script>

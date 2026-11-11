@@ -1,0 +1,78 @@
+# OpenPurse website
+
+OpenPurse is the public website for the Nigeria Data Dashboard: interactive pages and plain-language explainers on public Nigerian data, readable on any phone. The name and tagline live in `src/site.ts`. Built with [Astro](https://astro.build). Phase 1 is tracked in #35, and the reasons for choosing a website over Power BI are in [`docs/decisions/0003`](../../docs/decisions/0003-public-website-over-power-bi.md).
+
+The Power BI report in [`../nigeria-data-dashboard/`](../nigeria-data-dashboard/) stays live until this site covers everything it shows.
+
+## How it gets its data
+
+The site never connects to MotherDuck from the browser. Instead:
+
+1. `daily-pipeline.yml` builds `prod_dwh` with dbt.
+2. When it succeeds, `nigeria-data-web.yml` runs the `.sql` files in `queries/` against `prod_dwh` (read only) and writes small JSON files.
+3. Astro builds static pages from those files.
+4. The pages are deployed to Cloudflare Pages (project `openpurse`). A merged change to the site deploys the same way, without waiting for the next day.
+
+If the data refresh fails, nothing is deployed and the site keeps the previous day's version; its freshness label turns to "Refresh missed" after 3 days. On every PR, the `site` job in `ci.yml` builds the site from `dev_dwh` so broken pages fail before they merge.
+
+The MotherDuck token stays in GitHub Secrets, so visitors only ever download finished public numbers.
+
+### Exporting the data locally
+
+`export_site_data.py` runs every `queries/<name>.sql` and writes `src/data/<name>.json`, plus `src/data/export_info.json` (when it ran, from which database, row counts). **To add data to the site, add a `.sql` file:** the script picks it up without changes. Queries name tables without the database (`datamart.nigeria_faac_state_month`), so the same SQL runs against `dev_dwh` and `prod_dwh`.
+
+From the repo root, with `MOTHERDUCK_TOKEN` in `.env`:
+
+```bash
+uv run --group pipelines python dashboards/nigeria-data-web/export_site_data.py
+```
+
+It reads `dev_dwh` unless `MOTHERDUCK_DATABASE=prod_dwh`, which only `daily-pipeline` sets. It stops without writing anything if a query fails or returns no rows. `src/data/` is rebuilt on every run and kept out of git, so run the export once before `npm run dev` on a fresh clone.
+
+| Query | One row per | Used by |
+|---|---|---|
+| `faac_national_month.sql` | FAAC month, all states together: gross, deductions, net, the 6 revenue lines, the 6 deduction lines, naira per dollar | FAAC Overview |
+| `faac_state_month.sql` | state per FAAC month: gross, deductions, net and every revenue and deduction line | FAAC Overview top 5, States, Revenue mix, Deductions, Compare |
+| `faac_states.sql` | state: zone and region | colouring and grouping states by zone |
+| `economy_month.sql` | month: president, naira per dollar, CPI, inflation | Economy Overview, FAAC in real terms, Presidents |
+| `economy_year.sql` | year: president, GDP in naira and dollars, real growth, population, GDP per person | Economy size, Economy Overview, Presidents |
+| `administrations.sql` | administration: president, party, term dates | Presidents |
+
+Amounts are whole naira. Dollars are worked out on the site as naira ÷ that month's `naira_per_usd`, the same way the datamart does it. Pages don't download the whole state file: each page's build packs only the columns it needs, in units of ₦100,000 (see `makeCube` in `src/lib/faac.ts`).
+
+The state map comes from `../nigeria-data-dashboard/design/maps/nigeria_states.json` (geoBoundaries, CC BY 4.0) and is drawn as SVG at build time.
+
+## Folder layout
+
+```text
+nigeria-data-web/
+├── README.md
+├── export_site_data.py runs queries/*.sql and writes src/data/*.json
+├── queries/            the SQL behind each data file (one .sql per JSON file)
+├── package.json        dependencies and the npm scripts (dev, build, preview)
+├── package-lock.json   exact dependency versions; commit it, never edit by hand
+├── astro.config.mjs    site settings
+├── tsconfig.json       type checking for the site's code
+├── .nvmrc              the Node.js major version (CI reads it too)
+├── public/             files served as they are: favicon, images
+└── src/
+    ├── components/     pieces shared by pages: section tabs, filters, page header, chart cards
+    ├── data/           exported JSON (generated, not in git)
+    ├── layouts/        the frame around every page (header, menu, footer)
+    ├── lib/            calculations and HTML for each page (lib/pages/), charts, map, formatting
+    ├── pages/          one file per page: faac/, economy/, index.astro (home), methodology.md
+    └── styles/         the palette (global.css) and the data pages' styles (data-pages.css)
+```
+
+`node_modules/` (installed packages), `dist/` (the built site) and `.astro/` (generated types) are rebuilt on demand and kept out of git.
+
+## Preview locally
+
+You need Node.js (the version in `.nvmrc`). From this folder:
+
+```bash
+npm install        # once, and after package.json changes
+npm run dev        # opens a live preview at http://localhost:4321 that reloads as you edit
+npm run build      # builds the finished site into dist/, as the pipeline does
+npm run preview    # serves dist/ to check the built site
+```

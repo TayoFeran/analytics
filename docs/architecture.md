@@ -71,10 +71,11 @@ The two databases have identical schemas, and the dbt source reads `{{ target.da
 | What | Where | Runs |
 |---|---|---|
 | Local checks | `.pre-commit-config.yaml` | every `git commit`: file checks, ruff, mypy, sqlfmt, dbt parse, commit message format |
-| `ci` workflow | `.github/workflows/ci.yml` | every PR (checks + `dbt build --target dev`) and push to `main` (checks) |
+| `ci` workflow | `.github/workflows/ci.yml` | every PR (checks + `dbt build --target dev` + website build from `dev_dwh`) and push to `main` (checks) |
 | `daily-pipeline` workflow | `.github/workflows/daily-pipeline.yml` | 05:00 UTC daily, on merges that change `dbt/`, `pipelines/` or `data/`, and by hand |
+| `nigeria-data-web` workflow | `.github/workflows/nigeria-data-web.yml` | after each successful `daily-pipeline`, on merges that change the website, and by hand: reads `prod_dwh`, builds the website, deploys it to Cloudflare Pages |
 
-Secrets: `MOTHERDUCK_TOKEN` lives in `.env` locally (gitignored) and as a GitHub Actions repository secret.
+Secrets: `MOTHERDUCK_TOKEN` lives in `.env` locally (gitignored) and as a GitHub Actions repository secret. `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` are GitHub Actions secrets only, used to deploy the website.
 
 ## FAAC: moved from Fabric
 

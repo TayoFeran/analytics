@@ -1,0 +1,66 @@
+---
+// Tabs for the pages inside a section. Scrolls sideways on a phone instead of wrapping.
+interface Props {
+	section: "faac" | "economy";
+}
+
+const SECTIONS = {
+	faac: [
+		{ href: "/faac/", label: "Overview" },
+		{ href: "/faac/states/", label: "States" },
+		{ href: "/faac/revenue-mix/", label: "Revenue mix" },
+		{ href: "/faac/deductions/", label: "Deductions" },
+		{ href: "/faac/compare/", label: "Compare" },
+	],
+	economy: [
+		{ href: "/economy/", label: "Overview" },
+		{ href: "/economy/size/", label: "Economy size" },
+		{ href: "/economy/faac-real-terms/", label: "FAAC in real terms" },
+		{ href: "/economy/presidents/", label: "Presidents" },
+	],
+};
+
+const { section } = Astro.props;
+const path = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astro.url.pathname}/`;
+---
+
+<nav class="tabs" aria-label={section === "faac" ? "FAAC pages" : "Economy pages"}>
+	{
+		SECTIONS[section].map((t) => (
+			<a href={t.href} aria-current={path === t.href ? "page" : undefined}>
+				{t.label}
+			</a>
+		))
+	}
+</nav>
+
+<style>
+	.tabs {
+		display: flex;
+		gap: 4px;
+		overflow-x: auto;
+		scrollbar-width: none;
+		margin: -8px 0 4px;
+		border-bottom: 1px solid var(--line);
+	}
+	.tabs::-webkit-scrollbar {
+		display: none;
+	}
+	a {
+		flex: none;
+		padding: 10px 12px;
+		color: var(--muted);
+		text-decoration: none;
+		font-size: 0.92rem;
+		border-bottom: 3px solid transparent;
+		white-space: nowrap;
+	}
+	a:hover {
+		color: var(--ink);
+	}
+	a[aria-current="page"] {
+		color: var(--ink);
+		font-weight: 650;
+		border-bottom-color: var(--gold);
+	}
+</style>

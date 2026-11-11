@@ -1,0 +1,62 @@
+# Publishes the OpenPurse website: prod_dwh -> JSON files -> static pages -> Cloudflare Pages.
+# Reads prod_dwh only; daily-pipeline stays the only workflow that writes to it.
+name: nigeria-data-web
+
+on:
+  # Every day, right after daily-pipeline has refreshed prod_dwh
+  workflow_run:
+    workflows: [daily-pipeline]
+    types: [completed]
+  # A merged change to the site goes live without waiting for the next day
+  push:
+    branches: [main]
+    paths:
+      - "dashboards/nigeria-data-web/**"
+      - ".github/workflows/nigeria-data-web.yml"
+  # Run button in the Actions tab
+  workflow_dispatch:
+
+# One deploy at a time; a newer trigger waits rather than racing the older one
+concurrency:
+  group: nigeria-data-web
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    # Don't publish on top of a failed data refresh; the site keeps yesterday's version
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
+      MOTHERDUCK_DATABASE: prod_dwh
+      UV_NO_SYNC: "1"
+    defaults:
+      run:
+        working-directory: dashboards/nigeria-data-web
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: dashboards/nigeria-data-web/.nvmrc
+          cache: npm
+          cache-dependency-path: dashboards/nigeria-data-web/package-lock.json
+      - name: Install dependencies
+        run: |
+          uv sync --locked --no-default-groups --group pipelines
+          npm ci
+      - name: Export site data (prod)
+        run: uv run python export_site_data.py
+      - name: Build
+        run: npm run build
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: dashboards/nigeria-data-web
+          command: pages deploy dist --project-name=openpurse --branch=main

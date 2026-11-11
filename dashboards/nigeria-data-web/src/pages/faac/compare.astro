@@ -1,0 +1,167 @@
+---
+import PageHeader from "../../components/PageHeader.astro";
+import SectionTabs from "../../components/SectionTabs.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import info from "../../data/export_info.json";
+import national from "../../data/faac_national_month.json";
+import stateMonth from "../../data/faac_state_month.json";
+import states from "../../data/faac_states.json";
+import { DEDUCTION_LINES, makeCube, type NationalMonth, REVENUE_LINES, type StateMonthRow } from "../../lib/faac";
+import { monthLabel } from "../../lib/format";
+import { buildCompareView, choices, type CompareData, defaultCompare, renderButterfly, renderCompareInsight } from "../../lib/pages/faac-compare";
+import { FAAC_CLOCK, renderFreshness } from "../../lib/ui";
+import "../../styles/data-pages.css";
+
+const months = national as NationalMonth[];
+const cube = makeCube(months, stateMonth as StateMonthRow[], states, [...REVENUE_LINES.map((l) => l.key), ...DEDUCTION_LINES.map((l) => l.key)]);
+// Administrations with FAAC months, in term order
+const presidents = [...new Set(months.map((m) => m.president))];
+const data: CompareData = { cube, presidents, exportedAt: info.exported_at };
+const f = defaultCompare(data);
+const view = buildCompareView(data, f);
+const latest = cube.months[cube.months.length - 1];
+const options = choices(data, f.by);
+---
+
+<BaseLayout
+	title="Compare FAAC allocations"
+	description="Compare FAAC allocations between administrations, states or zones, line by line: revenue, deductions and net, in total, per month or per state."
+>
+	<div class="ov">
+		<SectionTabs section="faac" />
+		<PageHeader
+			eyebrow="FAAC"
+			title="Compare"
+			lede="Put two administrations, states or zones side by side, line by line."
+			freshness={renderFreshness([FAAC_CLOCK(latest)], data.exportedAt, new Date())}
+		/>
+
+		<form class="filters card" aria-label="Filters">
+			<label>
+				<span>Compare</span>
+				<select id="by">
+					<option value="admin" selected>Administrations</option>
+					<option value="state">States</option>
+					<option value="zone">Zones</option>
+				</select>
+			</label>
+			<label>
+				<span>A</span>
+				<select id="a">{options.map((o) => <option value={o} selected={o === f.a}>{o}</option>)}</select>
+			</label>
+			<label>
+				<span>B</span>
+				<select id="b">{options.map((o) => <option value={o} selected={o === f.b}>{o}</option>)}</select>
+			</label>
+			<label>
+				<span>Basis</span>
+				<select id="basis">
+					<option value="total">Total</option>
+					<option value="monthly" selected>Monthly average</option>
+					<option value="perstate">Per state per month</option>
+				</select>
+			</label>
+			<label>
+				<span>From</span>
+				<select id="from">{cube.months.map((k) => <option value={k} selected={k === f.from}>{monthLabel(k, "tick")}</option>)}</select>
+			</label>
+			<label>
+				<span>To</span>
+				<select id="to">{[...cube.months].reverse().map((k) => <option value={k} selected={k === f.to}>{monthLabel(k, "tick")}</option>)}</select>
+			</label>
+			<label>
+				<span>Currency</span>
+				<select id="cur">
+					<option value="NGN" selected>₦ Naira</option>
+					<option value="USD">$ Dollar</option>
+				</select>
+			</label>
+		</form>
+
+		<section class="card">
+			<h2 class="ptitle">Line by line</h2>
+			<p class="psub">Each row has its own scale, so small lines stay readable · the chip is B compared with A</p>
+			<div id="bfly" set:html={renderButterfly(data, view)} />
+		</section>
+
+		<section class="banner" id="insight" aria-label="Key takeaway" set:html={renderCompareInsight(view)} />
+	</div>
+
+	<script type="application/json" id="page-data" set:html={JSON.stringify(data)} />
+</BaseLayout>
+
+<script>
+	import { byId, readData, setOptions, syncUrl } from "../../lib/client";
+	import {
+		type Basis,
+		buildCompareView,
+		choices,
+		type CompareBy,
+		type CompareData,
+		defaultCompare,
+		defaultSides,
+		renderButterfly,
+		renderCompareInsight,
+	} from "../../lib/pages/faac-compare";
+	import { FAAC_CLOCK, renderFreshness } from "../../lib/ui";
+
+	const data = readData<CompareData>("page-data");
+	const months = data.cube.months;
+	const defaults = defaultCompare(data);
+	const p = new URLSearchParams(location.search);
+	const by = (["admin", "state", "zone"].includes(p.get("by") ?? "") ? p.get("by") : "admin") as CompareBy;
+	const opts = choices(data, by);
+	const [da, db] = defaultSides(data, by);
+	const f = {
+		by,
+		a: opts.includes(p.get("a") ?? "") ? p.get("a")! : da,
+		b: opts.includes(p.get("b") ?? "") ? p.get("b")! : db,
+		basis: (["total", "monthly", "perstate"].includes(p.get("basis") ?? "") ? p.get("basis") : "monthly") as Basis,
+		from: months.includes(p.get("from") ?? "") ? p.get("from")! : defaults.from,
+		to: months.includes(p.get("to") ?? "") ? p.get("to")! : defaults.to,
+		currency: (p.get("cur") === "usd" ? "USD" : "NGN") as "NGN" | "USD",
+	};
+
+	const sel = (id: string) => byId<HTMLSelectElement>(id);
+	function render() {
+		if (f.from > f.to) f.from = f.to;
+		const list = choices(data, f.by).map((o) => ({ value: o, label: o }));
+		sel("by").value = f.by;
+		setOptions(sel("a"), list, f.a);
+		setOptions(sel("b"), list, f.b);
+		sel("basis").value = f.basis;
+		sel("from").value = f.from;
+		sel("to").value = f.to;
+		sel("cur").value = f.currency;
+		const view = buildCompareView(data, f);
+		byId("bfly").innerHTML = renderButterfly(data, view);
+		byId("insight").innerHTML = renderCompareInsight(view);
+		const q = new URLSearchParams();
+		if (f.by !== "admin") q.set("by", f.by);
+		const [sa, sb] = defaultSides(data, f.by);
+		if (f.a !== sa) q.set("a", f.a);
+		if (f.b !== sb) q.set("b", f.b);
+		if (f.basis !== "monthly") q.set("basis", f.basis);
+		if (f.from !== defaults.from) q.set("from", f.from);
+		if (f.to !== defaults.to) q.set("to", f.to);
+		if (f.currency === "USD") q.set("cur", "usd");
+		syncUrl(q);
+	}
+
+	sel("by").addEventListener("change", () => {
+		f.by = sel("by").value as CompareBy;
+		[f.a, f.b] = defaultSides(data, f.by);
+		render();
+	});
+	for (const id of ["a", "b", "basis", "from", "to", "cur"] as const) {
+		sel(id).addEventListener("change", () => {
+			const value = sel(id).value;
+			if (id === "cur") f.currency = value as "NGN" | "USD";
+			else if (id === "basis") f.basis = value as Basis;
+			else f[id] = value;
+			render();
+		});
+	}
+	byId("fresh").innerHTML = renderFreshness([FAAC_CLOCK(months[months.length - 1])], data.exportedAt, new Date());
+	render();
+</script>

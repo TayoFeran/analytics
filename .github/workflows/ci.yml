@@ -50,3 +50,36 @@ jobs:
       - name: dbt build (dev)
         working-directory: dbt
         run: uv run dbt build --target dev --profiles-dir .
+
+  # Builds the Nigeria Data website from dev_dwh, so a PR that breaks a page, a query or
+  # the types fails here instead of on the live site. Builds only; nothing is deployed.
+  site:
+    if: github.event_name == 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
+      MOTHERDUCK_DATABASE: dev_dwh
+      UV_NO_SYNC: "1"
+    defaults:
+      run:
+        working-directory: dashboards/nigeria-data-web
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: dashboards/nigeria-data-web/.nvmrc
+          cache: npm
+          cache-dependency-path: dashboards/nigeria-data-web/package-lock.json
+      - name: Install dependencies
+        run: |
+          uv sync --locked --no-default-groups --group pipelines
+          npm ci
+      - name: Export site data (dev)
+        run: uv run python export_site_data.py
+      - name: Type check
+        run: npx astro check
+      - name: Build
+        run: npm run build
