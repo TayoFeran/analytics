@@ -44,6 +44,11 @@ TOKEN = os.getenv("MOTHERDUCK_TOKEN")
 DATABASE = os.getenv("MOTHERDUCK_DATABASE", "dev_dwh")
 ALLOWED_DATABASES = {"dev_dwh", "prod_dwh"}
 
+# How old the World Bank rows may get while the API is down before the run fails.
+# CPI, FX and GDP change monthly or yearly, so a few days late is harmless, but a
+# longer outage must fail loudly rather than leave the site quietly out of date.
+MAX_STALE_DAYS = 7
+
 # bronze is shared by every project, so table names start with <project>_<source>_.
 # Bronze tables this script owns. Created if missing, so a new database (like prod_dwh)
 # is set up by code instead of by hand. Types match the original dev_dwh tables.
@@ -83,22 +88,44 @@ def utc_now() -> datetime:
     return datetime.now(UTC).replace(tzinfo=None)
 
 
-def _get(url: str, params: dict[str, Any], max_retries: int = 3) -> Any:
-    """Return the parsed JSON body, retrying failed requests with a growing pause.
+class WorldBankUnavailable(Exception):
+    """The World Bank API is down or answering badly; bronze is left as it is."""
+
+
+def _get(url: str, params: dict[str, Any], max_retries: int = 5) -> Any:
+    """Return the parsed JSON body, retrying outages with a doubling pause.
+
+    The API has had outages lasting days (timeouts and 502s, November 2026), so a
+    failure here is usually theirs. A 4xx other than 429 means our request is wrong,
+    which retrying can't fix, so it fails at once.
 
     Args:
         url: World Bank API endpoint.
         params: Query string parameters.
-        max_retries: Attempts before the last HTTP error is raised.
+        max_retries: Attempts before giving up with WorldBankUnavailable.
     """
+    problem = ""
     for attempt in range(1, max_retries + 1):
-        resp = requests.get(url, params=params, timeout=30)
-        if resp.ok:
-            return resp.json()
-        if attempt == max_retries:
-            resp.raise_for_status()
-        time.sleep(1.5 * attempt)
-    raise RuntimeError(f"No response from {url} after {max_retries} attempts")
+        try:
+            resp = requests.get(url, params=params, timeout=30)
+        except requests.RequestException as e:
+            problem = f"{type(e).__name__}: {e}"
+        else:
+            if resp.ok:
+                try:
+                    return resp.json()
+                except ValueError:
+                    # The API sometimes sends an HTML or XML error page with status 200
+                    problem = "response was not JSON"
+            elif resp.status_code >= 500 or resp.status_code == 429:
+                problem = f"HTTP {resp.status_code}"
+            else:
+                resp.raise_for_status()
+        if attempt < max_retries:
+            wait = 10 * 2 ** (attempt - 1)
+            print(f"Attempt {attempt} failed ({problem}), retrying in {wait}s")
+            time.sleep(wait)
+    raise WorldBankUnavailable(f"{url}: {problem} after {max_retries} attempts")
 
 
 def fetch_annual(
@@ -187,7 +214,7 @@ def fetch_all(indicators: dict[str, str], fetch: Callable[[str], list[Row]]) -> 
     for code, name in indicators.items():
         fetched = fetch(code)
         if not fetched:
-            raise SystemExit(f"Error: 0 rows fetched for {code} ({name}); bronze left unchanged")
+            raise WorldBankUnavailable(f"0 rows fetched for {code} ({name})")
         print(f"{code}: {len(fetched)} rows")
         rows.extend(fetched)
     return rows
@@ -250,6 +277,42 @@ def load_rows(
     )
 
 
+def keep_existing_rows(con: duckdb.DuckDBPyConnection, reason: str) -> None:
+    """Let the run carry on with the rows already in bronze, unless they're too old.
+
+    Without this, one World Bank outage stopped the FAAC load, dbt and the website
+    deploy for a week. The age check stops a long outage going unnoticed.
+
+    Args:
+        con: Open MotherDuck connection.
+        reason: What went wrong with the API, for the log.
+    """
+    # The older of the two tables decides, so neither can go stale unnoticed
+    last_loads: list[datetime] = []
+    for table in BRONZE_DDL:
+        result = con.sql(f"SELECT MAX(extracted_at) FROM {DATABASE}.bronze.{table}").fetchone()
+        if result and result[0] is not None:
+            last_loads.append(result[0])
+    if len(last_loads) < len(BRONZE_DDL):
+        raise SystemExit(f"Error: World Bank API unavailable and no rows in bronze ({reason})")
+
+    age_days = (utc_now() - min(last_loads)).total_seconds() / 86400
+    if age_days > MAX_STALE_DAYS:
+        raise SystemExit(
+            f"Error: World Bank API unavailable and bronze was last loaded {age_days:.1f} days "
+            f"ago, more than {MAX_STALE_DAYS} ({reason})"
+        )
+
+    message = (
+        f"World Bank API unavailable, kept the rows loaded {age_days:.1f} days ago "
+        f"(fails after {MAX_STALE_DAYS} days): {reason}"
+    )
+    print(f"Warning: {message}")
+    # A yellow annotation on the run summary, so a green run still shows the problem
+    if os.getenv("GITHUB_ACTIONS") == "true":
+        print(f"::warning title=World Bank API unavailable::{message}")
+
+
 def main() -> None:
     if DATABASE not in ALLOWED_DATABASES:
         raise SystemExit(
@@ -259,14 +322,24 @@ def main() -> None:
         raise SystemExit("Error: MOTHERDUCK_TOKEN is not set")
 
     # Fetch everything before touching MotherDuck, so an API failure changes nothing
-    annual_rows = fetch_all(ANNUAL_INDICATORS, fetch_annual)
-    monthly_rows = fetch_all(MONTHLY_INDICATORS, fetch_monthly)
+    try:
+        annual_rows = fetch_all(ANNUAL_INDICATORS, fetch_annual)
+        monthly_rows = fetch_all(MONTHLY_INDICATORS, fetch_monthly)
+    except WorldBankUnavailable as e:
+        api_problem = str(e)
+    else:
+        api_problem = ""
 
-    print(f"Loading into {DATABASE}")
     # The MotherDuck extension reads MOTHERDUCK_TOKEN from the environment. Never put the
     # token in the connection string: DuckDB echoes it in error messages.
     con = duckdb.connect("md:")
     ensure_bronze(con)
+
+    if api_problem:
+        keep_existing_rows(con, api_problem)
+        return
+
+    print(f"Loading into {DATABASE}")
 
     # Replace both tables in one transaction: if any insert fails, the old rows stay
     # instead of leaving bronze empty for the next dbt run.
