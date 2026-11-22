@@ -1,0 +1,1306 @@
+shared_month,position,column_id,column_header,header_key
+2020-01,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2020-01,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2020-01,3,6,Gross Total,grosstotal
+2020-01,4,7,External Debt,externaldebt
+2020-01,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2020-01,6,9,Other Deductions (see Note),otherdeductionsseenote
+2020-01,7,10,Net Statutory Allocation,netstatutoryallocation
+2020-01,8,11,Distribution of ExchangeGain,distributionofexchangegain
+2020-01,9,12,Gross VAT Allocation,grossvatallocation
+2020-01,10,13,VAT Deduction,vatdeduction
+2020-01,11,14,NET VAT Allocation,netvatallocation
+2020-01,12,15,Total Gross Amount,totalgrossamount
+2020-01,13,16,Total Net Amount,totalnetamount
+2020-02,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2020-02,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2020-02,3,6,Gross Total,grosstotal
+2020-02,4,7,External Debt,externaldebt
+2020-02,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2020-02,6,9,Other Deductions (see Note),otherdeductionsseenote
+2020-02,7,10,Net Statutory Allocation,netstatutoryallocation
+2020-02,8,11,Distribution of Exchange Gain,distributionofexchangegain
+2020-02,9,12,Distribution of Excess Bank Charges Recovered,distributionofexcessbankchargesrecovered
+2020-02,10,13,Distribution of 16.298 Billion from Non Oil Revenue,distributionof16298billionfromnonoilrevenue
+2020-02,11,14,Gross VAT Allocation,grossvatallocation
+2020-02,12,15,Deduction,deduction
+2020-02,13,16,Net VAT Allocation,netvatallocation
+2020-02,14,17,Total Gross Amount,totalgrossamount
+2020-02,15,18,Total Net Amount,totalnetamount
+2020-03,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2020-03,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2020-03,3,6,Gross Total,grosstotal
+2020-03,4,7,ExternalDebt,externaldebt
+2020-03,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2020-03,6,9,OtherDeductions (see Note),otherdeductionsseenote
+2020-03,7,10,Net StatutoryAllocation,netstatutoryallocation
+2020-03,8,11,Distribution of Exchange f Gain,distributionofexchangefgain
+2020-03,9,12,Distribution of '=N= 15.198 rom FOREX Equalisation Account,distributionofn15198romforexequalisationaccount
+2020-03,10,13,Gross VATAllocation,grossvatallocation
+2020-03,11,14,Deduction,deduction
+2020-03,12,15,Net VAT,netvat
+2020-03,13,16,TotalGross Amount,totalgrossamount
+2020-03,14,17,TotalNet Amount,totalnetamount
+2020-04,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2020-04,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2020-04,3,6,Gross Total,grosstotal
+2020-04,4,7,External Debt,externaldebt
+2020-04,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2020-04,6,9,Other Deductions (see Note),otherdeductionsseenote
+2020-04,7,10,Net Statutory Allocation,netstatutoryallocation
+2020-04,8,11,ExchangeGain,exchangegain
+2020-04,9,14,Gross VAT Allocation,grossvatallocation
+2020-04,10,14a,Deduction,deduction
+2020-04,11,14b,Net VAT,netvat
+2020-04,12,15,Total Gross Amount,totalgrossamount
+2020-04,13,16,Total Net Amount,totalnetamount
+2020-05,1,4,f Gross Statutory Allocation,fgrossstatutoryallocation
+2020-05,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2020-05,3,6,Gross Total,grosstotal
+2020-05,4,7,External Debt,externaldebt
+2020-05,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2020-05,6,9,Other Deductions (see Note),otherdeductionsseenote
+2020-05,7,10,Net Statutory D Allocation,netstatutorydallocation
+2020-05,8,11,istribution of ExchangeGain,istributionofexchangegain
+2020-05,9,12,Distribution of SolidMineral Revenue for the Month,distributionofsolidmineralrevenueforthemonth
+2020-05,10,13,Distribution of ExcessBank Charges for theMonth,distributionofexcessbankchargesforthemonth
+2020-05,11,14,Distribution of 103Billion for theMonth,distributionof103billionforthemonth
+2020-05,12,15,Gross VAT Allocation,grossvatallocation
+2020-05,13,16,Deduction,deduction
+2020-05,14,17,Net VAT Allocation,netvatallocation
+2020-05,15,18,Total Gross Amount,totalgrossamount
+2020-05,16,18a,Total Net Amount,totalnetamount
+2020-06,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2020-06,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2020-06,3,6,Gross Total,grosstotal
+2020-06,4,7,External Debt,externaldebt
+2020-06,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2020-06,6,9,Other Deductions (see Note),otherdeductionsseenote
+2020-06,7,10,Net Statutory D Allocation,netstatutorydallocation
+2020-06,8,11,istribution of ExchangeGain,istributionofexchangegain
+2020-06,9,12,Excess Bank Charges,excessbankcharges
+2020-06,10,13,Gross VAT Allocation,grossvatallocation
+2020-06,11,15,Deduction,deduction
+2020-06,12,16,Net VAT Allocation,netvatallocation
+2020-06,13,17,Total Gross Amount,totalgrossamount
+2020-06,14,18,Total Net Amount,totalnetamount
+2020-07,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2020-07,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2020-07,3,6,Gross Total,grosstotal
+2020-07,4,7,External Debt,externaldebt
+2020-07,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2020-07,6,9,Other Deductions (see Note),otherdeductionsseenote
+2020-07,7,10,Net Statutory f Allocation,netstatutoryfallocation
+2020-07,8,11,Distribution of 50 Billion rom Non-Oil Revenue for the Month,distributionof50billionromnonoilrevenueforthemonth
+2020-07,9,12,Distribution of Exchange Gain,distributionofexchangegain
+2020-07,10,13,Gross VAT Allocation,grossvatallocation
+2020-07,11,14,Deduction,deduction
+2020-07,12,15,Net VAT,netvat
+2020-07,13,16,Total Gross Amount,totalgrossamount
+2020-07,14,17,Total Net Amount,totalnetamount
+2020-08,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2020-08,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2020-08,3,6,Gross Total,grosstotal
+2020-08,4,7,External Debt,externaldebt
+2020-08,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2020-08,6,9,Other Deductions (see Note),otherdeductionsseenote
+2020-08,7,10,Net Statutory Allocation,netstatutoryallocation
+2020-08,8,11,Gross VAT Allocation,grossvatallocation
+2020-08,9,12,Deduction,deduction
+2020-08,10,13,Net VAT Allocation,netvatallocation
+2020-08,11,14,Total Gross Amount,totalgrossamount
+2020-08,12,15,Total Net Amount,totalnetamount
+2020-09,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2020-09,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2020-09,3,6,Gross Total,grosstotal
+2020-09,4,7,External Debt,externaldebt
+2020-09,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2020-09,6,9,Other Deductions (see Note),otherdeductionsseenote
+2020-09,7,10,Net Statutory Allocation,netstatutoryallocation
+2020-09,8,11,Gross VAT Allocation,grossvatallocation
+2020-09,9,12,Deduction,deduction
+2020-09,10,13,Gross VAT Allocation,grossvatallocation
+2020-09,11,14,Total Gross Amount,totalgrossamount
+2020-09,12,15,Total Net Amount,totalnetamount
+2020-10,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2020-10,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2020-10,3,6,Gross Total,grosstotal
+2020-10,4,7,External Debt,externaldebt
+2020-10,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2020-10,6,9,Other Deductions (see Note),otherdeductionsseenote
+2020-10,7,10,Net Statutory Allocation,netstatutoryallocation
+2020-10,8,11,Distribution of 72Billion Being FGN Intervention Fund,distributionof72billionbeingfgninterventionfund
+2020-10,9,12,Distribution of 39.542Billion from FOREX,distributionof39542billionfromforex
+2020-10,10,13,Distribution of 45 Billion from Non-Oil Revenue,distributionof45billionfromnonoilrevenue
+2020-10,11,14,Gross VAT Allocation,grossvatallocation
+2020-10,12,15,Deduction,deduction
+2020-10,13,16,Net VAT Allocation,netvatallocation
+2020-10,14,16a,Total Gross Amount,totalgrossamount
+2020-10,15,16b,Total Net Amount,totalnetamount
+2020-11,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2020-11,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2020-11,3,6,Gross Total,grosstotal
+2020-11,4,7,External Debt,externaldebt
+2020-11,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2020-11,6,9,Other Deductions (see Note),otherdeductionsseenote
+2020-11,7,10,D Net Statutory Allocation F,dnetstatutoryallocationf
+2020-11,8,11,istribution of 72 BillionBeing GN Intervention for theMonth,istributionof72billionbeinggninterventionforthemonth
+2020-11,9,12,Distribution of 20 Billion from StablisationAccount,distributionof20billionfromstablisationaccount
+2020-11,10,13,Distribution of 7.392 Billion Being FOREXEqualisation,distributionof7392billionbeingforexequalisation
+2020-11,11,14,Distribution of 1.001 Billion beingExcessBankCharges Recovered,distributionof1001billionbeingexcessbankchargesrecovered
+2020-11,12,15,Gross VAT Allocation,grossvatallocation
+2020-11,13,16,Deduction,deduction
+2020-11,14,17,Net VAT Allocation,netvatallocation
+2020-11,15,18,TotalGross Amount,totalgrossamount
+2020-11,16,19,Total Net Amount,totalnetamount
+2020-12,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2020-12,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2020-12,3,6,Gross Total,grosstotal
+2020-12,4,7,External Debt,externaldebt
+2020-12,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2020-12,6,9,Other Deductions (see Note),otherdeductionsseenote
+2020-12,7,10,Net Statutory Allocation,netstatutoryallocation
+2020-12,8,11,Distribution from FOREX Equalisation Account,distributionfromforexequalisationaccount
+2020-12,9,13,Gross VAT Allocation,grossvatallocation
+2020-12,10,13a,Deduction,deduction
+2020-12,11,13b,Net VAT Allocation,netvatallocation
+2020-12,12,14,Total Gross Amount,totalgrossamount
+2020-12,13,15,Total Net Amount,totalnetamount
+2021-01,1,4,o. of Gross Statutory GCs Allocation =N=,oofgrossstatutorygcsallocationn
+2021-01,2,5,13% Share of Derivation (Net) =N=,13%shareofderivationnetn
+2021-01,3,6,Gross Total,grosstotal
+2021-01,4,7,External Debt,externaldebt
+2021-01,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2021-01,6,9,Other Deductions (see Note),otherdeductionsseenote
+2021-01,7,10,Net Statutory D Allocation,netstatutorydallocation
+2021-01,8,11,istribution of ExchangeGain for theMonth,istributionofexchangegainforthemonth
+2021-01,9,12,Distribution from FOREX Equalisation Account,distributionfromforexequalisationaccount
+2021-01,10,13,Gross VAT Allocation,grossvatallocation
+2021-01,11,14,Deduction,deduction
+2021-01,12,15,Gross VAT Allocation,grossvatallocation
+2021-01,13,16,Total Gross Amount,totalgrossamount
+2021-01,14,17,Total Net Amount,totalnetamount
+2021-02,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2021-02,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2021-02,3,6,Gross Total,grosstotal
+2021-02,4,7,External Debt,externaldebt
+2021-02,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2021-02,6,9,Other Deductions (see Note),otherdeductionsseenote
+2021-02,7,10,Net Statutory Allocation,netstatutoryallocation
+2021-02,8,11,Gross VAT Allocation,grossvatallocation
+2021-02,9,12,Deduction,deduction
+2021-02,10,13,Net VAT Allocation,netvatallocation
+2021-02,11,14,Total Gross Amount,totalgrossamount
+2021-02,12,15,Total Net Amount,totalnetamount
+2021-03,1,4,Statutory Allocation,statutoryallocation
+2021-03,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2021-03,3,6,Gross Total,grosstotal
+2021-03,4,7,External Debt,externaldebt
+2021-03,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2021-03,6,9,Other Deductions (see Note),otherdeductionsseenote
+2021-03,7,10,F Net Statutory Allocation,fnetstatutoryallocation
+2021-03,8,11,OREX Equalization for theMonth,orexequalizationforthemonth
+2021-03,9,12,Distribution of Excess Bank Charges for the Month,distributionofexcessbankchargesforthemonth
+2021-03,10,13,Share of Ecology,shareofecology
+2021-03,11,14,Gross VAT Allocation,grossvatallocation
+2021-03,12,15,Deduction,deduction
+2021-03,13,16,Net VAT Allocation,netvatallocation
+2021-03,14,17,Total Gross Amount,totalgrossamount
+2021-03,15,18,Total Net Amount,totalnetamount
+2021-04,1,4,Statutory Allocation,statutoryallocation
+2021-04,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2021-04,3,6,Gross Total,grosstotal
+2021-04,4,7,External Debt,externaldebt
+2021-04,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2021-04,6,9,OtherDeductions (see Note),otherdeductionsseenote
+2021-04,7,10,Net Statutory Allocation,netstatutoryallocation
+2021-04,8,11,Distribution of 30 Billion fromNon-Oil ExcessAccount for the Month,distributionof30billionfromnonoilexcessaccountforthemonth
+2021-04,9,12,Distribution from ExchangeGain,distributionfromexchangegain
+2021-04,10,13,Total Share of Ecology,totalshareofecology
+2021-04,11,14,Gross VAT Allocation,grossvatallocation
+2021-04,12,15,Deduction,deduction
+2021-04,13,16,Gross NetAllocation,grossnetallocation
+2021-04,14,17,TotalGross Amount,totalgrossamount
+2021-04,15,18,Total NetAmount,totalnetamount
+2021-05,1,4,StatutoryAllocation,statutoryallocation
+2021-05,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2021-05,3,6,Gross Total,grosstotal
+2021-05,4,7,C ExternalDebt,cexternaldebt
+2021-05,5,8,Deductions ontractualObligation (ISPO),deductionsontractualobligationispo
+2021-05,6,9,N OtherDeductions (see Note),notherdeductionsseenote
+2021-05,7,10,et StatutoryAllocation D,etstatutoryallocationd
+2021-05,8,11,istribution of 20 Billion fromNon-Oil Excess Account,istributionof20billionfromnonoilexcessaccount
+2021-05,9,12,Distribution ofExchange Gain Allocation for the Month,distributionofexchangegainallocationforthemonth
+2021-05,10,13,Distribution ofExcess Bank Charges for the Month,distributionofexcessbankchargesforthemonth
+2021-05,11,14,Ecology,ecology
+2021-05,12,15,GrossVATAllocation,grossvatallocation
+2021-05,13,16,Deduction,deduction
+2021-05,14,17,NetVATAllocation,netvatallocation
+2021-05,15,18,TotalGrossAmount,totalgrossamount
+2021-05,16,19,TotalNetAmount,totalnetamount
+2021-06,1,4,Statutory Allocation,statutoryallocation
+2021-06,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2021-06,3,6,Gross Total,grosstotal
+2021-06,4,7,External Debt,externaldebt
+2021-06,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2021-06,6,9,Other Deductions (see Note),otherdeductionsseenote
+2021-06,7,10,Net Statutory Allocation,netstatutoryallocation
+2021-06,8,11,Distribution of 50 Billion from Non-Oil Excess Account,distributionof50billionfromnonoilexcessaccount
+2021-06,9,12,Distribution of 20 Billion from Non-Oil Excess Account,distributionof20billionfromnonoilexcessaccount
+2021-06,10,13,Distribution of 7.940 from Solid Minerals Revenue,distributionof7940fromsolidmineralsrevenue
+2021-06,11,14,Exchange Gain Difference,exchangegaindifference
+2021-06,12,15,Ecology Fund,ecologyfund
+2021-06,13,16,Gross VAT Allocation,grossvatallocation
+2021-06,14,17,Deduction,deduction
+2021-06,15,18,Net VAT,netvat
+2021-06,16,18a,TotalGrossAmount,totalgrossamount
+2021-06,17,18b,Total NetAmount,totalnetamount
+2021-07,1,4,Gross Statutory Allocation =N=,grossstatutoryallocationn
+2021-07,2,5,13% Share of Derivation (Net) =N=,13%shareofderivationnetn
+2021-07,3,6,Gross Total =N=,grosstotaln
+2021-07,4,7,External Debt =N=,externaldebtn
+2021-07,5,8,Deductions Contractual Obligation (ISPO) =N=,deductionscontractualobligationispon
+2021-07,6,9,Other Deductions (see Note) =N=,otherdeductionsseenoten
+2021-07,7,10,Net Statutory D Allocation =N=,netstatutorydallocationn
+2021-07,8,11,istribution of ExchangeGain =N=,istributionofexchangegainn
+2021-07,9,13,Ecology =N=,ecologyn
+2021-07,10,14,Gross VAT Allocation =N=,grossvatallocationn
+2021-07,11,14a,Deduction =N=,deductionn
+2021-07,12,14b,Net VAT Allocation =N=,netvatallocationn
+2021-07,13,15,Total Gross Amount =N=,totalgrossamountn
+2021-07,14,16,Total Net Amount =N=,totalnetamountn
+2021-08,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2021-08,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2021-08,3,6,Gross Total,grosstotal
+2021-08,4,7,External Debt,externaldebt
+2021-08,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2021-08,6,9,Other Deductions (see Note),otherdeductionsseenote
+2021-08,7,10,Net Statutory Allocation,netstatutoryallocation
+2021-08,8,11,Distribution of ExchangeGain,distributionofexchangegain
+2021-08,9,12,Ecology Funds,ecologyfunds
+2021-08,10,13,Transfer of 50% to HYPPADEC,transferof50%tohyppadec
+2021-08,11,14,Net Ecology Fund,netecologyfund
+2021-08,12,15,Gross VAT Allocation,grossvatallocation
+2021-08,13,15a,Deduction,deduction
+2021-08,14,16,Net VAT Allocation,netvatallocation
+2021-08,15,18,TotalGross Amount,totalgrossamount
+2021-08,16,18a,Total Net Amount,totalnetamount
+2021-09,1,4,Gross Statutory Allocation,grossstatutoryallocation
+2021-09,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2021-09,3,6,Gross Total,grosstotal
+2021-09,4,7,External Debt,externaldebt
+2021-09,5,8,Contractual Obligation (ISPO),contractualobligationispo
+2021-09,6,9,Other Deductions (see Note),otherdeductionsseenote
+2021-09,7,10,Net Statutory Allocation,netstatutoryallocation
+2021-09,8,11,Distribution of ₦50 Billion from Non-Oil Excess Account,distributionof50billionfromnonoilexcessaccount
+2021-09,9,12,Exchange Gain Allocation,exchangegainallocation
+2021-09,10,13,Excess Bank Charges,excessbankcharges
+2021-09,11,14,Ecology Fund,ecologyfund
+2021-09,12,15,Gross VAT Allocation,grossvatallocation
+2021-09,13,16,Deduction,deduction
+2021-09,14,17,Net VAT,netvat
+2021-09,15,18,Total Gross Amount,totalgrossamount
+2021-09,16,19,Total Net Amount,totalnetamount
+2021-10,1,4,Gross Statutory Allocation =N=,grossstatutoryallocationn
+2021-10,2,5,13% Share of Derivation (Net) =N=,13%shareofderivationnetn
+2021-10,3,6,Gross Total =N=,grosstotaln
+2021-10,4,7,C ExternalDebt =N=,cexternaldebtn
+2021-10,5,8,Deductions ontractualObligation (ISPO) =N=,deductionsontractualobligationispon
+2021-10,6,9,N OtherDeductions (see Note) =N=,notherdeductionsseenoten
+2021-10,7,10,et StatutoryAllocation =N=,etstatutoryallocationn
+2021-10,8,11,ExchangeGainAllocation =N=,exchangegainallocationn
+2021-10,9,12,TotalEcology Fund =N=,totalecologyfundn
+2021-10,10,13,Transfer of 50% to NDDC/HYPPADEC =N=,transferof50%tonddchyppadecn
+2021-10,11,14,Net Ecology Fund =N=,netecologyfundn
+2021-10,12,15,GrossVATAllocation =N=,grossvatallocationn
+2021-10,13,16,Deduction =N=,deductionn
+2021-10,14,17,NetVATAllocation =N=,netvatallocationn
+2021-10,15,18,TotalGrossAmount =N=,totalgrossamountn
+2021-10,16,19,TotalNetAmount =N=,totalnetamountn
+2021-11,1,4,Statutory Allocation,statutoryallocation
+2021-11,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2021-11,3,6,Gross Total,grosstotal
+2021-11,4,7,External Debt,externaldebt
+2021-11,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2021-11,6,9,Other Deductions (see Note),otherdeductionsseenote
+2021-11,7,10,Net Statutory Allocation,netstatutoryallocation
+2021-11,8,11,Distribution of 100 Billion from Non-Oil Excess Account,distributionof100billionfromnonoilexcessaccount
+2021-11,9,12,Distribution of 50 Billion from Non-Oil Excess Account,distributionof50billionfromnonoilexcessaccount
+2021-11,10,13,Exchange Gain Difference,exchangegaindifference
+2021-11,11,14,Total Ecology Fund,totalecologyfund
+2021-11,12,15,Transfer of 50% to NDDC/HYPPADEC,transferof50%tonddchyppadec
+2021-11,13,16,Net Ecology Fund,netecologyfund
+2021-11,14,17,Gross VAT Allocation,grossvatallocation
+2021-11,15,18,Deduction,deduction
+2021-12,1,4,1 StatutoryAllocation,1statutoryallocation
+2021-12,2,5,3% Share ofDerivation (Net),3%shareofderivationnet
+2021-12,3,6,Gross Total,grosstotal
+2021-12,4,7,ExternalDebt,externaldebt
+2021-12,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2021-12,6,9,OtherDeductions (see Note),otherdeductionsseenote
+2021-12,7,10,Net StatutoryAllocation,netstatutoryallocation
+2021-12,8,11,EXCHANGEGAIN REVENUE,exchangegainrevenue
+2021-12,9,12,Distribution of Excess BankCharges for the Month,distributionofexcessbankchargesforthemonth
+2021-12,10,13,TOTAL Share of Ecology,totalshareofecology
+2021-12,11,14,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2021-12,12,15,Net Share of Ecology,netshareofecology
+2021-12,13,16,GrossVATAllocation,grossvatallocation
+2021-12,14,17,VATDeduction,vatdeduction
+2021-12,15,18,NetVATAllocation,netvatallocation
+2021-12,16,19,TotalGrossAmount,totalgrossamount
+2022-01,1,4,1 StatutoryAllocation,1statutoryallocation
+2022-01,2,5,3% ShareofDerivation (Net),3%shareofderivationnet
+2022-01,3,6,GrossTotal,grosstotal
+2022-01,4,7,ExternalDebt,externaldebt
+2022-01,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2022-01,6,9,OtherDeductions,otherdeductions
+2022-01,7,10,Net StatutoryAllocation,netstatutoryallocation
+2022-01,8,11,ExchangeGain Allocation,exchangegainallocation
+2022-01,9,12,T TOTAL Shareof Ecology,ttotalshareofecology
+2022-01,10,13,ransfer of 50% Share ofEcology to NDDC/HYPPADEC,ransferof50%shareofecologytonddchyppadec
+2022-01,11,14,Net Share ofEcology G,netshareofecologyg
+2022-01,12,15,rossVATAllocation,rossvatallocation
+2022-01,13,16,VATDeduction,vatdeduction
+2022-01,14,17,NetVATAllocation,netvatallocation
+2022-01,15,18,TotalGrossAmount,totalgrossamount
+2022-01,16,19,TotalNetAmount,totalnetamount
+2022-02,1,4,1 Statutory Allocation,1statutoryallocation
+2022-02,2,5,3% Share of Derivation (Net),3%shareofderivationnet
+2022-02,3,6,Gross Total,grosstotal
+2022-02,4,7,External Debt,externaldebt
+2022-02,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2022-02,6,9,Other Deductions,otherdeductions
+2022-02,7,10,Net Statutory Allocation,netstatutoryallocation
+2022-02,8,11,Distribution of 100 Billion from Non-Oil ExcessAccount,distributionof100billionfromnonoilexcessaccount
+2022-02,9,12,Exchange Gain Allocation,exchangegainallocation
+2022-02,10,13,TOTAL Share of Ecology,totalshareofecology
+2022-02,11,14,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-02,12,15,Net Share of Ecology,netshareofecology
+2022-02,13,16,Gross VAT Allocation,grossvatallocation
+2022-02,14,17,VAT Deduction,vatdeduction
+2022-02,15,18,Net VAT Allocation,netvatallocation
+2022-03,1,4,13 StatutoryAllocation,13statutoryallocation
+2022-03,2,5,%Share ofDerivation (Net),%shareofderivationnet
+2022-03,3,6,GrossTotal,grosstotal
+2022-03,4,7,ExternalDebt,externaldebt
+2022-03,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2022-03,6,9,OtherDeductions N,otherdeductionsn
+2022-03,7,10,D et StatutoryAllocation,detstatutoryallocation
+2022-03,8,11,istribution of 80 Billion fromNon-OilExcess Account,istributionof80billionfromnonoilexcessaccount
+2022-03,9,12,ExcessBank Charges,excessbankcharges
+2022-03,10,13,T TOTALShare of Ecology,ttotalshareofecology
+2022-03,11,14,ransfer of50% Share ofEcology to NDDC/HYPPADEC N,ransferof50%shareofecologytonddchyppadecn
+2022-03,12,15,et Share ofEcology G,etshareofecologyg
+2022-03,13,16,rossVATAllocation,rossvatallocation
+2022-03,14,17,VATDeduction,vatdeduction
+2022-03,15,18,NetVATAllocation,netvatallocation
+2022-03,16,19,TotalGrossAmount,totalgrossamount
+2022-03,17,20,TotalNetAmount,totalnetamount
+2022-04,1,4,1 StatutoryAllocation,1statutoryallocation
+2022-04,2,5,3% Share ofDerivation (Net),3%shareofderivationnet
+2022-04,3,6,GrossTotal,grosstotal
+2022-04,4,7,ExternalDebt,externaldebt
+2022-04,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2022-04,6,9,OtherDeductions,otherdeductions
+2022-04,7,10,NetStatutoryAllocation,netstatutoryallocation
+2022-04,8,11,T TOTAL Share of Ecology,ttotalshareofecology
+2022-04,9,12,ransfer of 50% Share ofEcology to NDDC/HYPPADEC,ransferof50%shareofecologytonddchyppadec
+2022-04,10,13,NetShare ofEcology G,netshareofecologyg
+2022-04,11,13a,rossVATAllocation,rossvatallocation
+2022-04,12,15,VATDeduction,vatdeduction
+2022-04,13,16,NetVATAllocation,netvatallocation
+2022-04,14,17,TotalGrossAmount,totalgrossamount
+2022-04,15,20,TotalNetAmount,totalnetamount
+2022-05,1,4,13 StatutoryAllocation,13statutoryallocation
+2022-05,2,5,%Share ofDerivation (Net),%shareofderivationnet
+2022-05,3,6,GrossTotal,grosstotal
+2022-05,4,7,ExternalDebt,externaldebt
+2022-05,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2022-05,6,9,OtherDeductions N,otherdeductionsn
+2022-05,7,10,Di fro et StatutoryAllocation Ac,difroetstatutoryallocationac
+2022-05,8,11,stribution of 20Billion mNon-OilExcess E count,stributionof20billionmnonoilexcessecount
+2022-05,9,12,xcessBankCharges for theMonth,xcessbankchargesforthemonth
+2022-05,10,13,T TOTALShare of Ecology,ttotalshareofecology
+2022-05,11,14,ransfer of 50%Share ofEcology to NDDC/HYPPADEC N,ransferof50%shareofecologytonddchyppadecn
+2022-05,12,15,et Share ofEcology G,etshareofecologyg
+2022-05,13,16,rossVATAllocation,rossvatallocation
+2022-05,14,17,VATDeduction,vatdeduction
+2022-05,15,18,NetVATAllocation,netvatallocation
+2022-05,16,19,TotalGrossAmount,totalgrossamount
+2022-05,17,20,TotalNetAmount,totalnetamount
+2022-06,1,4,1 StatutoryAllocation,1statutoryallocation
+2022-06,2,5,3% ShareofDerivation (Net),3%shareofderivationnet
+2022-06,3,6,GrossTotal,grosstotal
+2022-06,4,7,ExternalDebt,externaldebt
+2022-06,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2022-06,6,9,OtherDeductions,otherdeductions
+2022-06,7,10,El Net StatutoryAllocation Le,elnetstatutoryallocationle
+2022-06,8,11,ectronicMoneyTransfer vy (EMTL),ectronicmoneytransfervyemtl
+2022-06,9,12,T TOTAL Share of Ecology,ttotalshareofecology
+2022-06,10,13,ransfer of 50% Share ofEcology to NDDC/HYPPADEC,ransferof50%shareofecologytonddchyppadec
+2022-06,11,14,Net Share ofEcology G,netshareofecologyg
+2022-06,12,15,rossVATAllocation,rossvatallocation
+2022-06,13,16,VATDeduction,vatdeduction
+2022-06,14,17,NetVATAllocation,netvatallocation
+2022-06,15,18,TotalGrossAmount,totalgrossamount
+2022-06,16,19,TotalNetAmount,totalnetamount
+2022-07,1,4,1 StatutoryAllocation,1statutoryallocation
+2022-07,2,5,3% Share ofDerivation (Net),3%shareofderivationnet
+2022-07,3,6,GrossTotal,grosstotal
+2022-07,4,7,ExternalDebt,externaldebt
+2022-07,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2022-07,6,9,OtherDeductions,otherdeductions
+2022-07,7,10,NetStatutoryAllocation,netstatutoryallocation
+2022-07,8,13,T TOTAL Share of Ecology,ttotalshareofecology
+2022-07,9,14,ransfer of 50% Share ofEcology to NDDC/HYPPADEC,ransferof50%shareofecologytonddchyppadec
+2022-07,10,15,NetShare ofEcology G,netshareofecologyg
+2022-07,11,16,rossVATAllocation,rossvatallocation
+2022-07,12,17,VATDeduction,vatdeduction
+2022-07,13,18,NetVATAllocation,netvatallocation
+2022-07,14,19,TotalGrossAmount,totalgrossamount
+2022-07,15,20,TotalNetAmount,totalnetamount
+2022-08,1,4,1 StatutoryAllocation,1statutoryallocation
+2022-08,2,5,3% Share ofDerivation (Net),3%shareofderivationnet
+2022-08,3,6,GrossTotal,grosstotal
+2022-08,4,7,ExternalDebt,externaldebt
+2022-08,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2022-08,6,9,OtherDeductions,otherdeductions
+2022-08,7,10,NetStatutoryAllocation,netstatutoryallocation
+2022-08,8,11,T TOTAL Share of Ecology,ttotalshareofecology
+2022-08,9,12,ransfer of 50% Share ofEcology to NDDC/HYPPADEC,ransferof50%shareofecologytonddchyppadec
+2022-08,10,13,NetShare ofEcology G,netshareofecologyg
+2022-08,11,14,rossVATAllocation,rossvatallocation
+2022-08,12,15,VATDeduction,vatdeduction
+2022-08,13,16,NetVATAllocation,netvatallocation
+2022-08,14,17,TotalGrossAmount,totalgrossamount
+2022-08,15,18,TotalNetAmount,totalnetamount
+2022-09,1,4,1 StatutoryAllocation,1statutoryallocation
+2022-09,2,5,3% ShareofDerivation (Net),3%shareofderivationnet
+2022-09,3,6,GrossTotal,grosstotal
+2022-09,4,7,ExternalDebt,externaldebt
+2022-09,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2022-09,6,9,OtherDeductions,otherdeductions
+2022-09,7,10,Net StatutoryAllocation,netstatutoryallocation
+2022-09,8,11,T TOTAL Shareof Ecology,ttotalshareofecology
+2022-09,9,12,ransferof 50% Share ofEcology to NDDC/HYPPADEC,ransferof50%shareofecologytonddchyppadec
+2022-09,10,13,Net Share ofEcology,netshareofecology
+2022-09,11,14,Distribution of 20 Billion fromNon-Oil ExcessAccount G,distributionof20billionfromnonoilexcessaccountg
+2022-09,12,15,rossVATAllocation,rossvatallocation
+2022-09,13,16,VATDeduction,vatdeduction
+2022-09,14,17,NetVATAllocation,netvatallocation
+2022-09,15,18,TotalGrossAmount,totalgrossamount
+2022-09,16,19,TotalNetAmount,totalnetamount
+2022-10,1,4,13 StatutoryAllocation,13statutoryallocation
+2022-10,2,5,%Share ofDerivation (Net),%shareofderivationnet
+2022-10,3,6,GrossTotal,grosstotal
+2022-10,4,7,ExternalDebt,externaldebt
+2022-10,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2022-10,6,9,OtherDeductions N,otherdeductionsn
+2022-10,7,10,Di fr et StatutoryAllocation,difretstatutoryallocation
+2022-10,8,11,stributionof 60billion om non oil for themonth E ofOctober,stributionof60billionomnonoilforthemontheofoctober
+2022-10,9,12,lectronicMoneyTransfer Levy (EMTL),lectronicmoneytransferlevyemtl
+2022-10,10,13,T TOTALShare of Ecology,ttotalshareofecology
+2022-10,11,14,ransfer of 50%Share ofEcology to NDDC/HYPPADEC N,ransferof50%shareofecologytonddchyppadecn
+2022-10,12,15,et Share ofEcology G,etshareofecologyg
+2022-10,13,16,rossVATAllocation,rossvatallocation
+2022-10,14,17,VATDeduction,vatdeduction
+2022-10,15,18,NetVATAllocation,netvatallocation
+2022-10,16,19,TotalGrossAmount,totalgrossamount
+2022-10,17,20,TotalNetAmount,totalnetamount
+2022-11,1,4,13 StatutoryAllocation,13statutoryallocation
+2022-11,2,5,%ShareofDerivation (Net),%shareofderivationnet
+2022-11,3,6,Gross Total,grosstotal
+2022-11,4,7,ExternalDebt,externaldebt
+2022-11,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2022-11,6,9,OtherDeductions N,otherdeductionsn
+2022-11,7,10,Di fro et StatutoryAllocation,difroetstatutoryallocation
+2022-11,8,11,stributionof 70billion D m nonoil for themonth fr ofNovember2022,stributionof70billiondmnonoilforthemonthfrofnovember2022
+2022-11,9,12,istributionof 30billion D omnonoil for themonth ofNovember2022,istributionof30billiondomnonoilforthemonthofnovember2022
+2022-11,10,13,istribution ofExchange Gain for themonthof November2022,istributionofexchangegainforthemonthofnovember2022
+2022-11,11,14,T TOTALShareof Ecology,ttotalshareofecology
+2022-11,12,15,ransferof 50%Share ofEcology to NDDC/HYPPADEC N,ransferof50%shareofecologytonddchyppadecn
+2022-11,13,16,et Share ofEcology G,etshareofecologyg
+2022-11,14,17,rossVATAllocation,rossvatallocation
+2022-11,15,18,VATDeduction,vatdeduction
+2022-11,16,19,NetVATAllocation,netvatallocation
+2022-11,17,20,TotalGrossAmount,totalgrossamount
+2022-11,18,21,TotalNetAmount,totalnetamount
+2022-12,1,4,13 StatutoryAllocation,13statutoryallocation
+2022-12,2,5,%Share ofDerivation (Net),%shareofderivationnet
+2022-12,3,6,GrossTotal,grosstotal
+2022-12,4,7,ExternalDebt,externaldebt
+2022-12,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2022-12,6,9,OtherDeductions N,otherdeductionsn
+2022-12,7,10,D et StatutoryAllocation,detstatutoryallocation
+2022-12,8,11,istributionofExchange Gain for themonth of E December,istributionofexchangegainforthemonthofedecember
+2022-12,9,12,lectronicMoneyTransfer Levy (EMTL),lectronicmoneytransferlevyemtl
+2022-12,10,13,T TOTALShare of Ecology,ttotalshareofecology
+2022-12,11,14,ransfer of 50%Share ofEcology to NDDC/HYPPADEC N,ransferof50%shareofecologytonddchyppadecn
+2022-12,12,15,et Share ofEcology G,etshareofecologyg
+2022-12,13,16,rossVATAllocation,rossvatallocation
+2022-12,14,17,VATDeduction,vatdeduction
+2022-12,15,18,NetVATAllocation,netvatallocation
+2022-12,16,19,TotalGrossAmount,totalgrossamount
+2022-12,17,20,TotalNetAmount,totalnetamount
+2023-01,1,4,Statutory Allocation,statutoryallocation
+2023-01,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2023-01,3,6,Gross Total,grosstotal
+2023-01,4,7,External Debt,externaldebt
+2023-01,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2023-01,6,9,OtherDeductions,otherdeductions
+2023-01,7,10,Net Statutory Allocation,netstatutoryallocation
+2023-01,8,11,Distribution of Exchange Gain for themonth,distributionofexchangegainforthemonth
+2023-01,9,12,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-01,10,13,TOTAL Share of Ecology,totalshareofecology
+2023-01,11,14,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-01,12,15,Net Share of Ecology,netshareofecology
+2023-01,13,16,Gross VATAllocation,grossvatallocation
+2023-01,14,17,VATDeduction,vatdeduction
+2023-01,15,18,Net VATAllocation,netvatallocation
+2023-01,16,19,Total Gross Amount,totalgrossamount
+2023-01,17,20,Total Net Amount,totalnetamount
+2023-02,1,4,StatutoryAllocation,statutoryallocation
+2023-02,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2023-02,3,6,Gross Total,grosstotal
+2023-02,4,7,External Debt,externaldebt
+2023-02,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2023-02,6,9,OtherDeductions,otherdeductions
+2023-02,7,10,Net StatutoryAllocation,netstatutoryallocation
+2023-02,8,11,Distribution of 100 Billion from Non-Oil ExcessAccount,distributionof100billionfromnonoilexcessaccount
+2023-02,9,12,Distribution of 15 Billion from Non- Oil ExcessAccount,distributionof15billionfromnonoilexcessaccount
+2023-02,10,13,Electronicmoney Transfer Levy,electronicmoneytransferlevy
+2023-02,11,14,TOTAL Share of Ecology,totalshareofecology
+2023-02,12,15,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-02,13,16,Net Share of Ecology,netshareofecology
+2023-02,14,17,GrossVATAllocation,grossvatallocation
+2023-02,15,18,VATDeduction,vatdeduction
+2023-02,16,19,Net VATAllocation,netvatallocation
+2023-03,1,4,StatutoryAllocation,statutoryallocation
+2023-03,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2023-03,3,6,Gross Total,grosstotal
+2023-03,4,7,External Debt,externaldebt
+2023-03,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2023-03,6,9,OtherDeductions,otherdeductions
+2023-03,7,10,Net StatutoryAllocation,netstatutoryallocation
+2023-03,8,11,Distribution of 120 Billion from forex Equalisation,distributionof120billionfromforexequalisation
+2023-03,9,12,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-03,10,13,Refund ofWHT and Stamp Duty to States,refundofwhtandstampdutytostates
+2023-03,11,14,TOTAL Share of Ecology,totalshareofecology
+2023-03,12,15,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-03,13,16,Net Share of Ecology,netshareofecology
+2023-03,14,17,GrossVATAllocation,grossvatallocation
+2023-03,15,18,VATDeduction,vatdeduction
+2023-03,16,19,Net VATAllocation,netvatallocation
+2023-04,1,4,Statutory Allocation,statutoryallocation
+2023-04,2,5,13% Share of Derivation,13%shareofderivation
+2023-04,3,6,Gross Total,grosstotal
+2023-04,4,7,External Debt,externaldebt
+2023-04,5,8,Contractual Obligation (ISPO),contractualobligationispo
+2023-04,6,9,Other Deductions,otherdeductions
+2023-04,7,10,Net Statutory Allocation,netstatutoryallocation
+2023-04,8,11,Electronic Money Transfer Levy,electronicmoneytransferlevy
+2023-04,9,12,TOTAL Share of Ecology,totalshareofecology
+2023-04,10,13,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-04,11,14,Net Share of Ecology,netshareofecology
+2023-04,12,15,Gross VAT Allocation,grossvatallocation
+2023-04,13,16,VAT Deduction,vatdeduction
+2023-04,14,17,Net VAT Allocation,netvatallocation
+2023-04,15,18,Total Gross Amount,totalgrossamount
+2023-04,16,19,Total Net Amount,totalnetamount
+2023-05,1,4,Statutory Allocation,statutoryallocation
+2023-05,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2023-05,3,6,Gross Total,grosstotal
+2023-05,4,7,External Debt,externaldebt
+2023-05,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2023-05,6,9,OtherDeductions,otherdeductions
+2023-05,7,10,Net Statutory Allocation,netstatutoryallocation
+2023-05,8,11,Distribution of 24 Billion from Non-Oil Excess Account,distributionof24billionfromnonoilexcessaccount
+2023-05,9,12,Distribution of 10 Billion from Non-Oil Excess Account,distributionof10billionfromnonoilexcessaccount
+2023-05,10,13,Distribution of 50 Billion from Forex Equalisation Account,distributionof50billionfromforexequalisationaccount
+2023-05,11,14,Distribution of 20 Billion from Forex Equalisation Account,distributionof20billionfromforexequalisationaccount
+2023-05,12,15,SolidMinerals Distribution,solidmineralsdistribution
+2023-05,13,16,FGN Treasury Crude Account,fgntreasurycrudeaccount
+2023-05,14,17,Distribution of 15.121 Billion being Electronic Money Transfer Levy (EMTL) for May 2023,distributionof15121billionbeingelectronicmoneytransferlevyemtlformay2023
+2023-05,15,18,Distribution of 80.400 Billion being Electronic Money Transfer Levy (EMTL) January to August 2022,distributionof80400billionbeingelectronicmoneytransferlevyemtljanuarytoaugust2022
+2023-05,16,19,TOTAL Share of Ecology,totalshareofecology
+2023-05,17,20,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-05,18,21,Net Share of Ecology,netshareofecology
+2023-05,19,22,Gross VATAllocation,grossvatallocation
+2023-05,20,23,VATDeduction,vatdeduction
+2023-05,21,24,Net VATAllocation,netvatallocation
+2023-06,1,4,StatutoryAllocation,statutoryallocation
+2023-06,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2023-06,3,6,Gross Total,grosstotal
+2023-06,4,7,ExternalDebt,externaldebt
+2023-06,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2023-06,6,9,Other Deductions,otherdeductions
+2023-06,7,10,Net StatutoryAllocation,netstatutoryallocation
+2023-06,8,11,Exchange Rate Differential,exchangeratedifferential
+2023-06,9,12,ExchangeGain Allocation,exchangegainallocation
+2023-06,10,13,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-06,11,14,TOTAL Share of Ecology,totalshareofecology
+2023-06,12,15,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-06,13,16,Net Share of Ecology,netshareofecology
+2023-06,14,17,Gross VATAllocation,grossvatallocation
+2023-06,15,18,VATDeduction,vatdeduction
+2023-06,16,19,NetVATAllocation,netvatallocation
+2023-07,1,4,Statutory Allocation,statutoryallocation
+2023-07,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2023-07,3,6,Gross Total,grosstotal
+2023-07,4,7,ExternalDebt,externaldebt
+2023-07,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2023-07,6,9,Other Deductions,otherdeductions
+2023-07,7,10,Net Statutory Allocation,netstatutoryallocation
+2023-07,8,12,Exchange Gain Allocation,exchangegainallocation
+2023-07,9,13,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-07,10,14,TOTAL Share of Ecology,totalshareofecology
+2023-07,11,15,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-07,12,16,Net Share of Ecology,netshareofecology
+2023-07,13,17,Gross VAT Allocation,grossvatallocation
+2023-07,14,18,VAT Deduction,vatdeduction
+2023-07,15,19,Net VAT Allocation,netvatallocation
+2023-08,1,4,StatutoryAllocation,statutoryallocation
+2023-08,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2023-08,3,6,Gross Total,grosstotal
+2023-08,4,7,ExternalDebt,externaldebt
+2023-08,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2023-08,6,9,OtherDeductions,otherdeductions
+2023-08,7,10,Net StatutoryAllocation,netstatutoryallocation
+2023-08,8,11,Exchange Rate Differential,exchangeratedifferential
+2023-08,9,12,Exchange Gain,exchangegain
+2023-08,10,13,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2023-08,11,14,TOTAL Share of Ecology,totalshareofecology
+2023-08,12,15,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-08,13,16,Net Share of Ecology,netshareofecology
+2023-08,14,17,GrossVATAllocation,grossvatallocation
+2023-08,15,18,VATDeduction,vatdeduction
+2023-08,16,19,Net VATAllocation,netvatallocation
+2023-08,17,20,TotalGrossAmount,totalgrossamount
+2023-08,18,21,TotalNet Amount,totalnetamount
+2023-09,1,4,StatutoryAllocation,statutoryallocation
+2023-09,2,5,13%Share of Derivation (Net),13%shareofderivationnet
+2023-09,3,6,Gross Total,grosstotal
+2023-09,4,7,ExternalDebt,externaldebt
+2023-09,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2023-09,6,9,OtherDeductions,otherdeductions
+2023-09,7,10,Net StatutoryAllocation,netstatutoryallocation
+2023-09,8,11,"Distribution of 177.092 Billion from non oil for themonth of September, 2023",distributionof177092billionfromnonoilforthemonthofseptember2023
+2023-09,9,12,ExchangeGain,exchangegain
+2023-09,10,13,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2023-09,11,14,TOTAL Share of Ecology,totalshareofecology
+2023-09,12,15,Transfer of 50% Share ofEcology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-09,13,16,Net Share ofEcology,netshareofecology
+2023-09,14,17,Gross VATAllocation,grossvatallocation
+2023-09,15,18,VATDeduction,vatdeduction
+2023-09,16,19,NetVATAllocation,netvatallocation
+2023-09,17,20,TotalGross Amount,totalgrossamount
+2023-09,18,21,TotalNetAmount,totalnetamount
+2023-10,1,4,StatutoryAllocation,statutoryallocation
+2023-10,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2023-10,3,6,Gross Total,grosstotal
+2023-10,4,7,External Debt,externaldebt
+2023-10,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2023-10,6,9,Other Deductions,otherdeductions
+2023-10,7,10,Net StatutoryAllocation,netstatutoryallocation
+2023-10,8,11,Distribution of Exchange Gain for theMonth of October 2023,distributionofexchangegainforthemonthofoctober2023
+2023-10,9,12,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-10,10,13,TOTAL Share of Ecology,totalshareofecology
+2023-10,11,14,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-10,12,15,Net Share of Ecology,netshareofecology
+2023-10,13,16,Gross VAT Allocation,grossvatallocation
+2023-10,14,17,VAT Deduction,vatdeduction
+2023-10,15,18,Net VAT Allocation,netvatallocation
+2023-10,16,19,Total Gross Amount,totalgrossamount
+2023-10,17,20,Total Net Amount,totalnetamount
+2023-11,1,4,StatutoryAllocation,statutoryallocation
+2023-11,2,5,13%Share of Derivation (Net),13%shareofderivationnet
+2023-11,3,6,Gross Total,grosstotal
+2023-11,4,7,ExternalDebt,externaldebt
+2023-11,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2023-11,6,9,OtherDeductions,otherdeductions
+2023-11,7,10,Net StatutoryAllocation,netstatutoryallocation
+2023-11,8,11,ExchangeGain Allocation,exchangegainallocation
+2023-11,9,12,Distribution of 60Billion fromNon-Oil Revenue,distributionof60billionfromnonoilrevenue
+2023-11,10,13,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2023-11,11,14,TOTAL Share of Ecology,totalshareofecology
+2023-11,12,15,Transfer of 50% Share ofEcology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-11,13,16,Net Share ofEcology,netshareofecology
+2023-11,14,17,Gross VATAllocation,grossvatallocation
+2023-11,15,18,VATDeduction,vatdeduction
+2023-11,16,19,NetVATAllocation,netvatallocation
+2023-11,17,20,TotalGross Amount,totalgrossamount
+2023-11,18,21,TotalNetAmount,totalnetamount
+2023-12,1,4,StatutoryAllocation,statutoryallocation
+2023-12,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2023-12,3,6,Gross Total,grosstotal
+2023-12,4,7,External Debt,externaldebt
+2023-12,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2023-12,6,9,Other Deductions,otherdeductions
+2023-12,7,10,Net StatutoryAllocation,netstatutoryallocation
+2023-12,8,11,ExchangeGain Allocation,exchangegainallocation
+2023-12,9,12,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-12,10,13,TOTAL Share of Ecology,totalshareofecology
+2023-12,11,14,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-12,12,15,Net Share of Ecology,netshareofecology
+2023-12,13,16,Gross VAT Allocation,grossvatallocation
+2023-12,14,17,VAT Deduction,vatdeduction
+2023-12,15,18,Net VAT Allocation,netvatallocation
+2023-12,16,19,Total Gross Amount,totalgrossamount
+2023-12,17,20,Total Net Amount,totalnetamount
+2024-01,1,4,Statutory Allocation,statutoryallocation
+2024-01,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2024-01,3,6,Gross Total,grosstotal
+2024-01,4,7,External Debt,externaldebt
+2024-01,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2024-01,6,9,OtherDeductions,otherdeductions
+2024-01,7,10,Net Statutory Allocation,netstatutoryallocation
+2024-01,8,11,Exchange Gain Allocation,exchangegainallocation
+2024-01,9,12,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-01,10,13,TOTAL Share of Ecology,totalshareofecology
+2024-01,11,14,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-01,12,15,Net Share of Ecology,netshareofecology
+2024-01,13,16,Gross VATAllocation,grossvatallocation
+2024-01,14,17,VATDeduction,vatdeduction
+2024-01,15,18,Gross VATAllocation,grossvatallocation
+2024-01,16,19,Total Gross Amount,totalgrossamount
+2024-01,17,20,Total Net Amount,totalnetamount
+2024-02,1,4,StatutoryAllocation,statutoryallocation
+2024-02,2,5,13%Share of Derivation (Net),13%shareofderivationnet
+2024-02,3,6,Gross Total,grosstotal
+2024-02,4,7,ExternalDebt,externaldebt
+2024-02,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2024-02,6,9,OtherDeductions,otherdeductions
+2024-02,7,10,Net StatutoryAllocation,netstatutoryallocation
+2024-02,8,11,ExchangeGain Allocation,exchangegainallocation
+2024-02,9,12,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2024-02,10,13,TOTAL Share of Ecology,totalshareofecology
+2024-02,11,14,Transfer of 50% Share ofEcology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-02,12,15,Net Share ofEcology,netshareofecology
+2024-02,13,16,Gross VATAllocation,grossvatallocation
+2024-02,14,17,VATDeduction,vatdeduction
+2024-02,15,18,NetVATAllocation,netvatallocation
+2024-02,16,19,TotalGross Amount,totalgrossamount
+2024-02,17,20,TotalNetAmount,totalnetamount
+2024-03,1,4,StatutoryAllocation,statutoryallocation
+2024-03,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2024-03,3,6,Gross Total,grosstotal
+2024-03,4,7,External Debt,externaldebt
+2024-03,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2024-03,6,9,Other Deductions,otherdeductions
+2024-03,7,10,Net StatutoryAllocation,netstatutoryallocation
+2024-03,8,11,ExchangeGain Allocation,exchangegainallocation
+2024-03,9,12,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-03,10,13,TOTAL Share of Ecology,totalshareofecology
+2024-03,11,14,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-03,12,15,Net Share of Ecology,netshareofecology
+2024-03,13,16,Gross VAT Allocation,grossvatallocation
+2024-03,14,17,VAT Deduction,vatdeduction
+2024-03,15,18,Net VAT Allocation,netvatallocation
+2024-03,16,19,Total Gross Amount,totalgrossamount
+2024-03,17,20,Total Net Amount,totalnetamount
+2024-04,1,4,StatutoryAllocation,statutoryallocation
+2024-04,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2024-04,3,6,Gross Total,grosstotal
+2024-04,4,7,External Debt,externaldebt
+2024-04,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2024-04,6,9,Other Deductions,otherdeductions
+2024-04,7,10,Net StatutoryAllocation,netstatutoryallocation
+2024-04,8,11,ExchangeGain Allocation,exchangegainallocation
+2024-04,9,12,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-04,10,13,TOTAL Share of Ecology,totalshareofecology
+2024-04,11,14,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-04,12,15,Net Share of Ecology,netshareofecology
+2024-04,13,16,Gross VAT Allocation,grossvatallocation
+2024-04,14,17,VAT Deduction,vatdeduction
+2024-04,15,18,Net VAT Allocation,netvatallocation
+2024-04,16,19,Total Gross Amount,totalgrossamount
+2024-04,17,20,Total Net Amount,totalnetamount
+2024-05,1,4,StatutoryAllocation,statutoryallocation
+2024-05,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2024-05,3,6,Gross Total,grosstotal
+2024-05,4,7,External Debt,externaldebt
+2024-05,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2024-05,6,9,Other Deductions,otherdeductions
+2024-05,7,10,Net StatutoryAllocation,netstatutoryallocation
+2024-05,8,11,ExchangeGain Allocation,exchangegainallocation
+2024-05,9,12,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-05,10,13,TOTAL Share of Ecology,totalshareofecology
+2024-05,11,14,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-05,12,15,Net Share of Ecology,netshareofecology
+2024-05,13,16,Gross VAT Allocation,grossvatallocation
+2024-05,14,17,VAT Deduction,vatdeduction
+2024-05,15,18,Net VAT Allocation,netvatallocation
+2024-05,16,19,Total Gross Amount,totalgrossamount
+2024-05,17,20,Total Net Amount,totalnetamount
+2024-06,1,4,StatutoryAllocation,statutoryallocation
+2024-06,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2024-06,3,6,GrossTotal,grosstotal
+2024-06,4,7,ExternalDebt,externaldebt
+2024-06,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2024-06,6,9,OtherDeductions,otherdeductions
+2024-06,7,10,Net StatutoryAllocation,netstatutoryallocation
+2024-06,8,11,ExchangeGainAllocation,exchangegainallocation
+2024-06,9,12,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2024-06,10,13,TOTAL Share of Ecology,totalshareofecology
+2024-06,11,14,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-06,12,15,Net Share of Ecology,netshareofecology
+2024-06,13,16,GrossVATAllocation,grossvatallocation
+2024-06,14,17,VATDeduction,vatdeduction
+2024-06,15,18,NetVATAllocation,netvatallocation
+2024-06,16,19,TotalGrossAmount,totalgrossamount
+2024-06,17,20,TotalNetAmount,totalnetamount
+2024-07,1,4,Statutory Allocation,statutoryallocation
+2024-07,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2024-07,3,6,Gross Total,grosstotal
+2024-07,4,7,External Debt,externaldebt
+2024-07,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2024-07,6,9,OtherDeductions,otherdeductions
+2024-07,7,10,Net Statutory Allocation,netstatutoryallocation
+2024-07,8,11,Exchange Gain Allocation,exchangegainallocation
+2024-07,9,12,Distribution of 200Billion from Non- Oil Excess Account for theMonth of July 2024,distributionof200billionfromnonoilexcessaccountforthemonthofjuly2024
+2024-07,10,13,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-07,11,14,TOTAL Share of Ecology,totalshareofecology
+2024-07,12,15,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-07,13,16,Net Share of Ecology,netshareofecology
+2024-07,14,17,Gross VATAllocation,grossvatallocation
+2024-07,15,18,VATDeduction,vatdeduction
+2024-07,16,19,Net VATAllocation,netvatallocation
+2024-07,17,20,Total Gross Amount,totalgrossamount
+2024-07,18,21,Total Net Amount,totalnetamount
+2024-08,1,4,Statutory Allocation,statutoryallocation
+2024-08,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2024-08,3,6,Gross Total,grosstotal
+2024-08,4,7,ExternalDebt,externaldebt
+2024-08,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2024-08,6,9,Other Deductions,otherdeductions
+2024-08,7,10,Net Statutory Allocation,netstatutoryallocation
+2024-08,8,11,Exchange Gain Allocation,exchangegainallocation
+2024-08,9,12,Solid Mineral,solidmineral
+2024-08,10,13,Electronic Money Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-08,11,14,TOTAL Share of Ecology,totalshareofecology
+2024-08,12,15,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-08,13,16,Net Share of Ecology,netshareofecology
+2024-08,14,17,Gross VAT Allocation,grossvatallocation
+2024-08,15,18,VAT Deduction,vatdeduction
+2024-08,16,19,Net VAT Allocation,netvatallocation
+2024-08,17,20,TotalGross Amount,totalgrossamount
+2024-08,18,21,TotalNet Amount,totalnetamount
+2024-09,1,4,Statutory Allocation,statutoryallocation
+2024-09,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2024-09,3,6,Gross Total,grosstotal
+2024-09,4,7,External Debt,externaldebt
+2024-09,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2024-09,6,9,Other Deductions,otherdeductions
+2024-09,7,10,Net Statutory Allocation,netstatutoryallocation
+2024-09,8,11,Exchange Gain Allocation,exchangegainallocation
+2024-09,9,12,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-09,10,13,TOTAL Share of Ecology,totalshareofecology
+2024-09,11,14,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-09,12,15,Net Share of Ecology,netshareofecology
+2024-09,13,16,Gross VATAllocation,grossvatallocation
+2024-09,14,17,VATDeduction,vatdeduction
+2024-09,15,18,Net VATAllocation,netvatallocation
+2024-09,16,19,Total Gross Amount,totalgrossamount
+2024-09,17,20,Total Net Amount,totalnetamount
+2024-10,1,4,Statutory Allocation,statutoryallocation
+2024-10,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2024-10,3,6,Gross Total,grosstotal
+2024-10,4,7,External Debt,externaldebt
+2024-10,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2024-10,6,9,Other Deductions,otherdeductions
+2024-10,7,10,Net Statutory Allocation,netstatutoryallocation
+2024-10,8,11,Exchange Gain Allocation,exchangegainallocation
+2024-10,9,12,Distribution of 150Billion from Non-Oil Revenue for theMonth,distributionof150billionfromnonoilrevenueforthemonth
+2024-10,10,13,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-10,11,14,TOTAL Share of Ecology,totalshareofecology
+2024-10,12,15,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-10,13,16,Net Share of Ecology,netshareofecology
+2024-10,14,17,Gross VAT Allocation,grossvatallocation
+2024-10,15,18,VAT Deduction,vatdeduction
+2024-10,16,19,Net VAT Allocation,netvatallocation
+2024-10,17,20,Total Gross Amount,totalgrossamount
+2024-10,18,21,Total Net Amount,totalnetamount
+2024-11,1,4,Statutory Allocation,statutoryallocation
+2024-11,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2024-11,3,6,Gross Total,grosstotal
+2024-11,4,7,External Debt,externaldebt
+2024-11,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2024-11,6,9,Other Deductions,otherdeductions
+2024-11,7,10,Net Statutory Allocation,netstatutoryallocation
+2024-11,8,11,Exchange Gain Allocation,exchangegainallocation
+2024-11,9,12,Distribution of 100Billion from Non-Oil Revenue for theMonth,distributionof100billionfromnonoilrevenueforthemonth
+2024-11,10,13,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-11,11,14,TOTAL Share of Ecology,totalshareofecology
+2024-11,12,15,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-11,13,16,Net Share of Ecology,netshareofecology
+2024-11,14,17,Gross VAT Allocation,grossvatallocation
+2024-11,15,18,VAT Deduction,vatdeduction
+2024-11,16,19,Net VAT Allocation,netvatallocation
+2024-11,17,20,Total Gross Amount,totalgrossamount
+2024-11,18,21,Total Net Amount,totalnetamount
+2024-12,1,4,StatutoryAllocation,statutoryallocation
+2024-12,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2024-12,3,6,Gross Total,grosstotal
+2024-12,4,7,External Debt,externaldebt
+2024-12,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2024-12,6,9,OtherDeductions,otherdeductions
+2024-12,7,10,Net StatutoryAllocation,netstatutoryallocation
+2024-12,8,11,ExchangeGainAllocation,exchangegainallocation
+2024-12,9,13,ElectronicMoneyTransfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-12,10,14,TOTAL Share of Ecology,totalshareofecology
+2024-12,11,15,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-12,12,16,Net Share of Ecology,netshareofecology
+2024-12,13,17,Gross VAT Allocation,grossvatallocation
+2024-12,14,18,VAT Deduction,vatdeduction
+2024-12,15,19,Net VAT Allocation,netvatallocation
+2024-12,16,20,TotalGross Amount,totalgrossamount
+2024-12,17,21,Total Net Amount,totalnetamount
+2025-01,1,4,Statutory Allocation,statutoryallocation
+2025-01,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2025-01,3,6,Gross Total,grosstotal
+2025-01,4,7,External Debt,externaldebt
+2025-01,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2025-01,6,9,OtherDeductions,otherdeductions
+2025-01,7,10,Net Statutory Allocation,netstatutoryallocation
+2025-01,8,11,Exchange Gain Allocation,exchangegainallocation
+2025-01,9,12,13% Derivation of Exchange Gain Allocation,13%derivationofexchangegainallocation
+2025-01,10,13,Total Exchange Gain Allocation,totalexchangegainallocation
+2025-01,11,14,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-01,12,15,TOTAL Share of Ecology,totalshareofecology
+2025-01,13,16,Transfer of Share of Ecology to NDDC/HYPPADEC,transferofshareofecologytonddchyppadec
+2025-01,14,17,Net Share of Ecology,netshareofecology
+2025-01,15,18,Gross VATAllocation,grossvatallocation
+2025-01,16,19,VATDeduction,vatdeduction
+2025-01,17,20,Net VATAllocation,netvatallocation
+2025-01,18,21,Total Gross Allocation,totalgrossallocation
+2025-01,19,22,Total Net Allocation,totalnetallocation
+2025-02,1,4,Statutory Allocation,statutoryallocation
+2025-02,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2025-02,3,6,Gross Total,grosstotal
+2025-02,4,7,External Debt,externaldebt
+2025-02,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2025-02,6,9,OtherDeductions,otherdeductions
+2025-02,7,10,Net Statutory Allocation,netstatutoryallocation
+2025-02,8,11,"Augmentation of ' 214Billion for the month of February, 2025",augmentationof214billionforthemonthoffebruary2025
+2025-02,9,12,"13% Derivation of Augmentation of ' 214Billion for the month of February, 2025",13%derivationofaugmentationof214billionforthemonthoffebruary2025
+2025-02,10,13,"Total Augmentation of ' 214Billion for the month of February, 2025",totalaugmentationof214billionforthemonthoffebruary2025
+2025-02,11,14,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-02,12,15,TOTAL Share of Ecology,totalshareofecology
+2025-02,13,16,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-02,14,17,Net Share of Ecology,netshareofecology
+2025-02,15,18,Gross VATAllocation,grossvatallocation
+2025-02,16,19,VATDeduction,vatdeduction
+2025-02,17,20,Net VATAllocation,netvatallocation
+2025-02,18,21,Total Gross Amount,totalgrossamount
+2025-02,19,22,Total Net Amount,totalnetamount
+2025-03,1,4,StatutoryAllocation,statutoryallocation
+2025-03,2,5,13%Share of Derivation (Net),13%shareofderivationnet
+2025-03,3,6,Gross Total,grosstotal
+2025-03,4,7,ExternalDebt,externaldebt
+2025-03,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2025-03,6,9,OtherDeductions,otherdeductions
+2025-03,7,10,Net StatutoryAllocation,netstatutoryallocation
+2025-03,8,11,"Augmentation of ' 178Billion fromNon OilRevenue for the month ofMarch, 2025",augmentationof178billionfromnonoilrevenueforthemonthofmarch2025
+2025-03,9,12,"Distribution of 28.218 Billion from SolidMineral Revenue for theMonth of March, 2025",distributionof28218billionfromsolidmineralrevenueforthemonthofmarch2025
+2025-03,10,13,13%Derivation from Distribution of 28.218 Billion from SolidMineral Revenue for theMonth of,13%derivationfromdistributionof28218billionfromsolidmineralrevenueforthemonthof
+2025-03,11,14,"Total SolidMineral Disribution for themonth ofMarch, 2025",totalsolidmineraldisributionforthemonthofmarch2025
+2025-03,12,15,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2025-03,13,16,TOTAL Share of Ecology,totalshareofecology
+2025-03,14,17,Transfer of 50% Share ofEcology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-03,15,18,Net Share ofEcology,netshareofecology
+2025-03,16,19,Gross VATAllocation,grossvatallocation
+2025-03,17,20,VATDeduction,vatdeduction
+2025-03,18,21,NetVATAllocation,netvatallocation
+2025-03,19,22,TotalGross Amount,totalgrossamount
+2025-03,20,23,TotalNetAmount,totalnetamount
+2025-04,1,4,Statutory Allocation,statutoryallocation
+2025-04,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2025-04,3,6,Gross Total,grosstotal
+2025-04,4,7,External Debt,externaldebt
+2025-04,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2025-04,6,9,OtherDeductions,otherdeductions
+2025-04,7,10,Net Statutory Allocation,netstatutoryallocation
+2025-04,8,11,Exchange Gain Allocation,exchangegainallocation
+2025-04,9,12,13% Derivation on Exchange Gain Allocation,13%derivationonexchangegainallocation
+2025-04,10,13,Total Exchange Gain Allocation,totalexchangegainallocation
+2025-04,11,14,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-04,12,15,TOTAL Share of Ecology,totalshareofecology
+2025-04,13,16,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-04,14,17,Net Share of Ecology,netshareofecology
+2025-04,15,18,Gross VATAllocation,grossvatallocation
+2025-04,16,19,VATDeduction,vatdeduction
+2025-04,17,20,Net VATAllocation,netvatallocation
+2025-04,18,21,Total Gross Amount,totalgrossamount
+2025-04,19,22,Total Net Amount,totalnetamount
+2025-05,1,4,Statutory Allocation,statutoryallocation
+2025-05,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2025-05,3,6,Gross Total,grosstotal
+2025-05,4,7,External Debt,externaldebt
+2025-05,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2025-05,6,9,OtherDeductions,otherdeductions
+2025-05,7,10,Net Statutory Allocation,netstatutoryallocation
+2025-05,8,11,Exchange Gain Allocation,exchangegainallocation
+2025-05,9,12,13% Derivation on Exchange Gain Allocation,13%derivationonexchangegainallocation
+2025-05,10,13,Total Exchange Gain Allocation,totalexchangegainallocation
+2025-05,11,14,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-05,12,15,TOTAL Share of Ecology,totalshareofecology
+2025-05,13,16,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-05,14,17,Net Share of Ecology,netshareofecology
+2025-05,15,18,Gross VATAllocation,grossvatallocation
+2025-05,16,19,VATDeduction,vatdeduction
+2025-05,17,20,Net VATAllocation,netvatallocation
+2025-05,18,21,Total Gross Amount,totalgrossamount
+2025-05,19,22,Total Net Amount,totalnetamount
+2025-06,1,4,StatutoryAllocation,statutoryallocation
+2025-06,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2025-06,3,6,Gross Total,grosstotal
+2025-06,4,7,ExternalDebt,externaldebt
+2025-06,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2025-06,6,9,OtherDeductions,otherdeductions
+2025-06,7,10,Net StatutoryAllocation,netstatutoryallocation
+2025-06,8,11,Exchange Gain Allocation,exchangegainallocation
+2025-06,9,12,13% Derivation on Exchange GainAllocation,13%derivationonexchangegainallocation
+2025-06,10,13,TotalExchange Gain Allocation,totalexchangegainallocation
+2025-06,11,14,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2025-06,12,15,TOTAL Share of Ecology,totalshareofecology
+2025-06,13,16,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-06,14,17,Net Share of Ecology,netshareofecology
+2025-06,15,18,GrossVATAllocation,grossvatallocation
+2025-06,16,19,VATDeduction,vatdeduction
+2025-06,17,20,Net VATAllocation,netvatallocation
+2025-06,18,21,TotalGrossAmount,totalgrossamount
+2025-06,19,22,TotalNet Amount,totalnetamount
+2025-07,1,4,StatutoryAllocation,statutoryallocation
+2025-07,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2025-07,3,6,Gross Total,grosstotal
+2025-07,4,7,ExternalDebt,externaldebt
+2025-07,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2025-07,6,9,OtherDeductions,otherdeductions
+2025-07,7,10,Net StatutoryAllocation,netstatutoryallocation
+2025-07,8,11,Exchange Gain Allocation,exchangegainallocation
+2025-07,9,12,13% Derivation on Exchange GainAllocation,13%derivationonexchangegainallocation
+2025-07,10,13,TotalExchange Gain Allocation,totalexchangegainallocation
+2025-07,11,14,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2025-07,12,15,Augmentation of 100B fromNon-OilRevenue,augmentationof100bfromnonoilrevenue
+2025-07,13,16,TOTAL Share of Ecology,totalshareofecology
+2025-07,14,17,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-07,15,18,Net Share of Ecology,netshareofecology
+2025-07,16,19,GrossVATAllocation,grossvatallocation
+2025-07,17,20,VATDeduction,vatdeduction
+2025-07,18,21,Net VATAllocation,netvatallocation
+2025-07,19,22,TotalGrossAmount,totalgrossamount
+2025-07,20,22a,TotalNet Amount,totalnetamount
+2025-08,1,4,StatutoryAllocation,statutoryallocation
+2025-08,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2025-08,3,6,Gross Total,grosstotal
+2025-08,4,7,ExternalDebt,externaldebt
+2025-08,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2025-08,6,9,OtherDeductions,otherdeductions
+2025-08,7,10,Net StatutoryAllocation,netstatutoryallocation
+2025-08,8,11,Exchange Gain Allocation,exchangegainallocation
+2025-08,9,12,13% Derivation on Exchange GainAllocation,13%derivationonexchangegainallocation
+2025-08,10,13,TotalExchange Gain Allocation,totalexchangegainallocation
+2025-08,11,14,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2025-08,12,15,TOTAL Share of Ecology,totalshareofecology
+2025-08,13,16,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-08,14,17,Net Share of Ecology,netshareofecology
+2025-08,15,18,GrossVATAllocation,grossvatallocation
+2025-08,16,19,VATDeduction,vatdeduction
+2025-08,17,20,Net VATAllocation,netvatallocation
+2025-08,18,21,TotalGrossAmount,totalgrossamount
+2025-08,19,22,TotalNet Amount,totalnetamount
+2025-09,1,4,StatutoryAllocation,statutoryallocation
+2025-09,2,5,13% Share of Derivation,13%shareofderivation
+2025-09,3,6,Gross Total,grosstotal
+2025-09,4,7,ExternalDebt,externaldebt
+2025-09,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2025-09,6,9,OtherDeductions,otherdeductions
+2025-09,7,10,Net StatutoryAllocation,netstatutoryallocation
+2025-09,8,11,ExchangeGain Allocation,exchangegainallocation
+2025-09,9,12,13% Derivation on ExchangeGainAllocation,13%derivationonexchangegainallocation
+2025-09,10,13,Total ExchangeGain Allocation,totalexchangegainallocation
+2025-09,11,14,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2025-09,12,15,TOTAL Share of Ecology,totalshareofecology
+2025-09,13,16,Transfer of 50% Share ofEcology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-09,14,17,Net Share ofEcology,netshareofecology
+2025-09,15,18,Gross VAT Allocation,grossvatallocation
+2025-09,16,19,VAT Deduction,vatdeduction
+2025-09,17,20,NetVAT Allocation,netvatallocation
+2025-09,18,21,TotalGross Amount,totalgrossamount
+2025-09,19,22,TotalNetAmount,totalnetamount
+2025-10,1,4,StatutoryAllocation,statutoryallocation
+2025-10,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2025-10,3,6,Gross Total,grosstotal
+2025-10,4,7,External Debt,externaldebt
+2025-10,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2025-10,6,9,Other Deductions,otherdeductions
+2025-10,7,10,Net StatutoryAllocation,netstatutoryallocation
+2025-10,8,11,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-10,9,12,TOTAL Share of Ecology,totalshareofecology
+2025-10,10,13,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-10,11,14,Net Share of Ecology,netshareofecology
+2025-10,12,15,Gross VAT Allocation,grossvatallocation
+2025-10,13,16,VAT Deduction,vatdeduction
+2025-10,14,17,Net VAT Allocation,netvatallocation
+2025-10,15,18,Total Gross Amount,totalgrossamount
+2025-10,16,19,Total Net Amount,totalnetamount
+2025-11,1,4,Statutory Allocation,statutoryallocation
+2025-11,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2025-11,3,6,Gross Total,grosstotal
+2025-11,4,7,External Debt,externaldebt
+2025-11,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2025-11,6,9,OtherDeductions,otherdeductions
+2025-11,7,10,Net Statutory Allocation,netstatutoryallocation
+2025-11,8,11,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-11,9,12,TOTAL Share of Ecology,totalshareofecology
+2025-11,10,13,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-11,11,14,Net Share of Ecology,netshareofecology
+2025-11,12,15,Gross VATAllocation,grossvatallocation
+2025-11,13,16,VATDeduction,vatdeduction
+2025-11,14,17,Net VATAllocation,netvatallocation
+2025-11,15,18,Total Gross Amount,totalgrossamount
+2025-11,16,19,Total Net Amount,totalnetamount
+2025-12,1,4,Statutory Allocation,statutoryallocation
+2025-12,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2025-12,3,6,Gross Total,grosstotal
+2025-12,4,7,External Debt,externaldebt
+2025-12,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2025-12,6,9,OtherDeductions,otherdeductions
+2025-12,7,10,Net Statutory Allocation,netstatutoryallocation
+2025-12,8,11,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-12,9,12,TOTAL Share of Ecology,totalshareofecology
+2025-12,10,13,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-12,11,14,Net Share of Ecology,netshareofecology
+2025-12,12,15,Gross VATAllocation,grossvatallocation
+2025-12,13,16,VATDeduction,vatdeduction
+2025-12,14,17,Net VATAllocation,netvatallocation
+2025-12,15,18,Total Gross Amount,totalgrossamount
+2025-12,16,19,Total Net Amount,totalnetamount
+2026-01,1,4,Statutory Allocation,statutoryallocation
+2026-01,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2026-01,3,6,Gross Total,grosstotal
+2026-01,4,7,External Debt,externaldebt
+2026-01,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2026-01,6,9,Other Deductions,otherdeductions
+2026-01,7,10,Net Statutory Allocation,netstatutoryallocation
+2026-01,8,11,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2026-01,9,12,TOTAL Share of Ecology,totalshareofecology
+2026-01,10,13,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-01,11,14,Net Share of Ecology,netshareofecology
+2026-01,12,15,Gross VAT Allocation,grossvatallocation
+2026-01,13,16,VAT Deduction,vatdeduction
+2026-01,14,17,Net VAT Allocation,netvatallocation
+2026-01,15,18,Total Gross Amount,totalgrossamount
+2026-01,16,19,Total Net Amount,totalnetamount
+2026-02,1,4,StatutoryAllocation,statutoryallocation
+2026-02,2,5,13%Share of Derivation (Net),13%shareofderivationnet
+2026-02,3,6,Gross Total,grosstotal
+2026-02,4,7,External Debt,externaldebt
+2026-02,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2026-02,6,9,OtherDeductions,otherdeductions
+2026-02,7,10,Net StatutoryAllocation,netstatutoryallocation
+2026-02,8,11,Augmentation of 100B fromNon-Oil Revenue,augmentationof100bfromnonoilrevenue
+2026-02,9,12,TOTAL Share of Ecology,totalshareofecology
+2026-02,10,13,Transfer of 50% Share ofEcology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-02,11,14,Net Share ofEcology,netshareofecology
+2026-02,12,15,GrossVATAllocation,grossvatallocation
+2026-02,13,16,VATDeduction,vatdeduction
+2026-02,14,17,NetVATAllocation,netvatallocation
+2026-02,15,18,TotalGrossAmount,totalgrossamount
+2026-02,16,19,Total NetAmount,totalnetamount
+2026-03,1,4,StatutoryAllocation,statutoryallocation
+2026-03,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2026-03,3,6,Gross Total,grosstotal
+2026-03,4,7,External Debt,externaldebt
+2026-03,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2026-03,6,9,OtherDeductions,otherdeductions
+2026-03,7,10,Net StatutoryAllocation,netstatutoryallocation
+2026-03,8,11,TOTAL Share of Ecology,totalshareofecology
+2026-03,9,12,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-03,10,13,Net Share of Ecology,netshareofecology
+2026-03,11,14,Gross VAT Allocation,grossvatallocation
+2026-03,12,15,VAT Deduction,vatdeduction
+2026-03,13,16,Net VAT Allocation,netvatallocation
+2026-03,14,17,TotalGross Amount,totalgrossamount
+2026-03,15,18,Total Net Amount,totalnetamount
+2026-04,1,4,Statutory Allocation,statutoryallocation
+2026-04,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2026-04,3,6,Gross Total,grosstotal
+2026-04,4,7,External Debt,externaldebt
+2026-04,5,8,Deductions Contractual Obligation (ISPO),deductionscontractualobligationispo
+2026-04,6,9,OtherDeductions,otherdeductions
+2026-04,7,10,Net Statutory Allocation,netstatutoryallocation
+2026-04,8,11,"Augmentation of ' 200Billion from Non Oil Revenue for the month of April, 2026",augmentationof200billionfromnonoilrevenueforthemonthofapril2026
+2026-04,9,12,State Share of Allocation,stateshareofallocation
+2026-04,10,13,SolidMineral Revenue 13% Derivation of Soild Mineral Revenue,solidmineralrevenue13%derivationofsoildmineralrevenue
+2026-04,11,14,Total Share of Allocation to State,totalshareofallocationtostate
+2026-04,12,15,TOTAL Share of Ecology,totalshareofecology
+2026-04,13,16,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-04,14,17,Net Share of Ecology,netshareofecology
+2026-04,15,18,Gross VATAllocation,grossvatallocation
+2026-04,16,19,VATDeduction,vatdeduction
+2026-04,17,20,Net VATAllocation,netvatallocation
+2026-04,18,21,Total Gross Amount,totalgrossamount
+2026-04,19,22,Total Net Amount,totalnetamount
+2026-05,1,4,StatutoryAllocation,statutoryallocation
+2026-05,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2026-05,3,6,Gross Total,grosstotal
+2026-05,4,7,External Debt,externaldebt
+2026-05,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2026-05,6,9,OtherDeductions,otherdeductions
+2026-05,7,10,Net StatutoryAllocation,netstatutoryallocation
+2026-05,8,11,"Augmentation of ' 250Billion from Non Oil Revenue for the month ofMay, 2026",augmentationof250billionfromnonoilrevenueforthemonthofmay2026
+2026-05,9,12,TOTAL Share of Ecology,totalshareofecology
+2026-05,10,13,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-05,11,14,Net Share of Ecology,netshareofecology
+2026-05,12,15,GrossVATAllocation,grossvatallocation
+2026-05,13,16,VATDeduction,vatdeduction
+2026-05,14,17,Net VATAllocation,netvatallocation
+2026-05,15,18,TotalGrossAmount,totalgrossamount
+2026-05,16,19,Total Net Amount,totalnetamount
+2026-06,1,4,StatutoryAllocation,statutoryallocation
+2026-06,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2026-06,3,6,Gross Total,grosstotal
+2026-06,4,7,ExternalDebt,externaldebt
+2026-06,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2026-06,6,9,Other Deductions,otherdeductions
+2026-06,7,10,Net StatutoryAllocation,netstatutoryallocation
+2026-06,8,11,TOTAL Share of Ecology,totalshareofecology
+2026-06,9,12,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-06,10,13,Net Share of Ecology,netshareofecology
+2026-06,11,14,Gross VATAllocation,grossvatallocation
+2026-06,12,15,VATDeduction,vatdeduction
+2026-06,13,16,NetVATAllocation,netvatallocation
+2026-06,14,17,TotalGross Amount,totalgrossamount
+2026-06,15,18,TotalNetAmount,totalnetamount
+2026-07,1,4,StatutoryAllocation,statutoryallocation
+2026-07,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2026-07,3,6,Gross Total,grosstotal
+2026-07,4,7,External Debt,externaldebt
+2026-07,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2026-07,6,9,OtherDeductions,otherdeductions
+2026-07,7,10,Net StatutoryAllocation,netstatutoryallocation
+2026-07,8,11,"Augmentation of ' 250Billion from Non Oil Revenue for the month of July, 2026",augmentationof250billionfromnonoilrevenueforthemonthofjuly2026
+2026-07,9,12,TOTAL Share of Ecology,totalshareofecology
+2026-07,10,13,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-07,11,14,Net Share of Ecology,netshareofecology
+2026-07,12,15,GrossVATAllocation,grossvatallocation
+2026-07,13,16,VATDeduction,vatdeduction
+2026-07,14,17,Net VATAllocation,netvatallocation
+2026-07,15,18,TotalGrossAmount,totalgrossamount
+2026-07,16,19,Total Net Amount,totalnetamount
+2026-08,1,4,StatutoryAllocation,statutoryallocation
+2026-08,2,5,13% Share of Derivation (Net),13%shareofderivationnet
+2026-08,3,6,Gross Total,grosstotal
+2026-08,4,7,External Debt,externaldebt
+2026-08,5,8,Deductions ContractualObligation (ISPO),deductionscontractualobligationispo
+2026-08,6,9,Other Deductions,otherdeductions
+2026-08,7,10,Net StatutoryAllocation,netstatutoryallocation
+2026-08,8,11,TOTAL Share of Ecology,totalshareofecology
+2026-08,9,12,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-08,10,13,Net Share of Ecology,netshareofecology
+2026-08,11,14,Gross VAT Allocation,grossvatallocation
+2026-08,12,15,VAT Deduction,vatdeduction
+2026-08,13,16,Net VAT Allocation,netvatallocation
+2026-08,14,17,TotalGross Amount,totalgrossamount
+2026-08,15,18,Total Net Amount,totalnetamount

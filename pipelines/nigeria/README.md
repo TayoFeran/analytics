@@ -6,6 +6,17 @@ Ingestion for the Nigeria project. One `load_<source>_<what>.py` script per sour
 |---|---|---|
 | `load_world_bank_indicators.py` | World Bank API | `bronze.nigeria_world_bank_indicators_annual`, `bronze.nigeria_world_bank_indicators_monthly` |
 | `load_faac_allocations.py` | FAAC workbooks in [`data/nigeria/faac/`](../../data/nigeria/faac) | `bronze.nigeria_faac_income_sheet`, `bronze.nigeria_faac_deduction_sheet` |
+| `refine_faac_reports.py` | OAGF FAAC report PDFs (outside git) | CSV files in [`data/nigeria/faac/oagf/`](../../data/nigeria/faac/oagf), not MotherDuck |
+
+## refine_faac_reports.py
+
+Reads the state table (Table III) of each monthly OAGF FAAC report and writes tidy CSV files to [`data/nigeria/faac/oagf/`](../../data/nigeria/faac/oagf). It runs on a laptop, not in GitHub Actions: the PDFs stay outside git, and only the CSV files are committed. Why, and which months come from Excel instead: [ADR 0004](../../docs/decisions/0004-faac-from-oagf-reports.md).
+
+```bash
+uv run --group refine python pipelines/nigeria/refine_faac_reports.py
+```
+
+Every report is checked against itself before anything is written (right month, 36 states, columns add up to the Total row, no copied tables). Unchanged files are reused from the last run by their SHA-256 fingerprint, so adding a month takes seconds. The checks and how to add a month: [`data/nigeria/faac/oagf/README.md`](../../data/nigeria/faac/oagf/README.md).
 
 ## load_world_bank_indicators.py
 

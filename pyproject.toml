@@ -8,6 +8,7 @@ dependencies = []
 # One group per area, so each job installs only what it needs:
 #   uv run --group dbt dbt build
 #   uv run --group pipelines python <script>
+#   uv run --group refine python pipelines/nigeria/refine_faac_reports.py   (laptop only)
 #   uv run --group dev pre-commit run --all-files
 [dependency-groups]
 dbt = [
@@ -29,6 +30,11 @@ pipelines = [
     "openpyxl>=3.1,<4",
     "python-dotenv>=1,<2",
     "requests>=2.32,<3",
+]
+refine = [
+    "openpyxl>=3.1,<4",
+    "pdfplumber>=0.11,<0.12",
+    "python-dotenv>=1,<2",
 ]
 
 [tool.uv]
