@@ -1,13 +1,368 @@
 shared_month,note
+2020-02,LGA: FCT TOTAL row has no label
+2020-03,LGA: FCT TOTAL row has no label
+2020-04,LGA: dropped 3 stray figures beside the table
+2020-05,LGA: FCT TOTAL row has no label
+2020-06,LGA: FCT TOTAL row has no label
+2020-06,"LGA: known report error, KANO: TOTAL row's Total Allocation (N2.19bn) doesn't match its own columns (N6.36bn, as the councils add up)"
+2020-10,LGA: dropped 1 stray figures beside the table
+2020-10,LGA: FCT TOTAL row has no label
+2020-11,LGA: dropped 1 stray figures beside the table
+2020-12,LGA: FCT TOTAL row has no label
+2021-01,LGA: dropped 1 stray figures beside the table
+2021-01,LGA: dropped 1 stray figures beside the table
+2021-01,LGA: FCT has no TOTAL row; grand total minus the states used
+2021-02,LGA: dropped 3 stray figures beside the table
+2021-02,LGA: FCT TOTAL row has no label
+2021-02,"LGA: known report error, KANO: councils 1-25 print the N58,259.97 deduction as positive and add it to their totals, and Kano's 44 councils don't add up to its TOTAL row in any column; the TOTAL row agrees with the LGA summary page"
+2021-03,LGA: KANO TOTAL row has no label
+2021-03,LGA: KEBBI TOTAL row has no label
+2021-03,LGA: KOGI TOTAL row has no label
+2021-03,LGA: KWARA TOTAL row has no label
+2021-03,LGA: LAGOS TOTAL row has no label
+2021-03,LGA: NASSARAWA TOTAL row has no label
+2021-03,LGA: NIGER TOTAL row has no label
+2021-03,LGA: OGUN TOTAL row has no label
+2021-03,LGA: ONDO TOTAL row has no label
+2021-03,LGA: OSUN TOTAL row has no label
+2021-03,LGA: OYO TOTAL row has no label
+2021-03,LGA: PLATEAU TOTAL row has no label
+2021-03,LGA: RIVERS TOTAL row has no label
+2021-03,LGA: SOKOTO TOTAL row has no label
+2021-03,LGA: TARABA TOTAL row has no label
+2021-03,LGA: YOBE TOTAL row has no label
+2021-03,LGA: ZAMFARA TOTAL row has no label
+2021-03,LGA: FCT TOTAL row has no label
+2021-03,"LGA: known report error, KANO: TOTAL row's VAT is N18,000,000 more than the councils add up to"
+2021-03,"LGA: known report error, KATSINA: TOTAL row's ecological fund is N79.2m more than the councils add up to"
+2021-04,LGA: dropped 1 stray figures beside the table
+2021-05,LGA: KANO TOTAL row has no label
+2021-05,"LGA: known report error, KADUNA: councils' Total Allocation uses other councils' VAT (from Makarfi on, council 1's, 2's and so on; Lere's includes N1.56bn); the TOTAL row is right"
+2021-05,"LGA: known report error, KANO: TOTAL row's deduction is N69.9m more than the councils', and its Total Allocation N69.9m less"
+2021-06,LGA: part total after council 25 (page 3) skipped; the state continues
+2021-06,"LGA: line 'HYPPADEC' (page 5) has no council number, checked as a possible TOTAL row"
+2021-06,LGA: KANO TOTAL row has no label
+2021-06,LGA: KATSINA TOTAL row has no label
+2021-06,LGA: KEBBI TOTAL row has no label
+2021-06,LGA: KOGI TOTAL row has no label
+2021-06,LGA: KWARA TOTAL row has no label
+2021-06,LGA: LAGOS TOTAL row has no label
+2021-06,LGA: NASSARAWA TOTAL row has no label
+2021-06,LGA: NIGER TOTAL row has no label
+2021-06,LGA: OGUN TOTAL row has no label
+2021-06,LGA: ONDO TOTAL row has no label
+2021-06,LGA: OSUN TOTAL row has no label
+2021-06,LGA: OYO TOTAL row has no label
+2021-06,LGA: PLATEAU TOTAL row has no label
+2021-06,LGA: RIVERS TOTAL row has no label
+2021-06,LGA: SOKOTO TOTAL row has no label
+2021-06,LGA: TARABA TOTAL row has no label
+2021-06,LGA: YOBE TOTAL row has no label
+2021-06,LGA: ZAMFARA TOTAL row has no label
+2021-06,LGA: FCT TOTAL row has no label
+2021-07,LGA: KANO TOTAL row has no label
+2021-07,LGA: KEBBI TOTAL row has no label
+2021-07,LGA: KOGI TOTAL row has no label
+2021-07,LGA: KWARA TOTAL row has no label
+2021-07,LGA: LAGOS TOTAL row has no label
+2021-07,LGA: NASSARAWA TOTAL row has no label
+2021-07,LGA: NIGER TOTAL row has no label
+2021-07,LGA: OGUN TOTAL row has no label
+2021-07,LGA: ONDO TOTAL row has no label
+2021-07,LGA: OSUN TOTAL row has no label
+2021-07,LGA: OYO TOTAL row has no label
+2021-07,LGA: PLATEAU TOTAL row has no label
+2021-07,LGA: RIVERS TOTAL row has no label
+2021-07,LGA: SOKOTO TOTAL row has no label
+2021-07,LGA: TARABA TOTAL row has no label
+2021-07,LGA: YOBE TOTAL row has no label
+2021-07,LGA: ZAMFARA TOTAL row has no label
+2021-08,LGA: KANO TOTAL row has no label
+2021-08,LGA: KEBBI TOTAL row has no label
+2021-08,LGA: KOGI TOTAL row has no label
+2021-08,LGA: KWARA TOTAL row has no label
+2021-08,LGA: LAGOS TOTAL row has no label
+2021-08,LGA: NASSARAWA TOTAL row has no label
+2021-08,LGA: NIGER TOTAL row has no label
+2021-08,LGA: OGUN TOTAL row has no label
+2021-08,LGA: ONDO TOTAL row has no label
+2021-08,LGA: OSUN TOTAL row has no label
+2021-08,LGA: OYO TOTAL row has no label
+2021-08,LGA: PLATEAU TOTAL row has no label
+2021-08,LGA: RIVERS TOTAL row has no label
+2021-08,LGA: SOKOTO TOTAL row has no label
+2021-08,LGA: TARABA TOTAL row has no label
+2021-08,LGA: YOBE TOTAL row has no label
+2021-08,LGA: ZAMFARA TOTAL row has no label
+2021-08,LGA: FCT TOTAL row has no label
+2021-08,"LGA: known report error, RIVERS: TOTAL row leaves out council 1, Ahoada, in every column"
 2021-09,read from Excel: PDF shows the full ecology fund with no NDDC/HYPPADEC transfer and its Total Gross leaves out derivation; the Excel report applies the transfer and adds up
+2021-09,"LGA: no LGA figures: the Excel report has no LGA detail sheet, and the PDF's LGA table doesn't add up for Abia, Bauchi, Kano, Yobe, Zamfara (no TOTAL row) and the FCT"
 2021-11,table cut off after column 18: no Total Gross or Total Net printed
+2021-11,LGA: dropped 1 stray figures beside the table
+2021-11,LGA: KANO TOTAL row has no label
+2021-11,LGA: KEBBI TOTAL row has no label
+2021-11,LGA: KOGI TOTAL row has no label
+2021-11,LGA: KWARA TOTAL row has no label
+2021-11,LGA: LAGOS TOTAL row has no label
+2021-11,LGA: NASSARAWA TOTAL row has no label
+2021-11,LGA: NIGER TOTAL row has no label
+2021-11,LGA: OGUN TOTAL row has no label
+2021-11,LGA: ONDO TOTAL row has no label
+2021-11,LGA: OSUN TOTAL row has no label
+2021-11,LGA: OYO TOTAL row has no label
+2021-11,LGA: PLATEAU TOTAL row has no label
+2021-11,LGA: RIVERS TOTAL row has no label
+2021-11,LGA: SOKOTO TOTAL row has no label
+2021-11,LGA: TARABA TOTAL row has no label
+2021-11,LGA: YOBE TOTAL row has no label
+2021-11,LGA: ZAMFARA TOTAL row has no label
+2021-11,LGA: FCT has no TOTAL row; grand total minus the states used
 2021-12,table cut off after column 19: no Total Net printed
+2021-12,LGA: KANO TOTAL row has no label
+2021-12,LGA: KEBBI TOTAL row has no label
+2021-12,LGA: KOGI TOTAL row has no label
+2021-12,LGA: KWARA TOTAL row has no label
+2021-12,LGA: LAGOS TOTAL row has no label
+2021-12,LGA: NASSARAWA TOTAL row has no label
+2021-12,LGA: NIGER TOTAL row has no label
+2021-12,LGA: OGUN TOTAL row has no label
+2021-12,LGA: ONDO TOTAL row has no label
+2021-12,LGA: OSUN TOTAL row has no label
+2021-12,LGA: OYO TOTAL row has no label
+2021-12,LGA: PLATEAU TOTAL row has no label
+2021-12,LGA: RIVERS TOTAL row has no label
+2021-12,LGA: SOKOTO TOTAL row has no label
+2021-12,LGA: TARABA TOTAL row has no label
+2021-12,LGA: YOBE TOTAL row has no label
+2021-12,LGA: ZAMFARA TOTAL row has no label
+2022-01,LGA: KANO TOTAL row has no label
+2022-01,LGA: KEBBI TOTAL row has no label
+2022-01,LGA: KOGI TOTAL row has no label
+2022-01,LGA: KWARA TOTAL row has no label
+2022-01,LGA: LAGOS TOTAL row has no label
+2022-01,LGA: NASSARAWA TOTAL row has no label
+2022-01,LGA: NIGER TOTAL row has no label
+2022-01,LGA: OGUN TOTAL row has no label
+2022-01,LGA: ONDO TOTAL row has no label
+2022-01,LGA: OSUN TOTAL row has no label
+2022-01,LGA: OYO TOTAL row has no label
+2022-01,LGA: PLATEAU TOTAL row has no label
+2022-01,LGA: RIVERS TOTAL row has no label
+2022-01,LGA: SOKOTO TOTAL row has no label
+2022-01,LGA: TARABA TOTAL row has no label
+2022-01,LGA: YOBE TOTAL row has no label
+2022-01,LGA: ZAMFARA TOTAL row has no label
+2022-01,LGA: FCT TOTAL row has no label
 2022-02,table cut off after column 18: no Total Gross or Total Net printed
+2022-02,LGA: KANO TOTAL row has no label
+2022-02,LGA: KEBBI TOTAL row has no label
+2022-02,LGA: KOGI TOTAL row has no label
+2022-02,LGA: KWARA TOTAL row has no label
+2022-02,LGA: LAGOS TOTAL row has no label
+2022-02,LGA: NASSARAWA TOTAL row has no label
+2022-02,LGA: NIGER TOTAL row has no label
+2022-02,LGA: OGUN TOTAL row has no label
+2022-02,LGA: ONDO TOTAL row has no label
+2022-02,LGA: OSUN TOTAL row has no label
+2022-02,LGA: OYO TOTAL row has no label
+2022-02,LGA: PLATEAU TOTAL row has no label
+2022-02,LGA: RIVERS TOTAL row has no label
+2022-02,LGA: SOKOTO TOTAL row has no label
+2022-02,LGA: TARABA TOTAL row has no label
+2022-02,LGA: YOBE TOTAL row has no label
+2022-02,LGA: ZAMFARA TOTAL row has no label
+2022-02,"LGA: known report error, KANO: councils 1-25's Total Allocation leaves out the non-oil excess account and counts ecology twice; the TOTAL row is right"
+2022-03,LGA: KANO TOTAL row has no label
+2022-03,LGA: YOBE TOTAL row has no label
+2022-03,"LGA: known report error, KANO: councils 1-25 have the 50% ecology transfer to NDDC/HYPPADEC taken off, councils 26-44 and the TOTAL row don't"
+2022-03,"LGA: known report error, KATSINA: councils' Total Allocation column is wrong; the TOTAL row is right"
+2022-03,"LGA: known report error, KEBBI: councils' Total Allocation column is wrong; the TOTAL row is right"
+2022-03,"LGA: known report error, KOGI: councils' Total Allocation column is wrong; the TOTAL row is right"
+2022-04,LGA: KANO TOTAL row has no label
+2022-04,LGA: YOBE TOTAL row has no label
+2022-05,LGA: KANO TOTAL row has no label
+2022-05,LGA: YOBE TOTAL row has no label
+2022-06,LGA: KANO TOTAL row has no label
+2022-06,LGA: YOBE TOTAL row has no label
+2022-07,LGA: KANO TOTAL row has no label
+2022-07,LGA: YOBE TOTAL row has no label
 2022-08,state table title says shared 2022-07 (stale title copied from an older report)
+2022-08,LGA: KANO TOTAL row has no label
+2022-08,LGA: YOBE TOTAL row has no label
+2022-09,LGA: KANO TOTAL row has no label
+2022-09,LGA: YOBE TOTAL row has no label
+2022-10,LGA: KANO TOTAL row has no label
+2022-10,"LGA: known report error, ABIA: councils' Total Allocation leaves out the FOREX equalisation and EMTL columns; the TOTAL row includes them"
+2022-10,"LGA: known report error, KATSINA: councils' Total Allocation column is wrong; the TOTAL row is right"
+2022-11,LGA: KANO TOTAL row has no label
+2022-12,LGA: KANO TOTAL row has no label
+2022-12,LGA: YOBE TOTAL row has no label
+2023-01,LGA: KANO TOTAL row has no label
+2023-01,LGA: YOBE TOTAL row has no label
 2023-02,table cut off after column 19: no Total Gross or Total Net printed
+2023-02,LGA: KANO TOTAL row has no label
+2023-02,LGA: KEBBI TOTAL row has no label
+2023-02,LGA: KOGI TOTAL row has no label
+2023-02,LGA: KWARA TOTAL row has no label
+2023-02,LGA: LAGOS TOTAL row has no label
+2023-02,LGA: NASSARAWA TOTAL row has no label
+2023-02,LGA: NIGER TOTAL row has no label
+2023-02,LGA: OGUN TOTAL row has no label
+2023-02,LGA: ONDO TOTAL row has no label
+2023-02,LGA: OSUN TOTAL row has no label
+2023-02,LGA: OYO TOTAL row has no label
+2023-02,LGA: PLATEAU TOTAL row has no label
+2023-02,LGA: RIVERS TOTAL row has no label
+2023-02,LGA: SOKOTO TOTAL row has no label
+2023-02,LGA: TARABA TOTAL row has no label
+2023-02,LGA: YOBE TOTAL row has no label
+2023-02,LGA: ZAMFARA TOTAL row has no label
+2023-02,"LGA: known report error, KANO: councils' non-oil excess account figures are February 2022's, and the TOTAL row doesn't match the councils in that column and ecology"
 2023-03,table cut off after column 19: no Total Gross or Total Net printed
+2023-03,LGA: KANO TOTAL row has no label
+2023-03,LGA: KEBBI TOTAL row has no label
+2023-03,LGA: KOGI TOTAL row has no label
+2023-03,LGA: KWARA TOTAL row has no label
+2023-03,LGA: LAGOS TOTAL row has no label
+2023-03,LGA: NASSARAWA TOTAL row has no label
+2023-03,LGA: NIGER TOTAL row has no label
+2023-03,LGA: OGUN TOTAL row has no label
+2023-03,LGA: ONDO TOTAL row has no label
+2023-03,LGA: OSUN TOTAL row has no label
+2023-03,LGA: OYO TOTAL row has no label
+2023-03,LGA: PLATEAU TOTAL row has no label
+2023-03,LGA: RIVERS TOTAL row has no label
+2023-03,LGA: SOKOTO TOTAL row has no label
+2023-03,LGA: TARABA TOTAL row has no label
+2023-03,LGA: YOBE TOTAL row has no label
+2023-03,LGA: ZAMFARA TOTAL row has no label
+2023-03,"LGA: known report error, KANO: councils 1-25's Total Allocation leaves out column 3 and counts ecology twice; the TOTAL row is right"
 2023-04,read from Excel: PDF state and LGA tables are a copy of February 2022 (only Table I is April 2023)
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
+2023-04,LGA: an Excel state block has no TOTAL row; its sums are used
 2023-05,table cut off after column 24: no Total Gross or Total Net printed
+2023-05,LGA: KANO TOTAL row has no label
+2023-05,LGA: KEBBI TOTAL row has no label
+2023-05,LGA: KOGI TOTAL row has no label
+2023-05,LGA: KWARA TOTAL row has no label
+2023-05,LGA: LAGOS TOTAL row has no label
+2023-05,LGA: NASSARAWA TOTAL row has no label
+2023-05,LGA: NIGER TOTAL row has no label
+2023-05,LGA: OGUN TOTAL row has no label
+2023-05,LGA: ONDO TOTAL row has no label
+2023-05,LGA: OSUN TOTAL row has no label
+2023-05,LGA: OYO TOTAL row has no label
+2023-05,LGA: PLATEAU TOTAL row has no label
+2023-05,LGA: RIVERS TOTAL row has no label
+2023-05,LGA: SOKOTO TOTAL row has no label
+2023-05,LGA: TARABA TOTAL row has no label
+2023-05,LGA: YOBE TOTAL row has no label
+2023-05,LGA: ZAMFARA TOTAL row has no label
+2023-05,"LGA: known report error, AKWA IBOM: TOTAL row's VAT is N345m, the councils add up to N2.15bn; its Total Allocation follows the wrong VAT"
+2023-05,"LGA: known report error, ANAMBRA: TOTAL row's FOREX equalisation share is N137.4m more than the councils add up to"
+2023-05,"LGA: known report error, KANO: councils add up to N105.7m more than the TOTAL row in two columns and N600 less in a third"
+2023-05,"LGA: known report error, KATSINA: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, KEBBI: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, KOGI: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, KWARA: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, LAGOS: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, NASSARAWA: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, NIGER: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, OGUN: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, ONDO: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, OSUN: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, OYO: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, PLATEAU: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, RIVERS: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, SOKOTO: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, TARABA: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, YOBE: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, ZAMFARA: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,"LGA: known report error, FCT: Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
 2023-06,table cut off after column 19: no Total Gross or Total Net printed
+2023-06,LGA: KANO TOTAL row has no label
+2023-06,LGA: KEBBI TOTAL row has no label
+2023-06,LGA: KOGI TOTAL row has no label
+2023-06,LGA: KWARA TOTAL row has no label
+2023-06,LGA: LAGOS TOTAL row has no label
+2023-06,LGA: NASSARAWA TOTAL row has no label
+2023-06,LGA: NIGER TOTAL row has no label
+2023-06,LGA: OGUN TOTAL row has no label
+2023-06,LGA: ONDO TOTAL row has no label
+2023-06,LGA: OSUN TOTAL row has no label
+2023-06,LGA: OYO TOTAL row has no label
+2023-06,LGA: PLATEAU TOTAL row has no label
+2023-06,LGA: RIVERS TOTAL row has no label
+2023-06,LGA: SOKOTO TOTAL row has no label
+2023-06,LGA: TARABA TOTAL row has no label
+2023-06,LGA: YOBE TOTAL row has no label
+2023-06,LGA: ZAMFARA TOTAL row has no label
 2023-07,table cut off after column 19: no Total Gross or Total Net printed
+2023-07,LGA: KANO TOTAL row has no label
+2023-07,LGA: KEBBI TOTAL row has no label
+2023-07,LGA: KOGI TOTAL row has no label
+2023-07,LGA: KWARA TOTAL row has no label
+2023-07,LGA: LAGOS TOTAL row has no label
+2023-07,LGA: NASSARAWA TOTAL row has no label
+2023-07,LGA: NIGER TOTAL row has no label
+2023-07,LGA: OGUN TOTAL row has no label
+2023-07,LGA: ONDO TOTAL row has no label
+2023-07,LGA: OSUN TOTAL row has no label
+2023-07,LGA: OYO TOTAL row has no label
+2023-07,LGA: PLATEAU TOTAL row has no label
+2023-07,LGA: RIVERS TOTAL row has no label
+2023-07,LGA: SOKOTO TOTAL row has no label
+2023-07,LGA: TARABA TOTAL row has no label
+2023-07,LGA: YOBE TOTAL row has no label
+2023-07,LGA: ZAMFARA TOTAL row has no label
+2023-07,"LGA: known report error, BAUCHI: councils' Total Allocation column is wrong; the TOTAL row is right"
+2023-08,LGA: KANO TOTAL row has no label
+2023-08,"LGA: known report error, ABIA: councils' Total Allocation column is wrong; the TOTAL row is right"
+2023-09,LGA: skipped a council list numbered across all states
+2023-09,LGA: KANO TOTAL row has no label
+2023-09,"LGA: known report error, ABIA: councils' Total Allocation column is wrong; the TOTAL row is right"
+2023-11,LGA: KANO TOTAL row has no label
+2023-11,"LGA: known report error, KANO: councils' deductions add up to N582.6m more than the TOTAL row's"
+2023-12,LGA: KANO TOTAL row has no label
+2023-12,LGA: YOBE TOTAL row has no label
+2024-01,LGA: KANO TOTAL row has no label
+2024-01,LGA: YOBE TOTAL row has no label
+2024-02,LGA: KANO TOTAL row has no label
+2024-02,LGA: YOBE TOTAL row has no label
+2024-03,LGA: KANO TOTAL row has no label
+2024-03,LGA: YOBE TOTAL row has no label
+2024-04,LGA: KANO TOTAL row has no label
+2024-04,LGA: YOBE TOTAL row has no label
+2024-05,LGA: KANO TOTAL row has no label
+2024-05,LGA: YOBE TOTAL row has no label
+2024-06,LGA: KANO TOTAL row has no label
+2024-07,LGA: YOBE TOTAL row has no label
+2024-08,LGA: KANO TOTAL row has no label
+2024-09,LGA: YOBE TOTAL row has no label
 2025-07,"Total row blank for column 12 (13% Derivation on Exchange GainAllocation); rows add up to 2,502,524,585.57"
+2025-12,LGA: dropped 2 stray figures beside the table
+2026-01,LGA: dropped 2 stray figures beside the table
+2026-01,LGA: BAUCHI TOTAL row has no label
+2026-02,LGA: dropped 2 stray figures beside the table
+2026-02,"LGA: known report error, KANO: TOTAL row's statutory allocation is N50 less than the councils"
+2026-03,LGA: dropped 1 stray figures beside the table
+2026-03,"LGA: known report error, KANO: TOTAL row's statutory allocation is N30 more than the councils"
+2026-05,"LGA: known report error, KANO: councils' Total Net Allocation column is wrong; the TOTAL row is right"

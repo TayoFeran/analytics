@@ -23,6 +23,8 @@ The OAGF PDFs are text, not scanned images, so the figures can be read exactly. 
    - **April 2023:** the PDF's state and LGA tables are a copy of February 2022. Only Table I is April 2023.
    - **September 2021:** the PDF shows each state's full ecology fund with no NDDC/HYPPADEC transfer, and its Total Gross leaves out derivation, so its totals don't add up. The Excel report applies the 50% transfer, as every other month does, and adds up.
 6. **Months are named by the month the money was shared** (the "shared in" month), as the refined files were.
+7. **LGAs come from the same reports**, one CSV file per month. Each state's councils must add up to the state's TOTAL row. Where the report's own figures don't add up, they are **kept as printed and flagged** (`known_report_errors.csv`), not corrected: there is no second source to correct them from. April 2023's LGAs come from its Excel report, like its state table.
+8. **September 2021 has no LGA figures.** Its Excel report has no LGA sheet, and its PDF LGA table doesn't add up for five states and the FCT (Zamfara has no TOTAL row at all). A gap is more honest than figures we can't check.
 
 ## What the checks found
 
@@ -38,6 +40,17 @@ Report quirks the refine script records in `notes.csv`:
 - The printed column formulas ("18=6+11+12+13+14") are often out of date. They are not used as checks.
 - Some state-table titles are stale (August 2022 says July 2022) or have a typo (September 2021 says 2022). Table I decides the month.
 - July 2025's Total row is blank for one column.
+
+## What the LGA checks found
+
+Every month lists 774 councils (the 36 states' councils and the FCT's 6 area councils). In 18 months, 44 state-months have councils that don't add up to the state's TOTAL row because of a mistake in the report. Kano is the most common (13 months). The mistakes are of a few kinds:
+
+- The councils' own Total Allocation column uses a wrong formula for some or all councils (for example leaving out a new revenue line, or taking another council's VAT), while the state's TOTAL row is right.
+- The state's TOTAL row has a wrong figure: a typo of ₦30-50, ₦18 million too much VAT, ₦79 million too much ecology, or one council left out.
+- A deduction printed with the wrong sign.
+- May 2023 is the worst month: the whole right half of its LGA table (Katsina to the FCT, 18 entries) prints a Total Allocation that isn't the sum of the row's own columns, for councils and TOTAL rows alike. The revenue lines themselves add up, so the total can be computed from them.
+
+Each is listed, with what is wrong, in `known_report_errors.csv`.
 
 ## Consequences
 
