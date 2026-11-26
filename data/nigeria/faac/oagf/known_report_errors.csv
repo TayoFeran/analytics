@@ -1,0 +1,45 @@
+shared_month,state,error
+2020-06,KANO,"TOTAL row's Total Allocation (N2.19bn) doesn't match its own columns (N6.36bn, as the councils add up)"
+2021-02,KANO,"councils 1-25 print the N58,259.97 deduction as positive and add it to their totals, and Kano's 44 councils don't add up to its TOTAL row in any column; the TOTAL row agrees with the LGA summary page"
+2021-03,KANO,"TOTAL row's VAT is N18,000,000 more than the councils add up to"
+2021-03,KATSINA,TOTAL row's ecological fund is N79.2m more than the councils add up to
+2021-05,KADUNA,"councils' Total Allocation uses other councils' VAT (from Makarfi on, council 1's, 2's and so on; Lere's includes N1.56bn); the TOTAL row is right"
+2021-05,KANO,"TOTAL row's deduction is N69.9m more than the councils', and its Total Allocation N69.9m less"
+2021-08,RIVERS,"TOTAL row leaves out council 1, Ahoada, in every column"
+2022-02,KANO,councils 1-25's Total Allocation leaves out the non-oil excess account and counts ecology twice; the TOTAL row is right
+2022-03,KANO,"councils 1-25 have the 50% ecology transfer to NDDC/HYPPADEC taken off, councils 26-44 and the TOTAL row don't"
+2022-03,KATSINA,councils' Total Allocation column is wrong; the TOTAL row is right
+2022-03,KEBBI,councils' Total Allocation column is wrong; the TOTAL row is right
+2022-03,KOGI,councils' Total Allocation column is wrong; the TOTAL row is right
+2022-10,ABIA,councils' Total Allocation leaves out the FOREX equalisation and EMTL columns; the TOTAL row includes them
+2022-10,KATSINA,councils' Total Allocation column is wrong; the TOTAL row is right
+2023-02,KANO,"councils' non-oil excess account figures are February 2022's, and the TOTAL row doesn't match the councils in that column and ecology"
+2023-03,KANO,councils 1-25's Total Allocation leaves out column 3 and counts ecology twice; the TOTAL row is right
+2023-05,AKWA IBOM,"TOTAL row's VAT is N345m, the councils add up to N2.15bn; its Total Allocation follows the wrong VAT"
+2023-05,ANAMBRA,TOTAL row's FOREX equalisation share is N137.4m more than the councils add up to
+2023-05,FCT,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,KANO,councils add up to N105.7m more than the TOTAL row in two columns and N600 less in a third
+2023-05,KATSINA,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,KEBBI,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,KOGI,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,KWARA,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,LAGOS,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,NASSARAWA,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,NIGER,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,OGUN,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,ONDO,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,OSUN,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,OYO,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,PLATEAU,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,RIVERS,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,SOKOTO,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,TARABA,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,YOBE,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-05,ZAMFARA,"Total Allocation column, in the right half of the LGA table, doesn't match the row's other columns for the councils or the TOTAL row"
+2023-07,BAUCHI,councils' Total Allocation column is wrong; the TOTAL row is right
+2023-08,ABIA,councils' Total Allocation column is wrong; the TOTAL row is right
+2023-09,ABIA,councils' Total Allocation column is wrong; the TOTAL row is right
+2023-11,KANO,councils' deductions add up to N582.6m more than the TOTAL row's
+2026-02,KANO,TOTAL row's statutory allocation is N50 less than the councils
+2026-03,KANO,TOTAL row's statutory allocation is N30 more than the councils
+2026-05,KANO,councils' Total Net Allocation column is wrong; the TOTAL row is right

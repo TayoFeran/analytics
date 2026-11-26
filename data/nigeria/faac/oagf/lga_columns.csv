@@ -1,0 +1,647 @@
+shared_month,position,column_id,column_header,header_key
+2020-01,1,1,Gross Statutory ncils Allocation,grossstatutoryncilsallocation
+2020-01,2,2,Deduction,deduction
+2020-01,3,3,Exchange Gain Difference,exchangegaindifference
+2020-01,4,4,Value Added Tax,valueaddedtax
+2020-01,5,5,Total Allocation,totalallocation
+2020-02,1,1,Gross Statutory ncils Allocation,grossstatutoryncilsallocation
+2020-02,2,2,Deduction,deduction
+2020-02,3,3,Exchange Gain Difference,exchangegaindifference
+2020-02,4,4,Distribution of Excess Bank Charges Recovered,distributionofexcessbankchargesrecovered
+2020-02,5,5,Distribution of 16.298 Billion from Non OilRevenue,distributionof16298billionfromnonoilrevenue
+2020-02,6,6,Value Added Tax,valueaddedtax
+2020-02,7,7,Total Allocation,totalallocation
+2020-03,1,1,nt Gross Statutory Allocation,ntgrossstatutoryallocation
+2020-03,2,2,Deduction,deduction
+2020-03,3,3,Exchange Gain Difference,exchangegaindifference
+2020-03,4,4,Distribution of '=N= 15.198 from FOREX Equalisation Account,distributionofn15198fromforexequalisationaccount
+2020-03,5,5,Value Added Tax,valueaddedtax
+2020-03,6,6,Total Allocation,totalallocation
+2020-04,1,1,Gross Statutory Allocation,grossstatutoryallocation
+2020-04,2,2,Deduction,deduction
+2020-04,3,3,Exchange Gain Difference,exchangegaindifference
+2020-04,4,4,Value Added Tax,valueaddedtax
+2020-04,5,5,### Total Allocation,totalallocation
+2020-05,1,1,Gross Statutory Allocation,grossstatutoryallocation
+2020-05,2,2,Deduction,deduction
+2020-05,3,3,Distri ExchangeGain Difference,distriexchangegaindifference
+2020-05,4,4,bution Details Excess Bank Charges,butiondetailsexcessbankcharges
+2020-05,5,5,of Revenue All SolidMinerals Distribution for the Month,ofrevenueallsolidmineralsdistributionforthemonth
+2020-05,6,6,ocation to Loca Distribution of 103 Billion for theMonth,ocationtolocadistributionof103billionforthemonth
+2020-05,7,7,l Government Value Added Tax,lgovernmentvalueaddedtax
+2020-05,8,8,T Councils by F ### Total Allocation,tcouncilsbyftotalallocation
+2020-06,1,1,Distrib Gross Statutory Allocation,distribgrossstatutoryallocation
+2020-06,2,2,ution Details Deduction,utiondetailsdeduction
+2020-06,3,3,of Revenue Allo ExchangeGain Difference E,ofrevenuealloexchangegaindifferencee
+2020-06,4,4,cation to Local xcess Bank Charges,cationtolocalxcessbankcharges
+2020-06,5,5,Government Co Value Added Tax,governmentcovalueaddedtax
+2020-06,6,6,uncils by Feder ### Total Allocation,uncilsbyfedertotalallocation
+2020-07,1,1,t Gross Statutory Allocation,tgrossstatutoryallocation
+2020-07,2,2,Distribution D Deduction E,distributionddeductione
+2020-07,3,3,etails of Revenue Al xchange Gain Difference,etailsofrevenuealxchangegaindifference
+2020-07,4,4,location to Local Go Distribution of 50 Billion from Non-Oil Revenue for theMonth,locationtolocalgodistributionof50billionfromnonoilrevenueforthemonth
+2020-07,5,5,vernment Cou Value Added Tax,vernmentcouvalueaddedtax
+2020-07,6,6,ncils by Federati ### Total Allocation,ncilsbyfederatitotalallocation
+2020-08,1,1,Gross Statutory Allocation,grossstatutoryallocation
+2020-08,2,2,Deduction,deduction
+2020-08,3,3,Value Added Tax,valueaddedtax
+2020-08,4,4,### Total Allocation,totalallocation
+2020-09,1,1,nt Gross Statutory Allocation,ntgrossstatutoryallocation
+2020-09,2,2,Deduction,deduction
+2020-09,3,3,Value Added Tax,valueaddedtax
+2020-09,4,4,### Total Allocation,totalallocation
+2020-10,1,1,ment Gross Statutory s Allocation,mentgrossstatutorysallocation
+2020-10,2,2,Deduction,deduction
+2020-10,3,3,Distribution of 72Billion Being FGN Intervention Fund,distributionof72billionbeingfgninterventionfund
+2020-10,4,4,Distribution of 39.542 FOREX,distributionof39542forex
+2020-10,5,5,Distribution of 45 Billion from Non-Oil Revenue,distributionof45billionfromnonoilrevenue
+2020-10,6,6,Value Added Tax,valueaddedtax
+2020-10,7,7,### Total Allocation,totalallocation
+2020-11,1,1,ss Statutory Allocation,ssstatutoryallocation
+2020-11,2,2,Deduction,deduction
+2020-11,3,3,Distribution of 72Billion Being FGN Intervention Fund,distributionof72billionbeingfgninterventionfund
+2020-11,4,4,Distribution of 20 Billion from Stablisation,distributionof20billionfromstablisation
+2020-11,5,5,Distribution of 7.392 FOREX,distributionof7392forex
+2020-11,6,6,Distribution of 1.001 Billion Being Excess Charges Recovered,distributionof1001billionbeingexcesschargesrecovered
+2020-11,7,7,Value Added Tax,valueaddedtax
+2020-11,8,8,### Total Allocation,totalallocation
+2020-12,1,1,Gross Statutory Allocation,grossstatutoryallocation
+2020-12,2,2,D F A Deduction,dfadeduction
+2020-12,3,3,istribution from OREX Equalisation ccount,istributionfromorexequalisationccount
+2020-12,4,4,Value Added Tax,valueaddedtax
+2020-12,5,5,### Total Allocation,totalallocation
+2021-01,1,1,ribution Details Gross Statutory Allocation,ributiondetailsgrossstatutoryallocation
+2021-01,2,2,of Revenue A Deduction,ofrevenueadeduction
+2021-01,3,3,llocation to L Exchange Gain Difference,llocationtolexchangegaindifference
+2021-01,4,4,ocal Governm Distribution from FOREXEqualisation Account,ocalgovernmdistributionfromforexequalisationaccount
+2021-01,5,5,ent Councils Value Added Tax,entcouncilsvalueaddedtax
+2021-01,6,6,by Federatio ### Total Allocation,byfederatiototalallocation
+2021-02,1,1,nt Gross Statutory Allocation,ntgrossstatutoryallocation
+2021-02,2,2,Deduction,deduction
+2021-02,3,3,Value Added Tax,valueaddedtax
+2021-02,4,4,### Total Allocation,totalallocation
+2021-03,1,1,Gross Statutory Allocation =N=,grossstatutoryallocationn
+2021-03,2,2,Deduction =N=,deductionn
+2021-03,3,3,FOREX Equalization for the Month =N=,forexequalizationforthemonthn
+2021-03,4,4,Distribution of Excess Bank Charges for the Month =N=,distributionofexcessbankchargesforthemonthn
+2021-03,5,5,Ecological Fund =N=,ecologicalfundn
+2021-03,6,6,Value Added Tax =N=,valueaddedtaxn
+2021-03,7,7,### Total Allocation =N=,totalallocationn
+2021-04,1,1,Gross Statutory Allocation,grossstatutoryallocation
+2021-04,2,2,D B E Deduction M,dbedeductionm
+2021-04,3,3,istribution of =N=30 illion from Non- Oil xcess Account for the onth,istributionofn30illionfromnonoilxcessaccountfortheonth
+2021-04,4,4,Exchange Gain Difference,exchangegaindifference
+2021-04,5,5,Total Ecology Fund Allocation,totalecologyfundallocation
+2021-04,6,6,Value Added Tax,valueaddedtax
+2021-04,7,7,Total Allocation,totalallocation
+2021-05,1,1,Gross Statutory Allocation =N=,grossstatutoryallocationn
+2021-05,2,2,Dis Deduction =N=,disdeductionn
+2021-05,3,3,tribution Deta Distribution of Excess Bank Charges for the Month =N=,tributiondetadistributionofexcessbankchargesforthemonthn
+2021-05,4,4,ils of Revenue EXCHANGE DIFFERENCE =N=,ilsofrevenueexchangedifferencen
+2021-05,5,5,"Allocation to TotalEcological Funds =N= 2,656,691.66",allocationtototalecologicalfundsn265669166
+2021-05,6,6,Local Govern Distribution of =N=20Billion from Non Oil =N=,localgoverndistributionofn20billionfromnonoiln
+2021-05,7,7,ment Counc Value Added Tax =N=,mentcouncvalueaddedtaxn
+2021-05,8,8,T ils by Federat ### Total Allocation =N=,tilsbyfederattotalallocationn
+2021-06,1,1,nt GrossStatutory Allocation,ntgrossstatutoryallocation
+2021-06,2,2,Deduction,deduction
+2021-06,3,3,Distribution of 50 Billion from Non-Oil ExcessAccount,distributionof50billionfromnonoilexcessaccount
+2021-06,4,4,D istribution of 20 Billion fromNon-Oil Excess Account,distributionof20billionfromnonoilexcessaccount
+2021-06,5,5,D istribution of 7.940 from Solid Minerals Revenue,distributionof7940fromsolidmineralsrevenue
+2021-06,6,6,Exchange Gain D ifference,exchangegaindifference
+2021-06,7,7,Total Ecology Fund,totalecologyfund
+2021-06,8,8,Value Added Tax,valueaddedtax
+2021-06,9,9,### Total Allocation,totalallocation
+2021-07,1,1,Net Statutory Allocation =N=,netstatutoryallocationn
+2021-07,2,2,Deduction =N=,deductionn
+2021-07,3,3,EXCHANGE DIFFERENCE =N=,exchangedifferencen
+2021-07,4,4,TotalEcological Funds =N=,totalecologicalfundsn
+2021-07,5,5,Transfer of 50%Ecology to HYPADDEC =N=,transferof50%ecologytohypaddecn
+2021-07,6,6,Net Ecological Funds =N=,netecologicalfundsn
+2021-07,7,7,Value Added Tax =N=,valueaddedtaxn
+2021-07,8,8,### Total Allocation =N=,totalallocationn
+2021-08,1,1,Net Statutory Allocation =N=,netstatutoryallocationn
+2021-08,2,2,Distrib Deduction =N=,distribdeductionn
+2021-08,3,3,ution Details EXCHANGE DIFFERENCE =N=,utiondetailsexchangedifferencen
+2021-08,4,4,of Revenue Al Total Ecological Funds =N=,ofrevenuealtotalecologicalfundsn
+2021-08,5,5,location to L Transfer of 50%Ecology to HYPADDEC =N=,locationtoltransferof50%ecologytohypaddecn
+2021-08,6,6,ocal Governm Net Ecological Funds =N=,ocalgovernmnetecologicalfundsn
+2021-08,7,7,ent Councils Value Added Tax =N=,entcouncilsvalueaddedtaxn
+2021-08,8,8,T by Federation ### Total Allocation =N=,tbyfederationtotalallocationn
+2021-10,1,1,Net Statutory A llocation =N=,netstatutoryallocationn
+2021-10,2,2,Deduction =N=,deductionn
+2021-10,3,3,EXCHANGE DIFFERENCE =N=,exchangedifferencen
+2021-10,4,4,Distrib Total Ecological Funds =N=,distribtotalecologicalfundsn
+2021-10,5,5,ution Details ofReve Transfer of 50% Share of Ecology to NDDC/HYPPADEC =N=,utiondetailsofrevetransferof50%shareofecologytonddchyppadecn
+2021-10,6,6,nue Allocation to Loc Net Share of Ecology =N=,nueallocationtolocnetshareofecologyn
+2021-10,7,7,al GovernmentCounci Value Added Tax =N=,algovernmentcouncivalueaddedtaxn
+2021-10,8,8,ls by Federation Acco ### Total NetAllocation =N=,lsbyfederationaccototalnetallocationn
+2021-11,1,1,Net Statutory A llocation =N=,netstatutoryallocationn
+2021-11,2,2,D B Deduction E =N=,dbdeductionen
+2021-11,3,3,istr ibutionof 100 illion from Non-Oil xcessAccount =N=,istributionof100illionfromnonoilxcessaccountn
+2021-11,4,4,Distr ibutionof 50 Billion from Non-Oil ExcessAccount =N=,distributionof50billionfromnonoilexcessaccountn
+2021-11,5,5,Distribution Exchange Difference =N=,distributionexchangedifferencen
+2021-11,6,6,Details of Reven Total Ecological Fund s =N=,detailsofreventotalecologicalfundsn
+2021-11,7,7,ue Allocation to Transfer of 50% Share of Ecology to NDDC/HYPPADEC =N=,ueallocationtotransferof50%shareofecologytonddchyppadecn
+2021-11,8,8,Local Govern Net Share of Ecology =N=,localgovernnetshareofecologyn
+2021-11,9,9,ment Councils Value Added Tax =N=,mentcouncilsvalueaddedtaxn
+2021-11,10,10,by Federation Total Allocation =N=,byfederationtotalallocationn
+2021-12,1,1,Net Statutory Allocation =N=,netstatutoryallocationn
+2021-12,2,2,Deduction =N=,deductionn
+2021-12,3,3,Distribu EXCHANGE DIFFERENCE =N=,distribuexchangedifferencen
+2021-12,4,4,tion Details o Distribution ofExcess Bank Charges for the Month =N=,tiondetailsodistributionofexcessbankchargesforthemonthn
+2021-12,5,5,f Revenue All Total Ecological Funds =N=,frevenuealltotalecologicalfundsn
+2021-12,6,6,ocation to Loc Transfer of 50% Share of Ecology to NDDC/HYPPADEC =N=,ocationtoloctransferof50%shareofecologytonddchyppadecn
+2021-12,7,7,al Governme Net Share of Ecology =N=,algovernmenetshareofecologyn
+2021-12,8,8,nt Councils b Value Added Tax =N=,ntcouncilsbvalueaddedtaxn
+2021-12,9,9,Ta y Federation ### Total Allocation =N=,tayfederationtotalallocationn
+2022-01,1,1,Net Statutory Allocation,netstatutoryallocation
+2022-01,2,2,Deduction,deduction
+2022-01,3,3,EXCHANGE DIFFERENCE,exchangedifference
+2022-01,4,4,TotalEcological Funds,totalecologicalfunds
+2022-01,5,5,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-01,6,6,Net Share of Ecology,netshareofecology
+2022-01,7,7,Value Added Tax,valueaddedtax
+2022-01,8,8,### Total Net Allocation,totalnetallocation
+2022-02,1,1,Net Statutory Allocation,netstatutoryallocation
+2022-02,2,2,Deduction,deduction
+2022-02,3,3,Distribution of 100 Billion from Non-Oil Excess Account,distributionof100billionfromnonoilexcessaccount
+2022-02,4,4,EXCHANGE DIFFERENCE,exchangedifference
+2022-02,5,5,Total Ecological Funds,totalecologicalfunds
+2022-02,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-02,7,7,Net Share of Ecology,netshareofecology
+2022-02,8,8,Value Added Tax,valueaddedtax
+2022-02,9,9,### Total Allocation,totalallocation
+2022-03,1,1,Net Statutory Allocation,netstatutoryallocation
+2022-03,2,2,Deduction,deduction
+2022-03,3,3,Distribution of 80 Billion from Non-Oil Excess Account,distributionof80billionfromnonoilexcessaccount
+2022-03,4,4,Excess Bank Charges,excessbankcharges
+2022-03,5,5,Total Ecological Funds,totalecologicalfunds
+2022-03,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-03,7,7,Net Share of Ecology,netshareofecology
+2022-03,8,8,Value Added Tax,valueaddedtax
+2022-03,9,9,### Total Allocation,totalallocation
+2022-04,1,1,NetStatutory Allocation,netstatutoryallocation
+2022-04,2,2,Deduction,deduction
+2022-04,3,3,Total Ecological Funds,totalecologicalfunds
+2022-04,4,4,Transfer of50% Share ofEcology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-04,5,5,Net Share of Ecology,netshareofecology
+2022-04,6,6,Value Added Tax,valueaddedtax
+2022-04,7,7,### Total Allocation,totalallocation
+2022-05,1,1,Net Statutory Allocation,netstatutoryallocation
+2022-05,2,2,Deduction,deduction
+2022-05,3,3,Distribution of 20 Billion from Non-Oil Excess Account,distributionof20billionfromnonoilexcessaccount
+2022-05,4,4,Excess Bank Charges,excessbankcharges
+2022-05,5,5,Total Ecological Funds,totalecologicalfunds
+2022-05,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-05,7,7,Net Share of Ecology,netshareofecology
+2022-05,8,8,Value Added Tax,valueaddedtax
+2022-05,9,9,### Total Allocation,totalallocation
+2022-06,1,1,Net Statutory Allocation,netstatutoryallocation
+2022-06,2,2,Deduction,deduction
+2022-06,3,3,Electronic Money Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2022-06,4,4,TotalEcological Funds,totalecologicalfunds
+2022-06,5,5,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-06,6,6,Net Share of Ecology,netshareofecology
+2022-06,7,7,Value Added Tax,valueaddedtax
+2022-06,8,8,### Total Allocation,totalallocation
+2022-07,1,1,Net Statutory Allocation,netstatutoryallocation
+2022-07,2,2,Deduction,deduction
+2022-07,3,3,TotalEcological Funds,totalecologicalfunds
+2022-07,4,4,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-07,5,5,Net Share of Ecology,netshareofecology
+2022-07,6,6,Value Added Tax,valueaddedtax
+2022-07,7,7,### Total Allocation,totalallocation
+2022-08,1,1,NetStatutory Allocation,netstatutoryallocation
+2022-08,2,2,Deduction,deduction
+2022-08,3,3,Total Ecological Funds,totalecologicalfunds
+2022-08,4,4,Transfer of50% Share ofEcology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-08,5,5,Net Share of Ecology,netshareofecology
+2022-08,6,6,Value Added Tax,valueaddedtax
+2022-08,7,7,### Total Allocation,totalallocation
+2022-09,1,1,Net Statutory Allocation,netstatutoryallocation
+2022-09,2,2,Deduction,deduction
+2022-09,3,3,TotalEcological Funds,totalecologicalfunds
+2022-09,4,4,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-09,5,5,Net Share of Ecology,netshareofecology
+2022-09,6,6,Distribution of =N=20Billion from Non Oil =N=,distributionofn20billionfromnonoiln
+2022-09,7,7,Value Added Tax,valueaddedtax
+2022-09,8,8,### Total Allocation,totalallocation
+2022-10,1,1,Net Statutory Allocation,netstatutoryallocation
+2022-10,2,2,Deduction,deduction
+2022-10,3,3,"Distribution of =N=60 billion from Non Oil fo r the month ofO ctober, 2022",distributionofn60billionfromnonoilforthemonthofoctober2022
+2022-10,4,4,Electronic Money Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2022-10,5,5,Total Ecological Funds,totalecologicalfunds
+2022-10,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-10,7,7,Net Share of Ecology,netshareofecology
+2022-10,8,8,Value Added Tax,valueaddedtax
+2022-10,9,9,### Total Allocation,totalallocation
+2022-11,1,1,Net Statutory Allocation,netstatutoryallocation
+2022-11,2,2,Deduction t,deductiont
+2022-11,3,3,Distributionof 70 billion fromnon oil for hemonth ofNovember,distributionof70billionfromnonoilforhemonthofnovember
+2022-11,4,4,Distribution of 30 billion fromnonoil for the month ofNovember,distributionof30billionfromnonoilforthemonthofnovember
+2022-11,5,5,Distribution of Exchange Gain for themonth of November,distributionofexchangegainforthemonthofnovember
+2022-11,6,6,Total Ecological Funds,totalecologicalfunds
+2022-11,7,7,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-11,8,8,Net Share of Ecology,netshareofecology
+2022-11,9,9,Value Added Tax,valueaddedtax
+2022-11,10,10,### Net Allocation,netallocation
+2022-12,1,1,Net Statutory Allocation,netstatutoryallocation
+2022-12,2,2,E Deduction,ededuction
+2022-12,3,3,Distribution of xchange Gain for the month ofDecember,distributionofxchangegainforthemonthofdecember
+2022-12,4,4,Electronic Money Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2022-12,5,5,Total Ecological Funds,totalecologicalfunds
+2022-12,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2022-12,7,7,Net Share of Ecology,netshareofecology
+2022-12,8,8,Value Added Tax,valueaddedtax
+2022-12,9,9,### Total Allocation,totalallocation
+2023-01,1,1,Net Statutory Allocation,netstatutoryallocation
+2023-01,2,2,Deduction,deduction
+2023-01,3,3,Distribution of Exchange Gain for the month of December,distributionofexchangegainforthemonthofdecember
+2023-01,4,4,Electronic Money Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-01,5,5,Total Ecological Funds,totalecologicalfunds
+2023-01,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-01,7,7,Net Share of Ecology,netshareofecology
+2023-01,8,8,Value Added Tax,valueaddedtax
+2023-01,9,9,Total Allocation,totalallocation
+2023-02,1,1,Net Statutory Allocation,netstatutoryallocation
+2023-02,2,2,Deduction,deduction
+2023-02,3,3,Distribution of 100 Billion from Non-Oil Excess Account,distributionof100billionfromnonoilexcessaccount
+2023-02,4,4,Distribution of 15 Billion from Non-Oil Excess Account,distributionof15billionfromnonoilexcessaccount
+2023-02,5,5,Electronic money Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-02,6,6,Total Ecological Funds,totalecologicalfunds
+2023-02,7,7,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-02,8,8,Net Share of Ecology,netshareofecology
+2023-02,9,9,Value Added Tax,valueaddedtax
+2023-02,10,10,Total Allocation,totalallocation
+2023-03,1,1,Net Statutory Allocation,netstatutoryallocation
+2023-03,2,2,Deduction,deduction
+2023-03,3,3,Distribution of 120 Billion from FOREX Equalisation,distributionof120billionfromforexequalisation
+2023-03,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-03,5,5,TotalEcological Funds,totalecologicalfunds
+2023-03,6,6,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-03,7,7,Net Share of Ecology,netshareofecology
+2023-03,8,8,Value Added Tax,valueaddedtax
+2023-03,9,9,TotalAllocation,totalallocation
+2023-04,1,1,Net Statutory Allocation,netstatutoryallocation
+2023-04,2,2,Deduction,deduction
+2023-04,3,3,Electronic Money Transfer Levy,electronicmoneytransferlevy
+2023-04,4,4,Total Ecological Funds,totalecologicalfunds
+2023-04,5,5,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-04,6,6,Net Share of Ecology,netshareofecology
+2023-04,7,7,Value Added Tax,valueaddedtax
+2023-04,8,8,Total Allocation,totalallocation
+2023-05,1,1,Net Statutory Allocation,netstatutoryallocation
+2023-05,2,2,Deduction,deduction
+2023-05,3,3,Distribution of 24 Billion fromNon-Oil Excess Account,distributionof24billionfromnonoilexcessaccount
+2023-05,4,4,Distribution of 10 Billion fromNon-Oil Excess Account,distributionof10billionfromnonoilexcessaccount
+2023-05,5,5,Distribution of 50 Billion from Forex Equalisation Account,distributionof50billionfromforexequalisationaccount
+2023-05,6,6,Distribution of 20 Billion from Forex Equalisation Account,distributionof20billionfromforexequalisationaccount
+2023-05,7,7,SolidMineral Distribution,solidmineraldistribution
+2023-05,8,8,FGN Treasury Crude Account,fgntreasurycrudeaccount
+2023-05,9,9,Distribution of 15.121 Billion being Electronic Money Transfer Levy (EMTL) for May 2023,distributionof15121billionbeingelectronicmoneytransferlevyemtlformay2023
+2023-05,10,10,Distribution of 80.400 Billion being Electronic Money Transfer Levy (EMTL) January to August 2022,distributionof80400billionbeingelectronicmoneytransferlevyemtljanuarytoaugust2022
+2023-05,11,11,Total Ecology Fund,totalecologyfund
+2023-05,12,12,Transfer of 50% Share ofEcology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-05,13,13,Net Share ofEcology,netshareofecology
+2023-05,14,14,Value Added Tax,valueaddedtax
+2023-05,15,15,Total Allocation,totalallocation
+2023-06,1,1,Net Statutory Allocation,netstatutoryallocation
+2023-06,2,2,Deduction,deduction
+2023-06,3,3,Exchange Rate Differential,exchangeratedifferential
+2023-06,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-06,5,5,EXCHANGE DIFFERENCE,exchangedifference
+2023-06,6,6,Total Ecological Funds,totalecologicalfunds
+2023-06,7,7,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-06,8,8,Net Share of Ecology,netshareofecology
+2023-06,9,9,Value Added Tax,valueaddedtax
+2023-06,10,10,Total Allocation,totalallocation
+2023-07,1,1,Net Statutory Allocation,netstatutoryallocation
+2023-07,2,2,Deduction,deduction
+2023-07,3,3,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-07,4,4,EXCHANGE DIFFERENCE,exchangedifference
+2023-07,5,5,TotalEcological Funds,totalecologicalfunds
+2023-07,6,6,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-07,7,7,Net Share of Ecology,netshareofecology
+2023-07,8,8,Value Added Tax,valueaddedtax
+2023-07,9,9,TotalAllocation,totalallocation
+2023-08,1,1,Net StatutoryAllocation,netstatutoryallocation
+2023-08,2,2,Deduction,deduction
+2023-08,3,3,Exchange Rate Differential,exchangeratedifferential
+2023-08,4,4,Exchange Gain,exchangegain
+2023-08,5,5,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-08,6,6,Total Ecological Funds,totalecologicalfunds
+2023-08,7,7,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-08,8,8,Net Share of Ecology,netshareofecology
+2023-08,9,9,Value Added Tax,valueaddedtax
+2023-08,10,10,Total Allocation,totalallocation
+2023-09,1,1,Net Statutory Allocation,netstatutoryallocation
+2023-09,2,2,Deduction,deduction
+2023-09,3,3,"Distribution of 177.092 Billion fromnon oil for the month of September, 2023",distributionof177092billionfromnonoilforthemonthofseptember2023
+2023-09,4,4,Exchange Gain,exchangegain
+2023-09,5,5,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2023-09,6,6,TotalEcological Funds,totalecologicalfunds
+2023-09,7,7,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-09,8,8,Net Share of Ecology,netshareofecology
+2023-09,9,9,Value AddedTax,valueaddedtax
+2023-09,10,10,TotalAllocation,totalallocation
+2023-10,1,1,Net StatutoryAllocation,netstatutoryallocation
+2023-10,2,2,Deduction,deduction
+2023-10,3,3,Distribution of Exchange Gain for the Month of October 2023,distributionofexchangegainforthemonthofoctober2023
+2023-10,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2023-10,5,5,TOTAL Share of Ecology,totalshareofecology
+2023-10,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-10,7,7,Net Share of Ecology,netshareofecology
+2023-10,8,8,Value Added Tax,valueaddedtax
+2023-10,9,9,Total Allocation,totalallocation
+2023-11,1,1,Net Statutory Allocation,netstatutoryallocation
+2023-11,2,2,Deduction,deduction
+2023-11,3,3,Exchange Gain,exchangegain
+2023-11,4,4,Distribution of 60Billion fromNon-Oil Revenue,distributionof60billionfromnonoilrevenue
+2023-11,5,5,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2023-11,6,6,TOTAL Share of Ecology,totalshareofecology
+2023-11,7,7,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-11,8,8,Net Share of Ecology,netshareofecology
+2023-11,9,9,Value AddedTax,valueaddedtax
+2023-11,10,10,TotalAllocation,totalallocation
+2023-12,1,1,Net StatutoryAllocation,netstatutoryallocation
+2023-12,2,2,Deduction,deduction
+2023-12,3,3,Exchange Gain,exchangegain
+2023-12,4,4,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2023-12,5,5,TOTAL Share of Ecology,totalshareofecology
+2023-12,6,6,Transferof 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2023-12,7,7,Net Share of Ecology,netshareofecology
+2023-12,8,8,Value AddedTax,valueaddedtax
+2023-12,9,9,TotalAllocation,totalallocation
+2024-01,1,1,Net StatutoryAllocation,netstatutoryallocation
+2024-01,2,2,Deduction,deduction
+2024-01,3,3,Exchange Gain,exchangegain
+2024-01,4,4,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2024-01,5,5,TOTAL Share of Ecology,totalshareofecology
+2024-01,6,6,Transferof 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-01,7,7,Net Share of Ecology,netshareofecology
+2024-01,8,8,Value AddedTax,valueaddedtax
+2024-01,9,9,TotalAllocation,totalallocation
+2024-02,1,1,Net StatutoryAllocation,netstatutoryallocation
+2024-02,2,2,Deduction,deduction
+2024-02,3,3,Exchange Gain,exchangegain
+2024-02,4,4,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2024-02,5,5,TOTAL Share of Ecology,totalshareofecology
+2024-02,6,6,Transferof 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-02,7,7,Net Share of Ecology,netshareofecology
+2024-02,8,8,Value AddedTax,valueaddedtax
+2024-02,9,9,TotalAllocation,totalallocation
+2024-03,1,1,Net Statutory Allocation,netstatutoryallocation
+2024-03,2,2,Deduction,deduction
+2024-03,3,3,Exchange Gain,exchangegain
+2024-03,4,4,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2024-03,5,5,TOTAL Share of Ecology,totalshareofecology
+2024-03,6,6,Transferof 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-03,7,7,Net Share of Ecology,netshareofecology
+2024-03,8,8,Value AddedTax,valueaddedtax
+2024-03,9,9,TotalAllocation,totalallocation
+2024-04,1,1,Net StatutoryAllocation,netstatutoryallocation
+2024-04,2,2,Deduction,deduction
+2024-04,3,3,Exchange Gain,exchangegain
+2024-04,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-04,5,5,TOTAL Share of Ecology,totalshareofecology
+2024-04,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-04,7,7,Net Share of Ecology,netshareofecology
+2024-04,8,8,Value Added Tax,valueaddedtax
+2024-04,9,9,TotalAllocation,totalallocation
+2024-05,1,1,Net Statutory Allocation,netstatutoryallocation
+2024-05,2,2,Deduction,deduction
+2024-05,3,3,Exchange Gain,exchangegain
+2024-05,4,4,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2024-05,5,5,TOTAL Share of Ecology,totalshareofecology
+2024-05,6,6,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-05,7,7,Net Share of Ecology,netshareofecology
+2024-05,8,8,Value AddedTax,valueaddedtax
+2024-05,9,9,TotalAllocation,totalallocation
+2024-06,1,1,Net StatutoryAllocation,netstatutoryallocation
+2024-06,2,2,Deduction,deduction
+2024-06,3,3,Exchange Gain,exchangegain
+2024-06,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-06,5,5,TOTAL Share of Ecology,totalshareofecology
+2024-06,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-06,7,7,Net Share of Ecology,netshareofecology
+2024-06,8,8,Value Added Tax,valueaddedtax
+2024-06,9,9,TotalAllocation,totalallocation
+2024-07,1,1,Net StatutoryAllocation,netstatutoryallocation
+2024-07,2,2,Deduction,deduction
+2024-07,3,3,Exchange Gain,exchangegain
+2024-07,4,4,Distribution of 200Billion fromNon- Oil Excess Account for theMonth of July 2024,distributionof200billionfromnonoilexcessaccountforthemonthofjuly2024
+2024-07,5,5,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-07,6,6,TOTAL Share of Ecology,totalshareofecology
+2024-07,7,7,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-07,8,8,Net Share of Ecology,netshareofecology
+2024-07,9,9,Value Added Tax,valueaddedtax
+2024-07,10,10,Total Allocation,totalallocation
+2024-08,1,1,Net Statutory Allocation,netstatutoryallocation
+2024-08,2,2,Deduction,deduction
+2024-08,3,3,Exchange Gain,exchangegain
+2024-08,4,4,SolidMineral,solidmineral
+2024-08,5,5,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-08,6,6,TOTAL Share of Ecology,totalshareofecology
+2024-08,7,7,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-08,8,8,Net Share of Ecology,netshareofecology
+2024-08,9,9,Value Added Tax,valueaddedtax
+2024-08,10,10,Total Allocation,totalallocation
+2024-09,1,1,Net Statutory Allocation,netstatutoryallocation
+2024-09,2,2,Deduction,deduction
+2024-09,3,3,ExchangeGain,exchangegain
+2024-09,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-09,5,5,TOTAL Share of Ecology,totalshareofecology
+2024-09,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-09,7,7,Net Share of Ecology,netshareofecology
+2024-09,8,8,Value Added Tax,valueaddedtax
+2024-09,9,9,TotalAllocation,totalallocation
+2024-10,1,1,Net Statutory Allocation,netstatutoryallocation
+2024-10,2,2,Deduction,deduction
+2024-10,3,3,ExchangeGain,exchangegain
+2024-10,4,4,Distribution of 150Billion fromNon- OilRevenue for the Month,distributionof150billionfromnonoilrevenueforthemonth
+2024-10,5,5,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-10,6,6,TOTAL Share of Ecology,totalshareofecology
+2024-10,7,7,Transfer of 50% Share ofEcology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-10,8,8,Net Share ofEcology,netshareofecology
+2024-10,9,9,Value Added Tax,valueaddedtax
+2024-10,10,10,TotalNet Allocation,totalnetallocation
+2024-11,1,1,Net StatutoryAllocation,netstatutoryallocation
+2024-11,2,2,ExchangeGain,exchangegain
+2024-11,3,3,Distribution of 100Billion from Non- Oil Revenue for the Month,distributionof100billionfromnonoilrevenueforthemonth
+2024-11,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-11,5,5,TOTAL Share of Ecology,totalshareofecology
+2024-11,6,6,Transfer of 50%Share ofEcology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-11,7,7,Net Share ofEcology,netshareofecology
+2024-11,8,8,ValueAdded Tax,valueaddedtax
+2024-11,9,9,TotalNetAllocation,totalnetallocation
+2024-12,1,1,Net Statutory Allocation,netstatutoryallocation
+2024-12,2,2,Deduction,deduction
+2024-12,3,3,Exchange Gain,exchangegain
+2024-12,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2024-12,5,5,TOTAL Share of Ecology,totalshareofecology
+2024-12,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2024-12,7,7,Net Share of Ecology,netshareofecology
+2024-12,8,8,Value Added Tax,valueaddedtax
+2024-12,9,9,TotalNet Allocation,totalnetallocation
+2025-01,1,1,Net Statutory Allocation,netstatutoryallocation
+2025-01,2,2,Deduction,deduction
+2025-01,3,3,Exchange Gain,exchangegain
+2025-01,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-01,5,5,TOTAL Share of Ecology,totalshareofecology
+2025-01,6,6,Transfer of Share of Ecology to NDDC/HYPPADEC,transferofshareofecologytonddchyppadec
+2025-01,7,7,Net Share of Ecology,netshareofecology
+2025-01,8,8,Value Added Tax,valueaddedtax
+2025-01,9,9,TotalNet Allocation,totalnetallocation
+2025-02,1,1,Net Statutory Allocation,netstatutoryallocation
+2025-02,2,2,Deduction,deduction
+2025-02,3,3,"Augmentation of ' 214Billion for the month of February, 2025",augmentationof214billionforthemonthoffebruary2025
+2025-02,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-02,5,5,TOTAL Share of Ecology,totalshareofecology
+2025-02,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-02,7,7,Net Share of Ecology,netshareofecology
+2025-02,8,8,Value Added Tax,valueaddedtax
+2025-02,9,9,TotalNet Allocation,totalnetallocation
+2025-03,1,1,Net StatutoryAllocation,netstatutoryallocation
+2025-03,2,2,"Augmentation of ' 178Billion from Non Oil Revenue for themonth of March, 2025",augmentationof178billionfromnonoilrevenueforthemonthofmarch2025
+2025-03,3,3,"Distribution of 28.218 Billion from SolidMineral Revenue for the Month ofMarch,",distributionof28218billionfromsolidmineralrevenueforthemonthofmarch
+2025-03,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-03,5,5,TOTAL Share of Ecology,totalshareofecology
+2025-03,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-03,7,7,Net Share of Ecology,netshareofecology
+2025-03,8,8,Value Added Tax,valueaddedtax
+2025-03,9,9,TotalNet Allocation,totalnetallocation
+2025-04,1,1,Net StatutoryAllocation,netstatutoryallocation
+2025-04,2,2,Deduction,deduction
+2025-04,3,3,ExchangeGain Allocation,exchangegainallocation
+2025-04,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-04,5,5,TOTAL Share of Ecology,totalshareofecology
+2025-04,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-04,7,7,Net Share of Ecology,netshareofecology
+2025-04,8,8,Value Added Tax,valueaddedtax
+2025-04,9,9,TotalNet Allocation,totalnetallocation
+2025-05,1,1,Net StatutoryAllocation,netstatutoryallocation
+2025-05,2,2,Deduction,deduction
+2025-05,3,3,ExchangeGain Allocation,exchangegainallocation
+2025-05,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-05,5,5,TOTAL Share of Ecology,totalshareofecology
+2025-05,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-05,7,7,Net Share of Ecology,netshareofecology
+2025-05,8,8,Value Added Tax,valueaddedtax
+2025-05,9,9,TotalNet Allocation,totalnetallocation
+2025-06,1,1,Net StatutoryAllocation,netstatutoryallocation
+2025-06,2,2,Deduction,deduction
+2025-06,3,3,ExchangeGain Allocation,exchangegainallocation
+2025-06,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-06,5,5,TOTAL Share of Ecology,totalshareofecology
+2025-06,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-06,7,7,Net Share of Ecology,netshareofecology
+2025-06,8,8,Value Added Tax,valueaddedtax
+2025-06,9,9,TotalNet Allocation,totalnetallocation
+2025-07,1,1,Net StatutoryAllocation,netstatutoryallocation
+2025-07,2,2,Deduction,deduction
+2025-07,3,3,Exchange Gain Allocation,exchangegainallocation
+2025-07,4,4,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-07,5,5,Augmentation of 100B from Non- Oil Revenue,augmentationof100bfromnonoilrevenue
+2025-07,6,6,TOTAL Share of Ecology,totalshareofecology
+2025-07,7,7,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-07,8,8,Net Share of Ecology,netshareofecology
+2025-07,9,9,Value Added Tax,valueaddedtax
+2025-07,10,10,Total Net Allocation,totalnetallocation
+2025-08,1,1,Net Statutory Allocation,netstatutoryallocation
+2025-08,2,2,Deduction,deduction
+2025-08,3,3,Exchange Gain Allocation,exchangegainallocation
+2025-08,4,4,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2025-08,5,5,TOTAL Share of Ecology,totalshareofecology
+2025-08,6,6,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-08,7,7,Net Share of Ecology,netshareofecology
+2025-08,8,8,Value AddedTax,valueaddedtax
+2025-08,9,9,TotalNet Allocation,totalnetallocation
+2025-09,1,1,Net Statutory Allocation,netstatutoryallocation
+2025-09,2,2,Deduction,deduction
+2025-09,3,3,Exchange Gain Allocation,exchangegainallocation
+2025-09,4,4,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2025-09,5,5,TOTAL Share of Ecology,totalshareofecology
+2025-09,6,6,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-09,7,7,Net Share of Ecology,netshareofecology
+2025-09,8,8,Value AddedTax,valueaddedtax
+2025-09,9,9,TotalNet Allocation,totalnetallocation
+2025-10,1,1,Net Statutory Allocation,netstatutoryallocation
+2025-10,2,2,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-10,3,3,TOTAL Share of Ecology,totalshareofecology
+2025-10,4,4,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-10,5,5,Net Share of Ecology,netshareofecology
+2025-10,6,6,ValueAdded Tax,valueaddedtax
+2025-10,7,7,Total NetAllocation,totalnetallocation
+2025-11,1,1,Net Statutory Allocation,netstatutoryallocation
+2025-11,2,2,ElectronicMoney TransferLevy (EMTL),electronicmoneytransferlevyemtl
+2025-11,3,3,TOTAL Share of Ecology,totalshareofecology
+2025-11,4,4,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-11,5,5,Net Share of Ecology,netshareofecology
+2025-11,6,6,Value AddedTax,valueaddedtax
+2025-11,7,7,TotalNet Allocation,totalnetallocation
+2025-12,1,1,Net Statutory Allocation,netstatutoryallocation
+2025-12,2,2,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2025-12,3,3,TOTAL Share of Ecology,totalshareofecology
+2025-12,4,4,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2025-12,5,5,Net Share of Ecology,netshareofecology
+2025-12,6,6,ValueAdded Tax,valueaddedtax
+2025-12,7,7,Total NetAllocation,totalnetallocation
+2026-01,1,1,Net Statutory Allocation,netstatutoryallocation
+2026-01,2,2,ElectronicMoney Transfer Levy (EMTL),electronicmoneytransferlevyemtl
+2026-01,3,3,TOTAL Share of Ecology,totalshareofecology
+2026-01,4,4,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-01,5,5,Net Share of Ecology,netshareofecology
+2026-01,6,6,ValueAdded Tax,valueaddedtax
+2026-01,7,7,Total NetAllocation,totalnetallocation
+2026-02,1,1,Net Statutory Allocation,netstatutoryallocation
+2026-02,2,2,Augmentation of 100B fromNon-Oil Revenue,augmentationof100bfromnonoilrevenue
+2026-02,3,3,TOTAL Share of Ecology,totalshareofecology
+2026-02,4,4,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-02,5,5,Net Share of Ecology,netshareofecology
+2026-02,6,6,ValueAdded Tax,valueaddedtax
+2026-02,7,7,Total NetAllocation,totalnetallocation
+2026-03,1,1,Net StatutoryAllocation,netstatutoryallocation
+2026-03,2,2,TOTAL Share of Ecology,totalshareofecology
+2026-03,3,3,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-03,4,4,Net Share of Ecology,netshareofecology
+2026-03,5,5,Value Added Tax,valueaddedtax
+2026-03,6,6,Total Net Allocation,totalnetallocation
+2026-04,1,1,Net Statutory Allocation,netstatutoryallocation
+2026-04,2,2,Deduction,deduction
+2026-04,3,3,"Augmentation of 200 Billion for the month of April, 2025",augmentationof200billionforthemonthofapril2025
+2026-04,4,4,"Distribution from Solid Minerals Revenue for theMonth of April, 2025",distributionfromsolidmineralsrevenueforthemonthofapril2025
+2026-04,5,5,TOTAL Share of Ecology,totalshareofecology
+2026-04,6,6,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-04,7,7,Net Share of Ecology,netshareofecology
+2026-04,8,8,Value Added Tax,valueaddedtax
+2026-04,9,9,TotalNet Allocation,totalnetallocation
+2026-05,1,1,Net Statutory Allocation,netstatutoryallocation
+2026-05,2,2,Deduction,deduction
+2026-05,3,3,"Augmentation of 250 Billion for themonth of May, 2025",augmentationof250billionforthemonthofmay2025
+2026-05,4,4,TOTAL Share of Ecology,totalshareofecology
+2026-05,5,5,Transfer of 50% Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-05,6,6,Net Share of Ecology,netshareofecology
+2026-05,7,7,Value Added Tax,valueaddedtax
+2026-05,8,8,Total Net Allocation,totalnetallocation
+2026-06,1,1,Net Statutory Allocation,netstatutoryallocation
+2026-06,2,2,Deduction,deduction
+2026-06,3,3,TOTAL Share of Ecology,totalshareofecology
+2026-06,4,4,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-06,5,5,Net Share of Ecology,netshareofecology
+2026-06,6,6,ValueAdded Tax,valueaddedtax
+2026-06,7,7,Total NetAllocation,totalnetallocation
+2026-07,1,1,Net StatutoryAllocation,netstatutoryallocation
+2026-07,2,2,Deduction,deduction
+2026-07,3,3,"Augmentation of 250 Billion for themonth of July, 2026",augmentationof250billionforthemonthofjuly2026
+2026-07,4,4,TOTAL Share of Ecology,totalshareofecology
+2026-07,5,5,Transfer of 50%Share ofEcology to NDDC/HYPPADEC& 50%Refund toNDDC,transferof50%shareofecologytonddchyppadec50%refundtonddc
+2026-07,6,6,Net Share ofEcology,netshareofecology
+2026-07,7,7,ValueAdded Tax,valueaddedtax
+2026-07,8,8,TotalNetAllocation,totalnetallocation
+2026-08,1,1,Net Statutory Allocation,netstatutoryallocation
+2026-08,2,2,Deduction,deduction
+2026-08,3,3,TOTAL Share of Ecology,totalshareofecology
+2026-08,4,4,Transfer of 50%Share of Ecology to NDDC/HYPPADEC,transferof50%shareofecologytonddchyppadec
+2026-08,5,5,Net Share of Ecology,netshareofecology
+2026-08,6,6,ValueAdded Tax,valueaddedtax
+2026-08,7,7,Total NetAllocation,totalnetallocation

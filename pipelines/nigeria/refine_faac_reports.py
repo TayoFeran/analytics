@@ -18,8 +18,10 @@ files instead of being read again. If any month fails a check, nothing is writte
 import argparse
 import csv
 import hashlib
+import itertools
 import os
 import re
+import statistics
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -32,7 +34,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Bump when the reading logic changes, so every month is read again instead of reused
-READER_VERSION = "1"
+READER_VERSION = "2"
 
 # 2019 is incomplete (6 months), so it waits until a full year of reports is available
 FIRST_SHARED_MONTH = "2020-01"
@@ -51,6 +53,87 @@ EXCEL_EXCEPTIONS = {
         "FAAC 23/Disbursement April, 2023.xlsx",
         "PDF state and LGA tables are a copy of February 2022 (only Table I is April 2023)",
     ),
+}
+
+# Months with no LGA figures at all: neither the PDF nor the Excel report has a usable table
+NO_LGA_MONTHS = {
+    "2021-09": (
+        "the Excel report has no LGA detail sheet, and the PDF's LGA table doesn't add up for "
+        "Abia, Bauchi, Kano, Yobe, Zamfara (no TOTAL row) and the FCT"
+    ),
+}
+
+# May 2023: the right half of the LGA table (Katsina to the FCT) prints a Total Allocation
+# that is not the sum of the row's own columns, for councils and TOTAL rows alike
+MAY_2023_RIGHT_HALF = (
+    "Total Allocation column, in the right half of the LGA table, doesn't match the "
+    "row's other columns for the councils or the TOTAL row"
+)
+
+# Mistakes in the LGA tables of the published reports, kept as printed. The check that finds
+# them records a note instead of failing the month, and known_report_errors.csv lists them so
+# dbt can flag those states. Key: (shared month, state as the state table prints it).
+KNOWN_REPORT_ERRORS = {
+    ("2020-06", "KANO"): "TOTAL row's Total Allocation (N2.19bn) doesn't match its own columns "
+    "(N6.36bn, as the councils add up)",
+    ("2021-02", "KANO"): (
+        "councils 1-25 print the N58,259.97 deduction as positive and add it to their totals, "
+        "and Kano's 44 councils don't add up to its TOTAL row in any column; the TOTAL row "
+        "agrees with the LGA summary page"
+    ),
+    ("2021-03", "KANO"): "TOTAL row's VAT is N18,000,000 more than the councils add up to",
+    ("2021-03", "KATSINA"): "TOTAL row's ecological fund is N79.2m more than the councils "
+    "add up to",
+    ("2021-05", "KADUNA"): "councils' Total Allocation uses other councils' VAT (from Makarfi "
+    "on, council 1's, 2's and so on; Lere's includes N1.56bn); the TOTAL row is right",
+    ("2021-05", "KANO"): "TOTAL row's deduction is N69.9m more than the councils', and its "
+    "Total Allocation N69.9m less",
+    ("2021-08", "RIVERS"): "TOTAL row leaves out council 1, Ahoada, in every column",
+    ("2022-02", "KANO"): "councils 1-25's Total Allocation leaves out the non-oil excess account "
+    "and counts ecology twice; the TOTAL row is right",
+    ("2022-03", "KANO"): "councils 1-25 have the 50% ecology transfer to NDDC/HYPPADEC taken "
+    "off, councils 26-44 and the TOTAL row don't",
+    ("2022-03", "KATSINA"): "councils' Total Allocation column is wrong; the TOTAL row is right",
+    ("2022-03", "KEBBI"): "councils' Total Allocation column is wrong; the TOTAL row is right",
+    ("2022-03", "KOGI"): "councils' Total Allocation column is wrong; the TOTAL row is right",
+    ("2022-10", "ABIA"): "councils' Total Allocation leaves out the FOREX equalisation and EMTL "
+    "columns; the TOTAL row includes them",
+    ("2022-10", "KATSINA"): "councils' Total Allocation column is wrong; the TOTAL row is right",
+    ("2023-02", "KANO"): "councils' non-oil excess account figures are February 2022's, and the "
+    "TOTAL row doesn't match the councils in that column and ecology",
+    ("2023-03", "KANO"): "councils 1-25's Total Allocation leaves out column 3 and counts "
+    "ecology twice; the TOTAL row is right",
+    ("2023-05", "AKWA IBOM"): "TOTAL row's VAT is N345m, the councils add up to N2.15bn; its "
+    "Total Allocation follows the wrong VAT",
+    ("2023-05", "ANAMBRA"): "TOTAL row's FOREX equalisation share is N137.4m more than the "
+    "councils add up to",
+    ("2023-05", "KANO"): "councils add up to N105.7m more than the TOTAL row in two "
+    "columns and N600 less in a third",
+    ("2023-05", "KATSINA"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "KEBBI"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "KOGI"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "KWARA"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "LAGOS"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "NASSARAWA"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "NIGER"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "OGUN"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "ONDO"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "OSUN"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "OYO"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "PLATEAU"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "RIVERS"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "SOKOTO"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "TARABA"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "YOBE"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "ZAMFARA"): MAY_2023_RIGHT_HALF,
+    ("2023-05", "FCT"): MAY_2023_RIGHT_HALF,
+    ("2023-07", "BAUCHI"): "councils' Total Allocation column is wrong; the TOTAL row is right",
+    ("2023-08", "ABIA"): "councils' Total Allocation column is wrong; the TOTAL row is right",
+    ("2023-09", "ABIA"): "councils' Total Allocation column is wrong; the TOTAL row is right",
+    ("2023-11", "KANO"): "councils' deductions add up to N582.6m more than the TOTAL row's",
+    ("2026-02", "KANO"): "TOTAL row's statutory allocation is N50 less than the councils",
+    ("2026-03", "KANO"): "TOTAL row's statutory allocation is N30 more than the councils",
+    ("2026-05", "KANO"): "councils' Total Net Allocation column is wrong; the TOTAL row is right",
 }
 
 MONTH_NAMES = [
@@ -96,6 +179,15 @@ class Row:
 
 
 @dataclass
+class LgaRow:
+    state: str  # as the state table prints it
+    lga_sn: int | None
+    lga: str  # empty on a state's total row
+    row_type: str  # lga or total
+    values: dict[str, float]
+
+
+@dataclass
 class Report:
     shared_month: str
     source_type: str  # pdf or excel
@@ -105,6 +197,8 @@ class Report:
     columns: list[tuple[str, str]] = field(default_factory=list)  # (column_id, header)
     rows: list[Row] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
+    lga_columns: list[tuple[str, str]] = field(default_factory=list)
+    lga_rows: list[LgaRow] = field(default_factory=list)
 
 
 def month_number(name: str) -> int:
@@ -128,11 +222,15 @@ def to_amount(text: str) -> float:
     return 0.0 if text in DASH else float(text.replace(",", ""))
 
 
-def group_lines(words: list[Word], tolerance: float = 1.5) -> list[list[Word]]:
-    """Group words into lines by their top, left to right."""
+def group_lines(words: list[Word], tolerance: float = 1.5, edge: str = "top") -> list[list[Word]]:
+    """Group words into lines by their top (or bottom), left to right.
+
+    Words on one line share their bottom (the baseline) better than their top: a figure
+    shrunk or enlarged to fit its cell sits higher or lower at the top.
+    """
     lines: list[list[Word]] = []
-    for w in sorted(words, key=lambda w: (w["top"], w["x0"])):
-        if lines and abs(lines[-1][0]["top"] - w["top"]) <= tolerance:
+    for w in sorted(words, key=lambda w: (w[edge], w["x0"])):
+        if lines and abs(lines[-1][0][edge] - w[edge]) <= tolerance:
             lines[-1].append(w)
         else:
             lines.append([w])
@@ -141,46 +239,71 @@ def group_lines(words: list[Word], tolerance: float = 1.5) -> list[list[Word]]:
     return lines
 
 
-def tidy_line(line: list[Word]) -> list[Word]:
+def tidy_line(line: list[Word], glue_gap: float = 0.6) -> list[Word]:
     """Glue split figures back together and turn bracketed figures into negatives.
 
     The PDFs print the first digit of many figures as a separate piece that touches the rest
-    ("8" + ",145,202,571.72"), and some negatives as "(" followed by the figure.
+    ("8" + ",145,202,571.72"), and some negatives as "(" followed by the figure. glue_gap
+    is in points and scales with the font (the LGA tables go down to 0.6 pt).
     """
     glued: list[Word] = []
     for w in line:
         prev = glued[-1] if glued else None
         if (
             prev
-            and w["x0"] - prev["x1"] < 0.6
+            and w["x0"] - prev["x1"] < glue_gap
             and re.match(r"^[\d,.]", w["text"])
             and re.match(r"^\(?[\d,.]+$", prev["text"])
         ):
             prev["text"] += w["text"]
             prev["x1"] = w["x1"]
+        elif (
+            prev
+            and prev["text"] in DASH
+            and w["x0"] - prev["x1"] < glue_gap * 3.3
+            and re.match(r"^[\d,]+\.\d", w["text"])
+        ):
+            # A minus sign printed as its own piece, under half a character before the number
+            # (Sep 2022). An empty cell's dash sits mid-cell, well away from the next figure.
+            prev["text"] = "-" + w["text"]
+            prev["x1"] = w["x1"]
         elif prev and prev["text"] == "(" and re.match(r"^[\d,.]+\)?$", w["text"]):
             prev["text"] = "-" + w["text"].rstrip(")")
             prev["x1"] = w["x1"]
+        elif prev and w["text"] == ")" and re.match(r"^[(\-]?[\d,.]+$", prev["text"]):
+            # At very small sizes the closing bracket is a piece of its own
+            prev["text"] = "-" + prev["text"].lstrip("(-")
+            prev["x1"] = w["x1"]
         else:
             glued.append(dict(w))
+    # Excel prints ### over a number too wide for its cell; in the PDF the digits survive
+    # under it ("1,849,982,094.0#5#" then "#", 2020), so the #s go when a valid figure remains
+    glued = [w for w in glued if w["text"].strip("#")]
     for w in glued:
-        bracketed = re.match(r"^\(([\d,.]+)\)$", w["text"])
+        if "#" in w["text"] and AMOUNT.match(w["text"].replace("#", "").lstrip("(").rstrip(")")):
+            w["text"] = w["text"].replace("#", "")
+        # A naira sign glued to the figure ("N5,789,470.78", Sep 2022)
+        w["text"] = re.sub(r"^(?:=N=|=?N|₦)(?=-?\(?[\d,]+\.\d)", "", w["text"])
+        bracketed = re.match(r"^\(([\d,.]+)\)?$", w["text"])
         if bracketed:
             w["text"] = "-" + bracketed.group(1)
     return glued
 
 
-def column_spans(rows: list[list[Word]]) -> list[tuple[float, float]]:
+def column_spans(
+    rows: list[list[Word]], tolerance: float = 3.0, merge_gap: float = 25.0
+) -> list[tuple[float, float]]:
     """Find the figure columns from the figures themselves.
 
     Figures are right-aligned, so each column's figures end at about the same x. A dash for
     an empty cell sits elsewhere in the cell, so it starts its own cluster at first. Two
-    clusters that never appear in the same row are one column and get merged.
+    clusters that never appear in the same row are one column and get merged. Distances are
+    in points and scale with the font.
     """
     edges = sorted((w["x1"], row_index) for row_index, row in enumerate(rows) for w in row)
     clusters: list[dict[str, Any]] = []
     for x, row_index in edges:
-        if clusters and x - clusters[-1]["right"] <= 3.0:
+        if clusters and x - clusters[-1]["right"] <= tolerance:
             clusters[-1]["right"] = x
             clusters[-1]["rows"].add(row_index)
         else:
@@ -190,7 +313,7 @@ def column_spans(rows: list[list[Word]]) -> list[tuple[float, float]]:
         merged = False
         for i in range(len(clusters) - 1):
             a, b = clusters[i], clusters[i + 1]
-            if not (a["rows"] & b["rows"]) and b["left"] - a["right"] < 25:
+            if not (a["rows"] & b["rows"]) and b["left"] - a["right"] < merge_gap:
                 b["left"] = a["left"]
                 b["rows"] |= a["rows"]
                 del clusters[i]
@@ -259,11 +382,13 @@ def column_headers(
     header_bottom: float,
     spans: list[tuple[float, float]],
     ids: list[str],
+    scale: float = 1.0,
 ) -> dict[str, str]:
     """Header text per column, placed one character at a time.
 
     Placing whole words fails where a word runs across two columns ("EcologyGross"), so each
     character goes to the column whose cell holds its centre. Rotated text is skipped.
+    scale multiplies the distances, which are in points, for smaller or larger fonts.
     """
     chars = [
         c
@@ -271,7 +396,7 @@ def column_headers(
         if header_top <= c["top"] < header_bottom and c.get("upright", True) and c["text"].strip()
     ]
     per_column: dict[str, list[list[Word]]] = {i: [] for i in ids}
-    lines = group_lines(chars, tolerance=1.0)
+    lines = group_lines(chars, tolerance=1.0 * scale)
     # Spaces aren't characters in these PDFs, so lines are compared without them
     squashed = [re.sub(r"\s", "", "".join(c["text"] for c in line)).lower() for line in lines]
     # Everything down to the table's title line is title. Skipping by wording instead would
@@ -301,7 +426,7 @@ def column_headers(
             centre = (c["x0"] + c["x1"]) / 2
             previous_right = spans[0][1] - (spans[1][1] - spans[0][1])
             for column, (_left, right) in zip(ids, spans, strict=True):
-                if previous_right < centre <= right + 3:
+                if previous_right < centre <= right + 3 * scale:
                     cells.setdefault(column, []).append(c)
                     break
                 previous_right = right
@@ -314,7 +439,8 @@ def column_headers(
             text = ""
             for i, c in enumerate(cell):
                 gap = c["x0"] - cell[i - 1]["x1"] if i else 0
-                text += (" " if gap > 0.25 * (c["x1"] - c["x0"] + 1) and text else "") + c["text"]
+                space = gap > 0.25 * (c["x1"] - c["x0"] + scale)
+                text += (" " if space and text else "") + c["text"]
             parts.append(text)
         headers[column] = re.sub(r"\s+", " ", " ".join(parts)).strip()
     return headers
@@ -479,6 +605,8 @@ def read_pdf(path: Path, shared_month: str, digest: str) -> Report:
             for r in report.rows:
                 r.values.pop(column, None)
     check_rows(report)
+    with pdfplumber.open(path) as pdf:
+        read_pdf_lgas(pdf, report)
     return report
 
 
@@ -520,7 +648,581 @@ def read_excel(path: Path, shared_month: str, digest: str, reason: str) -> Repor
         if label.lower().startswith("total"):
             break
     check_rows(report)
+    if shared_month in NO_LGA_MONTHS:
+        report.notes.append(f"LGA: no LGA figures: {NO_LGA_MONTHS[shared_month]}")
+    elif not read_excel_lgas(workbook, report):
+        raise CheckFailed("the Excel report has no LGA detail sheet")
     return report
+
+
+# LGA tables (local government councils). Each state's councils are numbered from 1 and the
+# states come in the state table's order, so the numbering alone groups councils by state.
+# Some reports print a state's TOTAL row without a label, or its name off the page, so the
+# grouping doesn't rely on labels; the checks then compare every group with the state table.
+
+LGA_LABEL = re.compile(r"^(\d{1,3})([A-Za-z].*)?$")
+
+
+def state_key(name: str) -> str:
+    return re.sub(r"[^a-z]", "", name.lower()).replace("nassarawa", "nasarawa")
+
+
+FCT_COUNCILS = 6  # Abaji, Bwari, Gwagwalada, Kuje, Kwali, Municipal (AMAC)
+
+
+def is_fct(group: dict[str, Any]) -> bool:
+    """The FCT's area councils: six of them, starting with Abaji or under an FCT total."""
+    lgas = group["lgas"]
+    label = state_key(group.get("total_label", ""))
+    named = "fct" in label or "abuja" in label or (lgas and state_key(lgas[0].lga) == "abaji")
+    return len(lgas) == FCT_COUNCILS and bool(named)
+
+
+def dominant_font_size(page: Any) -> float:
+    sizes = [round(float(c["size"]), 1) for c in page.chars if c["text"].strip()]
+    return max(set(sizes), key=sizes.count) if sizes else 0.0
+
+
+def scaled_lines(page: Any, size: float) -> list[list[Word]]:
+    """Lines of a page with word and line tolerances scaled to its font size.
+
+    pdfplumber's defaults (3 pt) suit a normal font. The 2021-2022 LGA tables are printed at
+    0.6 pt, where the defaults merge neighbouring rows and columns into scrambled text.
+    """
+    words = page.extract_words(x_tolerance=size * 0.25, y_tolerance=size * 0.4)
+    # Rows are about 2.5 font sizes apart; words in one row share their bottom to within
+    # about 0.3 (a figure shrunk to fit its cell is a little taller)
+    lines = group_lines(words, size * 0.4, edge="bottom")
+    return [tidy_line(line, glue_gap=size * 0.15) for line in lines]
+
+
+def lga_page_kind(lines: list[list[Word]]) -> str:
+    # The page's header: every line above the first line with a figure. Some pages have a
+    # title, some only column headers (May-Aug 2026), sometimes five lines of them.
+    first_data = next(
+        (i for i, line in enumerate(lines) if any(AMOUNT.match(w["text"]) for w in line)),
+        min(len(lines), 20),
+    )
+    head = re.sub(r"\s", "", " ".join(w["text"] for line in lines[:first_data] for w in line))
+    head = head.lower()
+    if "summaryofdistribution" in head:
+        return "summary"
+    if "distributionofecology" in head or "ecologyrevenueallocation" in head:
+        return "other"
+    if "revenueallocationtolocalgovernment" in head:
+        return "lga"
+    if "localgovernment" in head and "statutory" in head:
+        return "lga"
+    if any(t in head for t in ("officeofthe", "federationaccountdep", "distributionof", "tablei")):
+        return "other"
+    # A page carrying on the LGA table starts with councils or state names, never with
+    # column headers of its own: headers mean another table (working sheets, Jul 2023)
+    if any(t in head for t in ("statutory", "beneficiar", "s/no", "s/n")):
+        return "other"
+    return "continued"
+
+
+def split_segments(line: list[Word]) -> list[tuple[list[Word], list[Word]]]:
+    """Split a line into (label words, figures) pieces: two councils can share one line."""
+    segments: list[tuple[list[Word], list[Word]]] = []
+    label: list[Word] = []
+    figures: list[Word] = []
+    for w in line:
+        if AMOUNT.match(w["text"]) or w["text"] in DASH:
+            figures.append(w)
+        else:
+            if figures:
+                segments.append((label, figures))
+                label, figures = [], []
+            label.append(w)
+    if label or figures:
+        segments.append((label, figures))
+    return segments
+
+
+@dataclass
+class LgaLine:
+    label: str
+    figures: list[Word]
+    page: int
+    label_x: float | None = None  # where the label starts, if there is one
+
+
+def parse_lga_label(label: str) -> tuple[int, str] | None:
+    """'26 KUNCHI', '26KUNCHI' or '19 KANO 26 KUNCHI' (state name on the same line) -> (26, ...)."""
+    parsed = split_lga_label(label)
+    return (parsed[0], parsed[1]) if parsed else None
+
+
+def split_lga_label(label: str) -> tuple[int, str, str] | None:
+    """(council number, council name, whatever is printed before it) or None.
+
+    The state's merged cell can share a council's row, so '12 EDO TOTAL 9 ETSAKO WEST' is
+    council 9 of a state labelled 'EDO TOTAL' (a typo the reports carry).
+    """
+    tokens = label.split()
+    for i in range(len(tokens) - 1, -1, -1):
+        match = LGA_LABEL.match(tokens[i])
+        if match:
+            name = " ".join(([match.group(2)] if match.group(2) else []) + tokens[i + 1 :])
+            if not name.strip() or "TOTAL" in name.upper():
+                return None
+            return int(match.group(1)), name.strip(), " ".join(tokens[:i])
+    return None
+
+
+def read_pdf_lgas(pdf: Any, report: Report) -> None:
+    """Read the LGA detail table(s) and check them against the state table."""
+    tables: list[list[tuple[int, Any, float, list[list[Word]]]]] = []
+    current: list[tuple[int, Any, float, list[list[Word]]]] | None = None
+    for number, page in enumerate(pdf.pages, start=1):
+        size = dominant_font_size(page)
+        if not size:
+            continue
+        lines = scaled_lines(page, size)
+        kind = lga_page_kind(lines)
+        if kind == "lga":
+            current = [(number, page, size, lines)]
+            tables.append(current)
+        elif kind == "continued" and current is not None:
+            # Council numbers above 60 mean a list across all states: the table has ended
+            numbers = [
+                p[0]
+                for line in lines
+                for label_words, _figures in split_segments(line)
+                if (p := parse_lga_label(" ".join(w["text"] for w in label_words)))
+            ]
+            if numbers and max(numbers) > 60:
+                current = None
+                continue
+            current.append((number, page, size, lines))
+        elif current is not None or kind == "summary":
+            current = None
+            if kind == "summary" and tables:
+                break
+    if not tables:
+        raise CheckFailed("LGA table not found")
+
+    # The councils are printed as two halves (states 1-18ish, then the rest). Either both
+    # halves share each line, left and right, whatever the number of title pages, or each
+    # half has its own run of pages under its own title (Aug-Nov 2024). Each half is one
+    # stream, read down the pages; a state cut at the end of the first carries on in the next.
+    def segments_of(table: list[tuple[int, Any, float, list[list[Word]]]]) -> list[LgaLine]:
+        out = []
+        for number, _page, _size, lines in table:
+            for line in lines:
+                for label_words, figures in split_segments(line):
+                    if figures:
+                        label = " ".join(w["text"] for w in label_words).strip(" (")
+                        label_x = label_words[0]["x0"] if label_words else None
+                        out.append(LgaLine(label, figures, number, label_x))
+        return out
+
+    # Some reports follow the LGA table with another council list (ecology details) numbered
+    # 1-774 across all states. No state has more than 44 councils, so that list is skipped.
+    def highest_number(table: list[tuple[int, Any, float, list[list[Word]]]]) -> int:
+        numbers = [p[0] for ln in segments_of(table) if (p := parse_lga_label(ln.label))]
+        return max(numbers, default=0)
+
+    kept = [t for t in tables if highest_number(t) <= 60]
+    if len(kept) < len(tables):
+        report.notes.append("LGA: skipped a council list numbered across all states")
+    tables = kept
+    if not tables:
+        raise CheckFailed("LGA table not found")
+
+    every = [ln for table in tables for ln in segments_of(table)]
+    # Two blocks per line: the councils' names start at two places about 100 characters
+    # apart. The split goes where the right block's names start, after the left block's last
+    # column and before any right-hand figure. Measured in font sizes (0.6 to 14 pt).
+    size0 = tables[0][0][2]
+    starts = sorted(ln.label_x for ln in every if ln.label_x is not None and len(ln.figures) >= 3)
+    gaps = [(b - a, b) for a, b in itertools.pairwise(starts)]
+    split = None
+    if gaps and max(gaps)[0] > 30 * size0:
+        # The usual start of a right-hand name; a TOTAL label can start a little further left
+        right_starts = [x for x in starts if x >= max(gaps)[1]]
+        split = statistics.median(right_starts) - 0.5 * size0
+    streams: list[list[LgaLine]] = []
+    header_pages: list[tuple[int, Any, float]] = []  # page number, page, font size
+    if split is not None:
+        # Cut every piece at the split: a right half without a label (a total, or stray
+        # figures) would otherwise run on from the left half's council
+        left: list[LgaLine] = []
+        right: list[LgaLine] = []
+        for ln in every:
+            # By right edge: figures are right-aligned, so that edge lines up in each column
+            on_left = [w for w in ln.figures if w["x1"] < split]
+            on_right = [w for w in ln.figures if w["x1"] >= split]
+            # The label goes with its figures; a piece that crosses the split keeps it on the
+            # left (labels come first) and its right-hand figures go on without one
+            if on_left:
+                left.append(LgaLine(ln.label, on_left, ln.page))
+            if on_right:
+                right.append(LgaLine("" if on_left else ln.label, on_right, ln.page))
+        streams = [left, right]
+        header_pages = [tables[0][0][:3]] * 2
+    else:
+        for table in tables:
+            streams.append(segments_of(table))
+            header_pages.append(table[0][:3])
+    # A council row has at least 3 figures; fewer is stray text from beside the table
+    streams = [[ln for ln in stream if len(ln.figures) >= 3] for stream in streams]
+
+    # Columns per stream, from the figures; headers from the stream's first page
+    stream_columns: list[tuple[list[str], list[tuple[float, float]]]] = []
+    stream_dropped: list[list[tuple[float, float]]] = []  # stray figures to skip, per stream
+    for s, stream in enumerate(streams):
+        header_page_number, page, size = header_pages[s]
+        scale = size / 4.0
+        spans = column_spans([ln.figures for ln in stream], 0.75 * size, 6 * size)
+        tol = 0.75 * size
+
+        def rows_in(
+            span: tuple[float, float], tol: float = tol, stream: list[LgaLine] = stream
+        ) -> set[int]:
+            a, b = span
+            return {
+                k
+                for k, ln in enumerate(stream)
+                if any(a - tol <= w["x1"] <= b + tol for w in ln.figures)
+            }
+
+        # Every real column has a figure or a dash in nearly every row. A sparse column is
+        # either the same column printed out of line (a bracketed negative ends further
+        # right): merged into its neighbour if they never share a row; or stray figures
+        # beside the table: dropped. A real figure dropped by mistake fails the sums check.
+        # A column most councils leave blank (Deduction, May 2024: 20 of 406 rows) is still a
+        # column when it holds a dash and sits between columns. Stray dashes sit outside
+        # the first or last column (Apr 2020, Apr 2021, Dec 2025).
+        dropped: list[tuple[float, float]] = []
+        blank_columns: list[tuple[float, float]] = []
+        while True:
+            members = [rows_in(sp) for sp in spans]
+            dense = [
+                len(m) >= 0.05 * len(stream) or sp in blank_columns
+                for m, sp in zip(members, spans, strict=True)
+            ]
+            sparse = next((k for k, d in enumerate(dense) if not d), None)
+            if sparse is None or len(spans) == 1:
+                break
+            neighbours = sorted(
+                (j for j in (sparse - 1, sparse + 1) if 0 <= j < len(spans) and dense[j]),
+                key=lambda j: abs(spans[j][1] - spans[sparse][1]),
+            )
+            target = next((j for j in neighbours if not members[j] & members[sparse]), None)
+            count = len(members[sparse])
+            a, b = spans[sparse]
+            has_dash = any(
+                w["text"] in DASH and a - tol <= w["x1"] <= b + tol
+                for ln in stream
+                for w in ln.figures
+            )
+            if target is None and has_dash and 0 < sparse < len(spans) - 1:
+                blank_columns.append(spans[sparse])
+                continue
+            if target is not None:
+                spans[target] = (
+                    min(spans[target][0], spans[sparse][0]),
+                    max(spans[target][1], spans[sparse][1]),
+                )
+                report.notes.append(
+                    f"LGA: {count} figures printed out of line, kept in their column"
+                )
+            else:
+                dropped.append(spans[sparse])
+                report.notes.append(f"LGA: dropped {count} stray figures beside the table")
+            del spans[sparse]
+        ids = [str(i) for i in range(1, len(spans) + 1)]
+        first_top = min(ln.figures[0]["top"] for ln in stream if ln.page == header_page_number)
+        headers = column_headers(
+            list(page.chars),
+            first_top - 0.3 * float(page.height),
+            first_top - size * 0.3,
+            spans,
+            ids,
+            scale=scale,
+        )
+        stream_dropped.append(dropped)
+        if not report.lga_columns:
+            report.lga_columns = [(i, headers.get(i, "")) for i in ids]
+        elif len(ids) != len(report.lga_columns):
+            # Header text can differ slightly between sides; the number of columns can't
+            raise CheckFailed(
+                f"LGA stream {s + 1} has {len(ids)} columns, the first {len(report.lga_columns)}"
+            )
+        stream_columns.append((ids, spans))
+
+    # Group councils by state: a new state starts when the numbering drops back
+    states = [r for r in report.rows if r.row_type == "state"]
+    state_names = {state_key(r.beneficiary) for r in states} | {"fct", "fctabuja", "abuja"}
+
+    def is_total_label(label: str) -> bool:
+        # "KANO TOTAL", or just the state's name ("BAUCHI STATE", Feb 2026)
+        if "TOTAL" in label.upper():
+            return True
+        bare = state_key(re.sub(r"\bSTATE\b", "", label.upper()))
+        return parse_lga_label(label) is None and bare in state_names
+
+    groups: list[dict[str, Any]] = []
+    grand_total: dict[str, float] | None = None
+    for s, stream in enumerate(streams):
+        ids, spans = stream_columns[s]
+        for ln in stream:
+            values: dict[str, float] = {}
+            size = header_pages[s][2]
+            for w in ln.figures:
+                if any(a - 0.75 * size <= w["x1"] <= b + 0.75 * size for a, b in stream_dropped[s]):
+                    continue  # stray figures beside the table (see the columns above)
+                column = next(
+                    (
+                        i
+                        for i, (_l, right) in zip(ids, spans, strict=True)
+                        if w["x1"] <= right + 0.4 * size
+                    ),
+                    None,
+                )
+                if column is None:
+                    raise CheckFailed(
+                        f"LGA {ln.label!r} (page {ln.page}): figure {w['text']} right of the table"
+                    )
+                if column in values:
+                    raise CheckFailed(
+                        f"LGA {ln.label!r} (page {ln.page}): two figures in column {column}"
+                    )
+                values[column] = to_amount(w["text"])
+            full = split_lga_label(ln.label)
+            parsed = (full[0], full[1]) if full else None
+            # A council in the label wins: the state cell beside it can say "EDO TOTAL"
+            if parsed is None and is_total_label(ln.label):
+                if "SUB" in ln.label.upper():
+                    continue  # a running subtotal part way down a page ("FCT SUBTOTAL")
+                if "GRAND" in ln.label.upper() or (
+                    groups
+                    and groups[-1]["total"] is not None
+                    and state_key(ln.label) in {"total", "totallgcs"}
+                ):
+                    grand_total = values  # the whole table's total, after the last state
+                    continue
+                if not groups or groups[-1]["total"] is not None:
+                    raise CheckFailed(
+                        f"LGA total row {ln.label!r} (page {ln.page}) has no councils"
+                    )
+                groups[-1]["total"] = values
+                groups[-1]["total_label"] = ln.label
+            elif parsed:
+                sn, name = parsed
+                # The state's name can share its first council's row ("TARABA ARDO KOLA",
+                # "FCT-ABUJA ABAJI"). Only council 1: later ones may start with the state's
+                # name (KANO MUNICIPAL), but no state's first council does.
+                # Anything printed before the council (the state's cell) is a cross-check
+                prefix = re.sub(r"\b(TOTAL|STATE)\b|\d+", "", full[2].upper()) if full else ""
+                hint = prefix.strip() if state_key(prefix) in state_names else ""
+                if sn == 1:
+                    for words in (3, 2, 1):
+                        head = name.split()[:words]
+                        rest = name.split()[words:]
+                        if rest and state_key(" ".join(head)) in state_names | {"fctabuja"}:
+                            hint, name = " ".join(head), " ".join(rest)
+                            break
+                if (
+                    groups
+                    and groups[-1]["total"] is not None
+                    and sn > 1
+                    and sn == groups[-1]["last_sn"] + 1
+                ):
+                    # A state cut by the end of a column carries on; the TOTAL line before
+                    # this was the first part's total (June 2021, Kano 1-25 then 26-44)
+                    report.notes.append(
+                        f"LGA: part total after council {groups[-1]['last_sn']} "
+                        f"(page {ln.page}) skipped; the state continues"
+                    )
+                    groups[-1]["total"] = None
+                    groups[-1]["total_label"] = ""
+                if not groups or groups[-1]["total"] is not None or sn <= groups[-1]["last_sn"]:
+                    # An open state may still close with an unlabelled TOTAL line (checked below)
+                    if groups and groups[-1]["total"] is None and not groups[-1].get("unlabelled"):
+                        raise CheckFailed(
+                            f"LGA numbering restarts at {name} (page {ln.page}) before the "
+                            f"previous state's TOTAL row"
+                        )
+                    groups.append({"lgas": [], "total": None, "total_label": "", "last_sn": 0})
+                if hint:
+                    groups[-1]["state_hint"] = hint
+                groups[-1]["lgas"].append(LgaRow("", sn, name, "lga", values))
+                groups[-1]["last_sn"] = sn
+            elif groups and (not ln.label or groups[-1]["total"] is None):
+                # Figures with no label: a page subtotal, or a TOTAL row whose label is
+                # printed off the page. The group's sums decide which (see below). A label
+                # without a council number is treated the same while a state is open:
+                # Sep 2021 prints Niger's TOTAL row as "AFIJIO".
+                if ln.label:
+                    report.notes.append(
+                        f"LGA: line {ln.label!r} (page {ln.page}) has no council number, "
+                        "checked as a possible TOTAL row"
+                    )
+                groups[-1].setdefault("unlabelled", []).append(values)
+
+    finish_lga_groups(report, groups, grand_total)
+
+
+def finish_lga_groups(
+    report: Report, groups: list[dict[str, Any]], grand_total: dict[str, float] | None = None
+) -> None:
+    """Match the groups of councils to the states in order, check them, store them.
+
+    Each group: lgas (LgaRow list), total (values or None), total_label, unlabelled (figure
+    lines without a label) and state_hint (a state name printed beside the councils).
+    grand_total is the whole table's total row, if printed.
+    """
+    states = [r for r in report.rows if r.row_type == "state"]
+    # The FCT's 6 area councils follow Zamfara, though the state table has no FCT row
+    if len(groups) == len(states) + 1 and is_fct(groups[-1]):
+        states = [*states, Row("FCT", "state", FCT_COUNCILS, {})]
+    if len(groups) != len(states):
+        raise CheckFailed(f"LGA table has {len(groups)} states, the state table {len(states)}")
+    columns = [i for i, _h in report.lga_columns]
+    totals: list[dict[str, float] | None] = []
+    for group, state in zip(groups, states, strict=True):
+        lgas = group["lgas"]
+        for row in lgas:
+            row.state = state.beneficiary
+        if state.lgc_count is not None and len(lgas) != state.lgc_count:
+            raise CheckFailed(
+                f"LGA table lists {len(lgas)} councils for {state.beneficiary}, "
+                f"the state table {state.lgc_count}"
+            )
+        for printed in (group.get("total_label", ""), group.get("state_hint", "")):
+            words = re.sub(r"\b(TOTAL|STATE)\b", "", printed.upper())
+            label = state_key(words)
+            if label and label not in state_key(state.beneficiary) + "abuja":
+                raise CheckFailed(
+                    f"LGA: {printed!r} printed with the councils of {state.beneficiary}"
+                )
+        total = group["total"]
+        if total is None:
+            sums = {i: sum(r.values.get(i, 0.0) for r in lgas) for i in columns}
+            # An unlabelled figures line that matches the councils' sums is their TOTAL row
+            total = next(
+                (
+                    u
+                    for u in group.get("unlabelled", [])
+                    if all(abs(sums[i] - u.get(i, 0.0)) <= 1.0 for i in columns)
+                ),
+                None,
+            )
+            if total is None and group.get("unlabelled"):
+                # None matches: the last one, just before the next state, is the TOTAL row,
+                # and the sums check below says which column differs
+                total = group["unlabelled"][-1]
+            if total is not None:
+                report.notes.append(f"LGA: {state.beneficiary} TOTAL row has no label")
+        totals.append(total)
+
+    # The FCT sometimes has no total row of its own: the grand total minus the states is one
+    if totals[-1] is None and states[-1].beneficiary == "FCT" and grand_total is not None:
+        others = [t for t in totals[:-1] if t is not None]
+        if len(others) == len(totals) - 1:
+            totals[-1] = {
+                i: grand_total.get(i, 0.0) - sum(t.get(i, 0.0) for t in others) for i in columns
+            }
+            report.notes.append("LGA: FCT has no TOTAL row; grand total minus the states used")
+
+    for group, state, total in zip(groups, states, totals, strict=True):
+        if total is None:
+            raise CheckFailed(f"LGA: no TOTAL row for {state.beneficiary}")
+        known = KNOWN_REPORT_ERRORS.get((report.shared_month, state.beneficiary))
+        for i, header in report.lga_columns:
+            column_sum = sum(r.values.get(i, 0.0) for r in group["lgas"])
+            if abs(column_sum - total.get(i, 0.0)) > 1.0:
+                if known:
+                    report.notes.append(f"LGA: known report error, {state.beneficiary}: {known}")
+                    break
+                raise CheckFailed(
+                    f"LGA: {state.beneficiary} councils add up to {column_sum:,.2f} in column {i} "
+                    f"({header}), its TOTAL row says {total.get(i, 0.0):,.2f}"
+                )
+        report.lga_rows.extend(group["lgas"])
+        report.lga_rows.append(LgaRow(state.beneficiary, None, "", "total", total))
+
+
+def read_excel_lgas(workbook: Any, report: Report) -> bool:
+    """Read the LGA table from an OAGF Excel report, if it has one.
+
+    Two blocks of councils side by side, like the PDFs. The state name is printed on only
+    some rows, so councils are grouped by their numbering, as in the PDFs, and the names
+    are a cross-check. Returns False when the workbook has no LGA detail sheet.
+    """
+    sheet = next(
+        (
+            ws
+            for ws in workbook.worksheets
+            if re.fullmatch(r"lgcs?\s*details", ws.title.strip().lower())
+        ),
+        None,
+    )
+    if sheet is None:
+        return False
+    rows = [list(r) for r in sheet.iter_rows(values_only=True)]
+    head_index = next(
+        i
+        for i, r in enumerate(rows)
+        if any(str(c).strip() == "Local Government Councils" for c in r)
+    )
+    head = [str(c).strip() if c is not None else "" for c in rows[head_index]]
+    names = [j for j, h in enumerate(head) if h == "Local Government Councils"]
+    groups: list[dict[str, Any]] = []
+    for b, j in enumerate(names):
+        end = names[b + 1] - 3 if b + 1 < len(names) else len(head)
+        value_cols = [k for k in range(j + 1, end) if head[k] and head[k] != "S/n"]
+        if b == 0:
+            report.lga_columns = [(str(n), head[k]) for n, k in enumerate(value_cols, start=1)]
+        elif len(value_cols) != len(report.lga_columns):
+            raise CheckFailed("Excel LGA blocks have different columns")
+        state_col = next(
+            (k for k in range(j - 1, max(j - 4, -1), -1) if head[k] in {"State", "States"}), None
+        )
+        # The council's number: the nearest S/n left of its name (the right-hand block has
+        # the state's number in an unheaded column as well)
+        sn_col = max(k for k in range(j) if head[k] == "S/n")
+        for r in rows[head_index + 1 :]:
+            name = str(r[j]).strip() if r[j] is not None else ""
+            cell = str(r[state_col]).strip() if state_col is not None and r[state_col] else ""
+            if not name and not cell:
+                continue
+            values = {
+                str(n): round(float(str(r[k] or 0)), 2) for n, k in enumerate(value_cols, start=1)
+            }
+            sn_cell = r[sn_col]
+            is_council = bool(name) and bool(re.fullmatch(r"\d+(\.0)?", str(sn_cell).strip()))
+            # A council row wins over the state cell: Apr 2023 prints "EDO TOTAL" beside
+            # Edo's first council
+            if not is_council and ("TOTAL" in name.upper() or "TOTAL" in cell.upper()):
+                if groups and groups[-1]["total"] is None:
+                    groups[-1]["total"] = values
+                    groups[-1]["total_label"] = name or cell
+                continue
+            if not is_council:
+                continue
+            sn = int(float(str(sn_cell)))
+            if not groups or groups[-1]["total"] is not None or sn <= groups[-1]["last_sn"]:
+                groups.append(
+                    {"lgas": [], "total": None, "total_label": "", "last_sn": 0, "state_hint": ""}
+                )
+            if cell and not cell.replace(".", "").isdigit():
+                groups[-1]["state_hint"] = cell
+            groups[-1]["lgas"].append(LgaRow("", sn, name, "lga", values))
+            groups[-1]["last_sn"] = sn
+    for group in groups:
+        if group["total"] is None:
+            # Councils are rounded to the kobo here, so a computed total is exact enough
+            group["total"] = {
+                i: round(sum(r.values.get(i, 0.0) for r in group["lgas"]), 2)
+                for i, _h in report.lga_columns
+            }
+            report.notes.append("LGA: an Excel state block has no TOTAL row; its sums are used")
+    finish_lga_groups(report, groups)
+    return True
 
 
 def load_previous() -> dict[str, Report]:
@@ -564,6 +1266,30 @@ def load_previous() -> dict[str, Report]:
                     )
                     reports[v["shared_month"]].rows.append(rows[key])
                 rows[key].values[v["column_id"]] = float(v["amount"])
+    lga_columns = OUT_DIR / "lga_columns.csv"
+    if not lga_columns.exists():
+        return {}  # written by an older reader, so every month is read again
+    with lga_columns.open(encoding="utf-8", newline="") as f:
+        for c in csv.DictReader(f):
+            if c["shared_month"] in reports:
+                reports[c["shared_month"]].lga_columns.append((c["column_id"], c["column_header"]))
+    lga_rows: dict[tuple[str, str, str], LgaRow] = {}
+    for month_file in sorted((OUT_DIR / "lga_figures").glob("*/*.csv")):
+        with month_file.open(encoding="utf-8", newline="") as f:
+            for v in csv.DictReader(f):
+                if v["shared_month"] not in reports:
+                    continue
+                lga_key = (v["shared_month"], v["state"], v["lga_sn"])
+                if lga_key not in lga_rows:
+                    lga_rows[lga_key] = LgaRow(
+                        v["state"],
+                        int(v["lga_sn"]) if v["lga_sn"] else None,
+                        v["lga"],
+                        v["row_type"],
+                        {},
+                    )
+                    reports[v["shared_month"]].lga_rows.append(lga_rows[lga_key])
+                lga_rows[lga_key].values[v["column_id"]] = float(v["amount"])
     return reports
 
 
@@ -659,6 +1385,57 @@ def write_outputs(reports: list[Report]) -> int:
     return figure_rows
 
 
+def write_lga_outputs(reports: list[Report]) -> int:
+    """LGA columns, one figures file per month, and the known report errors."""
+    with (OUT_DIR / "lga_columns.csv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["shared_month", "position", "column_id", "column_header", "header_key"])
+        for r in reports:
+            for position, (column, header) in enumerate(r.lga_columns, start=1):
+                w.writerow([r.shared_month, position, column, header, header_key(header)])
+    months = {r.shared_month for r in reports}
+    with (OUT_DIR / "known_report_errors.csv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["shared_month", "state", "error"])
+        for (month, state), error in sorted(KNOWN_REPORT_ERRORS.items()):
+            if month in months:
+                w.writerow([month, state, error])
+    figures_dir = OUT_DIR / "lga_figures"
+    wanted = {
+        figures_dir / r.shared_month[:4] / f"{r.shared_month}.csv" for r in reports if r.lga_rows
+    }
+    for stale in figures_dir.glob("*/*.csv"):
+        if stale not in wanted:
+            stale.unlink()
+    figure_rows = 0
+    for r in reports:
+        if not r.lga_rows:
+            continue
+        path = figures_dir / r.shared_month[:4] / f"{r.shared_month}.csv"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("w", encoding="utf-8", newline="") as f:
+            w = csv.writer(f)
+            w.writerow(
+                ["shared_month", "state", "lga_sn", "lga", "row_type", "column_id", "amount"]
+            )
+            for row in r.lga_rows:
+                for column, _header in r.lga_columns:
+                    if column in row.values:
+                        w.writerow(
+                            [
+                                r.shared_month,
+                                row.state,
+                                "" if row.lga_sn is None else row.lga_sn,
+                                row.lga,
+                                row.row_type,
+                                column,
+                                f"{row.values[column]:.2f}",
+                            ]
+                        )
+                        figure_rows += 1
+    return figure_rows
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Refine the OAGF FAAC reports into CSV files.")
     parser.add_argument("--pdf-dir", default=os.getenv("FAAC_OAGF_PDF_DIR"))
@@ -708,9 +1485,11 @@ def main() -> None:
     # Date order, so a new month adds lines at the end of its year's file
     reports.sort(key=lambda r: r.shared_month)
     figure_rows = write_outputs(reports)
+    lga_figure_rows = write_lga_outputs(reports)
     print(
         f"Wrote {len(reports)} months ({len(reports) - reused} read, {reused} unchanged), "
-        f"{figure_rows} figures to {OUT_DIR.relative_to(OUT_DIR.parents[3])}"
+        f"{figure_rows} state figures and {lga_figure_rows} LGA figures to "
+        f"{OUT_DIR.relative_to(OUT_DIR.parents[3])}"
     )
 
 
