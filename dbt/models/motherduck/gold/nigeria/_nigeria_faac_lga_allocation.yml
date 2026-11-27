@@ -1,0 +1,104 @@
+version: 2
+
+models:
+  - name: nigeria_faac_lga_allocation
+    description: >
+      FAAC allocations to each of the 774 local government councils from the OAGF reports'
+      LGA table, by line, in naira. Grain: one row per council per month (lga_month).
+      September 2021 has no rows (ADR 0004). The net is computed from the lines and
+      checked against the report's printed Total Allocation.
+    columns:
+      - name: lga_month
+        description: Grain key, "<YYYY-MM> <state> <lga_sn>", e.g. "2024-01 Abia 1".
+        data_tests:
+          - not_null
+          - unique
+      - name: disbursement_date
+        description: First day of the month the allocation was shared.
+        data_tests:
+          - not_null
+      - name: president
+        description: Administration in office in that month, from nigeria_administration.
+        data_tests:
+          - not_null
+      - name: state
+        description: State name as in nigeria_state (FCT for its 6 area councils).
+        data_tests:
+          - not_null
+      - name: lga_sn
+        description: The council's number within its state in the LGA table.
+        data_tests:
+          - not_null
+      - name: lga
+        description: Council name from nigeria_lga.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('nigeria_lga')
+                field: lga
+      - name: statutory_allocation
+        description: >
+          Statutory allocation before the deduction. Some reports head it "Net Statutory
+          Allocation", but the Deduction column is taken off after it.
+        data_tests:
+          - not_null
+      - name: exchange_gain_difference
+        data_tests:
+          - not_null
+      - name: total_ecology_fund
+        description: Total ecological fund, before the transfer to NDDC/HYPPADEC.
+        data_tests:
+          - not_null
+      - name: gross_vat_allocation
+        description: Value added tax.
+        data_tests:
+          - not_null
+      - name: others_income
+        description: One-off distributions, augmentation, EMTL, solid minerals and the like.
+        data_tests:
+          - not_null
+      - name: total_gross_amount
+        description: Sum of the five revenue lines.
+        data_tests:
+          - not_null
+      - name: deduction
+        description: The LGA table's Deduction column, as a positive amount taken off.
+        data_tests:
+          - not_null
+      - name: transfer_nddc_hyppadec
+        description: Transfer of 50% of the ecology share to NDDC/HYPPADEC.
+        data_tests:
+          - not_null
+      - name: total_deductions
+        data_tests:
+          - not_null
+      - name: net_amount_after_deductions
+        description: total_gross_amount minus total_deductions.
+        data_tests:
+          - not_null
+      - name: net_amount_reported
+        description: The report's Total Allocation for the council.
+        data_tests:
+          - not_null
+      - name: report_check
+        description: >
+          matches (within N1 of the printed Total Allocation) or report_error (the report's
+          own figures don't agree, and known_report_errors explains why). Any other value
+          fails the test: a column mapped to the wrong line, or a report mistake not yet
+          listed in KNOWN_REPORT_ERRORS in refine_faac_reports.py.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['matches', 'report_error']
+      - name: report_error
+        description: The known mistake in this state's LGA figures that month, if any.
+      - name: source_type
+        description: pdf, or excel for April 2023.
+        data_tests:
+          - not_null
+      - name: source_file
+        description: The OAGF report file this month was read from.
+        data_tests:
+          - not_null

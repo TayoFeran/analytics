@@ -14,7 +14,7 @@ The PDFs themselves aren't in git (about 200 MB). They're published on the OAGF'
 | `notes.csv` | finding | `shared_month`, `note`: report quirks found by the checks, and why a month came from Excel |
 | `lga_columns.csv` | month and LGA column | `shared_month`, `position`, `column_id` (numbered 1, 2, ... from the left), `column_header` as printed, `header_key` |
 | `lga_figures/<year>/<yyyy-mm>.csv` | month, council and column | `shared_month`, `state` as the state table prints it (plus `FCT`), `lga_sn` (the council's number within its state), `lga` as printed, `row_type` (`lga` or `total`), `column_id`, `amount` in naira |
-| `known_report_errors.csv` | month and state | `shared_month`, `state`, `error`: LGA tables whose councils don't add up to the state's TOTAL row in the report itself, kept as printed |
+| `known_report_errors.csv` | month and state | `shared_month`, `state`, `error`: mistakes in a state's LGA figures in the report itself, kept as printed: councils that don't add up to the state's TOTAL row, or whose printed Total Allocation isn't the sum of their own columns |
 
 `shared_month` is the month the money was shared, the "shared in" month of the report's title. The report's figures are for the month before.
 
@@ -43,11 +43,13 @@ LGA tables:
 
    It takes the folders from `FAAC_OAGF_PDF_DIR` and `FAAC_RAW_EXCEL_DIR` in `.env`, or `--pdf-dir` and `--excel-dir`.
 3. If it prints `Error: ...`, nothing was written. The message names the month and the check that failed.
-4. Commit the changed CSV files on a branch and open a PR.
+4. Commit the changed CSV files on a branch and open a PR. The PR check builds the dbt models, and the daily pipeline loads the files into MotherDuck once it's merged (`pipelines/nigeria/load_faac_oagf_reports.py`).
+5. If a dbt test fails on `line` in `stg_nigeria_faac_oagf__state_figure` or `__lga_figure`, the month has a column header the seeds don't know yet. Add it to `dbt/seeds/sandbox/nigeria_faac_state_column_line.csv` or `nigeria_faac_lga_column_line.csv`, with its line and role.
+6. If `report_check` fails in `nigeria_faac_state_allocation` or `nigeria_faac_lga_allocation`, the computed totals don't match the printed ones. Either a header is mapped to the wrong line, or the report has a new mistake: check the PDF, then fix the seed or add the state to `KNOWN_REPORT_ERRORS`.
 
 ## Checks
 
-Every month must pass all of these, or nothing is written:
+The refine script checks every month against itself, and nothing is written unless every month passes:
 
 - Table I on page 1 is for the file's month. A stale or mistyped state-table title only gets a note.
 - 36 states are listed.
@@ -56,3 +58,9 @@ Every month must pass all of these, or nothing is written:
 - No month's Total row is identical to another month's (a copied table).
 - The LGA table lists every state, in the state table's order, with the state table's number of councils.
 - Each state's councils add up to its TOTAL row, within ₦1, in every LGA column. A mismatch that is the report's own mistake is listed in `KNOWN_REPORT_ERRORS` in the script, with what is wrong, and goes to `known_report_errors.csv` instead of failing the month.
+
+dbt then checks the lines (the `report_check` columns in the gold tables):
+
+- Every column header maps to a line, through the seeds in `dbt/seeds/sandbox/`.
+- Each state's revenue lines add up to the report's Total Gross Amount, and minus its deductions to Total Net Amount, within ₦1, in every month whose table prints them.
+- Each council's lines, minus its deductions, add up to its printed Total Allocation within ₦1, unless its state is in `known_report_errors.csv`.

@@ -1,0 +1,36 @@
+version: 2
+
+seeds:
+  - name: nigeria_faac_state_column_override
+    description: >
+      State-table columns whose printed header is wrong for that month, so the header
+      can't decide the line. Wins over nigeria_faac_state_column_line for that month and
+      column only.
+    config:
+      column_types:
+        shared_month: varchar
+        column_id: varchar
+    columns:
+      - name: shared_month
+        description: Month the allocation was shared, "YYYY-MM".
+        data_tests:
+          - not_null
+      - name: column_id
+        description: The column number printed above the column in that month's report.
+        data_tests:
+          - not_null
+      - name: line
+        description: The line, as in nigeria_faac_state_column_line.
+        data_tests:
+          - not_null
+      - name: role
+        description: income, deduction, subtotal or printed_total.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['income', 'deduction', 'subtotal', 'printed_total']
+      - name: reason
+        description: Why the header can't be used.
+        data_tests:
+          - not_null

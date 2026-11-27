@@ -1,0 +1,30 @@
+version: 2
+
+seeds:
+  - name: nigeria_lga
+    description: >
+      Nigeria's 774 local government councils (the 36 states' LGAs and the FCT's 6 area
+      councils), keyed by state and the council's number in the OAGF LGA table. Names are
+      the spelling the reports print most often, in title case. Hand fixes: Ondo 1-4 (the
+      Akoko councils, often printed without "Akoko North/South") and Ondo 9 (Okitipupa,
+      printed with the state name in front).
+    config:
+      column_types:
+        lga_sn: integer
+    columns:
+      - name: state
+        description: State name as in nigeria_state, e.g. "Akwa Ibom", "Nasarawa", "FCT".
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('nigeria_state')
+                field: state
+      - name: lga_sn
+        description: The council's number within its state in the OAGF LGA table (1, 2, ...).
+        data_tests:
+          - not_null
+      - name: lga
+        description: Council name, e.g. "Aba North".
+        data_tests:
+          - not_null

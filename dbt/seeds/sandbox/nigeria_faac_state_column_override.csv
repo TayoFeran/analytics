@@ -1,0 +1,4 @@
+shared_month,column_id,line,role,reason
+2020-09,13,net_vat_allocation,subtotal,"Net VAT column printed under the Gross VAT Allocation header"
+2021-01,15,net_vat_allocation,subtotal,"Net VAT column printed under the Gross VAT Allocation header"
+2024-01,18,net_vat_allocation,subtotal,"Net VAT column printed under the Gross VAT Allocation header"

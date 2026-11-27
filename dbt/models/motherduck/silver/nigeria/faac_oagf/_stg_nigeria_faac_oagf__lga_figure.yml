@@ -1,0 +1,75 @@
+version: 2
+
+models:
+  - name: stg_nigeria_faac_oagf__lga_figure
+    description: >
+      Every printed figure of the OAGF LGA table, with its column header, standard line and
+      the council's name. Grain: one row per month, council (or state TOTAL row) and column
+      (figure_key). September 2021 has no rows: see ADR 0004.
+    columns:
+      - name: figure_key
+        description: Grain key, "<YYYY-MM> <state as printed> <lga_sn or total> <column_id>".
+        data_tests:
+          - not_null
+          - unique
+      - name: shared_month
+        description: Month the allocation was shared, "YYYY-MM".
+        data_tests:
+          - not_null
+      - name: row_type
+        description: lga (a council) or total (the state's TOTAL row).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['lga', 'total']
+      - name: report_state
+        description: State as the report prints it ("NASSARAWA"), for joining to known_report_errors.
+        data_tests:
+          - not_null
+      - name: state
+        description: State name as in nigeria_state.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('nigeria_state')
+                field: state
+      - name: lga_sn
+        description: The council's number within its state. Blank on TOTAL rows.
+        data_tests:
+          - not_null:
+              config:
+                where: "row_type = 'lga'"
+      - name: lga
+        description: >
+          Council name from nigeria_lga. Blank on TOTAL rows; blank on a council row means
+          a council number nigeria_lga doesn't have.
+        data_tests:
+          - not_null:
+              config:
+                where: "row_type = 'lga'"
+      - name: lga_as_printed
+        description: Council name as this month's report prints it (can be cut short).
+      - name: column_header
+        description: The column's header as printed.
+        data_tests:
+          - not_null
+      - name: line
+        description: >
+          Standard line from nigeria_faac_lga_column_line. Blank means a header the seed
+          doesn't know yet: add it there.
+        data_tests:
+          - not_null
+      - name: role
+        description: income, deduction, subtotal or printed_total.
+        data_tests:
+          - not_null
+      - name: amount
+        description: Naira, as printed.
+        data_tests:
+          - not_null
+      - name: line_amount
+        description: The amount for adding up lines. Deductions are positive, to subtract, whatever sign they're printed with.
+        data_tests:
+          - not_null

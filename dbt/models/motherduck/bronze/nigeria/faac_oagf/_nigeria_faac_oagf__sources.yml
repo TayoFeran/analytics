@@ -1,0 +1,43 @@
+version: 2
+
+sources:
+  - name: nigeria_faac_oagf
+    description: >
+      FAAC figures read from the original OAGF monthly reports by
+      pipelines/nigeria/refine_faac_reports.py, loaded as written from
+      data/nigeria/faac/oagf/ by pipelines/nigeria/load_faac_oagf_reports.py. Every printed
+      figure in long form, with the printed column headers. See
+      data/nigeria/faac/oagf/README.md and ADR 0004.
+    database: "{{ target.database }}"
+    # bronze is shared by all projects; table names carry the <project>_<source>_ prefix
+    schema: bronze
+    tables:
+      - name: reports
+        identifier: nigeria_faac_oagf_reports
+        description: One row per month - the report file each month was read from, and its fingerprint.
+      - name: state_columns
+        identifier: nigeria_faac_oagf_state_columns
+        description: >
+          The state table's columns in each month, with the header as printed and its
+          header_key (letters, digits and % only), which the column_line seed maps to a line.
+      - name: state_figures
+        identifier: nigeria_faac_oagf_state_figures
+        description: >
+          Every figure of the state table: one row per month, row and column. row_type is
+          state (the 36 states), other (FCT, NDDC, derivation funds and the like) or total.
+      - name: lga_columns
+        identifier: nigeria_faac_oagf_lga_columns
+        description: The LGA table's columns in each month, like state_columns.
+      - name: lga_figures
+        identifier: nigeria_faac_oagf_lga_figures
+        description: >
+          Every figure of the LGA table: one row per month, council and column, plus each
+          state's TOTAL row (row_type total, no lga_sn). September 2021 has none.
+      - name: known_report_errors
+        identifier: nigeria_faac_oagf_known_report_errors
+        description: >
+          States whose LGA figures have a mistake in the report itself, kept as printed.
+          state is spelt as the report prints it (NASSARAWA).
+      - name: notes
+        identifier: nigeria_faac_oagf_notes
+        description: What the reader noticed or skipped in each month, for the record.

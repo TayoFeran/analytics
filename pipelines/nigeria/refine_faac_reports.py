@@ -70,10 +70,28 @@ MAY_2023_RIGHT_HALF = (
     "row's other columns for the councils or the TOTAL row"
 )
 
-# Mistakes in the LGA tables of the published reports, kept as printed. The check that finds
-# them records a note instead of failing the month, and known_report_errors.csv lists them so
-# dbt can flag those states. Key: (shared month, state as the state table prints it).
+# February 2023: every council's printed Total Allocation leaves out its EMTL column
+FEB_2023_EMTL = "councils' Total Allocation leaves out the EMTL column"
+# The 50% ecology transfer to NDDC/HYPPADEC and the net share don't fit the ecology fund
+ECOLOGY_MISMATCH = (
+    "councils' 50% ecology transfer and net share add up to more than their ecology fund; "
+    "Total Allocation follows the net share"
+)
+ECOLOGY_LEFT_OUT = (
+    "councils' ecology transfer and net share are printed as 0, and Total Allocation "
+    "leaves out the ecology fund"
+)
+
+# Mistakes in the LGA tables of the published reports, kept as printed. Two kinds: councils
+# that don't add up to their state's TOTAL row (the check below records a note instead of
+# failing the month), and councils whose printed Total Allocation isn't the sum of their own
+# columns (dbt finds those). known_report_errors.csv lists both so dbt can flag those states.
+# Key: (shared month, state as the state table prints it).
 KNOWN_REPORT_ERRORS = {
+    ("2020-06", "ABIA"): "councils 2-17's Total Allocation repeats their VAT; the TOTAL row "
+    "adds those up",
+    ("2020-06", "EBONYI"): "councils' deductions are printed positive and added to their "
+    "Total Allocation",
     ("2020-06", "KANO"): "TOTAL row's Total Allocation (N2.19bn) doesn't match its own columns "
     "(N6.36bn, as the councils add up)",
     ("2021-02", "KANO"): (
@@ -99,14 +117,53 @@ KNOWN_REPORT_ERRORS = {
     ("2022-10", "ABIA"): "councils' Total Allocation leaves out the FOREX equalisation and EMTL "
     "columns; the TOTAL row includes them",
     ("2022-10", "KATSINA"): "councils' Total Allocation column is wrong; the TOTAL row is right",
+    ("2023-02", "ABIA"): FEB_2023_EMTL,
+    ("2023-02", "ADAMAWA"): FEB_2023_EMTL,
+    ("2023-02", "AKWA IBOM"): FEB_2023_EMTL,
+    ("2023-02", "ANAMBRA"): FEB_2023_EMTL,
+    ("2023-02", "BAUCHI"): FEB_2023_EMTL,
+    ("2023-02", "BAYELSA"): FEB_2023_EMTL,
+    ("2023-02", "BENUE"): FEB_2023_EMTL,
+    ("2023-02", "BORNO"): FEB_2023_EMTL,
+    ("2023-02", "CROSS RIVER"): FEB_2023_EMTL,
+    ("2023-02", "DELTA"): FEB_2023_EMTL,
+    ("2023-02", "EBONYI"): FEB_2023_EMTL,
+    ("2023-02", "EDO"): FEB_2023_EMTL,
+    ("2023-02", "EKITI"): FEB_2023_EMTL,
+    ("2023-02", "ENUGU"): FEB_2023_EMTL,
+    ("2023-02", "GOMBE"): FEB_2023_EMTL,
+    ("2023-02", "IMO"): FEB_2023_EMTL,
+    ("2023-02", "JIGAWA"): FEB_2023_EMTL,
+    ("2023-02", "KADUNA"): FEB_2023_EMTL,
     ("2023-02", "KANO"): "councils' non-oil excess account figures are February 2022's, and the "
-    "TOTAL row doesn't match the councils in that column and ecology",
+    "TOTAL row doesn't match the councils in that column and ecology; " + FEB_2023_EMTL,
+    ("2023-02", "KATSINA"): FEB_2023_EMTL,
+    ("2023-02", "KEBBI"): FEB_2023_EMTL,
+    ("2023-02", "KOGI"): FEB_2023_EMTL,
+    ("2023-02", "KWARA"): FEB_2023_EMTL,
+    ("2023-02", "LAGOS"): FEB_2023_EMTL,
+    ("2023-02", "NASSARAWA"): FEB_2023_EMTL,
+    ("2023-02", "NIGER"): FEB_2023_EMTL,
+    ("2023-02", "OGUN"): FEB_2023_EMTL,
+    ("2023-02", "ONDO"): FEB_2023_EMTL,
+    ("2023-02", "OSUN"): FEB_2023_EMTL,
+    ("2023-02", "OYO"): FEB_2023_EMTL,
+    ("2023-02", "PLATEAU"): FEB_2023_EMTL,
+    ("2023-02", "RIVERS"): FEB_2023_EMTL,
+    ("2023-02", "SOKOTO"): FEB_2023_EMTL,
+    ("2023-02", "TARABA"): FEB_2023_EMTL,
+    ("2023-02", "YOBE"): FEB_2023_EMTL,
+    ("2023-02", "ZAMFARA"): FEB_2023_EMTL,
+    ("2023-02", "FCT"): FEB_2023_EMTL,
     ("2023-03", "KANO"): "councils 1-25's Total Allocation leaves out column 3 and counts "
     "ecology twice; the TOTAL row is right",
+    ("2023-04", "KANO"): "council 1's N11.65m deduction is printed positive and added to its "
+    "Total Allocation",
     ("2023-05", "AKWA IBOM"): "TOTAL row's VAT is N345m, the councils add up to N2.15bn; its "
     "Total Allocation follows the wrong VAT",
     ("2023-05", "ANAMBRA"): "TOTAL row's FOREX equalisation share is N137.4m more than the "
     "councils add up to",
+    ("2023-05", "DELTA"): ECOLOGY_MISMATCH,
     ("2023-05", "KANO"): "councils add up to N105.7m more than the TOTAL row in two "
     "columns and N600 less in a third",
     ("2023-05", "KATSINA"): MAY_2023_RIGHT_HALF,
@@ -127,7 +184,14 @@ KNOWN_REPORT_ERRORS = {
     ("2023-05", "YOBE"): MAY_2023_RIGHT_HALF,
     ("2023-05", "ZAMFARA"): MAY_2023_RIGHT_HALF,
     ("2023-05", "FCT"): MAY_2023_RIGHT_HALF,
+    ("2023-07", "ADAMAWA"): ECOLOGY_LEFT_OUT,
     ("2023-07", "BAUCHI"): "councils' Total Allocation column is wrong; the TOTAL row is right",
+    ("2023-07", "BAYELSA"): ECOLOGY_MISMATCH,
+    ("2023-07", "BORNO"): ECOLOGY_LEFT_OUT,
+    ("2023-07", "EBONYI"): ECOLOGY_LEFT_OUT,
+    ("2023-07", "EKITI"): ECOLOGY_LEFT_OUT,
+    ("2023-07", "ENUGU"): ECOLOGY_LEFT_OUT,
+    ("2023-07", "GOMBE"): ECOLOGY_LEFT_OUT,
     ("2023-08", "ABIA"): "councils' Total Allocation column is wrong; the TOTAL row is right",
     ("2023-09", "ABIA"): "councils' Total Allocation column is wrong; the TOTAL row is right",
     ("2023-11", "KANO"): "councils' deductions add up to N582.6m more than the TOTAL row's",

@@ -1,0 +1,775 @@
+state,lga_sn,lga
+Abia,1,Aba North
+Abia,2,Aba South
+Abia,3,Arochukwu
+Abia,4,Bende
+Abia,5,Ikwuano
+Abia,6,Isiala Ngwa North
+Abia,7,Isiala Ngwa South
+Abia,8,Isuikwuato
+Abia,9,Nneochi
+Abia,10,Obioma Ngwa
+Abia,11,Ohafia
+Abia,12,Osisioma
+Abia,13,Ugwunagbo
+Abia,14,Ukwa East
+Abia,15,Ukwa West
+Abia,16,Umuahia North
+Abia,17,Umuahia South
+Adamawa,1,Demsa
+Adamawa,2,Fufore
+Adamawa,3,Ganye
+Adamawa,4,Girei
+Adamawa,5,Gombi
+Adamawa,6,Guyuk
+Adamawa,7,Hong
+Adamawa,8,Jada
+Adamawa,9,Yola-North
+Adamawa,10,Lamurde
+Adamawa,11,Madagali
+Adamawa,12,Maiha
+Adamawa,13,Mayo-Belwa
+Adamawa,14,Michika
+Adamawa,15,Mubi North
+Adamawa,16,Mubi South
+Adamawa,17,Numan
+Adamawa,18,Shelleng
+Adamawa,19,Song
+Adamawa,20,Toungo
+Adamawa,21,Yola-South
+Akwa Ibom,1,Abak
+Akwa Ibom,2,Eastern Obolo
+Akwa Ibom,3,Eket
+Akwa Ibom,4,Ekpe Atai
+Akwa Ibom,5,Essien Udim
+Akwa Ibom,6,Etim Ekpo
+Akwa Ibom,7,Etinan
+Akwa Ibom,8,Ibeno
+Akwa Ibom,9,Ibesikpo Asutan
+Akwa Ibom,10,Ibiono Ibom
+Akwa Ibom,11,Ika
+Akwa Ibom,12,Ikono
+Akwa Ibom,13,Ikot Abasi
+Akwa Ibom,14,Ikot Ekpene
+Akwa Ibom,15,Ini
+Akwa Ibom,16,Itu
+Akwa Ibom,17,Mbo
+Akwa Ibom,18,Mkpat Enin
+Akwa Ibom,19,Nsit Ibom
+Akwa Ibom,20,Nsit Ubium
+Akwa Ibom,21,Obat Akara
+Akwa Ibom,22,Okobo
+Akwa Ibom,23,Onna
+Akwa Ibom,24,Oron
+Akwa Ibom,25,Oruk Anam
+Akwa Ibom,26,Udung Uko
+Akwa Ibom,27,Ukanafun
+Akwa Ibom,28,Uquo
+Akwa Ibom,29,Uruan
+Akwa Ibom,30,Urue Offong/Oruk
+Akwa Ibom,31,Uyo
+Anambra,1,Aguata
+Anambra,2,Anambra East
+Anambra,3,Anambra West
+Anambra,4,Aniocha
+Anambra,5,Awka North
+Anambra,6,Awka South
+Anambra,7,Ayamelum
+Anambra,8,Dunukofia
+Anambra,9,Ekwusigwo
+Anambra,10,Idemili North
+Anambra,11,Idemili South
+Anambra,12,Ihiala
+Anambra,13,Njikoka
+Anambra,14,Nnewi North
+Anambra,15,Nnewi South
+Anambra,16,Ogbaru
+Anambra,17,Onisha North
+Anambra,18,Onisha South
+Anambra,19,Orumba North
+Anambra,20,Orumba South
+Anambra,21,Oyi
+Bauchi,1,Alkaleri
+Bauchi,2,Bauchi
+Bauchi,3,Bogoro
+Bauchi,4,Damban
+Bauchi,5,Darazo
+Bauchi,6,Dass
+Bauchi,7,Gamawa
+Bauchi,8,Ganjuwa
+Bauchi,9,Giade
+Bauchi,10,I/Gadau
+Bauchi,11,Jama'are
+Bauchi,12,Katagum
+Bauchi,13,Kirfi
+Bauchi,14,Misau
+Bauchi,15,Ningi
+Bauchi,16,Shira
+Bauchi,17,Tafawa Balewa
+Bauchi,18,Toro
+Bauchi,19,Warji
+Bauchi,20,Zaki
+Bayelsa,1,Brass
+Bayelsa,2,Ekermor
+Bayelsa,3,Kolokuma/Opokuma
+Bayelsa,4,Nembe
+Bayelsa,5,Ogbia
+Bayelsa,6,Sagbama
+Bayelsa,7,Southern Ijaw
+Bayelsa,8,Yenagoa
+Benue,1,Ado
+Benue,2,Agatu
+Benue,3,Apa
+Benue,4,Buruku
+Benue,5,Gboko
+Benue,6,Guma
+Benue,7,Gwer East
+Benue,8,Gwer West
+Benue,9,Katsina Ala
+Benue,10,Konshisha
+Benue,11,Kwande
+Benue,12,Logo
+Benue,13,Makurdi
+Benue,14,Obi
+Benue,15,Ogbadibo
+Benue,16,Ohimini
+Benue,17,Oju
+Benue,18,Okpokwu
+Benue,19,Otukpo
+Benue,20,Tarka
+Benue,21,Ukum
+Benue,22,Ushongo
+Benue,23,Vandeikya
+Borno,1,Abadan
+Borno,2,Askira Uba
+Borno,3,Bama
+Borno,4,Bayo
+Borno,5,Biu
+Borno,6,Chibok
+Borno,7,Damboa
+Borno,8,Dikwa
+Borno,9,Gubio
+Borno,10,Guzamala
+Borno,11,Gwoza
+Borno,12,Hawul
+Borno,13,Jere
+Borno,14,Kaga
+Borno,15,Kala Balge
+Borno,16,Konduga
+Borno,17,Kukawa
+Borno,18,Kwaya Kusar
+Borno,19,Mafa
+Borno,20,Magumeri
+Borno,21,Maiduguri Metro
+Borno,22,Marte
+Borno,23,Mobbar
+Borno,24,Monguno
+Borno,25,Ngala
+Borno,26,Nganzai
+Borno,27,Shani
+Cross River,1,Abi
+Cross River,2,Akamkpa
+Cross River,3,Akpabuyo
+Cross River,4,Bakassi
+Cross River,5,Bekwara
+Cross River,6,Biase
+Cross River,7,Boki
+Cross River,8,Calabar Municipal
+Cross River,9,Calabar South
+Cross River,10,Etung
+Cross River,11,Ikom
+Cross River,12,Obanliku
+Cross River,13,Obubra
+Cross River,14,Obudu
+Cross River,15,Odukpani
+Cross River,16,Ogaja
+Cross River,17,Yakurr
+Cross River,18,Yala
+Delta,1,Aniocha North
+Delta,2,Aniocha South
+Delta,3,Bomadi
+Delta,4,Burutu
+Delta,5,Ethiope East
+Delta,6,Ethiope West
+Delta,7,Ika North East
+Delta,8,Ika South
+Delta,9,Isoko North
+Delta,10,Isoko South
+Delta,11,Ndokwa East
+Delta,12,Ndokwa West
+Delta,13,Okpe
+Delta,14,Oshimili North
+Delta,15,Oshimili South
+Delta,16,Patani
+Delta,17,Sapele
+Delta,18,Udu
+Delta,19,Ughelli North
+Delta,20,Ughelli South
+Delta,21,Ukwuani
+Delta,22,Uvwie
+Delta,23,Warri South
+Delta,24,Warri North
+Delta,25,Warri South-West
+Ebonyi,1,Abakaliki
+Ebonyi,2,Afikpo North
+Ebonyi,3,Afikpo South
+Ebonyi,4,Ebonyi
+Ebonyi,5,Ezza North
+Ebonyi,6,Ezza South
+Ebonyi,7,Ikwo
+Ebonyi,8,Ishielu
+Ebonyi,9,Ivo
+Ebonyi,10,Izzi
+Ebonyi,11,Ohaozara
+Ebonyi,12,Ohaukwu
+Ebonyi,13,Onicha
+Edo,1,Akoko Edo
+Edo,2,Egor
+Edo,3,Esan Central
+Edo,4,Esan North East
+Edo,5,Esan South East
+Edo,6,Esan West
+Edo,7,Etsako Central
+Edo,8,Etsako East
+Edo,9,Etsako West
+Edo,10,Igueben
+Edo,11,Ikpoba Okha
+Edo,12,Oredo
+Edo,13,Orhionwon
+Edo,14,Ovia North East
+Edo,15,Ovia South West
+Edo,16,Owan East
+Edo,17,Owan West
+Edo,18,Uhunmwode
+Ekiti,1,Ado Ekiti
+Ekiti,2,Aiyekire
+Ekiti,3,Efon
+Ekiti,4,Ekiti East
+Ekiti,5,Ekiti South West
+Ekiti,6,Ekiti West
+Ekiti,7,Emure
+Ekiti,8,Ido-Osi
+Ekiti,9,Ijero
+Ekiti,10,Ikere
+Ekiti,11,Ikole
+Ekiti,12,Ilejemeji
+Ekiti,13,Irepodun/Ifelodun
+Ekiti,14,Ise/Orun
+Ekiti,15,Moba
+Ekiti,16,Oye
+Enugu,1,Agwu
+Enugu,2,Aninri
+Enugu,3,Enugu East
+Enugu,4,Enugu North
+Enugu,5,Enugu South
+Enugu,6,Ezeagu
+Enugu,7,Igbo Etiti
+Enugu,8,Igbo Eze North
+Enugu,9,Igbo Eze South
+Enugu,10,Isi Uzo
+Enugu,11,Nkanu East
+Enugu,12,Nkanu West
+Enugu,13,Nsukka
+Enugu,14,Oji River
+Enugu,15,Udenu
+Enugu,16,Udi
+Enugu,17,Uzo Uwani
+FCT,1,Abaji
+FCT,2,Abuja Municipal
+FCT,3,Bwari
+FCT,4,Gwagwalada
+FCT,5,Kuje
+FCT,6,Kwali
+Gombe,1,Akko
+Gombe,2,Balanga
+Gombe,3,Billiri
+Gombe,4,Dukku
+Gombe,5,Funakaye
+Gombe,6,Gombe
+Gombe,7,Kaltungo
+Gombe,8,Kwami
+Gombe,9,Nafada
+Gombe,10,Shomgom
+Gombe,11,Yamaltu/Deba
+Imo,1,Aboh Mbaise
+Imo,2,Ahiazu Mbaise
+Imo,3,Ehime Mbano
+Imo,4,Ezinihitte Mbaise
+Imo,5,Ideato North
+Imo,6,Ideato South
+Imo,7,Ihitte Uboma
+Imo,8,Ikeduru
+Imo,9,Isiala Mbano
+Imo,10,Isu
+Imo,11,Mbaitoli
+Imo,12,Ngor/Okpala
+Imo,13,Njaba
+Imo,14,Nkwangele
+Imo,15,Nkwerre
+Imo,16,Obowo
+Imo,17,Oguta
+Imo,18,Ohaji/Egbema
+Imo,19,Okigwe
+Imo,20,Onuimo
+Imo,21,Orlu
+Imo,22,Orsu
+Imo,23,Oru
+Imo,24,Oru West
+Imo,25,Owerri Municipal
+Imo,26,Owerri North
+Imo,27,Owerri West
+Jigawa,1,Auyo
+Jigawa,2,Babura
+Jigawa,3,Birnin Kudu
+Jigawa,4,Birniwa
+Jigawa,5,Gagarawa
+Jigawa,6,Buji
+Jigawa,7,Dutse
+Jigawa,8,Garki
+Jigawa,9,Gumel
+Jigawa,10,Guri
+Jigawa,11,Gwaram
+Jigawa,12,Gwiwa
+Jigawa,13,Hadejia
+Jigawa,14,Jahun
+Jigawa,15,Kafin Hausa
+Jigawa,16,Kaugama
+Jigawa,17,Kazaure
+Jigawa,18,Kiri-Kasamma
+Jigawa,19,Kiyawa
+Jigawa,20,Maigatari
+Jigawa,21,Malam Madori
+Jigawa,22,Miga
+Jigawa,23,Ringim
+Jigawa,24,Roni
+Jigawa,25,Sule Takarkar
+Jigawa,26,Taura
+Jigawa,27,Yankwashi
+Kaduna,1,Birnin Gwari
+Kaduna,2,Chikun
+Kaduna,3,Giwa
+Kaduna,4,Kajuru
+Kaduna,5,Igabi
+Kaduna,6,Ikara
+Kaduna,7,Jaba
+Kaduna,8,Jema'a
+Kaduna,9,Kachia
+Kaduna,10,Kaduna North
+Kaduna,11,Kaduna South
+Kaduna,12,Kagarko
+Kaduna,13,Kaura
+Kaduna,14,Kauru
+Kaduna,15,Kubau
+Kaduna,16,Kudan
+Kaduna,17,Lere
+Kaduna,18,Makarfi
+Kaduna,19,Sabon Gari
+Kaduna,20,Sanga
+Kaduna,21,Soba
+Kaduna,22,Zangon Kataf
+Kaduna,23,Zaria
+Kano,1,Ajingi
+Kano,2,Albasu
+Kano,3,Bagwai
+Kano,4,Bebeji
+Kano,5,Bichi
+Kano,6,Bunkure
+Kano,7,Dala
+Kano,8,Danbatta
+Kano,9,Dawakin Kudu
+Kano,10,Dawakin Tofa
+Kano,11,Doguwa
+Kano,12,Fagge
+Kano,13,Gabasawa
+Kano,14,Garko
+Kano,15,Garun Mallam
+Kano,16,Gaya
+Kano,17,Gezawa
+Kano,18,Gwale
+Kano,19,Gwarzo
+Kano,20,Kabo
+Kano,21,Kano Municipal
+Kano,22,Karaye
+Kano,23,Kibiya
+Kano,24,Kiru
+Kano,25,Kumbotso
+Kano,26,Kunchi
+Kano,27,Kura
+Kano,28,Madobi
+Kano,29,Makoda
+Kano,30,Minjibir
+Kano,31,Nassarawa
+Kano,32,Rano
+Kano,33,Rimin Gado
+Kano,34,Rogo
+Kano,35,Shanono
+Kano,36,Sumaila
+Kano,37,Takai
+Kano,38,Tarauni
+Kano,39,Tofa
+Kano,40,Tsanyawa
+Kano,41,Tudun Wada
+Kano,42,Ungogo
+Kano,43,Warawa
+Kano,44,Wudil
+Katsina,1,Bakori
+Katsina,2,Batagarawa
+Katsina,3,Batsari
+Katsina,4,Baure
+Katsina,5,Bindawa
+Katsina,6,Charanchi
+Katsina,7,Dan-Musa
+Katsina,8,Dandume
+Katsina,9,Danja
+Katsina,10,Daura
+Katsina,11,Dutsi
+Katsina,12,Dutsinma
+Katsina,13,Faskari
+Katsina,14,Funtua
+Katsina,15,Ingawa
+Katsina,16,Jibia
+Katsina,17,Kafur
+Katsina,18,Kaita
+Katsina,19,Kankara
+Katsina,20,Kankia
+Katsina,21,Katsina
+Katsina,22,Kurfi
+Katsina,23,Kusada
+Katsina,24,Maiadua
+Katsina,25,Malumfashi
+Katsina,26,Mani
+Katsina,27,Mashi
+Katsina,28,Matazu
+Katsina,29,Musawa
+Katsina,30,Rimi
+Katsina,31,Sabuwa
+Katsina,32,Safana
+Katsina,33,Sandamu
+Katsina,34,Zango
+Kebbi,1,Alieru
+Kebbi,2,Arewa
+Kebbi,3,Argungu
+Kebbi,4,Augie
+Kebbi,5,Bagudo
+Kebbi,6,Birnin -Kebbi
+Kebbi,7,Bunza
+Kebbi,8,Dandi Kamba
+Kebbi,9,Danko /Wasagu
+Kebbi,10,Fakai
+Kebbi,11,Gwandu
+Kebbi,12,Jega
+Kebbi,13,Kalgo
+Kebbi,14,Koko/Besse
+Kebbi,15,Maiyama
+Kebbi,16,Ngaski
+Kebbi,17,Sakaba
+Kebbi,18,Shanga
+Kebbi,19,Suru
+Kebbi,20,Yauri
+Kebbi,21,Zuru
+Kogi,1,Adavi
+Kogi,2,Ajaokuta
+Kogi,3,Ankpa
+Kogi,4,Bassa
+Kogi,5,Dekina
+Kogi,6,Ibaji
+Kogi,7,Idah
+Kogi,8,Igalamela
+Kogi,9,Ijumu
+Kogi,10,Kabba/Bunu
+Kogi,11,Kogi
+Kogi,12,Koton Karfe
+Kogi,13,Mopa-Muro
+Kogi,14,Ofu
+Kogi,15,Ogori/Magongo
+Kogi,16,Okehi
+Kogi,17,Okene
+Kogi,18,Olamaboro
+Kogi,19,Omala
+Kogi,20,Yagba East
+Kogi,21,Yagba West
+Kwara,1,Asa
+Kwara,2,Baruten
+Kwara,3,Edu
+Kwara,4,Ekiti
+Kwara,5,Ifelodun
+Kwara,6,Ilorin East
+Kwara,7,Ilorin South
+Kwara,8,Ilorin West
+Kwara,9,Irepodun
+Kwara,10,Kai Ama
+Kwara,11,Moro
+Kwara,12,Offa
+Kwara,13,Oke-Ero
+Kwara,14,Osin
+Kwara,15,Oyun
+Kwara,16,Pategi
+Lagos,1,Agege
+Lagos,2,Ajeromi/Ifelodun
+Lagos,3,Alimosho
+Lagos,4,Amowo-Odofin
+Lagos,5,Apapa
+Lagos,6,Badagry
+Lagos,7,Epe
+Lagos,8,Eti-Osa
+Lagos,9,Ibeju-Lekki
+Lagos,10,Ifako/Ijaye
+Lagos,11,Ikeja
+Lagos,12,Ikorodu
+Lagos,13,Kosofe
+Lagos,14,Lagos Island
+Lagos,15,Lagos Mainland
+Lagos,16,Mushin
+Lagos,17,Ojo
+Lagos,18,Oshodi/Isolo
+Lagos,19,Somolu
+Lagos,20,Surulere
+Nasarawa,1,Akwanga
+Nasarawa,2,Awe
+Nasarawa,3,Doma
+Nasarawa,4,Karu
+Nasarawa,5,Keana
+Nasarawa,6,Keffi
+Nasarawa,7,Kokona
+Nasarawa,8,Lafia
+Nasarawa,9,Nasarawa
+Nasarawa,10,Nasarawa Eggon
+Nasarawa,11,Obi
+Nasarawa,12,Toto
+Nasarawa,13,Wamba
+Niger,1,Agaie
+Niger,2,Agwara
+Niger,3,Bida
+Niger,4,Borgu
+Niger,5,Bosso
+Niger,6,Edati
+Niger,7,Gbako
+Niger,8,Gurara
+Niger,9,Katcha
+Niger,10,Kontagora
+Niger,11,Lapai
+Niger,12,Lavun
+Niger,13,Magama
+Niger,14,Mariga
+Niger,15,Mashegu
+Niger,16,Minna
+Niger,17,Mokwa
+Niger,18,Muya
+Niger,19,Paikoro
+Niger,20,Rafi
+Niger,21,Rijau
+Niger,22,Shiroro
+Niger,23,Suleja
+Niger,24,Tafa
+Niger,25,Wushishi
+Ogun,1,Abeokuta North
+Ogun,2,Abeokuta South
+Ogun,3,Ado-Odo/Ota
+Ogun,4,Egbado North
+Ogun,5,Egbado South
+Ogun,6,Ewekoro
+Ogun,7,Remo North
+Ogun,8,Ifo
+Ogun,9,Ijebu East
+Ogun,10,Ijebu North
+Ogun,11,Ijebu Ode
+Ogun,12,Ikenne
+Ogun,13,Ijebu North East
+Ogun,14,Imeko-Afon
+Ogun,15,Ipokia
+Ogun,16,Obafemi/Owode
+Ogun,17,Odedah
+Ogun,18,Odogbolu
+Ogun,19,Ogun Waterside
+Ogun,20,Shagamu
+Ondo,1,Akoko North East
+Ondo,2,Akoko North West
+Ondo,3,Akoko South West
+Ondo,4,Akoko South East
+Ondo,5,Akure North
+Ondo,6,Akure South
+Ondo,7,Idanre
+Ondo,8,Ifedore
+Ondo,9,Okitipupa
+Ondo,10,Ilaje
+Ondo,11,Ese-Edo
+Ondo,12,Ile-Oluji-Okeigbo
+Ondo,13,Irele
+Ondo,14,Odigbo
+Ondo,15,Ondo East
+Ondo,16,Ondo West
+Ondo,17,Ose
+Ondo,18,Owo
+Osun,1,Atakumosa East
+Osun,2,Atakumosa West
+Osun,3,Aiyedade
+Osun,4,Aiyedire
+Osun,5,Boluwaduro
+Osun,6,Boripe
+Osun,7,Ede North
+Osun,8,Ede South
+Osun,9,Egbedore
+Osun,10,Ejigbo
+Osun,11,Ife Central
+Osun,12,Ife East
+Osun,13,Ife North
+Osun,14,Ife South
+Osun,15,Ifedayo
+Osun,16,Ifelodun
+Osun,17,Ila
+Osun,18,Ilesha East
+Osun,19,Ilesha West
+Osun,20,Irepodun
+Osun,21,Irewole
+Osun,22,Isokan
+Osun,23,Iwo
+Osun,24,Obokun
+Osun,25,Odo-Otin
+Osun,26,Ola-Oluwa
+Osun,27,Olorunda
+Osun,28,Oriade
+Osun,29,Orolu
+Osun,30,Osogbo
+Oyo,1,Afijio
+Oyo,2,Akinyele
+Oyo,3,Atiba
+Oyo,4,Atisbo
+Oyo,5,Egbeda
+Oyo,6,Ibadan North
+Oyo,7,Ibadan North East
+Oyo,8,Ibadan North West
+Oyo,9,Ibadan South East
+Oyo,10,Ibadan South West
+Oyo,11,Ibarapa Central
+Oyo,12,Ibarapa North
+Oyo,13,Ido
+Oyo,14,Saki West
+Oyo,15,Ifeloju
+Oyo,16,Irepo
+Oyo,17,Iseyin
+Oyo,18,Itesiwaju
+Oyo,19,Iwajowa
+Oyo,20,Olorunsogo
+Oyo,21,Kajola
+Oyo,22,Lagelu
+Oyo,23,Ogbomosho North
+Oyo,24,Ogbomosho South
+Oyo,25,Ogo-Oluwa
+Oyo,26,Oluyole
+Oyo,27,Ona-Ara
+Oyo,28,Orelope
+Oyo,29,Ori Ire
+Oyo,30,Oyo East
+Oyo,31,Oyo West
+Oyo,32,Saki East
+Oyo,33,Ifedapo
+Plateau,1,Barkin Ladi
+Plateau,2,Bassa
+Plateau,3,Bokkos
+Plateau,4,Jos East
+Plateau,5,Jos North
+Plateau,6,Jos South
+Plateau,7,Kanam
+Plateau,8,Kanke
+Plateau,9,Langtang North
+Plateau,10,Langtang South
+Plateau,11,Mangu
+Plateau,12,Mikang
+Plateau,13,Pankshin
+Plateau,14,Quan-Pan
+Plateau,15,Riyom
+Plateau,16,Shendam
+Plateau,17,Wase
+Rivers,1,Ahoada
+Rivers,2,Ahoada West
+Rivers,3,Akukutoru
+Rivers,4,Andoni
+Rivers,5,Asaritoru
+Rivers,6,Bonny
+Rivers,7,Degema
+Rivers,8,Eleme
+Rivers,9,Emohua
+Rivers,10,Etche
+Rivers,11,Gonaka
+Rivers,12,Ikwerre
+Rivers,13,Khana
+Rivers,14,Obio/Akpor
+Rivers,15,Obua/Odual
+Rivers,16,Ogba/Egbema/Ndoni
+Rivers,17,Ogu/Bolo
+Rivers,18,Okrika
+Rivers,19,Omumma
+Rivers,20,Opobo/Nkoro
+Rivers,21,Oyigbo
+Rivers,22,Port Harcourt
+Rivers,23,Tai
+Sokoto,1,Binji
+Sokoto,2,Bodinga
+Sokoto,3,Dange-Shuni
+Sokoto,4,Gada
+Sokoto,5,Goronyo
+Sokoto,6,Gudu
+Sokoto,7,Gwadabawa
+Sokoto,8,Illela
+Sokoto,9,Isa
+Sokoto,10,Kebbe
+Sokoto,11,Kware
+Sokoto,12,Rabah
+Sokoto,13,Sabon Birni
+Sokoto,14,Shagari
+Sokoto,15,Silame
+Sokoto,16,Sokoto North
+Sokoto,17,Sokoto South
+Sokoto,18,Tambuwal
+Sokoto,19,Tangaza
+Sokoto,20,Tureta
+Sokoto,21,Wamakko
+Sokoto,22,Wurno
+Sokoto,23,Yabo
+Taraba,1,Ardo Kola
+Taraba,2,Bali
+Taraba,3,Donga
+Taraba,4,Gashaka
+Taraba,5,Gassol
+Taraba,6,Ibi
+Taraba,7,Jalingo
+Taraba,8,Karim Lamidu
+Taraba,9,Kurmi
+Taraba,10,Lau
+Taraba,11,Sardauna
+Taraba,12,Takum
+Taraba,13,Ussa
+Taraba,14,Wukari
+Taraba,15,Yorro
+Taraba,16,Zing
+Yobe,1,Bade
+Yobe,2,Bursari
+Yobe,3,Damaturu
+Yobe,4,Fika
+Yobe,5,Fune
+Yobe,6,Geidam
+Yobe,7,Gujba
+Yobe,8,Gulami
+Yobe,9,Jakusko
+Yobe,10,Karasuwa
+Yobe,11,Machina
+Yobe,12,Nangere
+Yobe,13,Nguru
+Yobe,14,Potiskum
+Yobe,15,Tarmua
+Yobe,16,Yunusari
+Yobe,17,Yusufari
+Zamfara,1,Anka
+Zamfara,2,Bakura
+Zamfara,3,Bukkuyum
+Zamfara,4,Bungudu
+Zamfara,5,Gummi
+Zamfara,6,Gusau
+Zamfara,7,Kaura Namoda
+Zamfara,8,Kiyawa
+Zamfara,9,Maradun
+Zamfara,10,Maru
+Zamfara,11,Shinkafi
+Zamfara,12,Talata Mafara
+Zamfara,13,Tsafe
+Zamfara,14,Zurmi
