@@ -20,8 +20,7 @@ export const DEDUCTION_LINES = [
 	{ key: "contractual_obligation_ispo", name: "Contractual obligations (ISPO)", short: "ISPO", colour: "#0E8A5F" },
 	{ key: "transfer_nddc_hyppadec", name: "NDDC / HYPPADEC transfer", short: "NDDC / HYPPADEC", colour: "#E2B53E" },
 	{ key: "other_deductions_note", name: "Other deductions (see note)", short: "Other (note)", colour: "#5FB38E" },
-	{ key: "deduction_misc", name: "Deduction (unlabelled)", short: "Unlabelled", colour: "#93A59D" },
-	{ key: "other_deduction", name: "Other deductions", short: "Other", colour: "#B9CCC3" },
+	{ key: "deduction_misc", name: "VAT deduction", short: "VAT deduction", colour: "#93A59D" },
 ] as const;
 
 export type RevenueKey = (typeof REVENUE_LINES)[number]["key"];
@@ -65,7 +64,6 @@ export interface NationalMonth {
 	transfer_nddc_hyppadec: number;
 	other_deductions_note: number;
 	deduction_misc: number;
-	other_deduction: number;
 	naira_per_usd: number | null;
 	states: number;
 }

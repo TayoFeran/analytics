@@ -48,8 +48,7 @@ const DEDUCTION_LINES: { key: LineKey; name: string; short: string }[] = [
 	{ key: "contractual_obligation_ispo", name: "Contractual obligations (ISPO)", short: "ISPO" },
 	{ key: "transfer_nddc_hyppadec", name: "NDDC / HYPPADEC transfer", short: "NDDC / HYPPADEC" },
 	{ key: "other_deductions_note", name: "Other deductions (see note)", short: "Other (note)" },
-	{ key: "deduction_misc", name: "Deduction (unlabelled)", short: "Unlabelled" },
-	{ key: "other_deduction", name: "Other deductions", short: "Other" },
+	{ key: "deduction_misc", name: "VAT deduction", short: "VAT deduction" },
 ];
 
 const COLOURS = { better: "#0E8A5F", worse: "#C93C3C", equal: "#C98A00", ink: "#0B3D2E", net: "#E2B53E" };

@@ -6,7 +6,7 @@
 Data pipelines that load public Nigerian economic data into **MotherDuck** and model it with **dbt** in bronze, silver and gold layers. **GitHub Actions** runs everything in the cloud: a daily production load, and checks on every pull request.
 
 ```text
-World Bank API, FAAC workbooks ─▶ pipelines/nigeria ─▶ bronze ─dbt─▶ silver ─dbt─▶ gold (nigeria, sandbox)
+World Bank API, OAGF FAAC reports ─▶ pipelines/nigeria ─▶ bronze ─dbt─▶ silver ─dbt─▶ gold (nigeria, sandbox)
                                           MotherDuck: dev_dwh (development) · prod_dwh (production)
 ```
 
@@ -19,7 +19,7 @@ The FAAC allocation pipeline moved here from **Microsoft Fabric** (#17), and Fab
 | [`pipelines/`](pipelines) | Ingestion: one folder per project, one `load_<source>_<what>.py` per source, loading raw data into MotherDuck `bronze`. Today: [`nigeria/`](pipelines/nigeria). |
 | [`dbt/`](dbt) | The dbt project: `models/motherduck/bronze/<project>/<source>` (sources), `silver/<project>/<source>` (cleaned views) and `gold/<schema>` (tables; each subfolder is a schema: `nigeria`, `sandbox`). |
 | [`.github/`](.github) | GitHub Actions workflows (`daily-pipeline`, `ci`) and the PR template. |
-| [`data/`](data) | Source files that don't come from an API, by project and source, e.g. the monthly FAAC workbooks in [`data/nigeria/faac/`](data/nigeria/faac). Adding a file and merging loads it into prod. |
+| [`data/`](data) | Source files that don't come from an API, by project and source, e.g. the FAAC figures read from the OAGF reports in [`data/nigeria/faac/oagf/`](data/nigeria/faac/oagf). Adding a file and merging loads it into prod. |
 | [`scripts/`](scripts) | Repo tooling, e.g. `check_motherduck.py` to test your token. |
 | [`docs/`](docs) | [Architecture](docs/architecture.md), [decisions](docs/decisions), [runbooks](docs/runbooks) and the [restructure record](docs/restructure). |
 | [`archive/`](archive) | Retired code kept for reference (the old Airflow project, one-off setup). Nothing here runs. |

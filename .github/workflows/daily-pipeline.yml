@@ -49,9 +49,6 @@ jobs:
       - name: "nigeria: load World Bank indicators into prod_dwh.bronze"
         run: uv run python pipelines/nigeria/load_world_bank_indicators.py
 
-      - name: "nigeria: load FAAC allocation workbooks into prod_dwh.bronze"
-        run: uv run python pipelines/nigeria/load_faac_allocations.py
-
       - name: "nigeria: load FAAC OAGF report figures into prod_dwh.bronze"
         run: uv run python pipelines/nigeria/load_faac_oagf_reports.py
 

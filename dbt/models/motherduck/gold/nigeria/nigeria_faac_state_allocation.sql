@@ -1,7 +1,6 @@
 -- One row per state per FAAC month, from the original OAGF reports: what each state was
 -- allocated by revenue line, what was deducted by deduction line, and the net it received.
--- Same lines as nigeria_faac_income and nigeria_faac_deduction (from the refined workbooks),
--- which this replaces once the site has switched.
+-- Same lines as the refined workbooks had (#17), which this replaced in #36.
 --
 -- Totals are computed from the lines, because eight reports are cut off before their
 -- totals. Where the report prints them, they're kept beside the computed ones and compared

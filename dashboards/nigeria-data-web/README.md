@@ -31,7 +31,7 @@ It reads `dev_dwh` unless `MOTHERDUCK_DATABASE=prod_dwh`, which only `daily-pipe
 
 | Query | One row per | Used by |
 |---|---|---|
-| `faac_national_month.sql` | FAAC month, all states together: gross, deductions, net, the 6 revenue lines, the 6 deduction lines, naira per dollar | FAAC Overview |
+| `faac_national_month.sql` | FAAC month, all states together: gross, deductions, net, the 6 revenue lines, the 5 deduction lines, naira per dollar | FAAC Overview |
 | `faac_state_month.sql` | state per FAAC month: gross, deductions, net and every revenue and deduction line | FAAC Overview top 5, States, Revenue mix, Deductions, Compare |
 | `faac_states.sql` | state: zone and region | colouring and grouping states by zone |
 | `economy_month.sql` | month: president, naira per dollar, CPI, inflation | Economy Overview, FAAC in real terms, Presidents |

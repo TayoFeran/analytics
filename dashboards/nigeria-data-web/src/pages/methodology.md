@@ -3,7 +3,7 @@ layout: ../layouts/ArticleLayout.astro
 title: Methodology
 eyebrow: About the data
 description: Where the data comes from, how each figure is calculated, how often it updates, and the known gaps.
-updated: 9 November 2026
+updated: 27 November 2026
 ---
 
 Every number on this site comes from public sources and is calculated the same way every time. This page explains where the data comes from, what each figure means, and what is missing, so you can check our work.
@@ -12,7 +12,7 @@ Every number on this site comes from public sources and is calculated the same w
 
 | Data | Source | Coverage |
 |---|---|---|
-| FAAC allocations to states | Monthly FAAC disbursement reports, published by the Office of the Accountant General of the Federation (OAGF) | 36 states, January 2020 to the latest month added |
+| FAAC allocations to states | The monthly FAAC reports published by the Office of the Accountant General of the Federation (OAGF), read from the original PDF (two months from the OAGF's Excel version) | 36 states, January 2020 to the latest month added |
 | Naira-per-dollar exchange rate | World Bank, official exchange rate (monthly average) | January 2010 to the latest month |
 | Consumer prices and inflation | World Bank, consumer price index (CPI) | Prices from January 2010; inflation from January 2011 (it compares with a year earlier) |
 | GDP, growth, population | World Bank | Yearly, 1990 to the latest year |
@@ -24,7 +24,7 @@ FAAC is the Federation Account Allocation Committee. Every month it shares feder
 ## How often it updates
 
 - The site is rebuilt **every day** from the latest data in our warehouse.
-- **FAAC data arrives monthly.** A month's workbook is added once it is published, usually some weeks after the month ends.
+- **FAAC data arrives monthly.** A month's report is added once the OAGF publishes it, usually some weeks after the month ends.
 - The **freshness** label on each page compares the latest month we have with today's date. A FAAC month is expected within 45 days after it ends:
 
 Economy pages use two clocks: CPI and the exchange rate are expected within 60 days after a month ends (Late up to 30 days after that), and GDP within 270 days after a year ends (Late up to 90 days after that). The label shows the worse of the two.
@@ -52,7 +52,7 @@ Economy pages use two clocks: CPI and the exchange rate are expected within 60 d
 - **Oil derivation**: extra money for oil- and gas-producing states. At least 13% of revenue from natural resources goes back to the states that produce them (Constitution, s.162(2)). Most states receive none.
 - **Exchange gain**: a state's share of the extra naira the Federation Account earns when dollar revenue is converted at a weaker naira rate than the budget assumed. Only paid in some months.
 - **Ecology fund**: a state's share of the Ecological Fund, set aside for problems such as erosion, flooding and desertification.
-- **Other income**: smaller or one-off revenue lines that the FAAC report groups as "Others".
+- **Other income**: everything else shared that month, mostly one-off items: distributions from the non-oil excess and forex equalisation accounts, augmentation, the Electronic Money Transfer Levy (EMTL), solid minerals revenue and excess bank charges. Their names change from month to month, so they are grouped here.
 
 ### Deduction lines (they add up to deductions)
 
@@ -60,8 +60,7 @@ Economy pages use two clocks: CPI and the exchange rate are expected within 60 d
 - **Contractual obligations (ISPO)**: Irrevocable Standing Payment Orders, payments a state committed to in advance, usually for bank loans, bonds or contracts, deducted automatically each month.
 - **NDDC / HYPPADEC transfer**: half of the ecological fund due to member states, transferred by law to the Niger Delta Development Commission (NDDC) or the Hydroelectric Power Producing Areas Development Commission (HYPPADEC).
 - **Other deductions (see note)**: deductions the FAAC report explains in its notes, often repayments of federal loans to states such as budget support or bailout facilities.
-- **Deduction (unlabelled)**: a deduction shown in the FAAC report under a column headed only "Deduction", with no further detail.
-- **Other deductions**: smaller deductions that the FAAC report groups as "Others".
+- **VAT deduction**: money taken from a state's VAT share before payment. Zero in most months.
 
 ### Shares and comparisons
 
@@ -95,17 +94,30 @@ To compare months fairly, amounts are converted to the prices of the latest FAAC
 - **The naira's value** compares the rate a president inherited (the month before their first month) with the rate they left.
 - A term is **partial** (hatched) when the data doesn't cover all of it, for example because monthly prices start in 2010. These comparisons describe outcomes; conditions such as oil prices differed between terms.
 
+## How we check the figures
+
+Each month's figures are read from the OAGF report itself, and checked against the report before they are used:
+
+- the report is for the right month, and lists all 36 states;
+- every column adds up to the report's own Total row, within ₦1;
+- no month repeats another month's table;
+- each state's revenue lines add up to the report's Total Gross Amount, and minus its deductions to its Total Net Amount, within ₦1. A few reports are cut off before their totals; there we calculate them from the lines.
+
+Every original report is kept, with a fingerprint of the file, so each figure can be traced to the exact document it came from.
+
 ## Rounding
 
 Amounts are stored in whole naira and shown in billions (₦) or millions and billions ($), to one decimal place. Because of rounding, the revenue or deduction lines can differ from their total by a few naira.
 
 ## Known gaps
 
-- **FCT is not included.** The Federal Capital Territory isn't in the FAAC state workbooks.
-- **October 2024 is missing.** There is no workbook for that month, so charts go straight from September to November 2024, and November 2024 is compared with September.
+- **FCT is not included.** The FAAC report lists the Federal Capital Territory with the federal government's share, not with the states.
 - **Data starts in January 2020.** Earlier years will be added over time.
-- **Some workbooks have blank totals.** Where a workbook was saved without its totals, we recompute them from their components, and net received as gross minus deductions. That rule matches every workbook where the totals are filled in.
 
 ## Spotted an error?
 
 The code and the calculations behind this site are public. If something looks wrong, please [open an issue on GitHub](https://github.com/TayoFeran/analytics/issues) with the page, the figure and what you expected. Corrections are noted on this page.
+
+## Corrections
+
+- **27 November 2026: figures now come from the original OAGF reports.** Until now they came from workbooks retyped from those reports. Checking every line against the originals changed one month noticeably: in **May 2023** the states' net received falls by ₦25.8 billion, to ₦317.3 billion, because the workbook, copied from the OAGF's Excel version, overstated four one-off revenue lines by 57%; the PDF agrees with its own summary page. August 2021 falls by ₦0.17 billion (the transfer of ecology funds to HYPPADEC was missing). Every other month changed by less than ₦1 million. October 2024 and the months since April 2026 were added.

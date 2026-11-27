@@ -9,7 +9,6 @@ How data moves from public sources to tables you can query, and what runs it.
                          ┌──────────────────────────────────────────────────────────────────┐
                          │                                                                  │
  World Bank API ─────────▶ pipelines/nigeria/load_world_bank_indicators.py ─┐                       │
- data/nigeria/faac/*.xlsx ▶ pipelines/nigeria/load_faac_allocations.py ─────┤                       │
  data/nigeria/faac/oagf/ ─▶ pipelines/nigeria/load_faac_oagf_reports.py ────┴▶ bronze ─dbt▶ silver ─dbt▶ gold
                          │                                          (raw)    (views)     (tables)│
                          └──────────────────────────────────────────────────────────────────┘
@@ -42,13 +41,11 @@ Gold tables today:
 | `nigeria.nigeria_population` | one row per year | World Bank `SP.POP.TOTL` |
 | `nigeria.nigeria_fx_rate` | one row per month | World Bank `DPANUSSPB` |
 | `nigeria.nigeria_consumer_price_index` | one row per month | World Bank `CPTOTNSXN` |
-| `nigeria.nigeria_faac_income` | one row per state per month (`state_month`) | FAAC workbooks, Income sheet |
-| `nigeria.nigeria_faac_deduction` | one row per state per month (`state_month`) | FAAC workbooks, Deduction sheet (+ Income for the net-amount fallback) |
-| `nigeria.nigeria_faac_state_allocation` | one row per state per month (`state_month`) | OAGF reports, state table: the same lines as `nigeria_faac_income` and `nigeria_faac_deduction`, which it replaces once the site has switched (#36) |
+| `nigeria.nigeria_faac_state_allocation` | one row per state per month (`state_month`) | OAGF reports, state table: six revenue lines, five deduction lines, totals computed and checked against the printed ones (#36) |
 | `nigeria.nigeria_faac_lga_allocation` | one row per council per month (`lga_month`) | OAGF reports, LGA table: the 774 councils' allocations by line |
 | `nigeria.nigeria_faac_report_figure` | one row per printed figure (`figure_key`) | OAGF reports: every state and council figure with its printed column header and line |
 | `sandbox.fo_calendar` | one row per day, 1990-01-01 to today | generated |
-| `datamart.nigeria_faac_state_month` | one row per state per month (`state_month`) | FAAC income + deduction, with every amount also in US dollars at the month's official exchange rate. Fact table of the Nigeria Data Dashboard's FAAC section |
+| `datamart.nigeria_faac_state_month` | one row per state per month (`state_month`) | `nigeria_faac_state_allocation`, with every amount also in US dollars at the month's official exchange rate. Fact table of the Nigeria Data Dashboard's FAAC section |
 | `datamart.nigeria_economy_month` | one row per month (`month_date`), from 2010 | official exchange rate and CPI, with the year-on-year change in each. Monthly fact table of the dashboard's Economy section |
 | `datamart.nigeria_economy_year` | one row per year (`year_date`), from 1990 | GDP in US dollars and naira, real growth, population, GDP per person and the year's average exchange rate. Yearly fact table of the Economy section |
 
@@ -86,6 +83,8 @@ Secrets: `MOTHERDUCK_TOKEN` lives in `.env` locally (gitignored) and as a GitHub
 
 ## FAAC: moved from Fabric
 
-FAAC now runs on MotherDuck (#17): the workbooks live in `data/nigeria/faac/`, and `nigeria.nigeria_faac_income` and `nigeria.nigeria_faac_deduction` replace Fabric's `DWH.nigeria.faac_income` and `faac_deduction`. The migration was reconciled row by row against Fabric. Every difference traced back to a bug in the Fabric notebooks, the largest being a net-amount fallback that understated net allocations by about ₦4.48 trillion. The details are in #17.
+FAAC moved to MotherDuck in #17: the hand-refined workbooks moved to the repo, and `nigeria.nigeria_faac_income` and `nigeria.nigeria_faac_deduction` replaced Fabric's `DWH.nigeria.faac_income` and `faac_deduction`. The migration was reconciled row by row against Fabric. Every difference traced back to a bug in the Fabric notebooks, the largest being a net-amount fallback that understated net allocations by about ₦4.48 trillion. The details are in #17.
+
+In #36 those workbooks were replaced by the original OAGF reports, with local governments added: `data/nigeria/faac/oagf/`, `nigeria.nigeria_faac_state_allocation` and `nigeria.nigeria_faac_lga_allocation` ([ADR 0004](decisions/0004-faac-from-oagf-reports.md)). The workbooks are kept in `archive/nigeria/faac/`.
 
 Fabric was retired on 2026-11-02: the Git integration was disconnected, the `Analytics_Engineering` workspace deleted, and the Fabric item folders removed from the repo (they remain in git history before that date). See [decision 0001](decisions/0001-motherduck-over-fabric.md).

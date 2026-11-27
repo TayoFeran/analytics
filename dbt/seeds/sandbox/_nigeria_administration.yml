@@ -36,8 +36,7 @@ seeds:
         description: >
           First month attributed to this administration, in the FAAC and economy tables.
           Presidents are inaugurated on 29 May, so the whole of May goes to the incoming
-          administration (the same rule as the president column in nigeria_faac_income and
-          nigeria_faac_deduction). Yar'Adua died on 5 May 2010, so May 2010 goes to Jonathan.
+          administration (the rule the FAAC gold tables use). Yar'Adua died on 5 May 2010, so May 2010 goes to Jonathan.
         data_tests:
           - not_null
           - unique

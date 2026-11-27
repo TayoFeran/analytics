@@ -1,48 +1,48 @@
 -- One row per state per FAAC disbursement month: what each state was allocated, what was
 -- deducted, and the net it received, in naira and in US dollars. The fact table of the
--- Nigeria Data Dashboard's FAAC section.
+-- OpenPurse site's and the Nigeria Data Dashboard's FAAC pages, from the original OAGF
+-- reports (nigeria_faac_state_allocation, ADR 0004).
 --
 -- Dollar amounts use the official exchange rate of the disbursement month itself, so a
 -- total across months is the sum of what each month was worth in dollars at the time.
 -- Converting a multi-year naira total at a single rate would misstate it.
 with
-    income as (select * from {{ ref("nigeria_faac_income") }}),
-
-    deduction as (select * from {{ ref("nigeria_faac_deduction") }}),
+    allocation as (select * from {{ ref("nigeria_faac_state_allocation") }}),
 
     fx as (select date, exchange_rate from {{ ref("nigeria_fx_rate") }}),
 
     joined as (
         select
-            income.state_month,
-            income.disbursement_date,
-            income.year,
-            income.month_number,
-            income.month_name,
-            income.president,
-            income.state,
-            income.lg_count,
-            income.statutory_allocation,
-            income.oil_derivation,
-            income.exchange_gain_difference,
-            income.total_ecology_fund,
-            income.gross_vat_allocation,
-            income.others_income,
-            income.total_gross_amount,
-            deduction.external_debt,
-            deduction.contractual_obligation_ispo,
-            deduction.other_deductions_note,
-            deduction.transfer_nddc_hyppadec,
-            deduction.deduction_misc,
-            deduction.other_deduction,
-            deduction.total_deductions,
-            deduction.net_amount_after_deductions,
+            allocation.state_month,
+            allocation.disbursement_date,
+            allocation.year,
+            allocation.month_number,
+            allocation.month_name,
+            allocation.president,
+            allocation.state,
+            allocation.lg_count,
+            allocation.statutory_allocation,
+            allocation.oil_derivation,
+            allocation.exchange_gain_difference,
+            allocation.total_ecology_fund,
+            allocation.gross_vat_allocation,
+            allocation.others_income,
+            allocation.total_gross_amount,
+            allocation.external_debt,
+            allocation.contractual_obligation_ispo,
+            allocation.other_deductions_note,
+            allocation.transfer_nddc_hyppadec,
+            allocation.deduction_misc,
+            -- The refined workbooks had a sixth deduction line that the OAGF reports don't
+            -- print. Kept at 0 because the Power BI report still reads it.
+            0::decimal(18, 2) as other_deduction,
+            allocation.total_deductions,
+            allocation.net_amount_after_deductions,
             -- Naira per US dollar in the disbursement month (World Bank official rate)
             fx.exchange_rate as naira_per_usd,
-            income.source_file
-        from income
-        left join deduction on income.state_month = deduction.state_month
-        left join fx on income.disbursement_date = fx.date
+            allocation.source_file
+        from allocation
+        left join fx on allocation.disbursement_date = fx.date
     )
 
 select

@@ -62,5 +62,5 @@ Each is listed, with what is wrong, in `known_report_errors.csv`. The revenue li
 
 - Adding a month: save the OAGF PDF, run the refine script, open a PR with the new CSV rows.
 - Reading a new layout can fail a check. That stops the refine step, not the website: the site keeps the last good data until the reader is fixed.
-- The refined workbooks and `load_faac_allocations.py` are retired once the website runs on the new data.
+- The refined workbooks are retired to `archive/nigeria/faac/`, and `load_faac_allocations.py` and the models built from them (`nigeria_faac_income`, `nigeria_faac_deduction`) were removed once the website ran on the new data (#36).
 - 2019 waits until a full year of reports is available.
