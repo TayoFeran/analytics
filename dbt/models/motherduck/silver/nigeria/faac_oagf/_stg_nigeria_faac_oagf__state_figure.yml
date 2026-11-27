@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: stg_nigeria_faac_oagf__state_figure
+    description: >
+      Every printed figure of the OAGF state table, with its column header and standard
+      line. Grain: one row per month, table row and column (figure_key).
+    columns:
+      - name: figure_key
+        description: Grain key, "<YYYY-MM> <row_number> <column_id>".
+        data_tests:
+          - not_null
+          - unique
+      - name: shared_month
+        description: Month the allocation was shared, "YYYY-MM" (the report's "Shared in").
+        data_tests:
+          - not_null
+      - name: disbursement_date
+        description: First day of the shared month, as in the other FAAC gold tables.
+        data_tests:
+          - not_null
+      - name: row_type
+        description: state (the 36 states), other (FCT, NDDC, derivation funds and the like) or total.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['state', 'other', 'total']
+      - name: beneficiary
+        description: The row's label as printed.
+        data_tests:
+          - not_null
+      - name: state
+        description: State name as in nigeria_state, on state rows only.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('nigeria_state')
+                field: state
+      - name: column_header
+        description: The column's header as printed.
+        data_tests:
+          - not_null
+      - name: line
+        description: >
+          Standard line from nigeria_faac_state_column_line (or the override seed). Blank
+          means a header the seed doesn't know yet: add it there.
+        data_tests:
+          - not_null
+      - name: role
+        description: income, deduction, subtotal or printed_total.
+        data_tests:
+          - not_null
+      - name: amount
+        description: Naira, as printed. A dash is 0; a blank cell has no row.
+        data_tests:
+          - not_null

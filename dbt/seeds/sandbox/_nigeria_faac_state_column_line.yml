@@ -1,0 +1,62 @@
+version: 2
+
+seeds:
+  - name: nigeria_faac_state_column_line
+    description: >
+      Maps every column header of the OAGF state table (Table III) to a standard FAAC line,
+      so every grouping decision is visible and editable here. Headers change almost every
+      month (one-off "Distribution of N Billion" items, EMTL, augmentation), and the
+      reader joins words cut off where headers wrap ("rossVATAllocation"). Lines are the
+      ones the site already uses. A new header in a new month fails the not_null test on
+      line in stg_nigeria_faac_oagf__state_figure: add it here.
+    config:
+      column_types:
+        header_key: varchar
+    columns:
+      - name: header_key
+        description: The printed header in lower case, letters, digits and % only.
+        data_tests:
+          - not_null
+          - unique
+      - name: line
+        description: >
+          The standard line. For income and deduction columns, one of the lines in the
+          gold tables; one-off distributions, EMTL, augmentation, solid minerals and the
+          13% derivation on exchange gain go to others_income, as the refined workbooks did.
+          For subtotal and printed_total columns, which column of the report it is.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - statutory_allocation
+                  - oil_derivation
+                  - exchange_gain_difference
+                  - total_ecology_fund
+                  - gross_vat_allocation
+                  - others_income
+                  - external_debt
+                  - contractual_obligation_ispo
+                  - other_deductions_note
+                  - transfer_nddc_hyppadec
+                  - deduction_misc
+                  - gross_total
+                  - net_statutory_allocation
+                  - net_ecology_fund
+                  - net_vat_allocation
+                  - group_total
+                  - total_gross_amount
+                  - total_net_amount
+      - name: role
+        description: >
+          income (adds to the gross amount), deduction (taken off it), subtotal (the
+          report's own sums, such as Gross Total and Net VAT, left out so nothing counts
+          twice) or printed_total (Total Gross Amount and Total Net Amount, kept to check
+          the computed totals against).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['income', 'deduction', 'subtotal', 'printed_total']
+      - name: example_header
+        description: One header as printed with this key, for reading the seed.

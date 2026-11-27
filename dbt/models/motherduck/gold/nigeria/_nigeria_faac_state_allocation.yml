@@ -1,0 +1,118 @@
+version: 2
+
+models:
+  - name: nigeria_faac_state_allocation
+    description: >
+      FAAC allocations to each of the 36 states from the original OAGF reports, by
+      revenue line and deduction line, in naira. Grain: one row per state per month
+      (state_month). The lines are those of nigeria_faac_income and nigeria_faac_deduction;
+      the totals are computed from them and checked against the report's own totals.
+    columns:
+      - name: state_month
+        description: Grain key, "<YYYY-MM> <state>", e.g. "2024-01 Lagos".
+        data_tests:
+          - not_null
+          - unique
+      - name: disbursement_date
+        description: First day of the month the allocation was shared.
+        data_tests:
+          - not_null
+      - name: month_number
+        data_tests:
+          - not_null
+      - name: president
+        description: Administration in office in that month, from nigeria_administration.
+        data_tests:
+          - not_null
+      - name: state
+        description: State name as in nigeria_state.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('nigeria_state')
+                field: state
+      - name: lg_count
+        description: Number of local government councils, as the state table prints it.
+        data_tests:
+          - not_null
+      - name: statutory_allocation
+        description: Gross statutory allocation.
+        data_tests:
+          - not_null
+      - name: oil_derivation
+        description: 13% share of derivation (net), for oil-producing states.
+        data_tests:
+          - not_null
+      - name: exchange_gain_difference
+        description: Exchange gain allocation.
+        data_tests:
+          - not_null
+      - name: total_ecology_fund
+        description: Total share of ecology, before the transfer to NDDC/HYPPADEC.
+        data_tests:
+          - not_null
+      - name: gross_vat_allocation
+        description: Gross VAT allocation.
+        data_tests:
+          - not_null
+      - name: others_income
+        description: >
+          Everything else shared that month: one-off distributions from the non-oil excess
+          and forex equalisation accounts, augmentation, EMTL, solid minerals, excess bank
+          charges and the 13% derivation on exchange gain. nigeria_faac_report_figure
+          lists them by printed header.
+        data_tests:
+          - not_null
+      - name: total_gross_amount
+        description: Sum of the six revenue lines.
+        data_tests:
+          - not_null
+      - name: external_debt
+        data_tests:
+          - not_null
+      - name: contractual_obligation_ispo
+        description: Contractual obligation (ISPO) deductions.
+        data_tests:
+          - not_null
+      - name: other_deductions_note
+        description: Other deductions (see the report's note).
+        data_tests:
+          - not_null
+      - name: transfer_nddc_hyppadec
+        description: Transfer of 50% of the ecology share to NDDC/HYPPADEC.
+        data_tests:
+          - not_null
+      - name: deduction_misc
+        description: VAT deduction.
+        data_tests:
+          - not_null
+      - name: total_deductions
+        data_tests:
+          - not_null
+      - name: net_amount_after_deductions
+        description: total_gross_amount minus total_deductions.
+        data_tests:
+          - not_null
+      - name: total_gross_amount_reported
+        description: The report's Total Gross Amount. Blank where the report is cut off before it.
+      - name: net_amount_reported
+        description: The report's Total Net Amount. Blank where the report is cut off before it.
+      - name: report_check
+        description: >
+          matches (the computed totals are within N1 of the printed ones) or not_printed
+          (the report is cut off before its totals). Any other value fails the test: it
+          means a column is mapped to the wrong line in the seeds.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['matches', 'not_printed']
+      - name: source_type
+        description: pdf, or excel for April 2023 and September 2021 (ADR 0004).
+        data_tests:
+          - not_null
+      - name: source_file
+        description: The OAGF report file this month was read from.
+        data_tests:
+          - not_null

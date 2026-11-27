@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: nigeria_faac_report_figure
+    description: >
+      Every figure the OAGF reports print for a state or a council, with the column
+      header as printed and the line it is grouped into. Grain: one row per level, month,
+      state or council, and column (figure_key).
+    columns:
+      - name: figure_key
+        description: Grain key, the level followed by the silver model's figure_key.
+        data_tests:
+          - not_null
+          - unique
+      - name: level
+        description: state (the state table) or lga (the LGA table).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['state', 'lga']
+      - name: shared_month
+        description: Month the allocation was shared, "YYYY-MM".
+        data_tests:
+          - not_null
+      - name: state
+        description: State name as in nigeria_state.
+        data_tests:
+          - not_null
+      - name: lga_sn
+        description: The council's number within its state, on lga rows.
+      - name: lga
+        description: Council name, on lga rows.
+      - name: column_header
+        description: The column's header as printed.
+        data_tests:
+          - not_null
+      - name: line
+        description: The standard line, from the column seeds.
+        data_tests:
+          - not_null
+      - name: role
+        description: income, deduction, subtotal or printed_total.
+        data_tests:
+          - not_null
+      - name: amount
+        description: Naira, as printed (LGA deductions with the sign they're printed with).
+        data_tests:
+          - not_null

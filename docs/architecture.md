@@ -9,7 +9,8 @@ How data moves from public sources to tables you can query, and what runs it.
                          ┌──────────────────────────────────────────────────────────────────┐
                          │                                                                  │
  World Bank API ─────────▶ pipelines/nigeria/load_world_bank_indicators.py ─┐                       │
- data/nigeria/faac/*.xlsx ▶ pipelines/nigeria/load_faac_allocations.py ─────┴▶ bronze ─dbt▶ silver ─dbt▶ gold
+ data/nigeria/faac/*.xlsx ▶ pipelines/nigeria/load_faac_allocations.py ─────┤                       │
+ data/nigeria/faac/oagf/ ─▶ pipelines/nigeria/load_faac_oagf_reports.py ────┴▶ bronze ─dbt▶ silver ─dbt▶ gold
                          │                                          (raw)    (views)     (tables)│
                          └──────────────────────────────────────────────────────────────────┘
                                                         MotherDuck: prod_dwh
@@ -43,6 +44,9 @@ Gold tables today:
 | `nigeria.nigeria_consumer_price_index` | one row per month | World Bank `CPTOTNSXN` |
 | `nigeria.nigeria_faac_income` | one row per state per month (`state_month`) | FAAC workbooks, Income sheet |
 | `nigeria.nigeria_faac_deduction` | one row per state per month (`state_month`) | FAAC workbooks, Deduction sheet (+ Income for the net-amount fallback) |
+| `nigeria.nigeria_faac_state_allocation` | one row per state per month (`state_month`) | OAGF reports, state table: the same lines as `nigeria_faac_income` and `nigeria_faac_deduction`, which it replaces once the site has switched (#36) |
+| `nigeria.nigeria_faac_lga_allocation` | one row per council per month (`lga_month`) | OAGF reports, LGA table: the 774 councils' allocations by line |
+| `nigeria.nigeria_faac_report_figure` | one row per printed figure (`figure_key`) | OAGF reports: every state and council figure with its printed column header and line |
 | `sandbox.fo_calendar` | one row per day, 1990-01-01 to today | generated |
 | `datamart.nigeria_faac_state_month` | one row per state per month (`state_month`) | FAAC income + deduction, with every amount also in US dollars at the month's official exchange rate. Fact table of the Nigeria Data Dashboard's FAAC section |
 | `datamart.nigeria_economy_month` | one row per month (`month_date`), from 2010 | official exchange rate and CPI, with the year-on-year change in each. Monthly fact table of the dashboard's Economy section |
@@ -54,6 +58,9 @@ Reference lists (dbt seeds, in `sandbox`):
 |---|---|---|
 | `sandbox.nigeria_state` | one row per state (36 + FCT) | geopolitical zone and region (North/South) of each state |
 | `sandbox.nigeria_administration` | one row per administration | president, party, term dates and the first month attributed to each, from Obasanjo (1999) |
+| `sandbox.nigeria_lga` | one row per council (774) | council names, keyed by state and the council's number in the OAGF LGA table |
+| `sandbox.nigeria_faac_state_column_line`, `sandbox.nigeria_faac_lga_column_line` | one row per printed column header | which FAAC line each OAGF column header belongs to |
+| `sandbox.nigeria_faac_state_column_override` | one row per month and column | the few columns whose printed header is wrong that month |
 
 ## Environments
 

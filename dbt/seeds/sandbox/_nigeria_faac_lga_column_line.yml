@@ -1,0 +1,47 @@
+version: 2
+
+seeds:
+  - name: nigeria_faac_lga_column_line
+    description: >
+      Maps every column header of the OAGF LGA table to a standard FAAC line, like
+      nigeria_faac_state_column_line. Many headers carry words from the table's title,
+      printed sideways down the left edge ("utiondetailsdeduction"). The LGA table's
+      "Net Statutory Allocation" is the amount before the Deduction column, so it maps to
+      statutory_allocation.
+    config:
+      column_types:
+        header_key: varchar
+    columns:
+      - name: header_key
+        description: The printed header in lower case, letters, digits and % only.
+        data_tests:
+          - not_null
+          - unique
+      - name: line
+        description: >
+          The standard line. deduction is the LGA table's single Deduction column.
+          net_ecology_fund (a subtotal) and total_net_amount (the printed Total
+          Allocation) are the report's own sums.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - statutory_allocation
+                  - exchange_gain_difference
+                  - total_ecology_fund
+                  - gross_vat_allocation
+                  - others_income
+                  - deduction
+                  - transfer_nddc_hyppadec
+                  - net_ecology_fund
+                  - total_net_amount
+      - name: role
+        description: income, deduction, subtotal or printed_total, as in nigeria_faac_state_column_line.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['income', 'deduction', 'subtotal', 'printed_total']
+      - name: example_header
+        description: One header as printed with this key, for reading the seed.

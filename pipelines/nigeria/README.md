@@ -7,6 +7,7 @@ Ingestion for the Nigeria project. One `load_<source>_<what>.py` script per sour
 | `load_world_bank_indicators.py` | World Bank API | `bronze.nigeria_world_bank_indicators_annual`, `bronze.nigeria_world_bank_indicators_monthly` |
 | `load_faac_allocations.py` | FAAC workbooks in [`data/nigeria/faac/`](../../data/nigeria/faac) | `bronze.nigeria_faac_income_sheet`, `bronze.nigeria_faac_deduction_sheet` |
 | `refine_faac_reports.py` | OAGF FAAC report PDFs (outside git) | CSV files in [`data/nigeria/faac/oagf/`](../../data/nigeria/faac/oagf), not MotherDuck |
+| `load_faac_oagf_reports.py` | CSV files in [`data/nigeria/faac/oagf/`](../../data/nigeria/faac/oagf) | `bronze.nigeria_faac_oagf_*` (7 tables) |
 
 ## refine_faac_reports.py
 
@@ -17,6 +18,25 @@ uv run --group refine python pipelines/nigeria/refine_faac_reports.py
 ```
 
 Every report is checked against itself before anything is written (right month, 36 states, columns add up to the Total row, no copied tables). Unchanged files are reused from the last run by their SHA-256 fingerprint, so adding a month takes seconds. The checks and how to add a month: [`data/nigeria/faac/oagf/README.md`](../../data/nigeria/faac/oagf/README.md).
+
+## load_faac_oagf_reports.py
+
+Loads the CSV files that `refine_faac_reports.py` writes into bronze, **as written**: every printed figure of the state and LGA tables in long form, the columns' printed headers, the report each month came from, the known report errors and the reader's notes. Which line each column belongs to, the totals and the checks against the printed totals are in dbt (`silver/nigeria/faac_oagf/`, `gold/nigeria/nigeria_faac_state_allocation`, `nigeria_faac_lga_allocation`, `nigeria_faac_report_figure`), with the column-to-line maps as seeds in `dbt/seeds/sandbox/`.
+
+| Table | Grain |
+|---|---|
+| `<database>.bronze.nigeria_faac_oagf_reports` | one row per month |
+| `<database>.bronze.nigeria_faac_oagf_state_columns`, `..._lga_columns` | one row per month and column |
+| `<database>.bronze.nigeria_faac_oagf_state_figures` | one row per month, state-table row and column |
+| `<database>.bronze.nigeria_faac_oagf_lga_figures` | one row per month, council (or state TOTAL row) and column |
+| `<database>.bronze.nigeria_faac_oagf_known_report_errors` | one row per month and state with a mistake in the report |
+| `<database>.bronze.nigeria_faac_oagf_notes` | one row per note |
+
+The same safety checks as the other loaders: only `dev_dwh` and `prod_dwh`, every file is read (and must have rows) before MotherDuck is touched, and all seven tables are replaced in one transaction. About half a million rows load in under a minute, because each table is staged locally and uploaded with one `INSERT ... SELECT`.
+
+```bash
+uv run --group pipelines python pipelines/nigeria/load_faac_oagf_reports.py   # dev_dwh
+```
 
 ## load_world_bank_indicators.py
 
