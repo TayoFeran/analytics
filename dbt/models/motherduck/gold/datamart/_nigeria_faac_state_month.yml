@@ -4,10 +4,12 @@ models:
   - name: nigeria_faac_state_month
     description: >
       FAAC allocations per state per disbursement month, in naira and US dollars: revenue
-      lines, deduction lines, total deductions and the net amount received. Combines
-      nigeria.nigeria_faac_income and nigeria.nigeria_faac_deduction with the month's
-      official exchange rate (nigeria.nigeria_fx_rate). Fact table of the Nigeria Data
-      Dashboard's FAAC section. Grain: one row per state per month (state_month).
+      lines, deduction lines, total deductions and the net amount received. From the
+      original OAGF reports (nigeria.nigeria_faac_state_allocation), with the month's
+      official exchange rate (nigeria.nigeria_fx_rate). Fact table of the OpenPurse site's
+      and the Nigeria Data Dashboard's FAAC pages. Grain: one row per state per month
+      (state_month). other_deduction is always 0: the OAGF reports have no such line, and
+      the Power BI report still reads the column.
     columns:
       - name: state_month
         description: Grain key, "<YYYY-MM> <state>", e.g. "2024-01 Lagos".
@@ -39,7 +41,7 @@ models:
         data_tests:
           - not_null
       - name: total_deductions
-        description: Sum of the six deduction lines, in naira. Every row has a matching deduction row.
+        description: Sum of the deduction lines, in naira.
         data_tests:
           - not_null
       - name: net_amount_after_deductions

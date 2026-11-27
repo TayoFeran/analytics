@@ -5,7 +5,7 @@ models:
     description: >
       FAAC allocations to each of the 36 states from the original OAGF reports, by
       revenue line and deduction line, in naira. Grain: one row per state per month
-      (state_month). The lines are those of nigeria_faac_income and nigeria_faac_deduction;
+      (state_month). The lines are those the refined workbooks had;
       the totals are computed from them and checked against the report's own totals.
     columns:
       - name: state_month

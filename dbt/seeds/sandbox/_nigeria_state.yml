@@ -5,7 +5,7 @@ seeds:
     description: >
       Nigeria's 36 states and the FCT, with their geopolitical zone and region (North or
       South). Reference list for the Nigeria Data Dashboard's zone and region comparisons.
-      FCT is included although the FAAC workbooks don't list it.
+      FCT is included although the FAAC state table lists it as another beneficiary, not a state.
     columns:
       - name: state
         description: State name as used in the gold tables, e.g. "Akwa Ibom", "Nasarawa".

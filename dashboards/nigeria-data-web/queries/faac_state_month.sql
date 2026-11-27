@@ -20,7 +20,6 @@ select
     round(contractual_obligation_ispo)::bigint as contractual_obligation_ispo,
     round(transfer_nddc_hyppadec)::bigint as transfer_nddc_hyppadec,
     round(other_deductions_note)::bigint as other_deductions_note,
-    round(deduction_misc)::bigint as deduction_misc,
-    round(other_deduction)::bigint as other_deduction
+    round(deduction_misc)::bigint as deduction_misc
 from datamart.nigeria_faac_state_month
 order by disbursement_date, state

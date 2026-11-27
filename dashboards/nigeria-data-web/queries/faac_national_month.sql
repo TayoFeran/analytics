@@ -22,7 +22,6 @@ select
     round(sum(transfer_nddc_hyppadec))::bigint as transfer_nddc_hyppadec,
     round(sum(other_deductions_note))::bigint as other_deductions_note,
     round(sum(deduction_misc))::bigint as deduction_misc,
-    round(sum(other_deduction))::bigint as other_deduction,
     -- One rate per month, so any() picks it
     round(any_value(naira_per_usd), 4) as naira_per_usd,
     count(*) as states

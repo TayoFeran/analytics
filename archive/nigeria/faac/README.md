@@ -1,4 +1,6 @@
-# FAAC workbooks
+# FAAC workbooks (retired)
+
+**Retired in #36.** FAAC now comes from the original OAGF reports: see [`data/nigeria/faac/oagf/`](../../../data/nigeria/faac/oagf) and [ADR 0004](../../../docs/decisions/0004-faac-from-oagf-reports.md). The loader and dbt models described below were removed; git history has them. These files are kept as the record ADR 0004 compares against.
 
 Monthly FAAC (Federation Account Allocation Committee) disbursement workbooks for the Nigeria project, one file per month: `<year>/<year> <Mon> Disbursement.xlsx`. They were moved here from the Fabric Lakehouse (`Data_lake/Files/FAAC/Refined/`) in #17.
 

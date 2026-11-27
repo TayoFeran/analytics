@@ -46,7 +46,7 @@ If the source needs an API key:
 - Add `<SOURCE>_API_KEY=` to `.env.example`, and the real value to your `.env`.
 - `gh secret set <SOURCE>_API_KEY` for GitHub Actions.
 
-If the data comes as files rather than from an API (e.g. Excel workbooks), commit them under `data/<project>/<source>/` and read them from there. Adding a file is then a commit, which triggers the prod load. `pipelines/nigeria/load_faac_allocations.py` is the example; it also shows staging rows locally and uploading them in one `INSERT ... SELECT`, which is much faster than row-by-row inserts for thousands of rows.
+If the data comes as files rather than from an API (e.g. CSV files), commit them under `data/<project>/<source>/` and read them from there. Adding a file is then a commit, which triggers the prod load. `pipelines/nigeria/load_faac_oagf_reports.py` is the example; it also shows staging rows locally and uploading them in one `INSERT ... SELECT`, which is much faster than row-by-row inserts for thousands of rows.
 
 If it needs a new Python library: `uv add --group pipelines <library>`. That updates `pyproject.toml` and `uv.lock`.
 

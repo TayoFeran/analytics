@@ -201,7 +201,7 @@ export function renderDeductionLines(v: LinesView, width: number): string {
 		format: fmt0(v),
 		valueLabel: (s, i) => (i === last && !smallest.has(DEDUCTION_LINES[s].key) ? "above" : null),
 		includeZero: true,
-		aria: `Line chart of the six deduction lines, ${ticks(v)[0]} to ${ticks(v).at(-1)}.`,
+		aria: `Line chart of the five deduction lines, ${ticks(v)[0]} to ${ticks(v).at(-1)}.`,
 	});
 }
 

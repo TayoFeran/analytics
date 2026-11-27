@@ -10,7 +10,7 @@ The layout comes from the restructure recorded in `docs/restructure/` (all phase
 
 - dbt: one project in `dbt/`, models in `dbt/models/motherduck/<bronze|silver|gold>/`. Each subfolder of `gold/` is a schema, e.g. `gold/nigeria`, `gold/sandbox`.
 - The warehouse and repo are shared by **unrelated projects**, not only Nigeria. Organize by project first in every layer, and give files self-describing names (never a bare `extract.py`).
-- Source files that don't come from an API: `data/<project>/<source>/` (e.g. the FAAC workbooks in `data/nigeria/faac/`).
+- Source files that don't come from an API: `data/<project>/<source>/` (e.g. the FAAC figures from the OAGF reports in `data/nigeria/faac/oagf/`).
 - Ingestion code: `pipelines/<project>/load_<source>_<what>.py`, e.g. `pipelines/nigeria/load_world_bank_indicators.py`. Repo tooling and one-off scripts: `scripts/`. Docs: `docs/`.
 - Dashboards: `dashboards/<dashboard-name>/`, with design files (backgrounds, placement guide) in `design/` and the Power BI project alongside, e.g. `dashboards/nigeria-data-dashboard/`.
 - If a new file doesn't clearly fit, ask before creating a new top-level folder.
@@ -43,7 +43,7 @@ The layout comes from the restructure recorded in `docs/restructure/` (all phase
 
 ## FAAC and security
 
-- FAAC runs on MotherDuck since #17 (`pipelines/nigeria/load_faac_allocations.py`, `nigeria.nigeria_faac_*`). Fabric is retired: don't add Fabric items or a `dbt/models/fabric/` folder.
+- FAAC runs on MotherDuck since #17, from the original OAGF reports since #36 (`pipelines/nigeria/refine_faac_reports.py`, `load_faac_oagf_reports.py`, `nigeria.nigeria_faac_*`). Fabric is retired: don't add Fabric items or a `dbt/models/fabric/` folder.
 - Never put the MotherDuck token in a connection string (`md:?motherduck_token=...`): DuckDB echoes it in error messages. Connect with `md:` and let the extension read `MOTHERDUCK_TOKEN` from the environment.
 
 ## Code quality
