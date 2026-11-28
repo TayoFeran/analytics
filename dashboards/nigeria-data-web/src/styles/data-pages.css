@@ -1145,6 +1145,23 @@
 	margin-top: 6px;
 	font-size: 0.8rem;
 }
+/* Each section on a faint tint of its colour: income green, deductions red. Faint enough
+   that the green and red bars on top stay clear. */
+.ov .bfly .sec {
+	display: grid;
+	gap: 2px;
+	padding: 2px 8px 8px;
+	border-radius: 10px;
+}
+.ov .bfly .sec.income {
+	background: color-mix(in srgb, var(--better) 7%, transparent);
+}
+.ov .bfly .sec.deductions {
+	background: color-mix(in srgb, var(--worse) 6%, transparent);
+}
+.ov .bfly .sec .row.total {
+	background: rgba(255, 255, 255, 0.7);
+}
 .ov .bfly .grp {
 	font-size: 0.68rem;
 	letter-spacing: 0.14em;
@@ -1256,4 +1273,20 @@
 	.ov .bfly-head {
 		grid-template-columns: minmax(0, 1fr) minmax(96px, 120px) minmax(0, 1fr);
 	}
+}
+
+/* Local governments pages */
+.ov .crumb {
+	margin: 0 0 4px;
+	font-size: 0.85rem;
+}
+.ov table.data tr.sum td {
+	font-weight: 700;
+	border-top: 2px solid var(--line);
+}
+.ov table.lga-index td:last-child {
+	text-align: left;
+}
+.ov .banner[hidden] {
+	display: none;
 }

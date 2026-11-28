@@ -1,0 +1,141 @@
+---
+import PageHeader from "../../../components/PageHeader.astro";
+import SectionTabs from "../../../components/SectionTabs.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import info from "../../../data/export_info.json";
+import lgaMonth from "../../../data/faac_lga_month.json";
+import reportErrors from "../../../data/faac_lga_report_errors.json";
+import lgaStates from "../../../data/faac_lga_states.json";
+import national from "../../../data/faac_national_month.json";
+import {
+	defaultLgaIndexFilters,
+	type LgaIndexData,
+	type LgaMonthRow,
+	type LgaReportError,
+	lgaCrumb,
+	monthOptions,
+	packAllStates,
+	packLgaIndex,
+	periodLabel,
+	periodYears,
+	renderLgaIndex,
+} from "../../../lib/pages/faac-lgas";
+import { FAAC_CLOCK, renderFreshness } from "../../../lib/ui";
+import "../../../styles/data-pages.css";
+
+const perState = packAllStates(lgaMonth as LgaMonthRow[], reportErrors as LgaReportError[], lgaStates, national, info.exported_at);
+const data: LgaIndexData = packLgaIndex(perState, info.exported_at);
+const f = defaultLgaIndexFilters(data);
+---
+
+<BaseLayout
+	title="FAAC by local government"
+	description="What Nigeria's 774 local government councils received from FAAC each month, by zone and state, from the OAGF reports."
+>
+	<div class="ov">
+		<SectionTabs section="faac" />
+		<div id="crumb" set:html={lgaCrumb("", "", new URLSearchParams())} />
+		<PageHeader
+			eyebrow="FAAC"
+			title="Local governments"
+			lede="What the 774 local government councils received, by zone, then state. Pick a zone, then a state to see its councils."
+			freshness={renderFreshness([FAAC_CLOCK(f.month)], data.exportedAt, new Date())}
+		/>
+
+		<form class="filters card" aria-label="Filters">
+			<label>
+				<span>Year</span>
+				<select id="year">{periodYears(data).map((y) => <option value={y} selected={y === f.year}>{y}</option>)}</select>
+			</label>
+			<label>
+				<span>Month</span>
+				<select id="month">{monthOptions(data, f.year).map((o) => <option value={o.value} selected={o.value === f.month}>{o.label}</option>)}</select>
+			</label>
+			<div class="seg" role="group" aria-label="Sort by">
+				<button type="button" data-sort="name" aria-pressed="true">A to Z</button>
+				<button type="button" data-sort="net" aria-pressed="false">Most received</button>
+			</div>
+			<div class="seg push" role="group" aria-label="Currency">
+				<button type="button" data-cur="NGN" aria-pressed="true">₦ Naira</button>
+				<button type="button" data-cur="USD" aria-pressed="false">$ Dollar</button>
+			</div>
+		</form>
+
+		<section class="card">
+			<h2 class="ptitle" id="title">Net received by each zone's councils</h2>
+			<p class="psub" id="sub">{periodLabel(data, f)} · the FCT's 6 area councils are in North Central</p>
+			<div id="table" set:html={renderLgaIndex(data, f)} />
+		</section>
+
+		<p class="note-line">
+			From the LGA table of each monthly OAGF report. September 2021 has no LGA figures: its report's table doesn't add up. See the
+			<a href="/methodology/">Methodology</a>.
+		</p>
+	</div>
+
+	<script type="application/json" id="page-data" set:html={JSON.stringify(data)} />
+</BaseLayout>
+
+<script>
+	import { byId, readData, setOptions, syncUrl } from "../../../lib/client";
+	import {
+		type LgaIndexData,
+		latestPeriod,
+		lgaCrumb,
+		monthOptions,
+		periodLabel,
+		readLgaIndexFilters,
+		renderLgaIndex,
+		writeLgaIndexFilters,
+		yearMonths,
+	} from "../../../lib/pages/faac-lgas";
+	import { FAAC_CLOCK, renderFreshness } from "../../../lib/ui";
+
+	const data = readData<LgaIndexData>("page-data");
+	const f = readLgaIndexFilters(new URLSearchParams(location.search), data);
+
+	function render() {
+		byId<HTMLSelectElement>("year").value = f.year;
+		setOptions(byId<HTMLSelectElement>("month"), monthOptions(data, f.year), f.month);
+		document.querySelectorAll<HTMLButtonElement>("[data-cur]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.cur === f.currency)));
+		document.querySelectorAll<HTMLButtonElement>("[data-sort]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.sort === f.sort)));
+		byId("crumb").innerHTML = lgaCrumb(f.zone, "", writeLgaIndexFilters(f, data, false));
+		byId("title").textContent = f.zone ? `Net received by the councils of each ${f.zone} state` : "Net received by each zone's councils";
+		byId("sub").textContent = `${periodLabel(data, f)} · ${f.zone ? "tap a state to see its councils" : "the FCT's 6 area councils are in North Central"}`;
+		byId("table").innerHTML = renderLgaIndex(data, f);
+		syncUrl(writeLgaIndexFilters(f, data));
+	}
+
+	byId<HTMLSelectElement>("year").addEventListener("change", (e) => {
+		f.year = (e.target as HTMLSelectElement).value;
+		// Keep "Whole year" when switching years; otherwise show the new year's last month
+		if (f.month) f.month = yearMonths(data, f.year).at(-1)!;
+		render();
+	});
+	byId<HTMLSelectElement>("month").addEventListener("change", (e) => {
+		f.month = (e.target as HTMLSelectElement).value;
+		render();
+	});
+	document.querySelectorAll<HTMLButtonElement>("[data-cur]").forEach((b) =>
+		b.addEventListener("click", () => {
+			f.currency = b.dataset.cur === "USD" ? "USD" : "NGN";
+			render();
+		}),
+	);
+	document.querySelectorAll<HTMLButtonElement>("[data-sort]").forEach((b) =>
+		b.addEventListener("click", () => {
+			f.sort = b.dataset.sort === "net" ? "net" : "name";
+			render();
+		}),
+	);
+	// Zone links and the breadcrumb change level on this page without reloading it
+	document.addEventListener("click", (e) => {
+		const link = (e.target as HTMLElement).closest<HTMLAnchorElement>("a[data-zone]");
+		if (!link) return;
+		e.preventDefault();
+		f.zone = link.dataset.zone ?? "";
+		render();
+	});
+	byId("fresh").innerHTML = renderFreshness([FAAC_CLOCK(latestPeriod(data).month)], data.exportedAt, new Date());
+	render();
+</script>

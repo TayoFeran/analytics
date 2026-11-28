@@ -8,10 +8,11 @@ import stateMonth from "../../data/faac_state_month.json";
 import states from "../../data/faac_states.json";
 import topology from "../../../../nigeria-data-dashboard/design/maps/nigeria_states.json";
 import { makeCube, type NationalMonth, type StateMonthRow } from "../../lib/faac";
-import { monthLabel } from "../../lib/format";
 import { buildStateShapes, renderMap } from "../../lib/map";
+import { latestPeriod, monthOptions, periodYears } from "../../lib/period";
 import {
 	buildStatesView,
+	cubeMonths,
 	mapFills,
 	renderRanking,
 	renderRankTools,
@@ -25,7 +26,8 @@ import "../../styles/data-pages.css";
 const cube = makeCube(national as NationalMonth[], stateMonth as StateMonthRow[], states, ["gross", "deductions", "net"]);
 const data: StatesData = { cube, exportedAt: info.exported_at };
 const latest = cube.months[cube.months.length - 1];
-const filters: StatesFilters = { to: latest, currency: "NGN", state: "", zone: "", mode: "states" };
+const period = latestPeriod(cubeMonths(cube));
+const filters: StatesFilters = { ...period, currency: "NGN", state: "", zone: "", mode: "states" };
 const view = buildStatesView(data, filters);
 const fills = mapFills(view);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,15 +50,13 @@ const map = renderMap(shapes, height, (name) => fills[name] ?? null, { aria: "Ma
 
 		<form class="filters card" aria-label="Filters">
 			<label>
+				<span>Year</span>
+				<select id="year">{periodYears(cubeMonths(cube)).map((y) => <option value={y} selected={y === filters.year}>{y}</option>)}</select>
+			</label>
+			<label>
 				<span>Month</span>
-				<select id="to">
-					{
-						[...cube.months].reverse().map((k) => (
-							<option value={k} selected={k === filters.to}>
-								{monthLabel(k, "tick")}
-							</option>
-						))
-					}
+				<select id="month">
+					{monthOptions(cubeMonths(cube), filters.year).map((o) => <option value={o.value} selected={o.value === filters.month}>{o.label}</option>)}
 				</select>
 			</label>
 			<label>
@@ -75,13 +75,13 @@ const map = renderMap(shapes, height, (name) => fills[name] ?? null, { aria: "Ma
 		<div class="cols-2 wide-left">
 			<section class="card">
 				<h2 class="ptitle">Net received by state</h2>
-				<p class="psub" id="map-sub">{monthLabel(latest, "long")} · darker = higher rank · FCT isn't in the FAAC state data</p>
+				<p class="psub" id="map-sub">{view.label} · darker = higher rank · FCT isn't in the FAAC state data</p>
 				<div id="map" set:html={map} />
 				<div class="scale-key"><span>Less</span><span class="ramp"></span><span>More</span></div>
 			</section>
 			<section class="card">
 				<h2 class="ptitle">Ranking</h2>
-				<p class="psub" id="rank-sub">Net received, {monthLabel(latest, "long")}</p>
+				<p class="psub" id="rank-sub">Net received, {view.label}</p>
 				<div id="rank-tools" set:html={renderRankTools(view)} />
 				<div id="rank" set:html={renderRanking(view)} />
 			</section>
@@ -95,10 +95,11 @@ const map = renderMap(shapes, height, (name) => fills[name] ?? null, { aria: "Ma
 </BaseLayout>
 
 <script>
-	import { bindTooltip, byId, readData, syncUrl } from "../../lib/client";
-	import { monthLabel } from "../../lib/format";
+	import { bindTooltip, byId, readData, setOptions, syncUrl } from "../../lib/client";
+	import { monthOptions, readPeriod, writePeriod, yearMonths } from "../../lib/period";
 	import {
 		buildStatesView,
+		cubeMonths,
 		mapFills,
 		renderRanking,
 		renderRankTools,
@@ -114,8 +115,15 @@ const map = renderMap(shapes, height, (name) => fills[name] ?? null, { aria: "Ma
 	const c = data.cube;
 	const latest = c.months[c.months.length - 1];
 	const params = new URLSearchParams(location.search);
+	const dm = cubeMonths(c);
+	// Older links used ?to=<month>; they still open that month
+	const oldTo = params.get("to");
+	if (oldTo && c.months.includes(oldTo) && !params.has("month")) {
+		params.set("year", oldTo.slice(0, 4));
+		params.set("month", oldTo);
+	}
 	const f: StatesFilters = {
-		to: c.months.includes(params.get("to") ?? "") ? params.get("to")! : latest,
+		...readPeriod(params, dm),
 		currency: params.get("cur") === "usd" ? "USD" : "NGN",
 		state: c.states.includes(params.get("state") ?? "") ? params.get("state")! : "",
 		zone: params.get("zone") ?? "",
@@ -125,7 +133,8 @@ const map = renderMap(shapes, height, (name) => fills[name] ?? null, { aria: "Ma
 
 	function render() {
 		view = buildStatesView(data, f);
-		byId<HTMLSelectElement>("to").value = f.to;
+		byId<HTMLSelectElement>("year").value = f.year;
+		setOptions(byId<HTMLSelectElement>("month"), monthOptions(dm, f.year), f.month);
 		byId<HTMLSelectElement>("state").value = f.state;
 		document.querySelectorAll<HTMLButtonElement>("[data-cur]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.cur === f.currency)));
 		const fills = mapFills(view);
@@ -134,14 +143,14 @@ const map = renderMap(shapes, height, (name) => fills[name] ?? null, { aria: "Ma
 			if (fills[name]) p.setAttribute("fill", fills[name]);
 			p.classList.toggle("sel", name === f.state);
 		});
-		const month = monthLabel(c.months[view.month], "long");
+		const month = view.label;
 		byId("map-sub").textContent = `${month} · darker = higher rank · FCT isn't in the FAAC state data`;
 		byId("rank-sub").textContent = `Net received, ${month}${f.zone ? ` · ${f.zone}` : ""}`;
 		byId("rank-tools").innerHTML = renderRankTools(view);
 		byId("rank").innerHTML = renderRanking(view);
 		byId("insight").innerHTML = renderStatesInsight(view, c);
 		const p = new URLSearchParams();
-		if (f.to !== latest) p.set("to", f.to);
+		writePeriod(f, dm, p);
 		if (f.currency === "USD") p.set("cur", "usd");
 		if (f.state) p.set("state", f.state);
 		if (f.zone) p.set("zone", f.zone);
@@ -154,8 +163,14 @@ const map = renderMap(shapes, height, (name) => fills[name] ?? null, { aria: "Ma
 		render();
 	};
 
-	byId<HTMLSelectElement>("to").addEventListener("change", (e) => {
-		f.to = (e.target as HTMLSelectElement).value;
+	byId<HTMLSelectElement>("year").addEventListener("change", (e) => {
+		f.year = (e.target as HTMLSelectElement).value;
+		// Keep "Whole year" when switching years; otherwise show the new year's last month
+		if (f.month) f.month = yearMonths(dm, f.year).at(-1)!;
+		render();
+	});
+	byId<HTMLSelectElement>("month").addEventListener("change", (e) => {
+		f.month = (e.target as HTMLSelectElement).value;
 		render();
 	});
 	byId<HTMLSelectElement>("state").addEventListener("change", (e) => {
