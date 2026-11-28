@@ -1,8 +1,9 @@
-// FAAC States: map and ranking of the 36 states for one month.
+// FAAC States: map and ranking of the 36 states for one month or a whole year.
 
 import { cubeValue, type Currency, type FaacCube, toCurrency, ZONE_COLOURS, ZONES } from "../faac";
-import { esc, money, monthLabel, percent } from "../format";
+import { esc, money, percent } from "../format";
 import { greenScale } from "../map";
+import { type Months, type Period, periodIndexes, periodLabel, previousIndexes, previousLabel } from "../period";
 import { type RankRow, rankBars } from "../charts";
 import { badge, banner, bannerTone, change, hl, legend } from "../ui";
 
@@ -11,8 +12,7 @@ export interface StatesData {
 	exportedAt: string;
 }
 
-export interface StatesFilters {
-	to: string;
+export interface StatesFilters extends Period {
 	currency: Currency;
 	state: string;
 	zone: string;
@@ -31,7 +31,10 @@ interface StateFigures {
 
 export interface StatesView {
 	f: StatesFilters;
-	month: number;
+	/** "August 2026" or "2026 (8 months)". */
+	label: string;
+	/** What changes are measured against: "July", or "Jan–Aug 2025"; empty if nothing earlier. */
+	prevLabel: string;
 	states: StateFigures[];
 	totalNet: number;
 	totalGross: number;
@@ -39,20 +42,24 @@ export interface StatesView {
 	prevTotalNet?: number;
 }
 
+/** The cube's months as a period list: every FAAC month has state figures. */
+export const cubeMonths = (c: FaacCube): Months => ({ months: c.months, has: c.months.map(() => true) });
+
 export function buildStatesView(d: StatesData, f: StatesFilters): StatesView {
 	const c = d.cube;
-	let m = c.months.indexOf(f.to);
-	if (m < 0) m = c.months.length - 1;
-	const value = (line: "gross" | "deductions" | "net", month: number, s: number) =>
-		toCurrency(cubeValue(c, line, month, s), c.rate[month], f.currency);
+	const dm = cubeMonths(c);
+	const ms = periodIndexes(dm, f);
+	const before = previousIndexes(dm, f);
+	const value = (line: "gross" | "deductions" | "net", months: number[], s: number) =>
+		months.reduce((a, m) => a + toCurrency(cubeValue(c, line, m, s), c.rate[m], f.currency), 0);
 	const states = c.states
 		.map((name, s) => ({
 			name,
 			zone: c.zones[s],
-			gross: value("gross", m, s),
-			deductions: value("deductions", m, s),
-			net: value("net", m, s),
-			prev: m > 0 ? { gross: value("gross", m - 1, s), deductions: value("deductions", m - 1, s), net: value("net", m - 1, s) } : undefined,
+			gross: value("gross", ms, s),
+			deductions: value("deductions", ms, s),
+			net: value("net", ms, s),
+			prev: before.length ? { gross: value("gross", before, s), deductions: value("deductions", before, s), net: value("net", before, s) } : undefined,
 			rank: 0,
 		}))
 		.sort((a, b) => b.net - a.net);
@@ -60,12 +67,13 @@ export function buildStatesView(d: StatesData, f: StatesFilters): StatesView {
 	const sum = (k: "gross" | "deductions" | "net") => states.reduce((a, s) => a + s[k], 0);
 	return {
 		f,
-		month: m,
+		label: periodLabel(dm, f),
+		prevLabel: previousLabel(dm, f),
 		states,
 		totalNet: sum("net"),
 		totalGross: sum("gross"),
 		totalDeductions: sum("deductions"),
-		prevTotalNet: m > 0 ? states.reduce((a, s) => a + (s.prev?.net ?? 0), 0) : undefined,
+		prevTotalNet: before.length ? states.reduce((a, s) => a + (s.prev?.net ?? 0), 0) : undefined,
 	};
 }
 
@@ -80,7 +88,7 @@ export function mapFills(v: StatesView): Record<string, string> {
 	return fills;
 }
 
-export const monthTitle = (v: StatesView, c: FaacCube) => monthLabel(c.months[v.month], "long");
+export const monthTitle = (v: StatesView) => v.label;
 
 export function renderRanking(v: StatesView): string {
 	const cur = v.f.currency;
@@ -116,9 +124,9 @@ export function renderRankTools(v: StatesView): string {
 	return `<div class="rank-tools">${mode}${back}</div>${zoneLegend}`;
 }
 
-export function stateTooltip(v: StatesView, key: string, c: FaacCube): string | null {
+export function stateTooltip(v: StatesView, key: string, _c?: FaacCube): string | null {
 	const cur = v.f.currency;
-	const month = monthLabel(c.months[v.month], "long");
+	const month = v.label;
 	if (key.startsWith("zone:")) {
 		const zone = key.slice(5);
 		const members = v.states.filter((s) => s.zone === zone);
@@ -136,13 +144,13 @@ export function stateTooltip(v: StatesView, key: string, c: FaacCube): string | 
 	return `<div class="m">${esc(s.name)} <span class="muted" style="font-weight:500">· ${esc(s.zone)}</span></div>
 		<div class="r"><span>Rank</span><b>#${s.rank} of ${v.states.length}</b><span></span></div>
 		${row("Gross", "gross", true)}${row("Deductions", "deductions", false)}${row("Net received", "net", true)}
-		<div class="vs">${month} · change vs the previous month</div>`;
+		<div class="vs">${month}${v.prevLabel ? ` · change vs ${v.prevLabel}` : ""}</div>`;
 }
 
-export function renderStatesInsight(v: StatesView, c: FaacCube): string {
+export function renderStatesInsight(v: StatesView, _c?: FaacCube): string {
 	const cur = v.f.currency;
-	const month = monthLabel(c.months[v.month], "long");
-	const prevName = v.month > 0 ? monthLabel(c.months[v.month - 1], "name") : "";
+	const month = v.label;
+	const prevName = v.prevLabel;
 	const s = v.states.find((x) => x.name === v.f.state);
 	if (s) {
 		const ch = change(s.net, s.prev?.net, true);

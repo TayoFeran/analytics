@@ -1,0 +1,213 @@
+---
+import PageHeader from "../../../components/PageHeader.astro";
+import SectionTabs from "../../../components/SectionTabs.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import info from "../../../data/export_info.json";
+import lgaMonth from "../../../data/faac_lga_month.json";
+import reportErrors from "../../../data/faac_lga_report_errors.json";
+import lgaStates from "../../../data/faac_lga_states.json";
+import national from "../../../data/faac_national_month.json";
+import {
+	defaultLgaStateFilters,
+	type LgaMonthRow,
+	type LgaReportError,
+	type LgaStateData,
+	lgaCrumb,
+	monthOptions,
+	packAllStates,
+	periodLabel,
+	periodYears,
+	renderLgaLines,
+	renderLgaNote,
+	renderLgaRanking,
+	renderLgaTrend,
+	stateSlug,
+} from "../../../lib/pages/faac-lgas";
+import { FAAC_CLOCK, renderFreshness } from "../../../lib/ui";
+import "../../../styles/data-pages.css";
+
+export function getStaticPaths() {
+	return packAllStates(lgaMonth as LgaMonthRow[], reportErrors as LgaReportError[], lgaStates, national, info.exported_at).map((data) => ({
+		params: { state: stateSlug(data.state) },
+		props: { data },
+	}));
+}
+
+const { data } = Astro.props as { data: LgaStateData };
+const f = defaultLgaStateFilters(data);
+const councilWord = data.state === "FCT" ? "area councils" : "local government councils";
+const note = renderLgaNote(data, f);
+---
+
+<BaseLayout
+	title={`${data.state}: local governments`}
+	description={`What ${data.state}'s ${data.councils.length} ${councilWord} received from FAAC each month, from the OAGF reports.`}
+>
+	<div class="ov">
+		<SectionTabs section="faac" />
+		<div id="crumb" set:html={lgaCrumb(data.zone, data.state, new URLSearchParams())} />
+		<PageHeader
+			eyebrow={`FAAC · Local governments · ${data.zone}`}
+			title={data.state}
+			lede={`How ${data.state}'s ${data.councils.length} ${councilWord} shared the allocation. Tap a council for its figures over time.`}
+			freshness={renderFreshness([FAAC_CLOCK(f.month)], data.exportedAt, new Date())}
+		/>
+
+		<form class="filters card" aria-label="Filters">
+			<label>
+				<span>Year</span>
+				<select id="year">{periodYears(data).map((y) => <option value={y} selected={y === f.year}>{y}</option>)}</select>
+			</label>
+			<label>
+				<span>Month</span>
+				<select id="month">{monthOptions(data, f.year).map((o) => <option value={o.value} selected={o.value === f.month}>{o.label}</option>)}</select>
+			</label>
+			<label>
+				<span>Council</span>
+				<select id="council">
+					{
+						data.councils
+							.map((name, i) => ({ name, i }))
+							.sort((a, b) => a.name.localeCompare(b.name))
+							.map((c) => (
+								<option value={String(c.i)} selected={c.i === f.council}>
+									{c.name}
+								</option>
+							))
+					}
+				</select>
+			</label>
+			<div class="seg push" role="group" aria-label="Currency">
+				<button type="button" data-cur="NGN" aria-pressed="true">₦ Naira</button>
+				<button type="button" data-cur="USD" aria-pressed="false">$ Dollar</button>
+			</div>
+		</form>
+
+		<section class="banner" id="note" aria-label="Note about the report" set:html={note} hidden={!note} />
+
+		<div class="cols-2 wide-left">
+			<section class="card">
+				<h2 class="ptitle">Councils</h2>
+				<p class="psub" id="rank-sub">Net received, {periodLabel(data, f)}</p>
+				<div class="rank-tools">
+					<div class="seg" role="group" aria-label="Sort by">
+						<button type="button" data-sort="name" aria-pressed="true">A to Z</button>
+						<button type="button" data-sort="net" aria-pressed="false">Most received</button>
+					</div>
+				</div>
+				<div id="rank" set:html={renderLgaRanking(data, f)} />
+			</section>
+			<section class="card">
+				<h2 class="ptitle" id="trend-title">{data.councils[f.council]} over time</h2>
+				<p class="psub">Net received (solid) and gross allocation (dashed), by month</p>
+				<div id="trend" set:html={renderLgaTrend(data, f, 560)} />
+			</section>
+		</div>
+
+		<section class="card">
+			<h2 class="ptitle" id="lines-title">{data.councils[f.council]}, {periodLabel(data, f)}</h2>
+			<p class="psub">Revenue lines, deductions and what the council received</p>
+			<div id="lines" set:html={renderLgaLines(data, f)} />
+		</section>
+
+		<p class="note-line">
+			From the LGA table of each monthly OAGF report. September 2021 has no LGA figures: its report's table doesn't add up. See the
+			<a href="/methodology/">Methodology</a>.
+		</p>
+	</div>
+
+	<script type="application/json" id="page-data" set:html={JSON.stringify(data)} />
+</BaseLayout>
+
+<script>
+	import { bindTooltip, byId, onWidthChange, readData, setOptions, syncUrl, widthOf } from "../../../lib/client";
+	import {
+		latestPeriod,
+		type LgaStateData,
+		lgaCrumb,
+		lgaRankTooltip,
+		lgaTrendTooltip,
+		monthOptions,
+		periodLabel,
+		readLgaStateFilters,
+		renderLgaLines,
+		renderLgaNote,
+		renderLgaRanking,
+		renderLgaTrend,
+		writeLgaStateFilters,
+		yearMonths,
+	} from "../../../lib/pages/faac-lgas";
+	import { FAAC_CLOCK, renderFreshness } from "../../../lib/ui";
+
+	const data = readData<LgaStateData>("page-data");
+	const f = readLgaStateFilters(new URLSearchParams(location.search), data);
+
+	function drawTrend() {
+		byId("trend").innerHTML = renderLgaTrend(data, f, widthOf(byId("trend"), 560));
+	}
+
+	function render() {
+		byId<HTMLSelectElement>("year").value = f.year;
+		setOptions(byId<HTMLSelectElement>("month"), monthOptions(data, f.year), f.month);
+		byId<HTMLSelectElement>("council").value = String(f.council);
+		document.querySelectorAll<HTMLButtonElement>("[data-cur]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.cur === f.currency)));
+		document.querySelectorAll<HTMLButtonElement>("[data-sort]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.sort === f.sort)));
+		const q = writeLgaStateFilters(f, data);
+		// The breadcrumb keeps the period and currency when going back up
+		const up = new URLSearchParams(q);
+		up.delete("council");
+		up.delete("sort");
+		byId("crumb").innerHTML = lgaCrumb(data.zone, data.state, up);
+		const name = data.councils[f.council];
+		const period = periodLabel(data, f);
+		const note = byId("note");
+		note.innerHTML = renderLgaNote(data, f);
+		note.hidden = !note.innerHTML;
+		byId("rank-sub").textContent = `Net received, ${period}`;
+		byId("rank").innerHTML = renderLgaRanking(data, f);
+		byId("trend-title").textContent = `${name} over time`;
+		byId("lines-title").textContent = `${name}, ${period}`;
+		byId("lines").innerHTML = renderLgaLines(data, f);
+		drawTrend();
+		syncUrl(q);
+	}
+
+	byId<HTMLSelectElement>("year").addEventListener("change", (e) => {
+		f.year = (e.target as HTMLSelectElement).value;
+		// Keep "Whole year" when switching years; otherwise show the new year's last month
+		if (f.month) f.month = yearMonths(data, f.year).at(-1)!;
+		render();
+	});
+	byId<HTMLSelectElement>("month").addEventListener("change", (e) => {
+		f.month = (e.target as HTMLSelectElement).value;
+		render();
+	});
+	byId<HTMLSelectElement>("council").addEventListener("change", (e) => {
+		f.council = Number((e.target as HTMLSelectElement).value);
+		render();
+	});
+	document.querySelectorAll<HTMLButtonElement>("[data-cur]").forEach((b) =>
+		b.addEventListener("click", () => {
+			f.currency = b.dataset.cur === "USD" ? "USD" : "NGN";
+			render();
+		}),
+	);
+	document.querySelectorAll<HTMLButtonElement>("[data-sort]").forEach((b) =>
+		b.addEventListener("click", () => {
+			f.sort = b.dataset.sort === "net" ? "net" : "name";
+			render();
+		}),
+	);
+	byId("rank").addEventListener("click", (e) => {
+		const row = (e.target as HTMLElement).closest<HTMLElement>("[data-i]");
+		if (!row) return;
+		f.council = Number(row.dataset.i);
+		render();
+	});
+
+	bindTooltip(byId("rank"), (key) => lgaRankTooltip(data, f, key));
+	bindTooltip(byId("trend"), (key) => lgaTrendTooltip(data, f, key));
+	onWidthChange(byId("trend"), drawTrend);
+	byId("fresh").innerHTML = renderFreshness([FAAC_CLOCK(latestPeriod(data).month)], data.exportedAt, new Date());
+	render();
+</script>

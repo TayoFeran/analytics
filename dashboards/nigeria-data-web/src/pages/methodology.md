@@ -13,13 +13,14 @@ Every number on this site comes from public sources and is calculated the same w
 | Data | Source | Coverage |
 |---|---|---|
 | FAAC allocations to states | The monthly FAAC reports published by the Office of the Accountant General of the Federation (OAGF), read from the original PDF (two months from the OAGF's Excel version) | 36 states, January 2020 to the latest month added |
+| FAAC allocations to local governments | The LGA table of the same OAGF reports (April 2023 from the Excel version) | 774 councils (the 36 states' councils and the FCT's 6 area councils), January 2020 to the latest month, except September 2021 |
 | Naira-per-dollar exchange rate | World Bank, official exchange rate (monthly average) | January 2010 to the latest month |
 | Consumer prices and inflation | World Bank, consumer price index (CPI) | Prices from January 2010; inflation from January 2011 (it compares with a year earlier) |
 | GDP, growth, population | World Bank | Yearly, 1990 to the latest year |
 | Presidents and terms | Hand-maintained list of administrations since 1999 | Obasanjo to Tinubu |
 | State boundaries (map) | geoBoundaries (GRID3, 2022), CC BY 4.0 | 36 states and the FCT |
 
-FAAC is the Federation Account Allocation Committee. Every month it shares federally collected revenue between the federal government, the 36 states and local governments. This site shows the **state** share.
+FAAC is the Federation Account Allocation Committee. Every month it shares federally collected revenue between the federal government, the 36 states and local governments. This site shows the **state** share and the **local government** share.
 
 ## How often it updates
 
@@ -62,6 +63,12 @@ Economy pages use two clocks: CPI and the exchange rate are expected within 60 d
 - **Other deductions (see note)**: deductions the FAAC report explains in its notes, often repayments of federal loans to states such as budget support or bailout facilities.
 - **VAT deduction**: money taken from a state's VAT share before payment. Zero in most months.
 
+### Local governments
+
+- A council's lines are **statutory allocation**, **VAT**, **exchange gain**, **ecology fund** and **other income**, as for the states. Its **deduction** is the report's single Deduction column, and the **NDDC / HYPPADEC transfer** is half of the ecology fund for member states.
+- **Net received** is the revenue lines minus the deductions, worked out by us. Some reports print a "Net Statutory Allocation" column that is really the amount before the deduction; we treat it as such, because that is how the report's own totals add up.
+- **Councils are matched across months by their number in the report**, not their printed name, which is sometimes cut short. Names follow the spelling the reports use most often.
+
 ### Shares and comparisons
 
 - **Deductions share**: deductions as a share of the gross allocation.
@@ -101,7 +108,10 @@ Each month's figures are read from the OAGF report itself, and checked against t
 - the report is for the right month, and lists all 36 states;
 - every column adds up to the report's own Total row, within ₦1;
 - no month repeats another month's table;
-- each state's revenue lines add up to the report's Total Gross Amount, and minus its deductions to its Total Net Amount, within ₦1. A few reports are cut off before their totals; there we calculate them from the lines.
+- each state's revenue lines add up to the report's Total Gross Amount, and minus its deductions to its Total Net Amount, within ₦1. A few reports are cut off before their totals; there we calculate them from the lines;
+- each state's councils add up to the state's total in the LGA table, and each council's lines add up to its printed Total Allocation, within ₦1.
+
+**Mistakes in the reports' LGA tables are kept as printed, and flagged.** In 19 months, a state's LGA figures don't add up in the report itself: for example a Total Allocation column that leaves out a revenue line or repeats the VAT, or a deduction added instead of taken off. There is no second source to correct them from, so we keep the revenue and deduction lines as printed, add them up ourselves, and say on the state's page what the report got wrong that month.
 
 Every original report is kept, with a fingerprint of the file, so each figure can be traced to the exact document it came from.
 
@@ -113,6 +123,7 @@ Amounts are stored in whole naira and shown in billions (₦) or millions and bi
 
 - **FCT is not included.** The FAAC report lists the Federal Capital Territory with the federal government's share, not with the states.
 - **Data starts in January 2020.** Earlier years will be added over time.
+- **September 2021 has no local government figures.** That month's LGA table doesn't add up for five states and the FCT, and the Excel version has no LGA table, so the month is left out rather than shown with figures we can't check.
 
 ## Spotted an error?
 
@@ -120,4 +131,4 @@ The code and the calculations behind this site are public. If something looks wr
 
 ## Corrections
 
-- **27 November 2026: figures now come from the original OAGF reports.** Until now they came from workbooks retyped from those reports. Checking every line against the originals changed one month noticeably: in **May 2023** the states' net received falls by ₦25.8 billion, to ₦317.3 billion, because the workbook, copied from the OAGF's Excel version, overstated four one-off revenue lines by 57%; the PDF agrees with its own summary page. August 2021 falls by ₦0.17 billion (the transfer of ecology funds to HYPPADEC was missing). Every other month changed by less than ₦1 million. October 2024 and the months since April 2026 were added.
+- **27 November 2026: figures now come from the original OAGF reports.** Until now they came from workbooks retyped from those reports. Checking every line against the originals changed one month noticeably: in **May 2023** the states' net received falls by ₦25.8 billion, to ₦317.3 billion, because the workbook, copied from the OAGF's Excel version, overstated four one-off revenue lines by 57%; the PDF agrees with its own summary page. August 2021 falls by ₦0.17 billion (the transfer of ecology funds to HYPPADEC was missing). Every other month changed by less than ₦1 million. October 2024 and the months since April 2026 were added, and the local government pages are new.

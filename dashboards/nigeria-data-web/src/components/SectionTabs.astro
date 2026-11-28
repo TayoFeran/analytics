@@ -11,6 +11,7 @@ const SECTIONS = {
 		{ href: "/faac/revenue-mix/", label: "Revenue mix" },
 		{ href: "/faac/deductions/", label: "Deductions" },
 		{ href: "/faac/compare/", label: "Compare" },
+		{ href: "/faac/lgas/", label: "Local governments" },
 	],
 	economy: [
 		{ href: "/economy/", label: "Overview" },
@@ -27,7 +28,7 @@ const path = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astro.ur
 <nav class="tabs" aria-label={section === "faac" ? "FAAC pages" : "Economy pages"}>
 	{
 		SECTIONS[section].map((t) => (
-			<a href={t.href} aria-current={path === t.href ? "page" : undefined}>
+			<a href={t.href} aria-current={path === t.href || (t.href === "/faac/lgas/" && path.startsWith(t.href)) ? "page" : undefined}>
 				{t.label}
 			</a>
 		))

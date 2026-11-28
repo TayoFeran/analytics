@@ -34,6 +34,9 @@ It reads `dev_dwh` unless `MOTHERDUCK_DATABASE=prod_dwh`, which only `daily-pipe
 | `faac_national_month.sql` | FAAC month, all states together: gross, deductions, net, the 6 revenue lines, the 5 deduction lines, naira per dollar | FAAC Overview |
 | `faac_state_month.sql` | state per FAAC month: gross, deductions, net and every revenue and deduction line | FAAC Overview top 5, States, Revenue mix, Deductions, Compare |
 | `faac_states.sql` | state: zone and region | colouring and grouping states by zone |
+| `faac_lga_month.sql` | council per FAAC month: its revenue and deduction lines, and whether the report's printed total is wrong | Local governments (the build only: each state's page packs its own councils, see `packLgaState` in `src/lib/pages/faac-lgas.ts`; the same packed data is published as `/data/lgas/<state>.json` for the Compare page, which loads only the two states compared) |
+| `faac_lga_states.sql` | state in the LGA data (36 + FCT): zone | the zone → state → council levels of the Local governments pages |
+| `faac_lga_report_errors.sql` | state and month with a known mistake in the report's LGA table | the note on a state's Local governments page |
 | `economy_month.sql` | month: president, naira per dollar, CPI, inflation | Economy Overview, FAAC in real terms, Presidents |
 | `economy_year.sql` | year: president, GDP in naira and dollars, real growth, population, GDP per person | Economy size, Economy Overview, Presidents |
 | `administrations.sql` | administration: president, party, term dates | Presidents |
